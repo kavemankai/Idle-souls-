@@ -374,7 +374,13 @@ for (const vp of SIZES) {
   test(`layout at ${vp.width}x${vp.height}: no sideways scroll, no clipped controls, 44px targets, readable text`, async ({ page }) => {
     await page.setViewportSize(vp);
     await open(page, '&seed=1&hp=5000');
-    const shot = async (name: string) => { if (SHOTS) await page.screenshot({ path: `docs/slice/screens/${name}-${vp.width}x${vp.height}.png`, fullPage: true }); };
+    // The screen scrolls inside a fixed box, so for the picture it is let flow into the page and the whole length is captured.
+    const shot = async (name: string) => {
+      if (!SHOTS) return;
+      await page.evaluate(() => { for (let e: HTMLElement | null = document.getElementById('xp'); e; e = e.parentElement) { e.dataset.css = e.style.cssText; e.style.position = 'static'; e.style.overflow = 'visible'; e.style.height = 'auto'; e.style.maxHeight = 'none'; e.style.inset = 'auto'; } });
+      await page.screenshot({ path: `docs/slice/screens/${name}-${vp.width}x${vp.height}.png`, fullPage: true });
+      await page.evaluate(() => { for (let e: HTMLElement | null = document.getElementById('xp'); e; e = e.parentElement) { e.style.cssText = e.dataset.css ?? ''; delete e.dataset.css; } });
+    };
     await shot('guide');
     expect(await noSideScroll(page), 'guide').toBe(true);
     await skipGuide(page);

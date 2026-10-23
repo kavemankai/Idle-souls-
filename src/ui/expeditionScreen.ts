@@ -298,7 +298,9 @@ export function mountExpedition(root: HTMLElement) {
     if (!r) return;
     if (last === 0) last = t;
     acc += Math.min(100, t - last) * speed * 30 / 1000; last = t;
-    if (!paused) while (acc >= 1 && !r.world.terminal) { r.world.step(); acc -= 1; }
+    // Steps run in order, so the run is the same however many fit in a frame. A frame spends at most ~12 ms on them, so a heavy fight at 16x slows
+    // the playback a little instead of freezing the page; the backlog is capped so it never snowballs.
+    if (!paused) { const t0 = performance.now(); while (acc >= 1 && !r.world.terminal) { r.world.step(); acc -= 1; if (performance.now() - t0 > 12) break; } acc = Math.min(acc, 60); }
     draw();
     if (!r.world.terminal) raf = requestAnimationFrame(frame);
   }
