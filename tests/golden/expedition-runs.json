@@ -1,6 +1,6 @@
 {
  "directSurvey/1": {
-  "version": 2,
+  "version": 3,
   "seed": 1,
   "outcome": "extracted",
   "summary": "Back at camp alive with 20 of 90 health after 2 fights.",
@@ -190,7 +190,9 @@
     "gold": 6,
     "supplies": {},
     "gear": [],
-    "mastery": 2
+    "mastery": 2,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -201,18 +203,24 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
    "startCache": null,
    "cacheRecovered": false,
-   "deathSpot": null
+   "deathSpot": null,
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   },
   "bossesDefeated": []
  },
  "directSurvey/2": {
-  "version": 2,
+  "version": 3,
   "seed": 2,
   "outcome": "extracted",
   "summary": "Back at camp alive with 34 of 90 health after 2 fights.",
@@ -402,7 +410,9 @@
     "gold": 6,
     "supplies": {},
     "gear": [],
-    "mastery": 2
+    "mastery": 2,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -413,18 +423,24 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
    "startCache": null,
    "cacheRecovered": false,
-   "deathSpot": null
+   "deathSpot": null,
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   },
   "bossesDefeated": []
  },
  "directSurvey/3": {
-  "version": 2,
+  "version": 3,
   "seed": 3,
   "outcome": "extracted",
   "summary": "Back at camp alive with 26 of 90 health after 2 fights.",
@@ -621,7 +637,9 @@
     "gold": 21,
     "supplies": {},
     "gear": [],
-    "mastery": 7
+    "mastery": 7,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -632,7 +650,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -643,18 +663,24 @@
       "gold": 15,
       "supplies": {},
       "gear": [],
-      "mastery": 5
+      "mastery": 5,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
    "startCache": null,
    "cacheRecovered": false,
-   "deathSpot": null
+   "deathSpot": null,
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   },
   "bossesDefeated": []
  },
  "directSurvey/4": {
-  "version": 2,
+  "version": 3,
   "seed": 4,
   "outcome": "extracted",
   "summary": "Back at camp alive with 3 of 90 health after 3 fights.",
@@ -906,7 +932,9 @@
     "gear": [
      "cracked-buckler"
     ],
-    "mastery": 11
+    "mastery": 11,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -917,7 +945,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -928,7 +958,9 @@
       "gold": 15,
       "supplies": {},
       "gear": [],
-      "mastery": 5
+      "mastery": 5,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -941,7 +973,9 @@
        "ration": 1
       },
       "gear": [],
-      "mastery": 0
+      "mastery": 0,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -954,7 +988,9 @@
       "gear": [
        "cracked-buckler"
       ],
-      "mastery": 0
+      "mastery": 0,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -965,7 +1001,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -976,18 +1014,24 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
    "startCache": null,
    "cacheRecovered": false,
-   "deathSpot": null
+   "deathSpot": null,
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   },
   "bossesDefeated": []
  },
  "thoroughSurvey/1": {
-  "version": 2,
+  "version": 3,
   "seed": 1,
   "outcome": "extracted",
   "summary": "Back at camp alive with 80 of 90 health after 1 fight.",
@@ -1168,7 +1212,9 @@
     "gold": 6,
     "supplies": {},
     "gear": [],
-    "mastery": 2
+    "mastery": 2,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -1179,18 +1225,24 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
    "startCache": null,
    "cacheRecovered": false,
-   "deathSpot": null
+   "deathSpot": null,
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   },
   "bossesDefeated": []
  },
  "thoroughSurvey/2": {
-  "version": 2,
+  "version": 3,
   "seed": 2,
   "outcome": "extracted",
   "summary": "Back at camp alive with 80 of 90 health after 1 fight.",
@@ -1371,7 +1423,9 @@
     "gold": 6,
     "supplies": {},
     "gear": [],
-    "mastery": 2
+    "mastery": 2,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -1382,18 +1436,24 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
    "startCache": null,
    "cacheRecovered": false,
-   "deathSpot": null
+   "deathSpot": null,
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   },
   "bossesDefeated": []
  },
  "thoroughSurvey/3": {
-  "version": 2,
+  "version": 3,
   "seed": 3,
   "outcome": "extracted",
   "summary": "Back at camp alive with 80 of 90 health after 1 fight.",
@@ -1574,7 +1634,9 @@
     "gold": 6,
     "supplies": {},
     "gear": [],
-    "mastery": 2
+    "mastery": 2,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -1585,18 +1647,24 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
    "startCache": null,
    "cacheRecovered": false,
-   "deathSpot": null
+   "deathSpot": null,
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   },
   "bossesDefeated": []
  },
  "thoroughSurvey/4": {
-  "version": 2,
+  "version": 3,
   "seed": 4,
   "outcome": "extracted",
   "summary": "Back at camp alive with 90 of 90 health after 1 fight.",
@@ -1777,7 +1845,9 @@
     "gold": 6,
     "supplies": {},
     "gear": [],
-    "mastery": 2
+    "mastery": 2,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -1788,18 +1858,24 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
    "startCache": null,
    "cacheRecovered": false,
-   "deathSpot": null
+   "deathSpot": null,
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   },
   "bossesDefeated": []
  },
  "cautious/1": {
-  "version": 2,
+  "version": 3,
   "seed": 1,
   "outcome": "extracted",
   "summary": "Back at camp alive with 66 of 90 health after 1 fight.",
@@ -1913,17 +1989,23 @@
     "gold": 0,
     "supplies": {},
     "gear": [],
-    "mastery": 0
+    "mastery": 0,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [],
    "startCache": null,
    "cacheRecovered": false,
-   "deathSpot": null
+   "deathSpot": null,
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   },
   "bossesDefeated": []
  },
  "cautious/2": {
-  "version": 2,
+  "version": 3,
   "seed": 2,
   "outcome": "extracted",
   "summary": "Back at camp alive with 55 of 90 health after 1 fight.",
@@ -2037,17 +2119,23 @@
     "gold": 0,
     "supplies": {},
     "gear": [],
-    "mastery": 0
+    "mastery": 0,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [],
    "startCache": null,
    "cacheRecovered": false,
-   "deathSpot": null
+   "deathSpot": null,
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   },
   "bossesDefeated": []
  },
  "cautious/3": {
-  "version": 2,
+  "version": 3,
   "seed": 3,
   "outcome": "extracted",
   "summary": "Back at camp alive with 46 of 90 health after 1 fight.",
@@ -2161,17 +2249,23 @@
     "gold": 0,
     "supplies": {},
     "gear": [],
-    "mastery": 0
+    "mastery": 0,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [],
    "startCache": null,
    "cacheRecovered": false,
-   "deathSpot": null
+   "deathSpot": null,
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   },
   "bossesDefeated": []
  },
  "cautious/4": {
-  "version": 2,
+  "version": 3,
   "seed": 4,
   "outcome": "extracted",
   "summary": "Back at camp alive with 66 of 90 health after 1 fight.",
@@ -2285,12 +2379,18 @@
     "gold": 0,
     "supplies": {},
     "gear": [],
-    "mastery": 0
+    "mastery": 0,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [],
    "startCache": null,
    "cacheRecovered": false,
-   "deathSpot": null
+   "deathSpot": null,
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   },
   "bossesDefeated": []
  }

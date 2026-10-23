@@ -1,8 +1,8 @@
 {
   "id": "T3",
   "name": "High Gallery",
-  "note": "Generated placeholder geometry from the room schedule and connections. Valid walls and doors, not tuned and not art-reviewed. Local frame: centre (0,0), x east, y south, simulation units.",
-  "status": "generated",
+  "note": "Trial settings. The first authored discovery: one Gate Key, claimed once ever (L18). The Harrier and Mireling guarding it need the roster in M6, so the gallery is empty for now. Local frame: centre (0,0), x east, y south, simulation units. World centre (2460,490).",
+  "status": "authored",
   "plan": {
     "center": {
       "x": 2460,
@@ -48,6 +48,17 @@
     }
   ],
   "encounters": {},
+  "pickups": [
+    {
+      "id": "t3-first-key",
+      "kind": "key",
+      "item": "gate-key",
+      "qty": 1,
+      "x": 0,
+      "y": -10,
+      "claim": "once"
+    }
+  ],
   "detection": {
     "range": 160,
     "arcDegrees": 120,

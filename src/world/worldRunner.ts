@@ -3,13 +3,14 @@ import type { SimApi, SimCarry, SimDerived, SimDoctrine } from '../combat/simApi
 import { ROOMS } from './roomRegistry';
 import { RoomRunner, type RetreatAnswer, type RoomResult } from './roomRunner';
 import { Ledger, PICKUP_REACH, type DeathSpot, type Gain } from '../expedition/loot';
+import { GATE_NEED, stagingPoint, type GateInfo } from './gates';
 import type { Bank, Cache } from '../save/saveTypes';
 import type { Door, RoomManifest } from './roomTypes';
 import type { Point } from './o1Route';
 import { WorldGraph } from './worldGraph';
 
 /** Encounters that stand in the Old Road rooms for a plain expedition. Camp has none. */
-export const OLD_ROAD_ENCOUNTERS: Readonly<Record<string, string>> = { O1: 'mireling', O2: 'sentry', O3: 'mireling2' };
+export const OLD_ROAD_ENCOUNTERS: Readonly<Record<string, string>> = { O1: 'mireling', O2: 'sentry', O3: 'mireling2', KT: 'mireling2' };
 export interface WorldRunConfig {
   seed: number; level: number; focus: string; doctrine: SimDoctrine;
   /** Start and turn-around rooms. The route between them is the graph's shortest path over ordinary links. Ignored when a navigator is given. */
@@ -22,6 +23,8 @@ export interface WorldRunConfig {
   turnDoor?: string;
   /** The recovery cache waiting at the start of this expedition, if any. */
   cache?: Cache | null;
+  /** Gate Keys issued from camp for this expedition (eligible to open gates), one-time claims already made, and links already open for good. */
+  issuedKeys?: number; claims?: readonly string[]; openLinks?: readonly string[];
   /** Tests only. */
   hpOverride?: number; maxFightTicks?: number;
 }
@@ -29,6 +32,8 @@ export type WorldState = 'ready' | 'outbound' | 'homebound' | 'home' | 'defeated
 /** What a navigator sees each time the adventurer starts a stretch inside a room (arriving, or turning round at a door). Everything is read-only. */
 export interface ArrivalCtx {
   room: string; entry: string | null; tick: number; hp: number; hpMax: number; pos: Point;
+  /** What is carried right now, read-only. */
+  carried: Bank;
   /** Index of this stretch in the whole walk, 0 for the first. */
   leg: number;
   dead: ReadonlyMap<string, readonly boolean[]>; results: readonly LegResult[];
@@ -36,16 +41,20 @@ export interface ArrivalCtx {
 /** `exit` is a door of the current room. `cross` false means: walk to the door, then ask again from inside the same room (a turn-around). */
 export type NavDecision = { exit: string; cross: boolean; label?: string; via?: Point } | { goal: Point; label?: string } | { halt: string };
 /** What a navigator sees every tick while the adventurer is in a room and not walking a passage. */
-export interface LiveCtx { room: string; entry: string | null; tick: number; hp: number; hpMax: number; fighting: boolean; pos: Point }
+export interface LiveCtx { room: string; entry: string | null; tick: number; hp: number; hpMax: number; fighting: boolean; pos: Point; carried: Bank }
 export interface Navigator {
   start: string;
   arrive(ctx: ArrivalCtx): NavDecision;
   /** Asked every tick inside a room. Returning an exit door changes the way out now (a retreat); in a fight the adventurer disengages first. */
-  live?(ctx: LiveCtx): { exit: string } | { end: true } | null;
+  live?(ctx: LiveCtx): { exit: string } | { end: true } | { again: true } | null;
   /** The room runner's answer to a `live` request: accepted (with what a retreat in a fight faces) or refused. */
   liveAnswer?(answer: RetreatAnswer, ctx: LiveCtx): void;
   /** Something was gained: a kill paid, a pickup taken, or the cache recovered. */
   looted?(gain: Gain, ctx: LiveCtx): void;
+  /** The adventurer stands at a sealed gate's staging point. Return true only if the plan deliberately asks to work this gate now (no automatic spending). */
+  wantsInteraction?(gate: GateInfo, ctx: LiveCtx): boolean;
+  /** The result of working a gate: opened for good, or refused (no eligible key). */
+  gateWorked?(gate: GateInfo, ok: boolean, ctx: LiveCtx): void;
   /** Called when a stretch ends, win or lose, before the next arrival. */
   legEnded?(result: LegResult, ctx: ArrivalCtx): void;
 }
@@ -56,7 +65,7 @@ export interface WorldResult {
   /** Largest distance covered in one tick while walking (rooms and the passages between them) and while the simulator moved the adventurer. */
   maxWalkStep: number; maxFightStep: number;
   /** What is carried at the end and how it was gained. Nothing here is banked: `settle` decides that. */
-  loot: { carried: Bank; gains: Gain[]; cache: Cache | null; recovered: Cache | null; deathSpot: DeathSpot | null };
+  loot: { carried: Bank; gains: Gain[]; cache: Cache | null; recovered: Cache | null; deathSpot: DeathSpot | null; issued: number; spent: number; opened: string[]; claimed: string[] };
   /** Per room, which of its enemies are dead at the end. */
   dead: Record<string, boolean[]>;
 }
@@ -129,7 +138,7 @@ export class WorldRunner {
     this.derived = derived;
     this.carry = { st: derived.maxSt, poise: derived.poise };
     this.hpMax = cfg.hpOverride ?? derived.hp; this.hp = this.hpMax;
-    this.ledger = new Ledger(cfg.cache ?? null);
+    this.ledger = new Ledger(cfg.cache ?? null, cfg.issuedKeys ?? 0, new Set(cfg.claims ?? []), new Set(cfg.openLinks ?? []));
     this.room = this.nav.start;
     this.pos = toWorld(this.manifests[this.nav.start], { x: 0, y: 0 });
   }
@@ -145,7 +154,7 @@ export class WorldRunner {
   private manifest(id: string) { return this.manifests[id]; }
   private note(text: string) { this.notes.push(`${this.tick}: ${text}`); }
   private ctx(room: string, entry: string | null, pos: Point): ArrivalCtx {
-    return { room, entry, tick: this.tick, hp: this.hp, hpMax: this.hpMax, pos, leg: this.legIdx, dead: this.dead, results: this.results };
+    return { room, entry, tick: this.tick, hp: this.hp, hpMax: this.hpMax, pos, carried: this.ledger.carried, leg: this.legIdx, dead: this.dead, results: this.results };
   }
   /** Start a stretch in `room` with the adventurer at room-local `at`, after asking the navigator where to go. */
   private beginLeg(room: string, entry: string | null, at: Point, face: number) {
@@ -199,18 +208,32 @@ export class WorldRunner {
     if (fighting || r.state === 'fighting') return;
     const m = this.manifest(this.room), p = r.hero;
     for (const pk of m.pickups ?? []) if (M.hypot(pk.x - p.x, pk.y - p.y) <= PICKUP_REACH) { const g = this.ledger.pickup(this.room, pk); if (g) this.nav.looted?.(g, ctx()); }
+    for (const n of this.graph.neighbours(this.room)) {
+      if (!this.graph.isGated(n.type) || this.ledger.isOpen(n.key)) continue;
+      const at = stagingPoint(m, n.room);
+      if (M.hypot(at.x - p.x, at.y - p.y) > PICKUP_REACH) continue;
+      const g: GateInfo = { key: n.key, from: this.room, to: n.room, type: n.type, need: GATE_NEED[n.type] ?? 'special', state: 'sealed' };
+      if (!this.nav.wantsInteraction?.(g, ctx())) continue;
+      const ok = g.need === 'key' ? this.ledger.spendKey(n.key) : g.need === 'activation' ? this.ledger.activate(n.key) : false;
+      this.nav.gateWorked?.(g, ok, ctx());
+    }
     const c = this.ledger.cache;
     if (c && c.room === this.room && M.hypot(c.x - p.x, c.y - p.y) <= PICKUP_REACH) { const g = this.ledger.recoverCache(); if (g) this.nav.looted?.(g, ctx()); }
   }
   private liveCtx(r: RoomRunner): LiveCtx {
-    return { room: this.room, entry: this.entry, tick: this.tick, hp: r.hp, hpMax: this.hpMax, fighting: r.state === 'fighting', pos: { x: r.hero.x, y: r.hero.y } };
+    return { room: this.room, entry: this.entry, tick: this.tick, hp: r.hp, hpMax: this.hpMax, fighting: r.state === 'fighting', pos: { x: r.hero.x, y: r.hero.y }, carried: this.ledger.carried };
   }
   /** Let the navigator change the way out mid-room (a retreat order or a survival trigger). */
   private askLive(r: RoomRunner) {
     if (!this.nav.live || (r.state !== 'fighting' && r.state !== 'travelling')) return;
-    const ctx: LiveCtx = { room: this.room, entry: this.entry, tick: this.tick, hp: r.hp, hpMax: this.hpMax, fighting: r.state === 'fighting', pos: r.state === 'fighting' && r.fight ? { x: r.fight.p.x, y: r.fight.p.y } : { x: r.hero.x, y: r.hero.y } };
+    const ctx: LiveCtx = { ...this.liveCtx(r), pos: r.state === 'fighting' && r.fight ? { x: r.fight.p.x, y: r.fight.p.y } : { x: r.hero.x, y: r.hero.y } };
     const act = this.nav.live(ctx);
     if (!act) return;
+    if ('again' in act) {   // something changed in this room (a gate was worked): decide again from where the adventurer stands
+      const dec = this.nav.arrive(this.ctx(this.room, this.entry, { x: r.hero.x, y: r.hero.y }));
+      if ('exit' in dec && dec.exit !== r.exit.id && r.retreat(dec.exit).ok) this.decision = { ...dec, via: undefined };
+      return;
+    }
     if ('end' in act) {   // a retreat ordered while still at camp: the walk ends here
       r.finishHere();
       this.decision = { goal: { x: 0, y: 0 }, label: 'back' };
@@ -278,7 +301,7 @@ export class WorldRunner {
       hpLeft: Math.round(this.hp), hpMax: this.hpMax, finalPos: { x: Math.round(this.pos.x * 10) / 10, y: Math.round(this.pos.y * 10) / 10 }, digest: this.digest,
       maxWalkStep: Math.round(this.maxWalkStep * 1000) / 1000, maxFightStep: Math.round(this.maxFightStep * 1000) / 1000,
       dead: Object.fromEntries(this.dead),
-      loot: { carried: this.ledger.carried, gains: this.ledger.gains, cache: this.ledger.cache, recovered: this.ledger.recovered, deathSpot: this.deathSpot },
+      loot: { carried: this.ledger.carried, gains: this.ledger.gains, cache: this.ledger.cache, recovered: this.ledger.recovered, deathSpot: this.deathSpot, issued: this.ledger.issued, spent: this.ledger.spent, opened: [...this.ledger.opened].sort(), claimed: [...this.ledger.claimed].sort() },
     };
   }
 }

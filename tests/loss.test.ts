@@ -7,7 +7,7 @@ import { defaultPlan, preflight, type ExpeditionPlan } from '../src/expedition/p
 import { runExpedition, type ExpeditionConfig } from '../src/expedition/run';
 import { addBanks, cloneBank, describeBank, emptyCarried, isEmptyBank, KILL_LOOT, Ledger, PICKUP_REACH } from '../src/expedition/loot';
 import { settle } from '../src/expedition/settle';
-import { defaultSave, STARTER_KIT, type Cache, type SaveV1 } from '../src/save/saveTypes';
+import { defaultSave, STARTER_KIT, type Cache, type Save } from '../src/save/saveTypes';
 import { MemoryStore, load, persist, parse, serialize, validateInvariants } from '../src/save/save';
 import { simRoom } from '../src/world/o1Room';
 
@@ -15,18 +15,18 @@ const sim = loadSim();
 const known = ['C0', 'O1', 'O2', 'O3', 'KT'];
 const obj = (room: string, kind: 'reach' | 'survey' | 'recover' = 'reach') => ({ id: `${kind}-${room}`, kind, room });
 const planOf = (objectives: ExpeditionPlan['objectives'], over: Partial<ExpeditionPlan> = {}): ExpeditionPlan => ({ ...defaultPlan(), retreatHpPct: 0, objectives, ...over });
-const cfg = (save: SaveV1, plan: ExpeditionPlan, seed: number, hpOverride?: number): ExpeditionConfig => ({ seed, level: 80, focus: 'balanced', plan, known, hpOverride, cache: save.camp.cache });
-const run = (save: SaveV1, plan: ExpeditionPlan, seed: number, hp?: number) => runExpedition(sim, cfg(save, plan, seed, hp)).chronicle;
+const cfg = (save: Save, plan: ExpeditionPlan, seed: number, hpOverride?: number): ExpeditionConfig => ({ seed, level: 80, focus: 'balanced', plan, known, hpOverride, cache: save.camp.cache });
+const run = (save: Save, plan: ExpeditionPlan, seed: number, hp?: number) => runExpedition(sim, cfg(save, plan, seed, hp)).chronicle;
 function findSeed<T>(tryIt: (seed: number) => T | null): { seed: number; v: T } {
   for (let seed = 1; seed <= 60; seed++) { const v = tryIt(seed); if (v) return { seed, v }; }
   throw new Error('no seed matched');
 }
-const fresh = (): SaveV1 => defaultSave('test');
-const cacheOf = (room: string, gold: number): Cache => ({ room, x: -50, y: 128, contents: { gold, supplies: { ration: 1 }, gear: [], mastery: 3 } });
+const fresh = (): Save => defaultSave('test');
+const cacheOf = (room: string, gold: number): Cache => ({ room, x: -50, y: 128, contents: { gold, supplies: { ration: 1 }, gear: [], mastery: 3, keys: 0, prepared: 0 } });
 
 test('a kill pays once, a pickup is taken once, and the cache is carried like any find', () => {
   const l = new Ledger(cacheOf('O2', 40));
-  assert.deepEqual(l.kill('mireling', 'O1', 0)!.bundle, { gold: KILL_LOOT.mireling.gold, supplies: {}, gear: [], mastery: KILL_LOOT.mireling.mastery });
+  assert.deepEqual(l.kill('mireling', 'O1', 0)!.bundle, { gold: KILL_LOOT.mireling.gold, supplies: {}, gear: [], mastery: KILL_LOOT.mireling.mastery, keys: 0, prepared: 0 });
   assert.equal(l.kill('mireling', 'O1', 0), null, 'the same enemy does not pay twice');
   assert.ok(l.kill('mireling', 'O1', 1), 'another enemy pays');
   const pk = ROOMS.O2.pickups![0];
@@ -57,7 +57,7 @@ test('a full Old Road walk carries the kills and finds, and extraction banks the
   assert.equal(c.loot.carried.gold, 33); assert.equal(c.loot.carried.mastery, 11);
   assert.equal(c.loot.carried.supplies.ration, 1); assert.deepEqual(c.loot.carried.gear, ['cracked-buckler']);
   assert.equal(c.loot.gains.filter(g => g.source === 'kill').length, 4);
-  assert.deepEqual(save.camp.bank, { gold: 0, supplies: {}, gear: [], mastery: 0 }, 'nothing is banked before settlement');
+  assert.deepEqual(save.camp.bank, emptyCarried(), 'nothing is banked before settlement');
   const s = settle(save, c, save.camp.expeditions);
   assert.equal(s.applied, true);
   assert.deepEqual(s.save.camp.bank, c.loot.carried);

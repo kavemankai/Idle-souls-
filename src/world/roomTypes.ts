@@ -5,7 +5,11 @@ export interface Circle { id: string; x: number; y: number; r: number }
 export interface SpawnSpec { x: number; y: number; facing: Facing }
 export interface EnemySpec extends SpawnSpec { arch: string }
 /** Something lying in a room. The adventurer takes it when it passes within reach; it is carried (at risk) until camp. It refills every expedition. */
-export interface Pickup { id: string; kind: 'supplies' | 'gear'; item: string; qty: number; x: number; y: number }
+export interface Pickup {
+  id: string; kind: 'supplies' | 'gear' | 'key'; item: string; qty: number; x: number; y: number;
+  /** For keys. `once`: a one-time authored discovery, claimed for good. `trial`: repeatable, once per expedition. */
+  claim?: 'once' | 'trial';
+}
 export interface EncounterSpec { name: string; enemies: EnemySpec[] }
 export interface Door {
   id: string; to: string; side: Side; linkType: string;

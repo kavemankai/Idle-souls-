@@ -12,15 +12,17 @@ export interface ExpeditionConfig {
   known: readonly string[];
   /** The recovery cache waiting at camp's last record, if any. */
   cache?: Cache | null;
+  /** Gate Keys issued from camp (0 to 2, never more than the bank holds), one-time claims already made, links already open for good. */
+  issueKeys?: number; claims?: readonly string[]; openLinks?: readonly string[];
   /** Tests only. */
   hpOverride?: number; maxFightTicks?: number; encounters?: Readonly<Record<string, string>>;
 }
 export interface ExpeditionRun { world: WorldRunner; expedition: Expedition; startKnown: ReadonlySet<string> }
 export function startExpedition(sim: SimApi, cfg: ExpeditionConfig, graph = new WorldGraph()): ExpeditionRun {
-  const expedition = new Expedition(cfg.plan, graph, cfg.known, cfg.cache ?? null);
+  const expedition = new Expedition(cfg.plan, graph, cfg.known, cfg.cache ?? null, cfg.openLinks ?? []);
   const world = new WorldRunner(sim, {
     seed: cfg.seed, level: cfg.level, focus: cfg.focus, doctrine: cfg.plan.doctrine, navigator: expedition,
-    hpOverride: cfg.hpOverride, maxFightTicks: cfg.maxFightTicks, encounters: cfg.encounters, cache: cfg.cache,
+    hpOverride: cfg.hpOverride, maxFightTicks: cfg.maxFightTicks, encounters: cfg.encounters, cache: cfg.cache, issuedKeys: cfg.issueKeys, claims: cfg.claims, openLinks: cfg.openLinks,
   }, graph);
   world.dispatch();
   return { world, expedition, startKnown: new Set(cfg.known) };

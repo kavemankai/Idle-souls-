@@ -1,4 +1,5 @@
 import { test } from 'node:test';
+import { emptyCarried } from '../src/expedition/loot';
 import assert from 'node:assert/strict';
 import { loadSim } from '../src/combat/loadSimNode';
 import { O1, simRoom } from '../src/world/o1Room';
@@ -182,13 +183,13 @@ test('with a retreat setting the adventurer survives far more often, and with no
 test('a retreat with no permitted way home is reported as blocked, never crosses the avoided room, and does not stop the fight', () => {
   const ex = new Expedition(planTo({ avoid: ['O1'] }), new WorldGraph(), base.known);
   ex.order({ type: 'retreat' });
-  const act = ex.live({ room: 'O2', entry: 'to-O1', tick: 400, hp: 50, hpMax: 90, fighting: true, pos: { x: 0, y: 0 } });
+  const act = ex.live({ room: 'O2', entry: 'to-O1', tick: 400, hp: 50, hpMax: 90, fighting: true, pos: { x: 0, y: 0 }, carried: emptyCarried() });
   assert.equal(act, null);
   assert.equal(ex.mode, 'outbound');
   const line = ex.intent.find(i => i.text.startsWith('RETREAT BLOCKED'))!;
   assert.match(line.text, /avoided room/);
   assert.match(line.cause, /L13/);
-  assert.equal(ex.live({ room: 'O2', entry: 'to-O1', tick: 401, hp: 40, hpMax: 90, fighting: true, pos: { x: 0, y: 0 } }), null);
+  assert.equal(ex.live({ room: 'O2', entry: 'to-O1', tick: 401, hp: 40, hpMax: 90, fighting: true, pos: { x: 0, y: 0 }, carried: emptyCarried() }), null);
 });
 
 test('stamina and poise carry between rooms and recover while walking', () => {

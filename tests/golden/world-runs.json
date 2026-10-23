@@ -99,7 +99,9 @@
     "gold": 6,
     "supplies": {},
     "gear": [],
-    "mastery": 2
+    "mastery": 2,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -110,7 +112,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
@@ -120,7 +124,11 @@
     "room": "O2",
     "x": -214.9,
     "y": 23.5
-   }
+   },
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "default/measured/2": {
@@ -334,7 +342,9 @@
      "ration": 1
     },
     "gear": [],
-    "mastery": 11
+    "mastery": 11,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -345,7 +355,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -356,7 +368,9 @@
       "gold": 15,
       "supplies": {},
       "gear": [],
-      "mastery": 5
+      "mastery": 5,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -367,7 +381,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -378,7 +394,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -391,13 +409,19 @@
        "ration": 1
       },
       "gear": [],
-      "mastery": 0
+      "mastery": 0,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
    "cache": null,
    "recovered": null,
-   "deathSpot": null
+   "deathSpot": null,
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "default/measured/3": {
@@ -500,7 +524,9 @@
     "gold": 6,
     "supplies": {},
     "gear": [],
-    "mastery": 2
+    "mastery": 2,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -511,7 +537,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
@@ -521,7 +549,11 @@
     "room": "O2",
     "x": -130.1,
     "y": 258.4
-   }
+   },
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "default/measured/4": {
@@ -649,7 +681,9 @@
     "gold": 27,
     "supplies": {},
     "gear": [],
-    "mastery": 9
+    "mastery": 9,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -660,7 +694,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -671,7 +707,9 @@
       "gold": 15,
       "supplies": {},
       "gear": [],
-      "mastery": 5
+      "mastery": 5,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -682,7 +720,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
@@ -692,7 +732,11 @@
     "room": "O3",
     "x": 38.1,
     "y": -114
-   }
+   },
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "default/guarded/1": {
@@ -906,7 +950,9 @@
      "ration": 1
     },
     "gear": [],
-    "mastery": 11
+    "mastery": 11,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -917,7 +963,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -928,7 +976,9 @@
       "gold": 15,
       "supplies": {},
       "gear": [],
-      "mastery": 5
+      "mastery": 5,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -941,7 +991,9 @@
        "ration": 1
       },
       "gear": [],
-      "mastery": 0
+      "mastery": 0,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -952,7 +1004,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -963,13 +1017,19 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
    "cache": null,
    "recovered": null,
-   "deathSpot": null
+   "deathSpot": null,
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "default/guarded/2": {
@@ -1183,7 +1243,9 @@
      "ration": 1
     },
     "gear": [],
-    "mastery": 11
+    "mastery": 11,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -1194,7 +1256,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -1205,7 +1269,9 @@
       "gold": 15,
       "supplies": {},
       "gear": [],
-      "mastery": 5
+      "mastery": 5,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -1216,7 +1282,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -1227,7 +1295,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -1240,13 +1310,19 @@
        "ration": 1
       },
       "gear": [],
-      "mastery": 0
+      "mastery": 0,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
    "cache": null,
    "recovered": null,
-   "deathSpot": null
+   "deathSpot": null,
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "default/guarded/3": {
@@ -1376,7 +1452,9 @@
      "ration": 1
     },
     "gear": [],
-    "mastery": 7
+    "mastery": 7,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -1387,7 +1465,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -1398,7 +1478,9 @@
       "gold": 15,
       "supplies": {},
       "gear": [],
-      "mastery": 5
+      "mastery": 5,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -1411,7 +1493,9 @@
        "ration": 1
       },
       "gear": [],
-      "mastery": 0
+      "mastery": 0,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
@@ -1421,7 +1505,11 @@
     "room": "O3",
     "x": 143.3,
     "y": 116.8
-   }
+   },
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "default/guarded/4": {
@@ -1549,7 +1637,9 @@
     "gold": 27,
     "supplies": {},
     "gear": [],
-    "mastery": 9
+    "mastery": 9,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -1560,7 +1650,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -1571,7 +1663,9 @@
       "gold": 15,
       "supplies": {},
       "gear": [],
-      "mastery": 5
+      "mastery": 5,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -1582,7 +1676,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
@@ -1592,7 +1688,11 @@
     "room": "O3",
     "x": 211.4,
     "y": 139.5
-   }
+   },
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "default/pressing/1": {
@@ -1720,7 +1820,9 @@
     "gold": 27,
     "supplies": {},
     "gear": [],
-    "mastery": 9
+    "mastery": 9,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -1731,7 +1833,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -1742,7 +1846,9 @@
       "gold": 15,
       "supplies": {},
       "gear": [],
-      "mastery": 5
+      "mastery": 5,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -1753,7 +1859,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
@@ -1763,7 +1871,11 @@
     "room": "O3",
     "x": 105.9,
     "y": -128.5
-   }
+   },
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "default/pressing/2": {
@@ -1891,7 +2003,9 @@
     "gold": 21,
     "supplies": {},
     "gear": [],
-    "mastery": 7
+    "mastery": 7,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -1902,7 +2016,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -1913,7 +2029,9 @@
       "gold": 15,
       "supplies": {},
       "gear": [],
-      "mastery": 5
+      "mastery": 5,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
@@ -1923,7 +2041,11 @@
     "room": "O3",
     "x": 28,
     "y": -195
-   }
+   },
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "default/pressing/3": {
@@ -2026,7 +2148,9 @@
     "gold": 6,
     "supplies": {},
     "gear": [],
-    "mastery": 2
+    "mastery": 2,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -2037,7 +2161,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
@@ -2047,7 +2173,11 @@
     "room": "O2",
     "x": 2.4,
     "y": 155.3
-   }
+   },
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "default/pressing/4": {
@@ -2175,7 +2305,9 @@
     "gold": 27,
     "supplies": {},
     "gear": [],
-    "mastery": 9
+    "mastery": 9,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -2186,7 +2318,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -2197,7 +2331,9 @@
       "gold": 15,
       "supplies": {},
       "gear": [],
-      "mastery": 5
+      "mastery": 5,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -2208,7 +2344,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
@@ -2218,7 +2356,11 @@
     "room": "O3",
     "x": 228.2,
     "y": -59.4
-   }
+   },
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "alt/measured/1": {
@@ -2346,7 +2488,9 @@
     "gold": 18,
     "supplies": {},
     "gear": [],
-    "mastery": 6
+    "mastery": 6,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -2357,7 +2501,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -2368,7 +2514,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -2379,7 +2527,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
@@ -2389,7 +2539,11 @@
     "room": "O3",
     "x": 82.6,
     "y": -50.5
-   }
+   },
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "alt/measured/2": {
@@ -2519,7 +2673,9 @@
      "ration": 1
     },
     "gear": [],
-    "mastery": 6
+    "mastery": 6,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -2530,7 +2686,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -2541,7 +2699,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -2552,7 +2712,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -2565,7 +2727,9 @@
        "ration": 1
       },
       "gear": [],
-      "mastery": 0
+      "mastery": 0,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
@@ -2575,7 +2739,11 @@
     "room": "O3",
     "x": 92.4,
     "y": -55
-   }
+   },
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "alt/measured/3": {
@@ -2703,7 +2871,9 @@
     "gold": 18,
     "supplies": {},
     "gear": [],
-    "mastery": 6
+    "mastery": 6,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -2714,7 +2884,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -2725,7 +2897,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -2736,7 +2910,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
@@ -2746,7 +2922,11 @@
     "room": "O3",
     "x": 31.1,
     "y": -110.7
-   }
+   },
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "alt/measured/4": {
@@ -2962,7 +3142,9 @@
     "gear": [
      "cracked-buckler"
     ],
-    "mastery": 11
+    "mastery": 11,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -2973,7 +3155,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -2984,7 +3168,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -2995,7 +3181,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -3008,7 +3196,9 @@
        "ration": 1
       },
       "gear": [],
-      "mastery": 0
+      "mastery": 0,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -3019,7 +3209,9 @@
       "gold": 15,
       "supplies": {},
       "gear": [],
-      "mastery": 5
+      "mastery": 5,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -3032,13 +3224,19 @@
       "gear": [
        "cracked-buckler"
       ],
-      "mastery": 0
+      "mastery": 0,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
    "cache": null,
    "recovered": null,
-   "deathSpot": null
+   "deathSpot": null,
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "alt/guarded/1": {
@@ -3252,7 +3450,9 @@
      "ration": 1
     },
     "gear": [],
-    "mastery": 11
+    "mastery": 11,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -3263,7 +3463,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -3274,7 +3476,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -3285,7 +3489,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -3298,7 +3504,9 @@
        "ration": 1
       },
       "gear": [],
-      "mastery": 0
+      "mastery": 0,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -3309,13 +3517,19 @@
       "gold": 15,
       "supplies": {},
       "gear": [],
-      "mastery": 5
+      "mastery": 5,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
    "cache": null,
    "recovered": null,
-   "deathSpot": null
+   "deathSpot": null,
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "alt/guarded/2": {
@@ -3531,7 +3745,9 @@
     "gear": [
      "cracked-buckler"
     ],
-    "mastery": 11
+    "mastery": 11,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -3542,7 +3758,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -3553,7 +3771,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -3564,7 +3784,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -3577,7 +3799,9 @@
        "ration": 1
       },
       "gear": [],
-      "mastery": 0
+      "mastery": 0,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -3588,7 +3812,9 @@
       "gold": 15,
       "supplies": {},
       "gear": [],
-      "mastery": 5
+      "mastery": 5,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -3601,13 +3827,19 @@
       "gear": [
        "cracked-buckler"
       ],
-      "mastery": 0
+      "mastery": 0,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
    "cache": null,
    "recovered": null,
-   "deathSpot": null
+   "deathSpot": null,
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "alt/guarded/3": {
@@ -3737,7 +3969,9 @@
      "ration": 1
     },
     "gear": [],
-    "mastery": 6
+    "mastery": 6,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -3748,7 +3982,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -3759,7 +3995,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -3770,7 +4008,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -3783,7 +4023,9 @@
        "ration": 1
       },
       "gear": [],
-      "mastery": 0
+      "mastery": 0,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
@@ -3793,7 +4035,11 @@
     "room": "O3",
     "x": 63.7,
     "y": -71.1
-   }
+   },
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "alt/guarded/4": {
@@ -4009,7 +4255,9 @@
     "gear": [
      "cracked-buckler"
     ],
-    "mastery": 11
+    "mastery": 11,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -4020,7 +4268,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -4031,7 +4281,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -4042,7 +4294,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -4053,7 +4307,9 @@
       "gold": 15,
       "supplies": {},
       "gear": [],
-      "mastery": 5
+      "mastery": 5,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -4066,7 +4322,9 @@
       "gear": [
        "cracked-buckler"
       ],
-      "mastery": 0
+      "mastery": 0,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -4079,13 +4337,19 @@
        "ration": 1
       },
       "gear": [],
-      "mastery": 0
+      "mastery": 0,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
    "cache": null,
    "recovered": null,
-   "deathSpot": null
+   "deathSpot": null,
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "alt/pressing/1": {
@@ -4213,7 +4477,9 @@
     "gold": 18,
     "supplies": {},
     "gear": [],
-    "mastery": 6
+    "mastery": 6,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -4224,7 +4490,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -4235,7 +4503,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -4246,7 +4516,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
@@ -4256,7 +4528,11 @@
     "room": "O3",
     "x": 95.2,
     "y": -68.8
-   }
+   },
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "alt/pressing/2": {
@@ -4360,7 +4636,9 @@
     "gold": 12,
     "supplies": {},
     "gear": [],
-    "mastery": 4
+    "mastery": 4,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -4371,7 +4649,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -4382,7 +4662,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
@@ -4392,7 +4674,11 @@
     "room": "O2",
     "x": 18.8,
     "y": -20.8
-   }
+   },
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "alt/pressing/3": {
@@ -4496,7 +4782,9 @@
     "gold": 12,
     "supplies": {},
     "gear": [],
-    "mastery": 4
+    "mastery": 4,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -4507,7 +4795,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     },
     {
@@ -4518,7 +4808,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
@@ -4528,7 +4820,11 @@
     "room": "O2",
     "x": -79.5,
     "y": 129.7
-   }
+   },
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  },
  "alt/pressing/4": {
@@ -4608,7 +4904,9 @@
     "gold": 6,
     "supplies": {},
     "gear": [],
-    "mastery": 2
+    "mastery": 2,
+    "keys": 0,
+    "prepared": 0
    },
    "gains": [
     {
@@ -4619,7 +4917,9 @@
       "gold": 6,
       "supplies": {},
       "gear": [],
-      "mastery": 2
+      "mastery": 2,
+      "keys": 0,
+      "prepared": 0
      }
     }
    ],
@@ -4629,7 +4929,11 @@
     "room": "O1",
     "x": -131.3,
     "y": 24.4
-   }
+   },
+   "issued": 0,
+   "spent": 0,
+   "opened": [],
+   "claimed": []
   }
  }
 }
