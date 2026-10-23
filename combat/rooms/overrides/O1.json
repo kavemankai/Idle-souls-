@@ -1,0 +1,81 @@
+{
+  "name": "Outer Road",
+  "note": "Trial settings. Positions, openings and detection values are not design locks. Local frame: centre (0,0), x east, y south, simulation units. World centre (950,1750).",
+  "status": "authored",
+  "entryDoor": "to-C0",
+  "exitDoor": "to-O2",
+  "solids": {
+    "rects": [],
+    "circles": [
+      {
+        "id": "pillar",
+        "x": 10,
+        "y": -125,
+        "r": 27
+      }
+    ]
+  },
+  "encounters": {
+    "mireling": {
+      "name": "Mireling",
+      "enemies": [
+        {
+          "arch": "mireling",
+          "x": 65,
+          "y": 80,
+          "facing": "NW"
+        }
+      ]
+    },
+    "sentry": {
+      "name": "Ashen Sentry",
+      "enemies": [
+        {
+          "arch": "sentry",
+          "x": 90,
+          "y": -25,
+          "facing": "SW"
+        }
+      ]
+    },
+    "mireling2": {
+      "name": "Two Mirelings",
+      "enemies": [
+        {
+          "arch": "mireling",
+          "x": 65,
+          "y": 80,
+          "facing": "NW"
+        },
+        {
+          "arch": "mireling",
+          "x": 125,
+          "y": 30,
+          "facing": "W"
+        }
+      ]
+    },
+    "sentryMireling": {
+      "name": "Sentry and Mireling",
+      "enemies": [
+        {
+          "arch": "sentry",
+          "x": 90,
+          "y": -25,
+          "facing": "SW"
+        },
+        {
+          "arch": "mireling",
+          "x": 65,
+          "y": 80,
+          "facing": "NW"
+        }
+      ]
+    }
+  },
+  "detection": {
+    "range": 160,
+    "arcDegrees": 120,
+    "alertRadius": 120
+  }
+}

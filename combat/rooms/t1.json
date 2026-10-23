@@ -1,0 +1,72 @@
+{
+  "id": "T1",
+  "name": "Tower Yard",
+  "note": "Generated placeholder geometry from the room schedule and connections. Valid walls and doors, not tuned and not art-reviewed. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "generated",
+  "plan": {
+    "center": {
+      "x": 2030,
+      "y": 1120
+    },
+    "difficulty": "MID",
+    "candidateEncounter": "Harrier solo / Sentry",
+    "purpose": "Cover tutorial",
+    "region": "Watchtower"
+  },
+  "floor": {
+    "x": [-260, 260],
+    "y": [-240, 240]
+  },
+  "bounds": [-320, -220, 320, 280],
+  "solids": {
+    "rects": [
+      [-320, -280, 320, -220],
+      [-320, 220, -87, 280],
+      [87, 220, 320, 280],
+      [-320, -220, -260, 220],
+      [260, -220, 320, -87],
+      [260, 87, 320, 220]
+    ],
+    "circles": []
+  },
+  "doors": [
+    {
+      "id": "to-T2",
+      "to": "T2",
+      "side": "east",
+      "linkType": "ordinary",
+      "center": {
+        "x": 260,
+        "y": 0
+      },
+      "span": [-87, 87]
+    },
+    {
+      "id": "to-O2",
+      "to": "O2",
+      "side": "south",
+      "linkType": "ordinary",
+      "center": {
+        "x": 0,
+        "y": 220
+      },
+      "span": [-87, 87]
+    }
+  ],
+  "openings": [
+    {
+      "side": "east",
+      "y": [-87, 87]
+    },
+    {
+      "side": "south",
+      "x": [-87, 87]
+    }
+  ],
+  "encounters": {},
+  "detection": {
+    "range": 160,
+    "arcDegrees": 120,
+    "alertRadius": 120
+  }
+}

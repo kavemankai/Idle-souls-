@@ -1,0 +1,72 @@
+{
+  "id": "S1",
+  "name": "Sludge Ford",
+  "note": "Generated placeholder geometry from the room schedule and connections. Valid walls and doors, not tuned and not art-reviewed. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "generated",
+  "plan": {
+    "center": {
+      "x": 2100,
+      "y": 2760
+    },
+    "difficulty": "MID",
+    "candidateEncounter": "Silt Spitter solo",
+    "purpose": "Hazard warning and open escape route",
+    "region": "Sunken Passage"
+  },
+  "floor": {
+    "x": [-270, 270],
+    "y": [-240, 240]
+  },
+  "bounds": [-330, -220, 330, 220],
+  "solids": {
+    "rects": [
+      [-330, -280, 330, -220],
+      [-330, 220, 330, 280],
+      [-330, -220, -270, -87],
+      [-330, 87, -270, 220],
+      [270, -220, 330, -87],
+      [270, 87, 330, 220]
+    ],
+    "circles": []
+  },
+  "doors": [
+    {
+      "id": "to-O3",
+      "to": "O3",
+      "side": "west",
+      "linkType": "ordinary",
+      "center": {
+        "x": -270,
+        "y": 0
+      },
+      "span": [-87, 87]
+    },
+    {
+      "id": "to-S2",
+      "to": "S2",
+      "side": "east",
+      "linkType": "ordinary",
+      "center": {
+        "x": 270,
+        "y": 0
+      },
+      "span": [-87, 87]
+    }
+  ],
+  "openings": [
+    {
+      "side": "west",
+      "y": [-87, 87]
+    },
+    {
+      "side": "east",
+      "y": [-87, 87]
+    }
+  ],
+  "encounters": {},
+  "detection": {
+    "range": 160,
+    "arcDegrees": 120,
+    "alertRadius": 120
+  }
+}

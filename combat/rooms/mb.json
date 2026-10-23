@@ -1,0 +1,72 @@
+{
+  "id": "MB",
+  "name": "Bell Warden",
+  "note": "Generated placeholder geometry from the room schedule and connections. Valid walls and doors, not tuned and not art-reviewed. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "generated",
+  "plan": {
+    "center": {
+      "x": 3480,
+      "y": 600
+    },
+    "difficulty": "MINIBOSS",
+    "candidateEncounter": "Bell Warden",
+    "purpose": "Universal key gate; permanent shortcut on first clear",
+    "region": "Miniboss Arena"
+  },
+  "floor": {
+    "x": [-360, 360],
+    "y": [-350, 350]
+  },
+  "bounds": [-420, -330, 420, 390],
+  "solids": {
+    "rects": [
+      [-420, -390, 420, -330],
+      [-420, 330, -87, 390],
+      [87, 330, 420, 390],
+      [-420, -330, -360, -87],
+      [-420, 87, -360, 330],
+      [360, -330, 420, 330]
+    ],
+    "circles": []
+  },
+  "doors": [
+    {
+      "id": "to-T2",
+      "to": "T2",
+      "side": "west",
+      "linkType": "fog_one_key",
+      "center": {
+        "x": -360,
+        "y": 0
+      },
+      "span": [-87, 87]
+    },
+    {
+      "id": "to-K2",
+      "to": "K2",
+      "side": "south",
+      "linkType": "post_miniboss_shortcut",
+      "center": {
+        "x": 0,
+        "y": 330
+      },
+      "span": [-87, 87]
+    }
+  ],
+  "openings": [
+    {
+      "side": "west",
+      "y": [-87, 87]
+    },
+    {
+      "side": "south",
+      "x": [-87, 87]
+    }
+  ],
+  "encounters": {},
+  "detection": {
+    "range": 160,
+    "arcDegrees": 120,
+    "alertRadius": 120
+  }
+}

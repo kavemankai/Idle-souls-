@@ -1,0 +1,467 @@
+{
+  "version": 1,
+  "rooms": [
+    {
+      "id": "C0",
+      "name": "Camp",
+      "region": "Camp",
+      "center": {
+        "x": 400,
+        "y": 1800
+      },
+      "floor": {
+        "w": 500,
+        "h": 480
+      },
+      "difficulty": "SAFE",
+      "candidateEncounter": "None",
+      "purpose": "No encounters; bank/extract",
+      "status": "generated"
+    },
+    {
+      "id": "O1",
+      "name": "Outer Road",
+      "region": "Old Road",
+      "center": {
+        "x": 950,
+        "y": 1750
+      },
+      "floor": {
+        "w": 480,
+        "h": 440
+      },
+      "difficulty": "EARLY",
+      "candidateEncounter": "1 Mireling",
+      "purpose": "Initial single enemy; open exit",
+      "status": "authored"
+    },
+    {
+      "id": "O2",
+      "name": "Crossroads",
+      "region": "Old Road",
+      "center": {
+        "x": 1450,
+        "y": 1700
+      },
+      "floor": {
+        "w": 540,
+        "h": 480
+      },
+      "difficulty": "EARLY",
+      "candidateEncounter": "Mireling / Sentry solo",
+      "purpose": "Fork: tower, trial, lower passage",
+      "status": "generated"
+    },
+    {
+      "id": "O3",
+      "name": "Broken Causeway",
+      "region": "Old Road",
+      "center": {
+        "x": 1450,
+        "y": 2150
+      },
+      "floor": {
+        "w": 500,
+        "h": 400
+      },
+      "difficulty": "EARLY",
+      "candidateEncounter": "Ashen Sentry / 2 Mirelings",
+      "purpose": "Lower route warning before heavy region",
+      "status": "generated"
+    },
+    {
+      "id": "KT",
+      "name": "Key Trial Watchpost",
+      "region": "Old Road",
+      "center": {
+        "x": 980,
+        "y": 2170
+      },
+      "floor": {
+        "w": 500,
+        "h": 420
+      },
+      "difficulty": "TRIAL",
+      "candidateEncounter": "3 staged enemies/waves",
+      "purpose": "Repeatable, keyless access; claimed key must extract",
+      "status": "generated"
+    },
+    {
+      "id": "T1",
+      "name": "Tower Yard",
+      "region": "Watchtower",
+      "center": {
+        "x": 2030,
+        "y": 1120
+      },
+      "floor": {
+        "w": 520,
+        "h": 480
+      },
+      "difficulty": "MID",
+      "candidateEncounter": "Harrier solo / Sentry",
+      "purpose": "Cover tutorial",
+      "status": "generated"
+    },
+    {
+      "id": "T2",
+      "name": "Tower Barracks",
+      "region": "Watchtower",
+      "center": {
+        "x": 2600,
+        "y": 920
+      },
+      "floor": {
+        "w": 560,
+        "h": 520
+      },
+      "difficulty": "MID",
+      "candidateEncounter": "Sentry + Harrier (telegraphed)",
+      "purpose": "Approach both miniboss and crypt gallery",
+      "status": "generated"
+    },
+    {
+      "id": "T3",
+      "name": "High Gallery",
+      "region": "Watchtower",
+      "center": {
+        "x": 2460,
+        "y": 490
+      },
+      "floor": {
+        "w": 500,
+        "h": 360
+      },
+      "difficulty": "MID",
+      "candidateEncounter": "Harrier + Mireling optional",
+      "purpose": "Alternate viewpoint/rare cache",
+      "status": "generated"
+    },
+    {
+      "id": "MB",
+      "name": "Bell Warden",
+      "region": "Miniboss Arena",
+      "center": {
+        "x": 3480,
+        "y": 600
+      },
+      "floor": {
+        "w": 720,
+        "h": 700
+      },
+      "difficulty": "MINIBOSS",
+      "candidateEncounter": "Bell Warden",
+      "purpose": "Universal key gate; permanent shortcut on first clear",
+      "status": "generated"
+    },
+    {
+      "id": "S1",
+      "name": "Sludge Ford",
+      "region": "Sunken Passage",
+      "center": {
+        "x": 2100,
+        "y": 2760
+      },
+      "floor": {
+        "w": 540,
+        "h": 480
+      },
+      "difficulty": "MID",
+      "candidateEncounter": "Silt Spitter solo",
+      "purpose": "Hazard warning and open escape route",
+      "status": "generated"
+    },
+    {
+      "id": "S2",
+      "name": "Broken Pump",
+      "region": "Sunken Passage",
+      "center": {
+        "x": 2750,
+        "y": 2780
+      },
+      "floor": {
+        "w": 620,
+        "h": 520
+      },
+      "difficulty": "HIGH",
+      "candidateEncounter": "Mudjaw Brute solo",
+      "purpose": "Sanctuary nearby; optional dangerous route",
+      "status": "generated"
+    },
+    {
+      "id": "S3",
+      "name": "Low Gallery",
+      "region": "Sunken Passage",
+      "center": {
+        "x": 2540,
+        "y": 3260
+      },
+      "floor": {
+        "w": 520,
+        "h": 380
+      },
+      "difficulty": "MID",
+      "candidateEncounter": "Spitter / Grunt escort",
+      "purpose": "Opens persistent sluice shortcut back to camp",
+      "status": "generated"
+    },
+    {
+      "id": "K1",
+      "name": "Crypt Threshold",
+      "region": "Forgotten Crypt",
+      "center": {
+        "x": 3360,
+        "y": 2180
+      },
+      "floor": {
+        "w": 560,
+        "h": 540
+      },
+      "difficulty": "HIGH",
+      "candidateEncounter": "Sentry + Spitter staged",
+      "purpose": "Threat warning, not unavoidable overlap",
+      "status": "generated"
+    },
+    {
+      "id": "K2",
+      "name": "Ossuary",
+      "region": "Forgotten Crypt",
+      "center": {
+        "x": 3900,
+        "y": 1870
+      },
+      "floor": {
+        "w": 560,
+        "h": 520
+      },
+      "difficulty": "HIGH",
+      "candidateEncounter": "Crypt Duelist solo",
+      "purpose": "One hard encounter before main boss",
+      "status": "generated"
+    },
+    {
+      "id": "K3",
+      "name": "Upper Crypt",
+      "region": "Forgotten Crypt",
+      "center": {
+        "x": 3800,
+        "y": 1320
+      },
+      "floor": {
+        "w": 520,
+        "h": 360
+      },
+      "difficulty": "HIGH",
+      "candidateEncounter": "Duelist / Harrier + Sentry",
+      "purpose": "Long upper approach; alternative route",
+      "status": "generated"
+    },
+    {
+      "id": "B1",
+      "name": "Siltbound Castellan",
+      "region": "Main Boss Arena",
+      "center": {
+        "x": 4720,
+        "y": 1880
+      },
+      "floor": {
+        "w": 740,
+        "h": 740
+      },
+      "difficulty": "BOSS",
+      "candidateEncounter": "Siltbound Castellan",
+      "purpose": "Universal key gate; permanent campaign route unlock",
+      "status": "generated"
+    },
+    {
+      "id": "SB",
+      "name": "Unmoored Surveyor",
+      "region": "Secret Boss Pocket",
+      "center": {
+        "x": 4540,
+        "y": 640
+      },
+      "floor": {
+        "w": 740,
+        "h": 720
+      },
+      "difficulty": "SECRET",
+      "candidateEncounter": "Unmoored Surveyor",
+      "purpose": "Optional special-key concept only; no mandatory route",
+      "status": "generated"
+    }
+  ],
+  "links": [
+    {
+      "from": "C0",
+      "to": "O1",
+      "type": "ordinary",
+      "doors": {
+        "from": "to-O1",
+        "to": "to-C0"
+      }
+    },
+    {
+      "from": "O1",
+      "to": "O2",
+      "type": "ordinary",
+      "doors": {
+        "from": "to-O2",
+        "to": "to-O1"
+      }
+    },
+    {
+      "from": "O2",
+      "to": "O3",
+      "type": "ordinary",
+      "doors": {
+        "from": "to-O3",
+        "to": "to-O2"
+      }
+    },
+    {
+      "from": "O2",
+      "to": "KT",
+      "type": "ordinary",
+      "doors": {
+        "from": "to-KT",
+        "to": "to-O2"
+      }
+    },
+    {
+      "from": "O2",
+      "to": "T1",
+      "type": "ordinary",
+      "doors": {
+        "from": "to-T1",
+        "to": "to-O2"
+      }
+    },
+    {
+      "from": "O3",
+      "to": "S1",
+      "type": "ordinary",
+      "doors": {
+        "from": "to-S1",
+        "to": "to-O3"
+      }
+    },
+    {
+      "from": "T1",
+      "to": "T2",
+      "type": "ordinary",
+      "doors": {
+        "from": "to-T2",
+        "to": "to-T1"
+      }
+    },
+    {
+      "from": "T2",
+      "to": "T3",
+      "type": "ordinary",
+      "doors": {
+        "from": "to-T3",
+        "to": "to-T2"
+      }
+    },
+    {
+      "from": "T2",
+      "to": "K3",
+      "type": "ordinary",
+      "doors": {
+        "from": "to-K3",
+        "to": "to-T2"
+      }
+    },
+    {
+      "from": "T2",
+      "to": "MB",
+      "type": "fog_one_key",
+      "doors": {
+        "from": "to-MB",
+        "to": "to-T2"
+      }
+    },
+    {
+      "from": "S1",
+      "to": "S2",
+      "type": "ordinary",
+      "doors": {
+        "from": "to-S2",
+        "to": "to-S1"
+      }
+    },
+    {
+      "from": "S2",
+      "to": "S3",
+      "type": "ordinary",
+      "doors": {
+        "from": "to-S3",
+        "to": "to-S2"
+      }
+    },
+    {
+      "from": "S2",
+      "to": "K1",
+      "type": "ordinary",
+      "doors": {
+        "from": "to-K1",
+        "to": "to-S2"
+      }
+    },
+    {
+      "from": "K1",
+      "to": "K2",
+      "type": "ordinary",
+      "doors": {
+        "from": "to-K2",
+        "to": "to-K1"
+      }
+    },
+    {
+      "from": "K3",
+      "to": "K2",
+      "type": "ordinary",
+      "doors": {
+        "from": "to-K2",
+        "to": "to-K3"
+      }
+    },
+    {
+      "from": "K2",
+      "to": "B1",
+      "type": "fog_one_key",
+      "doors": {
+        "from": "to-B1",
+        "to": "to-K2"
+      }
+    },
+    {
+      "from": "K3",
+      "to": "SB",
+      "type": "special_optional_proposal",
+      "doors": {
+        "from": "to-SB",
+        "to": "to-K3"
+      }
+    },
+    {
+      "from": "MB",
+      "to": "K2",
+      "type": "post_miniboss_shortcut",
+      "doors": {
+        "from": "to-K2",
+        "to": "to-MB"
+      }
+    },
+    {
+      "from": "S3",
+      "to": "C0",
+      "type": "unlockable_shortcut",
+      "doors": {
+        "from": "to-C0",
+        "to": "to-S3"
+      }
+    }
+  ]
+}

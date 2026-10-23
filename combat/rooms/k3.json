@@ -1,0 +1,88 @@
+{
+  "id": "K3",
+  "name": "Upper Crypt",
+  "note": "Generated placeholder geometry from the room schedule and connections. Valid walls and doors, not tuned and not art-reviewed. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "generated",
+  "plan": {
+    "center": {
+      "x": 3800,
+      "y": 1320
+    },
+    "difficulty": "HIGH",
+    "candidateEncounter": "Duelist / Harrier + Sentry",
+    "purpose": "Long upper approach; alternative route",
+    "region": "Forgotten Crypt"
+  },
+  "floor": {
+    "x": [-260, 260],
+    "y": [-180, 180]
+  },
+  "bounds": [-320, -160, 320, 220],
+  "solids": {
+    "rects": [
+      [-320, -220, 320, -160],
+      [-320, 160, -87, 220],
+      [87, 160, 320, 220],
+      [-320, -160, -260, -87],
+      [-320, 87, -260, 160],
+      [260, -160, 320, -87],
+      [260, 87, 320, 160]
+    ],
+    "circles": []
+  },
+  "doors": [
+    {
+      "id": "to-T2",
+      "to": "T2",
+      "side": "west",
+      "linkType": "ordinary",
+      "center": {
+        "x": -260,
+        "y": 0
+      },
+      "span": [-87, 87]
+    },
+    {
+      "id": "to-SB",
+      "to": "SB",
+      "side": "east",
+      "linkType": "special_optional_proposal",
+      "center": {
+        "x": 260,
+        "y": 0
+      },
+      "span": [-87, 87]
+    },
+    {
+      "id": "to-K2",
+      "to": "K2",
+      "side": "south",
+      "linkType": "ordinary",
+      "center": {
+        "x": 0,
+        "y": 160
+      },
+      "span": [-87, 87]
+    }
+  ],
+  "openings": [
+    {
+      "side": "west",
+      "y": [-87, 87]
+    },
+    {
+      "side": "east",
+      "y": [-87, 87]
+    },
+    {
+      "side": "south",
+      "x": [-87, 87]
+    }
+  ],
+  "encounters": {},
+  "detection": {
+    "range": 160,
+    "arcDegrees": 120,
+    "alertRadius": 120
+  }
+}

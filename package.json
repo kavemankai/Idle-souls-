@@ -21,7 +21,9 @@
     "assets:validate": "python tools/atlas/validate.py",
     "assets:reproduce": "python tools/blender/reproduce.py",
     "evidence:o1": "tsx tools/capture-o1.ts",
-    "report:o1": "tsx tools/o1-report.ts"
+    "report:o1": "tsx tools/o1-report.ts",
+    "world:build": "tsx tools/world/build-rooms.ts --write",
+    "world:check": "tsx tools/world/build-rooms.ts --check"
   },
   "dependencies": {
     "phaser": "4.2.1"

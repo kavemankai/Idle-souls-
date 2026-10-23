@@ -1,0 +1,56 @@
+{
+  "id": "B1",
+  "name": "Siltbound Castellan",
+  "note": "Generated placeholder geometry from the room schedule and connections. Valid walls and doors, not tuned and not art-reviewed. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "generated",
+  "plan": {
+    "center": {
+      "x": 4720,
+      "y": 1880
+    },
+    "difficulty": "BOSS",
+    "candidateEncounter": "Siltbound Castellan",
+    "purpose": "Universal key gate; permanent campaign route unlock",
+    "region": "Main Boss Arena"
+  },
+  "floor": {
+    "x": [-370, 370],
+    "y": [-370, 370]
+  },
+  "bounds": [-430, -350, 430, 350],
+  "solids": {
+    "rects": [
+      [-430, -410, 430, -350],
+      [-430, 350, 430, 410],
+      [-430, -350, -370, -87],
+      [-430, 87, -370, 350],
+      [370, -350, 430, 350]
+    ],
+    "circles": []
+  },
+  "doors": [
+    {
+      "id": "to-K2",
+      "to": "K2",
+      "side": "west",
+      "linkType": "fog_one_key",
+      "center": {
+        "x": -370,
+        "y": 0
+      },
+      "span": [-87, 87]
+    }
+  ],
+  "openings": [
+    {
+      "side": "west",
+      "y": [-87, 87]
+    }
+  ],
+  "encounters": {},
+  "detection": {
+    "range": 160,
+    "arcDegrees": 120,
+    "alertRadius": 120
+  }
+}
