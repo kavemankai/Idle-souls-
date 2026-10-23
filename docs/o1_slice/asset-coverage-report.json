@@ -1,0 +1,71 @@
+{
+  "generatedFrom": "tools/o1-asset-coverage.ts",
+  "scope": {
+    "opponents": [
+      "mireling",
+      "sentry"
+    ],
+    "doctrines": [
+      "measured",
+      "guarded",
+      "pressing"
+    ],
+    "seedsPerPair": 100,
+    "totalFights": 600,
+    "level": 80,
+    "focus": "balanced",
+    "tickRate": 30
+  },
+  "drawnFrames": 627971,
+  "reconstructedPreWaveFallbacks": 60456,
+  "currentFallbacks": 0,
+  "reconstructedPreWavePercent": 9.627,
+  "currentFallbackPercent": 0,
+  "historicalPublishedForReference": {
+    "drawnFrames": 627971,
+    "fallbacks": 60456
+  },
+  "previousByClip": {
+    "sentry light W": 12559,
+    "sentry reaction SW": 5919,
+    "adventurer light SE": 5695,
+    "adventurer light NW": 5007,
+    "sentry reaction W": 4016,
+    "adventurer light W": 3622,
+    "sentry light SE": 2967,
+    "sentry bash W": 2135,
+    "adventurer reaction NW": 1987,
+    "sentry light NW": 1853,
+    "adventurer reaction W": 1614,
+    "sentry reaction S": 1467,
+    "adventurer reaction SE": 1345,
+    "sentry reaction SE": 996,
+    "sentry reaction NW": 964,
+    "mireling reaction SW": 656,
+    "mireling light SE": 645,
+    "adventurer dodge SE": 564,
+    "mireling light SW": 511,
+    "mireling light S": 505,
+    "mireling light W": 476,
+    "adventurer dodge NW": 468,
+    "sentry reaction E": 435,
+    "mireling reaction S": 434,
+    "adventurer dodge W": 420,
+    "mireling reaction N": 377,
+    "mireling light NE": 360,
+    "mireling light N": 325,
+    "mireling light E": 315,
+    "mireling light NW": 306,
+    "mireling reaction W": 247,
+    "sentry reaction N": 216,
+    "sentry bash NW": 211,
+    "mireling reaction NE": 171,
+    "sentry bash SE": 155,
+    "mireling reaction NW": 152,
+    "mireling reaction SE": 139,
+    "sentry reaction NE": 116,
+    "mireling reaction E": 106
+  },
+  "currentByClip": {},
+  "caveat": "Previous fallback count is reconstructed from pre-wave file coverage on the same simulation trace. Original manifest reported 60,456 / 627,971; minor sampling-order differences are possible. Actual phone/human readability untested."
+}
