@@ -41,3 +41,14 @@ Combat integration V5 was BLOCKED at eaf4475 (no combat source in the repository
 - Evidence: the 36-run O1 matrix gives the same digest on Node 22, Node 24, Chromium 141 and Chrome 156.
 - Cost: about 11% more sim time (175 to 195 ms per 150 fights).
 - Not covered: presentation-only trig in the adapter and scene, which cannot change sim state.
+
+2026-10-23, M1 multi-room traversal. All values are trial settings.
+- `WorldRunner` (`src/world/worldRunner.ts`) walks the graph's shortest ordinary path from one room to a turn-around room and back to the start room's centre. Each room is a `RoomRunner`. Between rooms the adventurer walks the straight passage from one door to its paired door at walking speed, in world coordinates (room local position plus the schedule centre), so there is no teleport. Tested: walking steps never exceed walking speed, on every seed.
+- The turn-around marks the frontier of the known world: the turn room's first door that is not the way in (O3 to Sunken Passage, `to-S1`). Nothing beyond it is entered.
+- Carry-over: health carries between rooms (the simulator still carries nothing else); enemies killed stay dead for the whole walk; living enemies that never fought keep their places and can see the adventurer on any pass. Fights stay inside their room, so enemies are bound to their territory by construction. Nothing in the simulator changed, so doc 07's pursuit and quick alert reset are still not built.
+- O2 (Crossroads) and O3 (Broken Causeway) are now authored (`combat/rooms/overrides/`): one pillar each, encounters from the schedule's candidates (O2: Mireling or Sentry; O3: Sentry or Two Mirelings). Camp stays generated and empty. Positions are trial.
+- Camp is a safe room only because it has no enemies. It does not heal; banking, rest and supplies belong to M3 and M5.
+- Result with the defaults at level 80 balanced and the real 90 health: 17 of the 24 golden walks end in a fall and 7 end back at camp (fights come back to back with no rest). This is the honest cost of health carry-over with no recovery; the level table (M5) and supplies (M3) are what change it. No tuning was done to hide it.
+- Golden guard: `tests/golden/world-runs.json` (24 runs) via `npx tsx tools/world-golden.ts --record`. Browser and Node agree on the walk (spec in `tests/browser/o1.spec.ts`, hook `window.__WORLD_RUN__`).
+- Not built: a scene that shows the walk (the O1 page still shows one room). That is M2's expedition view. No human, device or combat QA claimed.
+

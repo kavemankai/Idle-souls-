@@ -1,0 +1,3182 @@
+{
+ "default/measured/1": {
+  "outcome": "defeated",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 1524,
+     "fightTicks": 1353,
+     "hpLeft": 52,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 240.1,
+      "y": -0.5
+     },
+     "detectedAtTick": 74,
+     "digest": "1bfa58f5"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "defeated",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 0,
+     "ticks": 459,
+     "fightTicks": 366,
+     "hpLeft": 0,
+     "hpMax": 90,
+     "finalPos": {
+      "x": -88.5,
+      "y": 102
+     },
+     "detectedAtTick": 92,
+     "digest": "e1a1caaf"
+    }
+   }
+  ],
+  "ticks": 2165,
+  "fights": 2,
+  "enemiesDefeated": 1,
+  "hpLeft": 0,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 1235.1,
+   "y": 1723.5
+  },
+  "digest": "6e3bc484",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 18.6,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true
+   ],
+   "O2": [
+    false
+   ]
+  }
+ },
+ "default/measured/2": {
+  "outcome": "home",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 646,
+     "fightTicks": 472,
+     "hpLeft": 66,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 241.7,
+      "y": 0
+     },
+     "detectedAtTick": 74,
+     "digest": "0d33c7d1"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 558,
+     "fightTicks": 343,
+     "hpLeft": 40,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 121,
+      "y": 220.1
+     },
+     "detectedAtTick": 92,
+     "digest": "9664ae7a"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 2,
+     "ticks": 651,
+     "fightTicks": 541,
+     "hpLeft": 11,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.7,
+      "y": -1.1
+     },
+     "detectedAtTick": 38,
+     "digest": "25fbc794"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 136,
+     "fightTicks": 0,
+     "hpLeft": 11,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 1.2,
+      "y": -181.1
+     },
+     "detectedAtTick": null,
+     "digest": "497b66a9"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 200,
+     "fightTicks": 0,
+     "hpLeft": 11,
+     "hpMax": 90,
+     "finalPos": {
+      "x": -270.8,
+      "y": 0.7
+     },
+     "detectedAtTick": null,
+     "digest": "cef91f95"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 213,
+     "fightTicks": 0,
+     "hpLeft": 11,
+     "hpMax": 90,
+     "finalPos": {
+      "x": -241.9,
+      "y": 0
+     },
+     "detectedAtTick": null,
+     "digest": "ba6eee87"
+    }
+   },
+   {
+    "room": "C0",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 11,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 0,
+      "y": 0
+     },
+     "detectedAtTick": null,
+     "digest": "85849676"
+    }
+   }
+  ],
+  "ticks": 2884,
+  "fights": 3,
+  "enemiesDefeated": 4,
+  "hpLeft": 11,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 400,
+   "y": 1800
+  },
+  "digest": "045784ea",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 18.6,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true
+   ],
+   "O2": [
+    true
+   ],
+   "O3": [
+    true,
+    true
+   ]
+  }
+ },
+ "default/measured/3": {
+  "outcome": "defeated",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 866,
+     "fightTicks": 641,
+     "hpLeft": 63,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 240.7,
+      "y": -0.2
+     },
+     "detectedAtTick": 74,
+     "digest": "96a2991b"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "defeated",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 0,
+     "ticks": 527,
+     "fightTicks": 434,
+     "hpLeft": 0,
+     "hpMax": 90,
+     "finalPos": {
+      "x": -88.5,
+      "y": 102
+     },
+     "detectedAtTick": 92,
+     "digest": "94062c8f"
+    }
+   }
+  ],
+  "ticks": 1575,
+  "fights": 2,
+  "enemiesDefeated": 1,
+  "hpLeft": 0,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 1319.9,
+   "y": 1958.4
+  },
+  "digest": "90628c21",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 18.6,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true
+   ],
+   "O2": [
+    false
+   ]
+  }
+ },
+ "default/measured/4": {
+  "outcome": "defeated",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 319,
+     "fightTicks": 121,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 241.7,
+      "y": 0.1
+     },
+     "detectedAtTick": 74,
+     "digest": "31849cde"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 527,
+     "fightTicks": 390,
+     "hpLeft": 26,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 128.2,
+      "y": 220.3
+     },
+     "detectedAtTick": 92,
+     "digest": "b11b3069"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "out",
+    "result": {
+     "outcome": "defeated",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 1214,
+     "fightTicks": 1175,
+     "hpLeft": 0,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 70,
+      "y": -130
+     },
+     "detectedAtTick": 38,
+     "digest": "d2a24e9c"
+    }
+   }
+  ],
+  "ticks": 2303,
+  "fights": 3,
+  "enemiesDefeated": 3,
+  "hpLeft": 0,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 1488.1,
+   "y": 2036
+  },
+  "digest": "8eab0517",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 18.6,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true
+   ],
+   "O2": [
+    true
+   ],
+   "O3": [
+    true,
+    false
+   ]
+  }
+ },
+ "default/guarded/1": {
+  "outcome": "home",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 819,
+     "fightTicks": 693,
+     "hpLeft": 80,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 240.3,
+      "y": 2.6
+     },
+     "detectedAtTick": 74,
+     "digest": "7eb5bb23"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 369,
+     "fightTicks": 196,
+     "hpLeft": 48,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 122.5,
+      "y": 220.9
+     },
+     "detectedAtTick": 92,
+     "digest": "912011c4"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 2,
+     "ticks": 618,
+     "fightTicks": 503,
+     "hpLeft": 13,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.1,
+      "y": 2.2
+     },
+     "detectedAtTick": 38,
+     "digest": "2dd39c80"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 136,
+     "fightTicks": 0,
+     "hpLeft": 13,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 2.4,
+      "y": -180.3
+     },
+     "detectedAtTick": null,
+     "digest": "0e6d708b"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 200,
+     "fightTicks": 0,
+     "hpLeft": 13,
+     "hpMax": 90,
+     "finalPos": {
+      "x": -270.8,
+      "y": 0.7
+     },
+     "detectedAtTick": null,
+     "digest": "62a4c8cd"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 213,
+     "fightTicks": 0,
+     "hpLeft": 13,
+     "hpMax": 90,
+     "finalPos": {
+      "x": -241.9,
+      "y": 0
+     },
+     "detectedAtTick": null,
+     "digest": "66c156db"
+    }
+   },
+   {
+    "room": "C0",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 13,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 0,
+      "y": 0
+     },
+     "detectedAtTick": null,
+     "digest": "ee3bdc8a"
+    }
+   }
+  ],
+  "ticks": 2837,
+  "fights": 3,
+  "enemiesDefeated": 4,
+  "hpLeft": 13,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 400,
+   "y": 1800
+  },
+  "digest": "ab73521a",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 18.6,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true
+   ],
+   "O2": [
+    true
+   ],
+   "O3": [
+    true,
+    true
+   ]
+  }
+ },
+ "default/guarded/2": {
+  "outcome": "home",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 1078,
+     "fightTicks": 923,
+     "hpLeft": 80,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 240.2,
+      "y": -2.4
+     },
+     "detectedAtTick": 74,
+     "digest": "6a0acd38"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 506,
+     "fightTicks": 412,
+     "hpLeft": 54,
+     "hpMax": 90,
+     "finalPos": {
+      "x": -194.1,
+      "y": 263.3
+     },
+     "detectedAtTick": 92,
+     "digest": "294ef8fb"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 2,
+     "ticks": 885,
+     "fightTicks": 699,
+     "hpLeft": 31,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 252,
+      "y": 0
+     },
+     "detectedAtTick": 38,
+     "digest": "ea55e5e9"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 136,
+     "fightTicks": 0,
+     "hpLeft": 31,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 2.5,
+      "y": -180.2
+     },
+     "detectedAtTick": null,
+     "digest": "8b405d5e"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 200,
+     "fightTicks": 0,
+     "hpLeft": 31,
+     "hpMax": 90,
+     "finalPos": {
+      "x": -270.8,
+      "y": 0.7
+     },
+     "detectedAtTick": null,
+     "digest": "996f25f5"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 213,
+     "fightTicks": 0,
+     "hpLeft": 31,
+     "hpMax": 90,
+     "finalPos": {
+      "x": -241.9,
+      "y": 0
+     },
+     "detectedAtTick": null,
+     "digest": "4406016f"
+    }
+   },
+   {
+    "room": "C0",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 31,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 0,
+      "y": 0
+     },
+     "detectedAtTick": null,
+     "digest": "a617dbfe"
+    }
+   }
+  ],
+  "ticks": 3525,
+  "fights": 3,
+  "enemiesDefeated": 4,
+  "hpLeft": 31,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 400,
+   "y": 1800
+  },
+  "digest": "722525a0",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 18.6,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true
+   ],
+   "O2": [
+    true
+   ],
+   "O3": [
+    true,
+    true
+   ]
+  }
+ },
+ "default/guarded/3": {
+  "outcome": "defeated",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 1140,
+     "fightTicks": 984,
+     "hpLeft": 80,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 241.7,
+      "y": 0.2
+     },
+     "detectedAtTick": 74,
+     "digest": "f48a1cec"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 686,
+     "fightTicks": 431,
+     "hpLeft": 43,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 118.8,
+      "y": 220.1
+     },
+     "detectedAtTick": 92,
+     "digest": "bb57e1cc"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "out",
+    "result": {
+     "outcome": "defeated",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 0,
+     "ticks": 813,
+     "fightTicks": 774,
+     "hpLeft": 0,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 70,
+      "y": -130
+     },
+     "detectedAtTick": 38,
+     "digest": "50e27a33"
+    }
+   }
+  ],
+  "ticks": 2878,
+  "fights": 3,
+  "enemiesDefeated": 2,
+  "hpLeft": 0,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 1593.3,
+   "y": 2266.8
+  },
+  "digest": "7d4997cf",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 18.6,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true
+   ],
+   "O2": [
+    true
+   ],
+   "O3": [
+    false,
+    false
+   ]
+  }
+ },
+ "default/guarded/4": {
+  "outcome": "defeated",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 654,
+     "fightTicks": 396,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 242,
+      "y": 0
+     },
+     "detectedAtTick": 74,
+     "digest": "987594dc"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 427,
+     "fightTicks": 333,
+     "hpLeft": 37,
+     "hpMax": 90,
+     "finalPos": {
+      "x": -162.5,
+      "y": 234.2
+     },
+     "detectedAtTick": 92,
+     "digest": "5a293f9d"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "out",
+    "result": {
+     "outcome": "defeated",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 615,
+     "fightTicks": 576,
+     "hpLeft": 0,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 70,
+      "y": -130
+     },
+     "detectedAtTick": 38,
+     "digest": "411c68a8"
+    }
+   }
+  ],
+  "ticks": 1952,
+  "fights": 3,
+  "enemiesDefeated": 3,
+  "hpLeft": 0,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 1661.4,
+   "y": 2289.5
+  },
+  "digest": "f58d0c66",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 18.6,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true
+   ],
+   "O2": [
+    true
+   ],
+   "O3": [
+    true,
+    false
+   ]
+  }
+ },
+ "default/pressing/1": {
+  "outcome": "defeated",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 587,
+     "fightTicks": 375,
+     "hpLeft": 66,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 241.2,
+      "y": 0
+     },
+     "detectedAtTick": 74,
+     "digest": "2229295f"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 437,
+     "fightTicks": 343,
+     "hpLeft": 8,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 153.8,
+      "y": 228.8
+     },
+     "detectedAtTick": 92,
+     "digest": "b53dbea1"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "out",
+    "result": {
+     "outcome": "defeated",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 305,
+     "fightTicks": 266,
+     "hpLeft": 0,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 70,
+      "y": -130
+     },
+     "detectedAtTick": 38,
+     "digest": "43c8b0ce"
+    }
+   }
+  ],
+  "ticks": 1582,
+  "fights": 3,
+  "enemiesDefeated": 3,
+  "hpLeft": 0,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 1555.9,
+   "y": 2021.5
+  },
+  "digest": "9ac4357a",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 18.6,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true
+   ],
+   "O2": [
+    true
+   ],
+   "O3": [
+    true,
+    false
+   ]
+  }
+ },
+ "default/pressing/2": {
+  "outcome": "defeated",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 729,
+     "fightTicks": 540,
+     "hpLeft": 31,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 242,
+      "y": 0
+     },
+     "detectedAtTick": 74,
+     "digest": "657f7160"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 421,
+     "fightTicks": 304,
+     "hpLeft": 10,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 122.4,
+      "y": 220.1
+     },
+     "detectedAtTick": 92,
+     "digest": "a09a3cf5"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "out",
+    "result": {
+     "outcome": "defeated",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 0,
+     "ticks": 319,
+     "fightTicks": 280,
+     "hpLeft": 0,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 70,
+      "y": -130
+     },
+     "detectedAtTick": 38,
+     "digest": "39c38921"
+    }
+   }
+  ],
+  "ticks": 1710,
+  "fights": 3,
+  "enemiesDefeated": 2,
+  "hpLeft": 0,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 1478,
+   "y": 1955
+  },
+  "digest": "fba79b58",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 18.6,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true
+   ],
+   "O2": [
+    true
+   ],
+   "O3": [
+    false,
+    false
+   ]
+  }
+ },
+ "default/pressing/3": {
+  "outcome": "defeated",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 505,
+     "fightTicks": 354,
+     "hpLeft": 66,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 240.1,
+      "y": 0.1
+     },
+     "detectedAtTick": 74,
+     "digest": "52a85294"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "defeated",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 0,
+     "ticks": 335,
+     "fightTicks": 242,
+     "hpLeft": 0,
+     "hpMax": 90,
+     "finalPos": {
+      "x": -88.5,
+      "y": 102
+     },
+     "detectedAtTick": 92,
+     "digest": "042941cf"
+    }
+   }
+  ],
+  "ticks": 1022,
+  "fights": 2,
+  "enemiesDefeated": 1,
+  "hpLeft": 0,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 1452.4,
+   "y": 1855.3
+  },
+  "digest": "5588f7a0",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 19.453,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true
+   ],
+   "O2": [
+    false
+   ]
+  }
+ },
+ "default/pressing/4": {
+  "outcome": "defeated",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 581,
+     "fightTicks": 406,
+     "hpLeft": 66,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 242,
+      "y": 0
+     },
+     "detectedAtTick": 74,
+     "digest": "e3e5c086"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 395,
+     "fightTicks": 279,
+     "hpLeft": 18,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 124.3,
+      "y": 221.1
+     },
+     "detectedAtTick": 92,
+     "digest": "16cc1608"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "out",
+    "result": {
+     "outcome": "defeated",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 439,
+     "fightTicks": 400,
+     "hpLeft": 0,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 70,
+      "y": -130
+     },
+     "detectedAtTick": 38,
+     "digest": "57883639"
+    }
+   }
+  ],
+  "ticks": 1657,
+  "fights": 3,
+  "enemiesDefeated": 3,
+  "hpLeft": 0,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 1678.2,
+   "y": 2090.6
+  },
+  "digest": "d4eab842",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 18.6,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true
+   ],
+   "O2": [
+    true
+   ],
+   "O3": [
+    true,
+    false
+   ]
+  }
+ },
+ "alt/measured/1": {
+  "outcome": "defeated",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 2,
+     "ticks": 682,
+     "fightTicks": 564,
+     "hpLeft": 61,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 240.5,
+      "y": 0.1
+     },
+     "detectedAtTick": 74,
+     "digest": "e3a033f2"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 756,
+     "fightTicks": 577,
+     "hpLeft": 46,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 118.1,
+      "y": 220.3
+     },
+     "detectedAtTick": 99,
+     "digest": "9bbbe02d"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "out",
+    "result": {
+     "outcome": "defeated",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 0,
+     "ticks": 217,
+     "fightTicks": 177,
+     "hpLeft": 0,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 71.8,
+      "y": -128.7
+     },
+     "detectedAtTick": 39,
+     "digest": "8a66770d"
+    }
+   }
+  ],
+  "ticks": 1894,
+  "fights": 3,
+  "enemiesDefeated": 3,
+  "hpLeft": 0,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 1532.6,
+   "y": 2099.5
+  },
+  "digest": "06d1b4ca",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 18.6,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true,
+    true
+   ],
+   "O2": [
+    true
+   ],
+   "O3": [
+    false
+   ]
+  }
+ },
+ "alt/measured/2": {
+  "outcome": "defeated",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 2,
+     "ticks": 1380,
+     "fightTicks": 1215,
+     "hpLeft": 46,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 242,
+      "y": 0
+     },
+     "detectedAtTick": 74,
+     "digest": "428123af"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 469,
+     "fightTicks": 329,
+     "hpLeft": 17,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 123.3,
+      "y": 220.7
+     },
+     "detectedAtTick": 99,
+     "digest": "83b850dc"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "out",
+    "result": {
+     "outcome": "defeated",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 0,
+     "ticks": 167,
+     "fightTicks": 127,
+     "hpLeft": 0,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 71.8,
+      "y": -128.7
+     },
+     "detectedAtTick": 39,
+     "digest": "9e328cee"
+    }
+   }
+  ],
+  "ticks": 2257,
+  "fights": 3,
+  "enemiesDefeated": 3,
+  "hpLeft": 0,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 1542.4,
+   "y": 2095
+  },
+  "digest": "30881948",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 18.6,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true,
+    true
+   ],
+   "O2": [
+    true
+   ],
+   "O3": [
+    false
+   ]
+  }
+ },
+ "alt/measured/3": {
+  "outcome": "defeated",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 2,
+     "ticks": 808,
+     "fightTicks": 599,
+     "hpLeft": 52,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 241.2,
+      "y": 0.2
+     },
+     "detectedAtTick": 74,
+     "digest": "de76e330"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 1200,
+     "fightTicks": 978,
+     "hpLeft": 41,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 122.7,
+      "y": 220.6
+     },
+     "detectedAtTick": 99,
+     "digest": "68e15dea"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "out",
+    "result": {
+     "outcome": "defeated",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 0,
+     "ticks": 188,
+     "fightTicks": 148,
+     "hpLeft": 0,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 71.8,
+      "y": -128.7
+     },
+     "detectedAtTick": 39,
+     "digest": "0bccf602"
+    }
+   }
+  ],
+  "ticks": 2437,
+  "fights": 3,
+  "enemiesDefeated": 3,
+  "hpLeft": 0,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 1481.1,
+   "y": 2039.3
+  },
+  "digest": "45ae9b8e",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 18.6,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true,
+    true
+   ],
+   "O2": [
+    true
+   ],
+   "O3": [
+    false
+   ]
+  }
+ },
+ "alt/measured/4": {
+  "outcome": "home",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 2,
+     "ticks": 1160,
+     "fightTicks": 983,
+     "hpLeft": 74,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 240.3,
+      "y": -0.3
+     },
+     "detectedAtTick": 74,
+     "digest": "b9ff325d"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 646,
+     "fightTicks": 465,
+     "hpLeft": 64,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 121.6,
+      "y": 220.4
+     },
+     "detectedAtTick": 99,
+     "digest": "ce04b1c9"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 353,
+     "fightTicks": 203,
+     "hpLeft": 43,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.2,
+      "y": -0.6
+     },
+     "detectedAtTick": 39,
+     "digest": "798db946"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 136,
+     "fightTicks": 0,
+     "hpLeft": 43,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 1,
+      "y": -181.2
+     },
+     "detectedAtTick": null,
+     "digest": "6d73a09d"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 200,
+     "fightTicks": 0,
+     "hpLeft": 43,
+     "hpMax": 90,
+     "finalPos": {
+      "x": -270.8,
+      "y": 0.7
+     },
+     "detectedAtTick": null,
+     "digest": "96bfbedd"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 213,
+     "fightTicks": 0,
+     "hpLeft": 43,
+     "hpMax": 90,
+     "finalPos": {
+      "x": -241.9,
+      "y": 0
+     },
+     "detectedAtTick": null,
+     "digest": "524dac6f"
+    }
+   },
+   {
+    "room": "C0",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 43,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 0,
+      "y": 0
+     },
+     "detectedAtTick": null,
+     "digest": "08ec6b36"
+    }
+   }
+  ],
+  "ticks": 3189,
+  "fights": 3,
+  "enemiesDefeated": 4,
+  "hpLeft": 43,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 400,
+   "y": 1800
+  },
+  "digest": "b45609ba",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 18.6,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true,
+    true
+   ],
+   "O2": [
+    true
+   ],
+   "O3": [
+    true
+   ]
+  }
+ },
+ "alt/guarded/1": {
+  "outcome": "home",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 2,
+     "ticks": 750,
+     "fightTicks": 576,
+     "hpLeft": 80,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 242,
+      "y": 0
+     },
+     "detectedAtTick": 74,
+     "digest": "a7c4a3a8"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 419,
+     "fightTicks": 269,
+     "hpLeft": 75,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 121.7,
+      "y": 220.8
+     },
+     "detectedAtTick": 99,
+     "digest": "500546a2"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 416,
+     "fightTicks": 256,
+     "hpLeft": 27,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.5,
+      "y": -1.3
+     },
+     "detectedAtTick": 39,
+     "digest": "a78363fb"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 135,
+     "fightTicks": 0,
+     "hpLeft": 27,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 2.8,
+      "y": -180
+     },
+     "detectedAtTick": null,
+     "digest": "2de43731"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 200,
+     "fightTicks": 0,
+     "hpLeft": 27,
+     "hpMax": 90,
+     "finalPos": {
+      "x": -270.8,
+      "y": 0.7
+     },
+     "detectedAtTick": null,
+     "digest": "85fcb49d"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 213,
+     "fightTicks": 0,
+     "hpLeft": 27,
+     "hpMax": 90,
+     "finalPos": {
+      "x": -241.9,
+      "y": 0
+     },
+     "detectedAtTick": null,
+     "digest": "8f25050f"
+    }
+   },
+   {
+    "room": "C0",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 27,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 0,
+      "y": 0
+     },
+     "detectedAtTick": null,
+     "digest": "ee80ce56"
+    }
+   }
+  ],
+  "ticks": 2614,
+  "fights": 3,
+  "enemiesDefeated": 4,
+  "hpLeft": 27,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 400,
+   "y": 1800
+  },
+  "digest": "be380c9a",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 5.313,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true,
+    true
+   ],
+   "O2": [
+    true
+   ],
+   "O3": [
+    true
+   ]
+  }
+ },
+ "alt/guarded/2": {
+  "outcome": "home",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 2,
+     "ticks": 648,
+     "fightTicks": 456,
+     "hpLeft": 59,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 241.4,
+      "y": 0.1
+     },
+     "detectedAtTick": 74,
+     "digest": "6e16e168"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 442,
+     "fightTicks": 293,
+     "hpLeft": 54,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 121.8,
+      "y": 220.3
+     },
+     "detectedAtTick": 99,
+     "digest": "734b7031"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 478,
+     "fightTicks": 322,
+     "hpLeft": 1,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250,
+      "y": -0.5
+     },
+     "detectedAtTick": 39,
+     "digest": "b118b056"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 136,
+     "fightTicks": 0,
+     "hpLeft": 1,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 1,
+      "y": -181.3
+     },
+     "detectedAtTick": null,
+     "digest": "d1cf5c0b"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 200,
+     "fightTicks": 0,
+     "hpLeft": 1,
+     "hpMax": 90,
+     "finalPos": {
+      "x": -270.8,
+      "y": 0.7
+     },
+     "detectedAtTick": null,
+     "digest": "a91bb035"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 213,
+     "fightTicks": 0,
+     "hpLeft": 1,
+     "hpMax": 90,
+     "finalPos": {
+      "x": -241.9,
+      "y": 0
+     },
+     "detectedAtTick": null,
+     "digest": "40c5ae4b"
+    }
+   },
+   {
+    "room": "C0",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 1,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 0,
+      "y": 0
+     },
+     "detectedAtTick": null,
+     "digest": "e6e1aeb2"
+    }
+   }
+  ],
+  "ticks": 2598,
+  "fights": 3,
+  "enemiesDefeated": 4,
+  "hpLeft": 1,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 400,
+   "y": 1800
+  },
+  "digest": "15ae9005",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 6.604,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true,
+    true
+   ],
+   "O2": [
+    true
+   ],
+   "O3": [
+    true
+   ]
+  }
+ },
+ "alt/guarded/3": {
+  "outcome": "defeated",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 2,
+     "ticks": 670,
+     "fightTicks": 503,
+     "hpLeft": 50,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 240.7,
+      "y": -0.4
+     },
+     "detectedAtTick": 74,
+     "digest": "4ea582c4"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 517,
+     "fightTicks": 366,
+     "hpLeft": 32,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 121.7,
+      "y": 220.1
+     },
+     "detectedAtTick": 99,
+     "digest": "f75a3961"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "out",
+    "result": {
+     "outcome": "defeated",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 0,
+     "ticks": 204,
+     "fightTicks": 164,
+     "hpLeft": 0,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 71.8,
+      "y": -128.7
+     },
+     "detectedAtTick": 39,
+     "digest": "fb0fe348"
+    }
+   }
+  ],
+  "ticks": 1632,
+  "fights": 3,
+  "enemiesDefeated": 3,
+  "hpLeft": 0,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 1513.7,
+   "y": 2078.9
+  },
+  "digest": "e9ae3f60",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 18.6,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true,
+    true
+   ],
+   "O2": [
+    true
+   ],
+   "O3": [
+    false
+   ]
+  }
+ },
+ "alt/guarded/4": {
+  "outcome": "home",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 2,
+     "ticks": 767,
+     "fightTicks": 592,
+     "hpLeft": 64,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 241.6,
+      "y": 0
+     },
+     "detectedAtTick": 74,
+     "digest": "45dfa0f8"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 910,
+     "fightTicks": 756,
+     "hpLeft": 49,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 126.3,
+      "y": 220.8
+     },
+     "detectedAtTick": 99,
+     "digest": "a982c55d"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 507,
+     "fightTicks": 329,
+     "hpLeft": 6,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 251.3,
+      "y": -0.4
+     },
+     "detectedAtTick": 39,
+     "digest": "4c71ac1f"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 136,
+     "fightTicks": 0,
+     "hpLeft": 6,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 1.9,
+      "y": -180.6
+     },
+     "detectedAtTick": null,
+     "digest": "34bf9869"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 200,
+     "fightTicks": 0,
+     "hpLeft": 6,
+     "hpMax": 90,
+     "finalPos": {
+      "x": -270.8,
+      "y": 0.7
+     },
+     "detectedAtTick": null,
+     "digest": "cb29d561"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 213,
+     "fightTicks": 0,
+     "hpLeft": 6,
+     "hpMax": 90,
+     "finalPos": {
+      "x": -241.9,
+      "y": 0
+     },
+     "detectedAtTick": null,
+     "digest": "3a2ce221"
+    }
+   },
+   {
+    "room": "C0",
+    "phase": "back",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 6,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 0,
+      "y": 0
+     },
+     "detectedAtTick": null,
+     "digest": "7153db5c"
+    }
+   }
+  ],
+  "ticks": 3215,
+  "fights": 3,
+  "enemiesDefeated": 4,
+  "hpLeft": 6,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 400,
+   "y": 1800
+  },
+  "digest": "4e72fbe4",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 18.6,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true,
+    true
+   ],
+   "O2": [
+    true
+   ],
+   "O3": [
+    true
+   ]
+  }
+ },
+ "alt/pressing/1": {
+  "outcome": "defeated",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 2,
+     "ticks": 755,
+     "fightTicks": 587,
+     "hpLeft": 47,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 242,
+      "y": 0
+     },
+     "detectedAtTick": 74,
+     "digest": "5af9890d"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 1005,
+     "fightTicks": 843,
+     "hpLeft": 1,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 124.7,
+      "y": 221.1
+     },
+     "detectedAtTick": 99,
+     "digest": "427daa54"
+    }
+   },
+   {
+    "room": "O3",
+    "phase": "out",
+    "result": {
+     "outcome": "defeated",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 0,
+     "ticks": 83,
+     "fightTicks": 43,
+     "hpLeft": 0,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 71.8,
+      "y": -128.7
+     },
+     "detectedAtTick": 39,
+     "digest": "68d10cb9"
+    }
+   }
+  ],
+  "ticks": 2085,
+  "fights": 3,
+  "enemiesDefeated": 3,
+  "hpLeft": 0,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 1545.2,
+   "y": 2081.2
+  },
+  "digest": "766c2e52",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 18.6,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true,
+    true
+   ],
+   "O2": [
+    true
+   ],
+   "O3": [
+    false
+   ]
+  }
+ },
+ "alt/pressing/2": {
+  "outcome": "defeated",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 2,
+     "ticks": 1044,
+     "fightTicks": 860,
+     "hpLeft": 57,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 242,
+      "y": 0
+     },
+     "detectedAtTick": 74,
+     "digest": "68f06b1d"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "defeated",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 0,
+     "ticks": 628,
+     "fightTicks": 528,
+     "hpLeft": 0,
+     "hpMax": 90,
+     "finalPos": {
+      "x": -74.7,
+      "y": 109.7
+     },
+     "detectedAtTick": 99,
+     "digest": "9df3e986"
+    }
+   }
+  ],
+  "ticks": 1854,
+  "fights": 2,
+  "enemiesDefeated": 2,
+  "hpLeft": 0,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 1468.8,
+   "y": 1679.2
+  },
+  "digest": "d535bd48",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 18.6,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true,
+    true
+   ],
+   "O2": [
+    false
+   ]
+  }
+ },
+ "alt/pressing/3": {
+  "outcome": "defeated",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 2,
+     "ticks": 1212,
+     "fightTicks": 978,
+     "hpLeft": 10,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 240.1,
+      "y": 0.5
+     },
+     "detectedAtTick": 74,
+     "digest": "ad42f7db"
+    }
+   },
+   {
+    "room": "O2",
+    "phase": "out",
+    "result": {
+     "outcome": "defeated",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 0,
+     "ticks": 504,
+     "fightTicks": 404,
+     "hpLeft": 0,
+     "hpMax": 90,
+     "finalPos": {
+      "x": -74.7,
+      "y": 109.7
+     },
+     "detectedAtTick": 99,
+     "digest": "95809aaa"
+    }
+   }
+  ],
+  "ticks": 1898,
+  "fights": 2,
+  "enemiesDefeated": 2,
+  "hpLeft": 0,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 1370.5,
+   "y": 1829.7
+  },
+  "digest": "db43f55b",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 18.6,
+  "dead": {
+   "C0": [],
+   "O1": [
+    true,
+    true
+   ],
+   "O2": [
+    false
+   ]
+  }
+ },
+ "alt/pressing/4": {
+  "outcome": "defeated",
+  "rooms": [
+   "C0",
+   "O1",
+   "O2",
+   "O3"
+  ],
+  "legs": [
+   {
+    "room": "C0",
+    "phase": "out",
+    "result": {
+     "outcome": "completed",
+     "fought": false,
+     "fights": 0,
+     "enemiesDefeated": 0,
+     "ticks": 121,
+     "fightTicks": 0,
+     "hpLeft": 90,
+     "hpMax": 90,
+     "finalPos": {
+      "x": 250.9,
+      "y": -109.5
+     },
+     "detectedAtTick": null,
+     "digest": "20daf100"
+    }
+   },
+   {
+    "room": "O1",
+    "phase": "out",
+    "result": {
+     "outcome": "defeated",
+     "fought": true,
+     "fights": 1,
+     "enemiesDefeated": 1,
+     "ticks": 1853,
+     "fightTicks": 1778,
+     "hpLeft": 0,
+     "hpMax": 90,
+     "finalPos": {
+      "x": -72.6,
+      "y": 0
+     },
+     "detectedAtTick": 74,
+     "digest": "503f3ab2"
+    }
+   }
+  ],
+  "ticks": 2012,
+  "fights": 1,
+  "enemiesDefeated": 1,
+  "hpLeft": 0,
+  "hpMax": 90,
+  "finalPos": {
+   "x": 818.7,
+   "y": 1774.4
+  },
+  "digest": "f3617f4d",
+  "maxWalkStep": 2.263,
+  "maxFightStep": 18.6,
+  "dead": {
+   "C0": [],
+   "O1": [
+    false,
+    true
+   ]
+  }
+ }
+}

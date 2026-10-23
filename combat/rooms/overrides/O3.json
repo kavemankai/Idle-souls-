@@ -1,0 +1,18 @@
+{
+  "name": "Broken Causeway",
+  "note": "Trial settings. Positions and detection values are not design locks. Local frame: centre (0,0), x east, y south, simulation units. World centre (1450,2150).",
+  "status": "authored",
+  "entryDoor": "to-O2",
+  "exitDoor": "to-S1",
+  "solids": {
+    "rects": [],
+    "circles": [
+      { "id": "pillar", "x": -90, "y": -20, "r": 27 }
+    ]
+  },
+  "encounters": {
+    "sentry": { "name": "Ashen Sentry", "enemies": [{ "arch": "sentry", "x": 130, "y": 20, "facing": "NW" }] },
+    "mireling2": { "name": "Two Mirelings", "enemies": [{ "arch": "mireling", "x": 120, "y": 40, "facing": "NW" }, { "arch": "mireling", "x": 175, "y": -10, "facing": "W" }] }
+  },
+  "detection": { "range": 160, "arcDegrees": 120, "alertRadius": 120 }
+}

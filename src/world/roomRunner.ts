@@ -7,13 +7,17 @@ import { sees } from './o1Sight';
 export type RoomState = 'ready' | 'travelling' | 'fighting' | 'completed' | 'defeated' | 'unresolved';
 export interface RoomRunnerConfig {
   seed: number; level: number; focus: string; doctrine: SimDoctrine;
-  /** Which of the room's encounters stands in it. */
-  encounter: string;
+  /** Which of the room's encounters stands in it. Omit for a room with no enemies. */
+  encounter?: string;
   room: RoomManifest;
   /** Door the adventurer enters by and door that ends the run. Default to the room's own, then to its first two doors. */
   entryDoor?: string; exitDoor?: string;
   /** Everything below is for tests; a real run uses the manifest. */
   start?: Point; maxFightTicks?: number; hpOverride?: number;
+  /** Expedition carry-over: health on entry, enemies already killed on an earlier visit (by index), and an offset that keeps fight seeds distinct per visit. */
+  startFace?: number; startHp?: number; defeated?: readonly boolean[]; seedOffset?: number;
+  /** End the run on reaching this point instead of crossing the exit door. */
+  goal?: Point;
   /** Replaces the encounter's enemy positions (same archetypes, same order). */
   enemies?: EnemySpec[];
   /** Single-enemy shorthand for `enemies`; the archetype defaults to the encounter's first. */
@@ -60,7 +64,7 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
   readonly exit: Door;
   private readonly prepared: PreparedRoom;
   readonly stats: Record<string, number>;
-  private readonly speed: number;
+  readonly speed: number;
   private readonly goal: Point;
   private hash = 2166136261;
   constructor(readonly sim: SimApi, readonly cfg: C) {
@@ -73,14 +77,17 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
     this.stats = sim.allocate(cfg.level, cfg.focus, cfg.seed);
     const derived = sim.derive(this.stats, false);
     this.speed = sim.ARCH.adventurer.speed * derived.moveMult;
-    this.hpMax = cfg.hpOverride ?? derived.hp; this.hp = this.hpMax;
+    this.hpMax = cfg.hpOverride ?? derived.hp; this.hp = Math.min(this.hpMax, cfg.startHp ?? this.hpMax);
     const start = cfg.start ?? this.entry.center;
-    this.hero = { x: start.x, y: start.y, face: 0, moving: false };
-    const base = this.room.encounters[cfg.encounter].enemies;
+    this.hero = { x: start.x, y: start.y, face: cfg.startFace ?? 0, moving: false };
+    const known = cfg.encounter ? this.room.encounters[cfg.encounter] : undefined;
+    if (cfg.encounter && !known) throw new Error(`${this.room.id} has no encounter ${cfg.encounter}`);
+    const base = known ? known.enemies : [];
     const specs: EnemySpec[] = cfg.enemies ?? (cfg.enemy ? [{ arch: cfg.enemy.arch ?? base[0].arch, ...cfg.enemy }] : base);
-    this.foes = specs.map(s => ({ arch: s.arch, x: s.x, y: s.y, face: spawnAngle(s), alive: true, engaged: false }));
+    // An enemy killed on an earlier visit stays dead and takes no part in this one.
+    this.foes = specs.map((s, i) => { const dead = cfg.defeated?.[i] === true; return { arch: s.arch, x: s.x, y: s.y, face: spawnAngle(s), alive: !dead, engaged: dead }; });
     const out = OUT[this.exit.side];
-    this.goal = { x: this.exit.center.x + out[0] * 2, y: this.exit.center.y + out[1] * 2 };
+    this.goal = cfg.goal ?? { x: this.exit.center.x + out[0] * 2, y: this.exit.center.y + out[1] * 2 };
   }
   get routePoints(): readonly Point[] { return this.route; }
   get terminal() { return TERMINAL.includes(this.state); }
@@ -94,7 +101,7 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
   dispatch() {
     if (this.state !== 'ready') return;
     this.state = 'travelling';
-    this.note('Dispatched to O2.');
+    this.note(`Dispatched through ${this.room.id} to ${this.exit.to}.`);
     this.replan();
   }
   /** Advance exactly one simulation tick. */
@@ -123,10 +130,10 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
       if (d <= budget) { this.hero.x = next.x; this.hero.y = next.y; this.route.shift(); budget -= d; }
       else { this.hero.x += dx / d * budget; this.hero.y += dy / d * budget; budget = 0; }
     }
-    if (crossed(this.exit, this.hero)) {
+    if (this.cfg.goal ? this.route.length === 0 && M.hypot(this.hero.x - this.goal.x, this.hero.y - this.goal.y) < 1e-6 : crossed(this.exit, this.hero)) {
       this.state = 'completed';
       this.hero.moving = false;
-      this.note(this.fought ? `Reached the ${this.exit.side} threshold after the fight.` : `Reached the ${this.exit.side} threshold. No fight occurred.`);
+      this.note(this.cfg.goal ? 'Reached the goal.' : this.fought ? `Reached the ${this.exit.side} threshold after the fight.` : `Reached the ${this.exit.side} threshold. No fight occurred.`);
     }
   }
   private startFight(seer: number) {
@@ -142,7 +149,7 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
     this.note(`${this.foes[seer].arch} at (${Math.round(s.x)}, ${Math.round(s.y)}) saw the adventurer at tick ${this.tick}${idx.length > 1 ? `; ${idx.length - 1} ally joins` : ''}.`);
     this.fightIdx = idx;
     this.fight = this.sim.createFight({
-      seed: this.cfg.seed + (this.fights - 1) * 1009, stats: this.stats, god: false, doctrine: this.cfg.doctrine, encounter,
+      seed: this.cfg.seed + (this.cfg.seedOffset ?? 0) + (this.fights - 1) * 1009, stats: this.stats, god: false, doctrine: this.cfg.doctrine, encounter,
       room: simRoom(this.room), hpOverride: this.hpMax,
       spawns: { adventurer: { x: this.hero.x, y: this.hero.y, face: this.hero.face }, enemies: idx.map(i => ({ x: this.foes[i].x, y: this.foes[i].y, face: this.foes[i].face })) },
     });
@@ -178,7 +185,7 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
   result(): RoomResult {
     return {
       outcome: this.state === 'completed' || this.state === 'defeated' || this.state === 'unresolved' ? this.state : 'unresolved',
-      fought: this.fought, fights: this.fights, enemiesDefeated: this.foes.filter(f => f.engaged && !f.alive).length, ticks: this.tick, fightTicks: this.fightTicks,
+      fought: this.fought, fights: this.fights, enemiesDefeated: this.foes.filter((f, i) => f.engaged && !f.alive && this.cfg.defeated?.[i] !== true).length, ticks: this.tick, fightTicks: this.fightTicks,
       hpLeft: Math.round(this.hp), hpMax: this.hpMax,
       finalPos: { x: Math.round(this.hero.x * 10) / 10, y: Math.round(this.hero.y * 10) / 10 }, detectedAtTick: this.detectedAtTick, digest: this.digest,
     };

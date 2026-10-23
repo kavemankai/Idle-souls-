@@ -6,6 +6,7 @@ import { loadSim } from '../combat/loadSimBrowser';
 import type { SimApi, SimDoctrine } from '../combat/simApi';
 import { O1Controller, runO1, type O1Config, type O1Opponent, type O1Result } from '../world/o1Controller';
 import { O1PresentationAdapter } from '../world/o1Adapter';
+import { runWorld, type WorldResult, type WorldRunConfig } from '../world/worldRunner';
 import { O1 } from '../world/o1Room';
 import { defenceCue } from '../world/o1Combat';
 import { combatPane, totalsPane, buildPane, logPane } from './o1Panels';
@@ -82,6 +83,7 @@ export class O1Scene extends Phaser.Scene {
     this.scale.on('resize', this.layout, this);
     this.events.once('shutdown', () => { this.audio.destroy(); this.hud.remove(); });
     window.__O1_RUN__ = (cfg: O1Config) => runO1(this.sim, cfg);
+    window.__WORLD_RUN__ = (cfg: WorldRunConfig) => runWorld(this.sim, cfg);
     this.syncHud();
     window.__O1_READY__ = true; window.__VISUAL_READY__ = true;
   }
@@ -301,4 +303,4 @@ export class O1Scene extends Phaser.Scene {
   }
 }
 export type { O1Result };
-declare global { interface Window { __O1_READY__: boolean; __O1_STATE__: unknown; __O1_RUN__: (cfg: O1Config) => O1Result } }
+declare global { interface Window { __O1_READY__: boolean; __O1_STATE__: unknown; __O1_RUN__: (cfg: O1Config) => O1Result; __WORLD_RUN__: (cfg: WorldRunConfig) => WorldResult } }

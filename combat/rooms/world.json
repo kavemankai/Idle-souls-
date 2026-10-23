@@ -50,7 +50,7 @@
       "difficulty": "EARLY",
       "candidateEncounter": "Mireling / Sentry solo",
       "purpose": "Fork: tower, trial, lower passage",
-      "status": "generated"
+      "status": "authored"
     },
     {
       "id": "O3",
@@ -67,7 +67,7 @@
       "difficulty": "EARLY",
       "candidateEncounter": "Ashen Sentry / 2 Mirelings",
       "purpose": "Lower route warning before heavy region",
-      "status": "generated"
+      "status": "authored"
     },
     {
       "id": "KT",
