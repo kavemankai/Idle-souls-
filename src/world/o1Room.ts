@@ -1,4 +1,4 @@
-import manifest from '../../combat/rooms/o1.json';
+import manifest from '../../combat/rooms/o1.json' with { type: 'json' };
 import { FACINGS, type Facing } from '../contracts/presentation';
 import { facingAngle } from '../presentation/directions';
 import type { SimRoom } from '../combat/simApi';
