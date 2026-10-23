@@ -13,7 +13,9 @@ KINDS=['mannequin','adventurer','sentry','mireling']
 if '--actor' in ARGS: KINDS=[ARGS[ARGS.index('--actor')+1]]
 SAMPLE='--sample' in ARGS
 if '--output' in ARGS: REND=ROOT/ARGS[ARGS.index('--output')+1];REND.mkdir(parents=True,exist_ok=True)
-FACINGS=['N','NE','E','SE','S','SW','W','NW']; SELECT=['N','NE','E','S','SW']
+FACINGS=['N','NE','E','SE','S','SW','W','NW']
+# O1 wave 1: true eight-heading output of EXISTING saved rig actions.
+# Combat traces request W/NW/SE; never mirror another heading to fill them.
 PRESET={'revision':'p0-75-v1','elevation':75,'azimuth':-90,'orthoScale':5.4,'canvas':[192,192], 'cameraTarget':[0,0,0], 'world':'+Y north, +Z up; screen Y down', 'engine':'BLENDER_WORKBENCH','worldUnitsPerBlenderUnit':22.4,'license':'Original project-generated geometry; CC0-1.0 asset grant; no third-party imagery'}
 HASH=hashlib.sha256(json.dumps(PRESET,sort_keys=True).encode()).hexdigest()[:16]
 ALL=[]
@@ -165,8 +167,8 @@ for kind in KINDS:
     creature=kind=='mireling'
     clips={'idle':(FACINGS,1),'walk':(FACINGS,4)}
     if not creature:clips['guard']=(FACINGS,3)
-    if kind=='adventurer':clips.update({'light':(SELECT,3),'heavy':(FACINGS,3),'dodge':(SELECT,1),'reaction':(SELECT,1)})
-    if kind=='sentry':clips.update({'light':(SELECT,3),'bash':(SELECT,3)})
+    if kind=='adventurer':clips.update({'light':(FACINGS,3),'heavy':(FACINGS,3),'dodge':(FACINGS,1),'reaction':(FACINGS,1)})
+    if kind=='sentry':clips.update({'light':(FACINGS,3),'bash':(FACINGS,3)})
     if creature:clips['leap']=(FACINGS,3)
     rig.animation_data_create()
     for action,(facings,count) in ([] if '--from-blend' in ARGS else clips.items()):

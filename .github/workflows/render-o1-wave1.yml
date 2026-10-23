@@ -1,0 +1,74 @@
+name: Render O1 eight-direction sprite wave 1
+
+on:
+  push:
+    branches: [art/o1-attack-facings-wave1]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  render-and-validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned Blender 4.3.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=https://download.blender.org/release/Blender4.3
+          ARCHIVE=blender-4.3.2-linux-x64.tar.xz
+          curl -fL --retry 3 --retry-delay 5 "$BASE/$ARCHIVE" -o "$ARCHIVE"
+          curl -fL --retry 3 --retry-delay 5 "$BASE/blender-4.3.2.sha256" -o blender.sha256
+          grep -F "$ARCHIVE" blender.sha256 | sed 's/\*/ /g' | sha256sum --check
+          tar -xf "$ARCHIVE"
+          echo "$PWD/blender-4.3.2-linux-x64" >> "$GITHUB_PATH"
+      - name: Render retained Blender sources and regenerate atlases
+        run: |
+          npm ci
+          python -m pip install -r tools/requirements.txt
+          npm run assets:characters
+          npm run assets:atlas
+          npm run assets:validate
+          blender -b -t 4 --python tools/blender/validate.py
+          npm run assets:reproduce
+      - name: Validate coverage and runtime
+        run: |
+          npm run lint
+          npm run typecheck
+          npm test
+          npm run build
+      - name: Publish render proof for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: o1-wave1-sprites
+          path: |
+            assets/characters/runtime/*.png
+            assets/characters/runtime/atlas-report.json
+            docs/visual_proof/*-compass.png
+            docs/visual_proof/atlas-validation.json
+          retention-days: 14
+      - name: Commit reproducible runtime sprite output
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/characters/runtime docs/visual_proof/atlas-validation.json docs/visual_proof/source-validation.json docs/visual_proof/reproducibility.json docs/visual_proof/adventurer-compass.png docs/visual_proof/sentry-compass.png docs/visual_proof/mireling-compass.png docs/visual_proof/mannequin-compass.png
+          if git diff --cached --quiet; then
+            echo "Expected new direction frames were not produced."
+            exit 1
+          fi
+          git commit -m "art(o1): render wave 1 eight-heading sprite atlases"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
