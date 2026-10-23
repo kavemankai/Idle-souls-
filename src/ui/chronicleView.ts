@@ -94,6 +94,7 @@ export function renderChronicle(c: Chronicle, o: ChronicleViewOptions): HTMLElem
       h('dt', {}, 'Run id'), h('dd', {}, `seed ${c.seed} · ${c.digest}`)),
     h('h3', {}, 'What happened to the loot'),
     h('ul', { id: 'settle-lines' }, ...o.settlement.map(l => h('li', {}, l))),
+    h('ul', { id: 'chronicle-events', hidden: !(c.events ?? []).length }, ...(c.events ?? []).map(e => h('li', { 'data-event': e.kind }, e.text))),
     h('a', { class: 'btn', id: 'download', href: `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(c, null, 1))}`, download: `chronicle-seed${c.seed}.json` }, 'Download Chronicle (JSON)'),
     ...(o.actions ?? []));
 }

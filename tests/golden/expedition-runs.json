@@ -1,6 +1,6 @@
 {
  "directSurvey/1": {
-  "version": 4,
+  "version": 5,
   "seed": 1,
   "outcome": "extracted",
   "summary": "Back at camp alive with 20 of 90 health after 2 fights.",
@@ -73,7 +73,7 @@
   "ticks": 3389,
   "hpLeft": 20,
   "hpMax": 90,
-  "digest": "f57edde8",
+  "digest": "de8096a3",
   "intent": [
    {
     "tick": 0,
@@ -221,10 +221,19 @@
    "claimed": []
   },
   "bossesDefeated": [],
+  "bosses": null,
+  "events": [
+   {
+    "tick": 3389,
+    "kind": "loot_banked",
+    "room": "C0",
+    "text": "Banked at camp: 6 gold, 2 mastery."
+   }
+  ],
   "progress": null
  },
  "directSurvey/2": {
-  "version": 4,
+  "version": 5,
   "seed": 2,
   "outcome": "extracted",
   "summary": "Back at camp alive with 34 of 90 health after 2 fights.",
@@ -297,7 +306,7 @@
   "ticks": 2414,
   "hpLeft": 34,
   "hpMax": 90,
-  "digest": "0fd8b5d0",
+  "digest": "afed838a",
   "intent": [
    {
     "tick": 0,
@@ -445,10 +454,19 @@
    "claimed": []
   },
   "bossesDefeated": [],
+  "bosses": null,
+  "events": [
+   {
+    "tick": 2414,
+    "kind": "loot_banked",
+    "room": "C0",
+    "text": "Banked at camp: 6 gold, 2 mastery."
+   }
+  ],
   "progress": null
  },
  "directSurvey/3": {
-  "version": 4,
+  "version": 5,
   "seed": 3,
   "outcome": "extracted",
   "summary": "Back at camp alive with 26 of 90 health after 2 fights.",
@@ -521,7 +539,7 @@
   "ticks": 2862,
   "hpLeft": 26,
   "hpMax": 90,
-  "digest": "ccc64cff",
+  "digest": "973e19c9",
   "intent": [
    {
     "tick": 0,
@@ -689,10 +707,19 @@
    "claimed": []
   },
   "bossesDefeated": [],
+  "bosses": null,
+  "events": [
+   {
+    "tick": 2862,
+    "kind": "loot_banked",
+    "room": "C0",
+    "text": "Banked at camp: 21 gold, 7 mastery."
+   }
+  ],
   "progress": null
  },
  "directSurvey/4": {
-  "version": 4,
+  "version": 5,
   "seed": 4,
   "outcome": "extracted",
   "summary": "Back at camp alive with 3 of 90 health after 3 fights.",
@@ -774,7 +801,7 @@
   "ticks": 3386,
   "hpLeft": 3,
   "hpMax": 90,
-  "digest": "1c669ad0",
+  "digest": "ba4a4fdd",
   "intent": [
    {
     "tick": 0,
@@ -1044,13 +1071,22 @@
    "claimed": []
   },
   "bossesDefeated": [],
+  "bosses": null,
+  "events": [
+   {
+    "tick": 3386,
+    "kind": "loot_banked",
+    "room": "C0",
+    "text": "Banked at camp: 33 gold, 1 ration, cracked-buckler, 11 mastery."
+   }
+  ],
   "progress": null
  },
  "thoroughSurvey/1": {
-  "version": 4,
+  "version": 5,
   "seed": 1,
   "outcome": "extracted",
-  "summary": "Back at camp alive with 80 of 90 health after 1 fight.",
+  "summary": "Back at camp alive with 35 of 90 health after 2 fights.",
   "plan": {
    "objectives": [
     {
@@ -1082,15 +1118,12 @@
    "O1",
    "O2",
    "T1",
-   "T2",
-   "T1",
    "O2",
    "O1",
    "C0"
   ],
   "discovered": [
-   "T1",
-   "T2"
+   "T1"
   ],
   "fights": [
    {
@@ -1099,12 +1132,19 @@
     "enemiesDefeated": 1,
     "hpLeft": 80,
     "hpMax": 90
+   },
+   {
+    "room": "T1",
+    "won": true,
+    "enemiesDefeated": 0,
+    "hpLeft": 35,
+    "hpMax": 90
    }
   ],
-  "ticks": 2962,
-  "hpLeft": 80,
+  "ticks": 2736,
+  "hpLeft": 35,
   "hpMax": 90,
-  "digest": "e3f8781f",
+  "digest": "61e0a604",
   "intent": [
    {
     "tick": 0,
@@ -1170,56 +1210,35 @@
     "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
    },
    {
-    "tick": 1660,
-    "kind": "discovery",
-    "room": "T2",
-    "text": "Entered Tower Barracks for the first time. It is now on the map.",
-    "cause": "Map memory is permanent."
-   },
-   {
-    "tick": 1660,
-    "kind": "sweep",
-    "room": "T2",
-    "text": "Looked around Tower Barracks.",
-    "cause": "Thorough survey looks into Tower Barracks."
-   },
-   {
-    "tick": 1660,
-    "kind": "route",
-    "room": "T2",
-    "text": "Thorough survey returns to Tower Yard: T2 > T1. No other permitted way.",
-    "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
-   },
-   {
-    "tick": 1998,
-    "kind": "sweep",
-    "room": "T1",
-    "text": "Back in Tower Yard; the survey goes on.",
-    "cause": "Thorough survey returns to Tower Yard."
-   },
-   {
-    "tick": 1998,
+    "tick": 1748,
     "kind": "retreat",
     "room": "T1",
-    "text": "Heading for camp. Every objective is done or skipped.",
-    "cause": "Return to Camp ends every plan."
+    "text": "Heading for camp. Health 39% is below the 40% retreat setting.",
+    "cause": "Survival policy"
    },
    {
-    "tick": 1998,
-    "kind": "route",
+    "tick": 1748,
+    "kind": "retreat",
     "room": "T1",
-    "text": "Way home: T1 > O2 > O1 > C0. No other permitted way.",
-    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+    "text": "Disengage: 1 enemy here, nearest 71 units, 0 within reach, stamina 7%, health 39%. Stops attacking, guards while walking out by the to-O2 door.",
+    "cause": "Phase 1 of a retreat: break contact. Enemies stay in their room."
    },
    {
-    "tick": 2413,
+    "tick": 1923,
+    "kind": "fight",
+    "room": "T1",
+    "text": "Broke contact in Tower Yard with health 35 of 90; surviving enemies return to their posts.",
+    "cause": "No lingering alert: enemies reset when the adventurer leaves (doc 07)."
+   },
+   {
+    "tick": 2187,
     "kind": "route",
     "room": "O2",
     "text": "Way home: O2 > O1 > C0. No other permitted way.",
     "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
    },
    {
-    "tick": 2840,
+    "tick": 2614,
     "kind": "end",
     "room": "C0",
     "text": "Arrived at camp alive. Banking comes with M3.",
@@ -1259,13 +1278,22 @@
    "claimed": []
   },
   "bossesDefeated": [],
+  "bosses": null,
+  "events": [
+   {
+    "tick": 2736,
+    "kind": "loot_banked",
+    "room": "C0",
+    "text": "Banked at camp: 6 gold, 2 mastery."
+   }
+  ],
   "progress": null
  },
  "thoroughSurvey/2": {
-  "version": 4,
+  "version": 5,
   "seed": 2,
   "outcome": "extracted",
-  "summary": "Back at camp alive with 80 of 90 health after 1 fight.",
+  "summary": "Back at camp alive with 35 of 90 health after 2 fights.",
   "plan": {
    "objectives": [
     {
@@ -1297,15 +1325,12 @@
    "O1",
    "O2",
    "T1",
-   "T2",
-   "T1",
    "O2",
    "O1",
    "C0"
   ],
   "discovered": [
-   "T1",
-   "T2"
+   "T1"
   ],
   "fights": [
    {
@@ -1314,12 +1339,19 @@
     "enemiesDefeated": 1,
     "hpLeft": 80,
     "hpMax": 90
+   },
+   {
+    "room": "T1",
+    "won": true,
+    "enemiesDefeated": 0,
+    "hpLeft": 35,
+    "hpMax": 90
    }
   ],
-  "ticks": 3219,
-  "hpLeft": 80,
+  "ticks": 2953,
+  "hpLeft": 35,
   "hpMax": 90,
-  "digest": "447eaae9",
+  "digest": "b2e78568",
   "intent": [
    {
     "tick": 0,
@@ -1385,56 +1417,35 @@
     "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
    },
    {
-    "tick": 1917,
-    "kind": "discovery",
-    "room": "T2",
-    "text": "Entered Tower Barracks for the first time. It is now on the map.",
-    "cause": "Map memory is permanent."
-   },
-   {
-    "tick": 1917,
-    "kind": "sweep",
-    "room": "T2",
-    "text": "Looked around Tower Barracks.",
-    "cause": "Thorough survey looks into Tower Barracks."
-   },
-   {
-    "tick": 1917,
-    "kind": "route",
-    "room": "T2",
-    "text": "Thorough survey returns to Tower Yard: T2 > T1. No other permitted way.",
-    "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
-   },
-   {
-    "tick": 2255,
-    "kind": "sweep",
-    "room": "T1",
-    "text": "Back in Tower Yard; the survey goes on.",
-    "cause": "Thorough survey returns to Tower Yard."
-   },
-   {
-    "tick": 2255,
+    "tick": 1965,
     "kind": "retreat",
     "room": "T1",
-    "text": "Heading for camp. Every objective is done or skipped.",
-    "cause": "Return to Camp ends every plan."
+    "text": "Heading for camp. Health 39% is below the 40% retreat setting.",
+    "cause": "Survival policy"
    },
    {
-    "tick": 2255,
-    "kind": "route",
+    "tick": 1965,
+    "kind": "retreat",
     "room": "T1",
-    "text": "Way home: T1 > O2 > O1 > C0. No other permitted way.",
-    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+    "text": "Disengage: 1 enemy here, nearest 67 units, 0 within reach, stamina 23%, health 39%. Stops attacking, guards while walking out by the to-O2 door.",
+    "cause": "Phase 1 of a retreat: break contact. Enemies stay in their room."
    },
    {
-    "tick": 2670,
+    "tick": 2139,
+    "kind": "fight",
+    "room": "T1",
+    "text": "Broke contact in Tower Yard with health 35 of 90; surviving enemies return to their posts.",
+    "cause": "No lingering alert: enemies reset when the adventurer leaves (doc 07)."
+   },
+   {
+    "tick": 2404,
     "kind": "route",
     "room": "O2",
     "text": "Way home: O2 > O1 > C0. No other permitted way.",
     "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
    },
    {
-    "tick": 3097,
+    "tick": 2831,
     "kind": "end",
     "room": "C0",
     "text": "Arrived at camp alive. Banking comes with M3.",
@@ -1474,13 +1485,22 @@
    "claimed": []
   },
   "bossesDefeated": [],
+  "bosses": null,
+  "events": [
+   {
+    "tick": 2953,
+    "kind": "loot_banked",
+    "room": "C0",
+    "text": "Banked at camp: 6 gold, 2 mastery."
+   }
+  ],
   "progress": null
  },
  "thoroughSurvey/3": {
-  "version": 4,
+  "version": 5,
   "seed": 3,
   "outcome": "extracted",
-  "summary": "Back at camp alive with 80 of 90 health after 1 fight.",
+  "summary": "Back at camp alive with 26 of 90 health after 2 fights.",
   "plan": {
    "objectives": [
     {
@@ -1512,15 +1532,12 @@
    "O1",
    "O2",
    "T1",
-   "T2",
-   "T1",
    "O2",
    "O1",
    "C0"
   ],
   "discovered": [
-   "T1",
-   "T2"
+   "T1"
   ],
   "fights": [
    {
@@ -1529,12 +1546,19 @@
     "enemiesDefeated": 1,
     "hpLeft": 80,
     "hpMax": 90
+   },
+   {
+    "room": "T1",
+    "won": true,
+    "enemiesDefeated": 0,
+    "hpLeft": 26,
+    "hpMax": 90
    }
   ],
-  "ticks": 3282,
-  "hpLeft": 80,
+  "ticks": 3115,
+  "hpLeft": 26,
   "hpMax": 90,
-  "digest": "e065ded2",
+  "digest": "f69698f9",
   "intent": [
    {
     "tick": 0,
@@ -1600,56 +1624,35 @@
     "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
    },
    {
-    "tick": 1980,
-    "kind": "discovery",
-    "room": "T2",
-    "text": "Entered Tower Barracks for the first time. It is now on the map.",
-    "cause": "Map memory is permanent."
-   },
-   {
-    "tick": 1980,
-    "kind": "sweep",
-    "room": "T2",
-    "text": "Looked around Tower Barracks.",
-    "cause": "Thorough survey looks into Tower Barracks."
-   },
-   {
-    "tick": 1980,
-    "kind": "route",
-    "room": "T2",
-    "text": "Thorough survey returns to Tower Yard: T2 > T1. No other permitted way.",
-    "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
-   },
-   {
-    "tick": 2318,
-    "kind": "sweep",
-    "room": "T1",
-    "text": "Back in Tower Yard; the survey goes on.",
-    "cause": "Thorough survey returns to Tower Yard."
-   },
-   {
-    "tick": 2318,
+    "tick": 2120,
     "kind": "retreat",
     "room": "T1",
-    "text": "Heading for camp. Every objective is done or skipped.",
-    "cause": "Return to Camp ends every plan."
+    "text": "Heading for camp. Health 29% is below the 40% retreat setting.",
+    "cause": "Survival policy"
    },
    {
-    "tick": 2318,
-    "kind": "route",
+    "tick": 2120,
+    "kind": "retreat",
     "room": "T1",
-    "text": "Way home: T1 > O2 > O1 > C0. No other permitted way.",
-    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+    "text": "Disengage: 1 enemy here, nearest 44 units, 0 within reach, stamina 30%, health 29%. Stops attacking, guards while walking out by the to-O2 door.",
+    "cause": "Phase 1 of a retreat: break contact. Enemies stay in their room."
    },
    {
-    "tick": 2733,
+    "tick": 2302,
+    "kind": "fight",
+    "room": "T1",
+    "text": "Broke contact in Tower Yard with health 26 of 90; surviving enemies return to their posts.",
+    "cause": "No lingering alert: enemies reset when the adventurer leaves (doc 07)."
+   },
+   {
+    "tick": 2566,
     "kind": "route",
     "room": "O2",
     "text": "Way home: O2 > O1 > C0. No other permitted way.",
     "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
    },
    {
-    "tick": 3160,
+    "tick": 2993,
     "kind": "end",
     "room": "C0",
     "text": "Arrived at camp alive. Banking comes with M3.",
@@ -1689,13 +1692,22 @@
    "claimed": []
   },
   "bossesDefeated": [],
+  "bosses": null,
+  "events": [
+   {
+    "tick": 3115,
+    "kind": "loot_banked",
+    "room": "C0",
+    "text": "Banked at camp: 6 gold, 2 mastery."
+   }
+  ],
   "progress": null
  },
  "thoroughSurvey/4": {
-  "version": 4,
+  "version": 5,
   "seed": 4,
   "outcome": "extracted",
-  "summary": "Back at camp alive with 90 of 90 health after 1 fight.",
+  "summary": "Back at camp alive with 27 of 90 health after 2 fights.",
   "plan": {
    "objectives": [
     {
@@ -1727,15 +1739,12 @@
    "O1",
    "O2",
    "T1",
-   "T2",
-   "T1",
    "O2",
    "O1",
    "C0"
   ],
   "discovered": [
-   "T1",
-   "T2"
+   "T1"
   ],
   "fights": [
    {
@@ -1744,12 +1753,19 @@
     "enemiesDefeated": 1,
     "hpLeft": 90,
     "hpMax": 90
+   },
+   {
+    "room": "T1",
+    "won": true,
+    "enemiesDefeated": 0,
+    "hpLeft": 27,
+    "hpMax": 90
    }
   ],
-  "ticks": 2796,
-  "hpLeft": 90,
+  "ticks": 2751,
+  "hpLeft": 27,
   "hpMax": 90,
-  "digest": "7622596e",
+  "digest": "c1e79573",
   "intent": [
    {
     "tick": 0,
@@ -1815,56 +1831,35 @@
     "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
    },
    {
-    "tick": 1494,
-    "kind": "discovery",
-    "room": "T2",
-    "text": "Entered Tower Barracks for the first time. It is now on the map.",
-    "cause": "Map memory is permanent."
-   },
-   {
-    "tick": 1494,
-    "kind": "sweep",
-    "room": "T2",
-    "text": "Looked around Tower Barracks.",
-    "cause": "Thorough survey looks into Tower Barracks."
-   },
-   {
-    "tick": 1494,
-    "kind": "route",
-    "room": "T2",
-    "text": "Thorough survey returns to Tower Yard: T2 > T1. No other permitted way.",
-    "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
-   },
-   {
-    "tick": 1832,
-    "kind": "sweep",
-    "room": "T1",
-    "text": "Back in Tower Yard; the survey goes on.",
-    "cause": "Thorough survey returns to Tower Yard."
-   },
-   {
-    "tick": 1832,
+    "tick": 1675,
     "kind": "retreat",
     "room": "T1",
-    "text": "Heading for camp. Every objective is done or skipped.",
-    "cause": "Return to Camp ends every plan."
+    "text": "Heading for camp. Health 30% is below the 40% retreat setting.",
+    "cause": "Survival policy"
    },
    {
-    "tick": 1832,
-    "kind": "route",
+    "tick": 1675,
+    "kind": "retreat",
     "room": "T1",
-    "text": "Way home: T1 > O2 > O1 > C0. No other permitted way.",
-    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+    "text": "Disengage: 1 enemy here, nearest 60 units, 0 within reach, stamina 31%, health 30%. Stops attacking, guards while walking out by the to-O2 door.",
+    "cause": "Phase 1 of a retreat: break contact. Enemies stay in their room."
    },
    {
-    "tick": 2247,
+    "tick": 1938,
+    "kind": "fight",
+    "room": "T1",
+    "text": "Broke contact in Tower Yard with health 27 of 90; surviving enemies return to their posts.",
+    "cause": "No lingering alert: enemies reset when the adventurer leaves (doc 07)."
+   },
+   {
+    "tick": 2202,
     "kind": "route",
     "room": "O2",
     "text": "Way home: O2 > O1 > C0. No other permitted way.",
     "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
    },
    {
-    "tick": 2674,
+    "tick": 2629,
     "kind": "end",
     "room": "C0",
     "text": "Arrived at camp alive. Banking comes with M3.",
@@ -1904,10 +1899,19 @@
    "claimed": []
   },
   "bossesDefeated": [],
+  "bosses": null,
+  "events": [
+   {
+    "tick": 2751,
+    "kind": "loot_banked",
+    "room": "C0",
+    "text": "Banked at camp: 6 gold, 2 mastery."
+   }
+  ],
   "progress": null
  },
  "cautious/1": {
-  "version": 4,
+  "version": 5,
   "seed": 1,
   "outcome": "extracted",
   "summary": "Back at camp alive with 66 of 90 health after 1 fight.",
@@ -2038,10 +2042,12 @@
    "claimed": []
   },
   "bossesDefeated": [],
+  "bosses": null,
+  "events": [],
   "progress": null
  },
  "cautious/2": {
-  "version": 4,
+  "version": 5,
   "seed": 2,
   "outcome": "extracted",
   "summary": "Back at camp alive with 55 of 90 health after 1 fight.",
@@ -2172,10 +2178,12 @@
    "claimed": []
   },
   "bossesDefeated": [],
+  "bosses": null,
+  "events": [],
   "progress": null
  },
  "cautious/3": {
-  "version": 4,
+  "version": 5,
   "seed": 3,
   "outcome": "extracted",
   "summary": "Back at camp alive with 46 of 90 health after 1 fight.",
@@ -2306,10 +2314,12 @@
    "claimed": []
   },
   "bossesDefeated": [],
+  "bosses": null,
+  "events": [],
   "progress": null
  },
  "cautious/4": {
-  "version": 4,
+  "version": 5,
   "seed": 4,
   "outcome": "extracted",
   "summary": "Back at camp alive with 66 of 90 health after 1 fight.",
@@ -2440,6 +2450,8 @@
    "claimed": []
   },
   "bossesDefeated": [],
+  "bosses": null,
+  "events": [],
   "progress": null
  }
 }
