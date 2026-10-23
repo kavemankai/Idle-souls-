@@ -1,0 +1,10 @@
+deliverable_id,actor_or_resource,proposed_test_facings,animations_or_assets,candidate_frames_or_scale,stage,acceptance_target,status
+CAM-001,Calibration mannequin,N/NE/E/S,idle/guard,locked +75 degree orthographic contact sheet,P0a,projection and hand-side evidence,PROPOSED_NOT_CREATED
+HERO-001,Adventurer,N/E/S/NE,idle/walk/guard,3/6/2 poses,P0a,"feet anchor, shield-side stable",PROPOSED_NOT_CREATED
+HERO-002,Adventurer,E/NE,light/heavy/dodge/hit,5/6/4/2 poses,P0b,windup/active/recovery sim-parity,PROPOSED_NOT_CREATED
+SENTRY-001,Ashen Sentry,E/NE,idle/move/guard/chop,3/6/2/5 poses,P0b,block vs attack recognizable,PROPOSED_NOT_CREATED
+MIRELING-001,Mireling,E/NE,idle/skitter/coil/leap,3/6/3/5 poses,P0b,small shape and launch direction,PROPOSED_NOT_CREATED
+O1-ENV-001,Old Road O1,N/A,floor/wall/collision pillar/threshold,32 unit modular,P0b,painted tiles do not lie about collision,PROPOSED_NOT_CREATED
+VFX-001,2D overlays,N/A,light arc/heavy wedge/block/dodge,event-bound clips,P0c,visual telegraph geometry is authoritative,PROPOSED_NOT_CREATED
+ATLAS-001,Trim + packing trial,8 only after approval,all passing clips,per actor + measured,P0c,quality and memory captured on devices,PROPOSED_NOT_CREATED
+BOSS-LATER,Boss rigs,TBD,all,not in P0,DEFER,no boss art until first encounter passes,PROPOSED_NOT_CREATED

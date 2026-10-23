@@ -1,0 +1,19 @@
+test_id,phase,viewport_or_environment,scenario,proposed_pass_criterion,evidence_required,status
+R01,Silhouette,Grayscale still,Player versus Sentry,Shield/weapon owner and facing distinguishable to 3 unfamiliar viewers,Named screenshot plus individual responses,PROPOSED_NOT_RUN
+R02,Silhouette,390x844 portrait,Mireling on pale road,Small target identifiable without zoom,Pixel measurements plus tester notes,PROPOSED_NOT_RUN
+R03,Silhouette,844x390 landscape,Mireling on dark road edge,Small enemy does not disappear into texture,Capture and response notes,PROPOSED_NOT_RUN
+R04,Environment,1280x720 desktop,Traverse west-east O1,"Campward entrance, exit and solid cover understood",Annotated capture,PROPOSED_NOT_RUN
+R05,Environment,Wall-aware scene,Solid pillar collision,Actor and arrows blocked only where art indicates,Screen-recorded test and collision data,PROPOSED_NOT_RUN
+R06,Telegraph,1x / current ticks,Sentry windup/slash,Visual arc agrees with authoritative event and heading,Replay seed and hit overlay capture,PROPOSED_NOT_RUN
+R07,Telegraph,1x / current ticks,Mireling coil/leap,Direction telegraphed without invented warning time,Replay clip and move tick values,PROPOSED_NOT_RUN
+R08,Telegraph,All doctrines,Guard/dodge/retreat,Pose accurately follows AI state,Seeded clips per doctrine,PROPOSED_NOT_RUN
+R09,Parity,30Hz sim plus variable render rate,Bench outcome parity,Identical deterministic events/hits versus headless baseline,Machine readable event diff,PROPOSED_NOT_RUN
+R10,Accessibility,Protanopia/deuteranopia/grayscale,Heavy versus light; forbidden route,Different in shape or hatch and discernible without hue,Composite screenshots,PROPOSED_NOT_RUN
+R11,Accessibility,390x844 / 844x390,Retreat action and critical HUD,Retreat remains touchable ≥44px and does not obscure safe zone,Measured capture,PROPOSED_NOT_RUN
+R12,Camera,390x844 / 844x390,Combat at intended zoom,Player visual diameter approximately 42–64 displayed px and actor in frame,On-screen measurement,PROPOSED_NOT_RUN
+R13,Fog truth,Persistent visibility,Unobserved enemy behind wall,No visual/audio-map leak of hidden patrol position,Recorded visibility-mask test,PROPOSED_NOT_RUN
+R14,World states,Map overlay,Forbidden route,"Barred route visibly forbidden, not just dangerous",Comparative screenshot,PROPOSED_NOT_RUN
+R15,Performance,Lower-end Android browser,Full O1 with lighting and VFX,Performance measurements captured; no unsupported target claim,"Frame timings, texture stats, build ID",PROPOSED_NOT_RUN
+R16,Asset pipeline,Source packaging,Character and ground exports,"Editable originals, pivots, rights/provenance retained",Manifest and source folder inspection,PROPOSED_NOT_RUN
+R17,Scene review,Six-screen board S01-S06,Integrated identity,Each rubric category ≥2/3 and total ≥12/15; no critical rule failure,Scoring sheet and evidence board,PROPOSED_NOT_RUN
+R18,Continuity,Original Phaser visual preview comparison,Painterly step-up,New assets improve silhouettes/material quality without reducing threat clarity,Side-by-side normal-zoom captures,PROPOSED_NOT_RUN

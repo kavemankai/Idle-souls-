@@ -1,0 +1,14 @@
+shot_id,actor,angle_or_facing,clip_phase,environment,review_focus,status
+C75-S01,Non-symmetric calibration mannequin,N,neutral,pale Old Road stone,camera azimuth and shield hand,PROPOSED_NOT_CREATED
+C75-S02,Non-symmetric calibration mannequin,E,neutral,neutral grid with north arrow,screen-heading versus world-heading mapping,PROPOSED_NOT_CREATED
+C75-S03,Non-symmetric calibration mannequin,NE,guard,dark wet stone,asymmetry and shield occlusion,PROPOSED_NOT_CREATED
+C75-S04,Adventurer,S,heavy windup,pale Old Road stone,raised sword silhouette and feet pivot,PROPOSED_NOT_CREATED
+C75-S05,Adventurer,NE,light active,dark wet stone,active hit pose versus sim timing,PROPOSED_NOT_CREATED
+C75-S06,Adventurer,W,dodge recovery,pale Old Road stone,pivot truth and handedness,PROPOSED_NOT_CREATED
+C75-S07,Ashen Sentry,N,guard,pale Old Road stone,distinguish Sentry from adventurer,PROPOSED_NOT_CREATED
+C75-S08,Ashen Sentry,E,chop anticipation,dark wet stone,attack tell clarity,PROPOSED_NOT_CREATED
+C75-S09,Mireling,E,coil,pale Old Road stone,readability of pre-leap compression,PROPOSED_NOT_CREATED
+C75-S10,Mireling,NE,leap,dark wet stone,visible small threat during action,PROPOSED_NOT_CREATED
+C75-S11,Adventurer + Sentry + Mireling,NE,mixed actions,full Old Road O1,overlap stress; threat hierarchy,PROPOSED_NOT_CREATED
+C75-S12,Adventurer,E,light and heavy comparison,mobile screenshot 1x,distinct anticipation; value contrast,PROPOSED_NOT_CREATED
+

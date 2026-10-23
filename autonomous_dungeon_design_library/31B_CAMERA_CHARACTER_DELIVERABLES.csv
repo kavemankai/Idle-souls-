@@ -1,0 +1,12 @@
+asset_id,asset_or_artifact,minimum_content,authority,depends_on,acceptance_evidence,status
+CAM75-001,Shared Blender camera master,fixed orthographic +75deg elevation azimuth ortho-scale light-rig settings,L23,none,settings screenshot and source version,PROPOSED_NOT_CREATED
+CAM75-002,Compass and asymmetry calibration rig,shield on one side sword on the other XY ground +Z up,31,CAM75-001,N/E/S/W/NE reference contact sheet,PROPOSED_NOT_CREATED
+HERO75-001,Adventurer source Blender file,editable mesh equipment rig and action names,L22 and 31,CAM75-001,rendered neutral/guard silhouette and retained rig,PROPOSED_NOT_CREATED
+HERO75-002,Adventurer limited source frames,light/heavy/dodge/guard/walk phases at selected facings,31,HERO75-001,pivot overlay and attack-phase parity,PROPOSED_NOT_CREATED
+SENTRY75-001,Ashen Sentry source,editable asymmetrical melee character rig with shield/chop,31,CAM75-001,readability against hero at zoom,PROPOSED_NOT_CREATED
+MIRE75-001,Mireling source,independent low-creature rig coil/leap,31,CAM75-001,small-silhouette recognition evidence,PROPOSED_NOT_CREATED
+EXPORT75-001,Trimmed atlas & pivot manifest,sprite frame metadata camera setting and ground pivot,31,HERO75-002,atlas reconstruction and size ledger,PROPOSED_NOT_CREATED
+EFFECT75-001,Separate ground shadow plane,ground position linked to sim feet,31,HERO75-001,shadow stays on walkable floor under wall occlusion,PROPOSED_NOT_CREATED
+QA75-001,Seeded parity report,combat frame/tick outcomes before and after asset swap,L11 and 31,HERO75-002,deterministic event diff without gameplay changes,PROPOSED_NOT_CREATED
+QA75-002,Mobile memory/readability report,measured texture allocation and actual screen footage,31,EXPORT75-001,device viewport and memory captures,PROPOSED_NOT_RUN
+

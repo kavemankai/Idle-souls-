@@ -1,0 +1,18 @@
+id,name,region,center_x,center_y,clear_floor_width,clear_floor_height,difficulty,candidate_encounter,purpose
+C0,Camp,Camp,400,1800,500,480,SAFE,None,No encounters; bank/extract
+O1,Outer Road,Old Road,950,1750,480,440,EARLY,1 Mireling,Initial single enemy; open exit
+O2,Crossroads,Old Road,1450,1700,540,480,EARLY,Mireling / Sentry solo,"Fork: tower, trial, lower passage"
+O3,Broken Causeway,Old Road,1450,2150,500,400,EARLY,Ashen Sentry / 2 Mirelings,Lower route warning before heavy region
+KT,Key Trial Watchpost,Old Road,980,2170,500,420,TRIAL,3 staged enemies/waves,"Repeatable, keyless access; claimed key must extract"
+T1,Tower Yard,Watchtower,2030,1120,520,480,MID,Harrier solo / Sentry,Cover tutorial
+T2,Tower Barracks,Watchtower,2600,920,560,520,MID,Sentry + Harrier (telegraphed),Approach both miniboss and crypt gallery
+T3,High Gallery,Watchtower,2460,490,500,360,MID,Harrier + Mireling optional,Alternate viewpoint/rare cache
+MB,Bell Warden,Miniboss Arena,3480,600,720,700,MINIBOSS,Bell Warden,Universal key gate; permanent shortcut on first clear
+S1,Sludge Ford,Sunken Passage,2100,2760,540,480,MID,Silt Spitter solo,Hazard warning and open escape route
+S2,Broken Pump,Sunken Passage,2750,2780,620,520,HIGH,Mudjaw Brute solo,Sanctuary nearby; optional dangerous route
+S3,Low Gallery,Sunken Passage,2540,3260,520,380,MID,Spitter / Grunt escort,Opens persistent sluice shortcut back to camp
+K1,Crypt Threshold,Forgotten Crypt,3360,2180,560,540,HIGH,Sentry + Spitter staged,"Threat warning, not unavoidable overlap"
+K2,Ossuary,Forgotten Crypt,3900,1870,560,520,HIGH,Crypt Duelist solo,One hard encounter before main boss
+K3,Upper Crypt,Forgotten Crypt,3800,1320,520,360,HIGH,Duelist / Harrier + Sentry,Long upper approach; alternative route
+B1,Siltbound Castellan,Main Boss Arena,4720,1880,740,740,BOSS,Siltbound Castellan,Universal key gate; permanent campaign route unlock
+SB,Unmoored Surveyor,Secret Boss Pocket,4540,640,740,720,SECRET,Unmoored Surveyor,Optional special-key concept only; no mandatory route

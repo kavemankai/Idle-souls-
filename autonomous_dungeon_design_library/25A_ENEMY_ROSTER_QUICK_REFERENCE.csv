@@ -1,0 +1,10 @@
+ID,Working name,Type,Movement speed,Size,Ranged,Suggested HP,Suggested raw landed damage,Region,Recommended arrival level,Moves
+E01,Mireling,Swarming skirmisher,Fast,Small,No,35,7-10,Old Road,L1-2,Quick Bite;Leaping Lunge;Backoff/Re-engage
+E02,Ashen Sentry,Guard humanoid,Medium,Medium,No,75,12-16,Old Road/Watchtower,L1-3,Sword Slash;Shield Bash;Guard/Counter
+E03,Tower Harrier,Marksman,Medium,Medium,Yes,52,10-14,Watchtower,L2-4,Aimed Shot;Quick Shot;Reposition
+E04,Mudjaw Brute,Heavy guard-break,Slow,Big,No,140,25-35,Sunken Passage,L3-5,Wide Swing;Crushing Slam;Short Charge
+E05,Silt Spitter,Ranged area denial,Slow,Small,Yes,55,7-10 plus floor hazard,Sunken Passage/Crypt,L3-6,Silt Bolt;Hazard Spit;Withdraw
+E06,Crypt Duelist,Fast melee pressure,Fast,Medium,No,90,12-17 per hit,Crypt,L5-8,Two-hit Combination;Lunging Thrust;Sidestep/Counter
+MB01,The Bell Warden,Optional miniboss mace/bell,Medium,Big,Limited-range AoE,420,20-35,Watchtower side vault,L4-6,Mace Sweep;Gatebreaker;Bell Toll;Recovery
+B01,The Siltbound Castellan,First major area boss,Slow (medium bursts),Big,Yes (silt wave),950,22-45,Weir Hall / Crypt boss arena,L7-9,Castellan Arc;Weirbreaker Slam;Silt Wave;Flood Channel
+SB01,The Unmoored Surveyor,"Optional secret boss, stretch",Fast,Medium,Yes (pins),1250,28-48,Optional secret pocket,L10-12,Surveyor Cut;Bearing Pin;Route Mark;False Advance;Phase 2 Echo

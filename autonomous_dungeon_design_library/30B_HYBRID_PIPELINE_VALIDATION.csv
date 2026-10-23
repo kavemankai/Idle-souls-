@@ -1,0 +1,15 @@
+test_id,area,test_conditions,proposed_acceptance,evidence,status
+H01,Camera coupon,Locked +75 degree fixed ortho,"same rig and feet point, N/E/S/NE facings, same locked camera and lighting",annotated source frame and camera settings,PROPOSED_NOT_RUN
+H02,Directional truth,N/E/S/NE plus test diagonals,handedness and heading read correctly; no hidden mirror flip,orientation contact sheet,PROPOSED_NOT_RUN
+H03,Anchor stability,idle/guard/windup/dodge,visual action does not relocate sim feet,pivots overlay and source-to-world transform,PROPOSED_NOT_RUN
+H04,Timing contract,7/3/9 light and 15/4/16 heavy sample,sprite phase maps to actual 30Hz sim ticks,seeded clip with move ticks,PROPOSED_NOT_RUN
+H05,Silhouette test,player vs Sentry vs Mireling,unique in grayscale at true portrait and landscape zoom,test notes from unfamiliar viewers,PROPOSED_NOT_RUN
+H06,Texture budget,source canvases/trimmed atlas,actual compressed/uncompressed textures measured; documented device limit,"atlas size table, VRAM estimate",PROPOSED_NOT_RUN
+H07,Scene render truth,art enabled vs disabled,same seeded 30Hz simulation outcomes,event diff and representative clips,PROPOSED_NOT_RUN
+H08,Collision/occlusion,"pillar, walls, thresholds",world logic matches solid-looking art; visibility respected,annotated map+collision overlay,PROPOSED_NOT_RUN
+H09,Accessibility,greyscale and colour deficiency,danger cues distinguishable without hue,side by side hazard captures,PROPOSED_NOT_RUN
+H10,Source provenance,Blender scene + textures + painted environment,"scene reproducible, assets licensed/documented",source manifest+licenses,PROPOSED_NOT_RUN
+H11,Low end device,target Android and desktop,"FPS, texture memory, download size captured not guessed",performance log + viewport captures,PROPOSED_NOT_RUN
+H12,Review board,S01-S06 Old Road,all proposed score thresholds and no critical faults,dated score sheet and six captures,PROPOSED_NOT_RUN
+
+# Locked L24 must be reviewed for eight-heading locomotion guard and attack-view accuracy

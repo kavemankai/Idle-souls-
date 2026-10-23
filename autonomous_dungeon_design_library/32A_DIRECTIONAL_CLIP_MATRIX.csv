@@ -1,0 +1,15 @@
+actor,clip,facing_set,decision_status,planned_views,acceptance_focus
+calibration,locomotion,N NE E SE S SW W NW,locked,8,feet pivot and handedness all views
+adventurer,walk / run / retreat,N NE E SE S SW W NW,locked,8,no slide; true movement visual vector
+adventurer,guard enter / hold / release,N NE E SE S SW W NW,locked,8,shield side correct; defensive arc truthful
+adventurer,idle,TBD,proposed,4 or 8,transitions from eight-way guard
+adventurer,light_attack,TBD,proposed,selective,windup/active/recovery and attack arc
+adventurer,heavy_attack,TBD,proposed,selective,strong tell and guard break direction
+adventurer,dodge / rolling slash,TBD,proposed,selective,dodge vector and follow-up timing
+sentry,walk,N NE E SE S SW W NW,locked,8,distinguish from hero
+sentry,guard,N NE E SE S SW W NW,locked,8,asymmetric enemy shield
+sentry,slash / bash / riposte,TBD,proposed,selective,distinct actions + correct handedness
+mireling,locomotion,N NE E SE S SW W NW,locked,8,"low creature, coherent rooted steps"
+mireling,bite / leap,TBD,proposed,selective,"tracking cutoff, coil and landing"
+bosses,locomotion / guard if applicable,N NE E SE S SW W NW,locked conditional,8 per applicable clip,separate encounter complexity
+bosses,attacks and specials,TBD,proposed,selective,floor telegraph agrees with simulator
