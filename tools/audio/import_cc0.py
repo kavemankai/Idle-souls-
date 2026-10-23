@@ -115,6 +115,9 @@ def list_audio(raw: bytes):
         for f in z.infolist():
             if f.is_dir() or f.file_size <= 0: continue
             p = PurePosixPath(f.filename)
+            # ZIPs made on macOS often include AppleDouble resource-fork files
+            # named __MACOSX/._swish.wav: these are not decodable audio.
+            if any(part.lower() == "__macosx" or part.startswith("._") for part in p.parts): continue
             if p.suffix.lower() not in AUDIO_EXT: continue
             if ".." in p.parts or p.is_absolute() or f.file_size > 60 * 1024 * 1024: continue
             members.append(f)
