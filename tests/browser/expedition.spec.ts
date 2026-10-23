@@ -241,7 +241,7 @@ test('browser and Node agree on boss expeditions: first clears, a rematch, the C
     { ...base, seed: 3, hpOverride: 5000, known: [...all, 'MB'], openLinks: ['MB~T2', 'K2~MB'], defeatedBosses: ['warden'], plan: { ...defaultPlan(), objectives: [{ id: 'r', kind: 'rematch', room: 'MB' }] } },
     { ...base, seed: 4, hpOverride: 5000, known: [...all, 'MB'], openLinks: ['MB~T2', 'K2~MB'], defeatedBosses: ['warden'], progression: { startLevel: 9 }, plan: { ...defaultPlan(), objectives: [{ id: 'r', kind: 'rematch', room: 'MB', variant: 'limited-healing' }] } },
     { ...base, seed: 5, hpOverride: 5000, issueKeys: 1, plan: { ...defaultPlan(), retreatHpPct: 0, objectives: [{ id: 'g', kind: 'open', room: 'K2', to: 'B1' }, { id: 'c', kind: 'challenge', room: 'B1' }] } },
-    { ...base, seed: 2, issueKeys: 1, progression: { startLevel: 9 }, plan: { ...defaultPlan(), objectives: warden } },
+    { ...base, seed: 4, issueKeys: 1, progression: { startLevel: 9 }, plan: { ...defaultPlan(), objectives: warden } },
     { ...base, seed: 1, issueKeys: 1, progression: { startLevel: 9 }, plan: { ...defaultPlan(), retreatHpPct: 0, objectives: warden } },
   ];
   const inPage = await page.evaluate(cs => cs.map(c => window.__EXPEDITION_RUN__(c)), cases);
