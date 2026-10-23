@@ -2,6 +2,129 @@
 // One adventurer AI vs one or more enemies.
 const SIM = (function () {
   'use strict';
+// >>> portable-math
+const M = (function () {
+  'use strict';
+  const PI = 3.141592653589793, HALF_PI = 1.5707963267948966, PI_LO = 1.2246467991473532e-16;
+  const sqrt = Math.sqrt, floor = Math.floor;
+
+  // sin/cos: reduce by multiples of pi/2 in three exact pieces, then the fdlibm kernels on [-pi/4, pi/4].
+  const INV_PIO2 = 6.36619772367581382433e-01;
+  const PIO2_1 = 1.57079632673412561417e+00, PIO2_1T = 6.07710050650619224932e-11;
+  const PIO2_2 = 6.07710050630396597660e-11, PIO2_2T = 2.02226624879595063154e-21;
+  const S1 = -1.66666666666666324348e-01, S2 = 8.33333333332248946124e-03, S3 = -1.98412698298579493134e-04;
+  const S4 = 2.75573137070700676789e-06, S5 = -2.50507602534068634195e-08, S6 = 1.58969099521155010221e-10;
+  const C1 = 4.16666666666666019037e-02, C2 = -1.38888888888741095749e-03, C3 = 2.48015872894767294178e-05;
+  const C4 = -2.75573143513906633035e-07, C5 = 2.08757232129817482790e-09, C6 = -1.13596475577881948265e-11;
+
+  function kSin(x, y) {
+    const z = x * x, v = z * x, r = S2 + z * (S3 + z * (S4 + z * (S5 + z * S6)));
+    return x - ((z * (0.5 * y - v * r) - y) - v * S1);
+  }
+  function kCos(x, y) {
+    const z = x * x, r = z * (C1 + z * (C2 + z * (C3 + z * (C4 + z * (C5 + z * C6)))));
+    const hz = 0.5 * z, w = 1 - hz;
+    return w + (((1 - w) - hz) + (z * r - x * y));
+  }
+  // Returns the quadrant n (0..3) and writes the reduced angle to R[0] + R[1] with |R| <= pi/4.
+  const R = [0, 0];
+  function reduce(x) {
+    if (x >= -0.7853981633974483 && x <= 0.7853981633974483) { R[0] = x; R[1] = 0; return 0; }
+    if (x > 1e5 || x < -1e5) { const k = floor(x / (2 * PI) + 0.5); x = ((x - k * 4 * PIO2_1) - k * 4 * PIO2_2) - k * 4 * PIO2_2T; } // exact for |k| < 2^20, about |x| < 6e6
+    const n = floor(x * INV_PIO2 + 0.5);
+    const r = x - n * PIO2_1;
+    let w = n * PIO2_1T;
+    let y0 = r - w;
+    if (n > 32 || n < -32) { // second stage when n is large enough that PIO2_1T alone loses bits
+      const t = r;
+      w = n * PIO2_2;
+      const rr = t - w;
+      w = n * PIO2_2T - ((t - rr) - w);
+      y0 = rr - w;
+      R[0] = y0; R[1] = (rr - y0) - w;
+    } else { R[0] = y0; R[1] = (r - y0) - w; }
+    return ((n % 4) + 4) % 4;
+  }
+  function sin(x) {
+    if (x !== x || x === Infinity || x === -Infinity) return NaN;
+    const n = reduce(x), a = R[0], b = R[1];
+    return n === 0 ? kSin(a, b) : n === 1 ? kCos(a, b) : n === 2 ? -kSin(a, b) : -kCos(a, b);
+  }
+  function cos(x) {
+    if (x !== x || x === Infinity || x === -Infinity) return NaN;
+    const n = reduce(x), a = R[0], b = R[1];
+    return n === 0 ? kCos(a, b) : n === 1 ? -kSin(a, b) : n === 2 ? -kCos(a, b) : kSin(a, b);
+  }
+
+  // atan: fdlibm argument reduction to |x| <= 7/16 and an odd polynomial.
+  const ATAN_HI = [4.63647609000806093515e-01, 7.85398163397448278999e-01, 9.82793723247329054082e-01, 1.57079632679489655800e+00];
+  const ATAN_LO = [2.26987774529616870924e-17, 3.06161699786838301793e-17, 1.39033110312309984516e-17, 6.12323399573676603587e-17];
+  const AT = [3.33333333333329318027e-01, -1.99999999998764832476e-01, 1.42857142725034663711e-01, -1.11111104054623557880e-01,
+    9.09088713343650656196e-02, -7.69187620504482999495e-02, 6.66107313738753120669e-02, -5.83357013379057348645e-02,
+    4.97687799461593236017e-02, -3.65315727442169155270e-02, 1.62858201153657823623e-02];
+  function atanPos(x) { // x >= 0, finite or +Infinity
+    if (x > 7.378697629483821e19) return ATAN_HI[3] + ATAN_LO[3];
+    let id;
+    if (x < 0.4375) id = -1;
+    else if (x < 1.1875) { if (x < 0.6875) { id = 0; x = (2 * x - 1) / (2 + x); } else { id = 1; x = (x - 1) / (x + 1); } }
+    else if (x < 2.4375) { id = 2; x = (x - 1.5) / (1 + 1.5 * x); }
+    else { id = 3; x = -1 / x; }
+    const z = x * x, w = z * z;
+    const s1 = z * (AT[0] + w * (AT[2] + w * (AT[4] + w * (AT[6] + w * (AT[8] + w * AT[10])))));
+    const s2 = w * (AT[1] + w * (AT[3] + w * (AT[5] + w * (AT[7] + w * AT[9]))));
+    if (id < 0) return x - x * (s1 + s2);
+    return ATAN_HI[id] - ((x * (s1 + s2) - ATAN_LO[id]) - x);
+  }
+  function atan2(y, x) {
+    if (x !== x || y !== y) return NaN;
+    if (x === Infinity || x === -Infinity || y === Infinity || y === -Infinity) return Math.atan2(y, x); // exact constants, no rounding involved
+    const neg = y < 0 || (y === 0 && 1 / y < 0);
+    if (y === 0) { // +-0 and +-pi
+      return (x > 0 || (x === 0 && 1 / x > 0)) ? y : neg ? -PI : PI;
+    }
+    if (x === 0) return neg ? -HALF_PI : HALF_PI;
+    const z = atanPos(Math.abs(y / x));
+    const r = x > 0 ? z : PI - (z - PI_LO);
+    return neg ? -r : r;
+  }
+
+  // exp: x = k ln2 + r, polynomial for exp(r), exact scaling by 2^k.
+  const LN2_HI = 6.93147180369123816490e-01, LN2_LO = 1.90821492927058770002e-10, INV_LN2 = 1.44269504088896338700e+00;
+  const P1 = 1.66666666666666019037e-01, P2 = -2.77777777770155933842e-03, P3 = 6.61375632143793436117e-05;
+  const P4 = -1.65339022054652515390e-06, P5 = 4.13813679705723846039e-08;
+  function pow2(k) { // 2^k for integer |k| <= 1000, by squaring: every product is an exact power of two
+    let r = 1, b = k < 0 ? 0.5 : 2, e = k < 0 ? -k : k;
+    while (e > 0) { if (e & 1) r *= b; b *= b; e = e >>> 1; }
+    return r;
+  }
+  function exp(x) {
+    if (x !== x) return NaN;
+    if (x > 709.782712893384) return Infinity;
+    if (x < -745.1332191019411) return 0;
+    if (x < 1.862645149230957e-9 && x > -1.862645149230957e-9) return 1 + x;
+    const k = floor(x * INV_LN2 + 0.5);
+    const hi = x - k * LN2_HI, lo = k * LN2_LO, r = hi - lo;
+    const t = r * r, c = r - t * (P1 + t * (P2 + t * (P3 + t * (P4 + t * P5))));
+    let y = 1 - ((lo - (r * c) / (2 - c)) - hi);
+    let e = k;
+    while (e > 1000) { y *= pow2(1000); e -= 1000; }
+    while (e < -1000) { y *= pow2(-1000); e += 1000; }
+    return y * pow2(e);
+  }
+
+  // hypot: no overflow guard, the sim works with coordinates under 1e4.
+  function hypot(x, y) { return sqrt(x * x + y * y); }
+
+  // pow: non-negative integer exponent only (the sim raises a probability to a count).
+  function pow(base, n) {
+    let r = 1;
+    for (let i = 0; i < n; i++) r *= base;
+    return r;
+  }
+
+  return { sin, cos, atan2, exp, hypot, pow };
+})();
+// <<< portable-math
   const HZ = 30, ARENA_R = 230, MAX_TICKS = HZ * 150;
   const GUARD_BREAK_STAGGER = 30; // ticks the adventurer is helpless after a broken guard
 
@@ -179,7 +302,7 @@ const SIM = (function () {
       const k = isR ? ri++ : mi++, cnt = isR ? ranged : melee;
       const spread = cnt === 1 ? 0 : -0.9 + 1.8 * k / (cnt - 1);
       const rad = isR ? 185 : 110;
-      const x = Math.cos(spread * (isR ? 0.6 : 1)) * rad, y = Math.sin(spread * (isR ? 0.6 : 1)) * rad;
+      const x = M.cos(spread * (isR ? 0.6 : 1)) * rad, y = M.sin(spread * (isR ? 0.6 : 1)) * rad;
       seen[arch] = (seen[arch] || 0) + 1;
       const name = counts[arch] > 1 ? `${ARCH[arch].name} ${'ABCD'[seen[arch] - 1]}` : ARCH[arch].name;
       const e = makeFighter(arch, x, y, Math.PI, name);
@@ -242,16 +365,16 @@ const SIM = (function () {
   }
 
   function checkHit(S, a, d, m) {
-    const dx = d.x - a.x, dy = d.y - a.y, dist = Math.hypot(dx, dy);
+    const dx = d.x - a.x, dy = d.y - a.y, dist = M.hypot(dx, dy);
     if (dist > m.range + d.r) return;
-    if (Math.abs(angDiff(Math.atan2(dy, dx), a.face)) > m.arc + Math.atan2(d.r, Math.max(dist, 1))) return;
+    if (Math.abs(angDiff(M.atan2(dy, dx), a.face)) > m.arc + M.atan2(d.r, Math.max(dist, 1))) return;
     const isP = d === S.p;
     if (d.iframe) {
       if (!a.evadeLogged) { a.evadeLogged = true; if (isP) { S.stats.dodges++; ev(S, `Dodged ${a.name}’s ${m.name}.`, 'good'); } }
       return;
     }
     if (isP) a.actHit = true; else a.hitSet.add(d.idx);
-    const outsideGuard = Math.abs(angDiff(Math.atan2(-dy, -dx), d.face)) >= 1.3;
+    const outsideGuard = Math.abs(angDiff(M.atan2(-dy, -dx), d.face)) >= 1.3;
     if (isP && d.act && d.act.kind === 'parry' && !outsideGuard && !m.noParry &&
         d.actT > d.act.windup && d.actT <= d.act.windup + d.parryWin) {
       S.stats.parries++;
@@ -329,7 +452,7 @@ const SIM = (function () {
       const A = ARCH[f.arch];
       f.ai.cool = A.aggro[0] + Math.floor(S.rngE() * (A.aggro[1] - A.aggro[0]));
       if (f.arch === 'stalker') {
-        const dist = Math.hypot(S.p.x - f.x, S.p.y - f.y);
+        const dist = M.hypot(S.p.x - f.x, S.p.y - f.y);
         if (!f.ai.chained && dist < 75 && S.rngE() < 0.45) { f.ai.chained = true; startAct(S, f, 'slash'); return; }
         f.ai.chained = false; f.ai.mode = 'retreat'; f.ai.modeT = 16;
       } else if (f.arch === 'mireling') { f.ai.mode = 'retreat'; f.ai.modeT = 20; }
@@ -349,7 +472,7 @@ const SIM = (function () {
     }
     if (m.kind === 'dodge') {
       const t = f.actT;
-      if (t <= 9) { const v = m.dist * (2 * (10 - t)) / 90; f.x += Math.cos(f.dodgeDir) * v; f.y += Math.sin(f.dodgeDir) * v; }
+      if (t <= 9) { const v = m.dist * (2 * (10 - t)) / 90; f.x += M.cos(f.dodgeDir) * v; f.y += M.sin(f.dodgeDir) * v; }
       f.iframe = t >= m.iStart && t <= m.iEnd;
       if (t >= m.dur) {
         f.act = null; f.iframe = false;
@@ -365,25 +488,25 @@ const SIM = (function () {
     const tgt = isP ? (S.ai.snaps[S.ai.target] || S.enemies[0]) : S.p;
     if (m.kind === 'guard') {
       // Shield up: keeps turning to face and edges forward at a crawl.
-      const dist = Math.hypot(tgt.x - f.x, tgt.y - f.y), ang = Math.atan2(tgt.y - f.y, tgt.x - f.x);
+      const dist = M.hypot(tgt.x - f.x, tgt.y - f.y), ang = M.atan2(tgt.y - f.y, tgt.x - f.x);
       turnToward(f, ang, f.turn);
-      if (dist > 50) { f.x += Math.cos(ang) * f.speed * 0.35; f.y += Math.sin(ang) * f.speed * 0.35; }
+      if (dist > 50) { f.x += M.cos(ang) * f.speed * 0.35; f.y += M.sin(ang) * f.speed * 0.35; }
       if (f.actT >= m.active + m.recovery) { f.act = null; onActEnd(S, f); }
       return;
     }
     if (m.kind === 'ranged') {
-      if (f.actT < m.windup - m.track) turnToward(f, Math.atan2(tgt.y - f.y, tgt.x - f.x), f.turn);
+      if (f.actT < m.windup - m.track) turnToward(f, M.atan2(tgt.y - f.y, tgt.x - f.x), f.turn);
       if (f.actT === m.windup + 1) {
-        S.projectiles.push({ inst: ++S.inst, owner: f, name: m.name, dmg: m.dmg, x: f.x + Math.cos(f.face) * (f.r + 4), y: f.y + Math.sin(f.face) * (f.r + 4), vx: Math.cos(f.face) * m.speed, vy: Math.sin(f.face) * m.speed, born: S.tick, evaded: false });
+        S.projectiles.push({ inst: ++S.inst, owner: f, name: m.name, dmg: m.dmg, x: f.x + M.cos(f.face) * (f.r + 4), y: f.y + M.sin(f.face) * (f.r + 4), vx: M.cos(f.face) * m.speed, vy: M.sin(f.face) * m.speed, born: S.tick, evaded: false });
       }
       if (f.actT >= m.windup + m.active + m.recovery) { f.act = null; onActEnd(S, f); }
       return;
     }
     if (f.actT <= m.windup) {
-      if (f.actT < m.windup - m.track) turnToward(f, Math.atan2(tgt.y - f.y, tgt.x - f.x), f.turn);
+      if (f.actT < m.windup - m.track) turnToward(f, M.atan2(tgt.y - f.y, tgt.x - f.x), f.turn);
     } else if (f.actT <= m.windup + m.active) {
       const v = m.lunge / m.active;
-      f.x += Math.cos(f.face) * v; f.y += Math.sin(f.face) * v;
+      f.x += M.cos(f.face) * v; f.y += M.sin(f.face) * v;
       if (isP) { for (const e of S.enemies) if (!e.dead && !f.hitSet.has(e.idx)) checkHit(S, f, e, m); }
       else if (!f.actHit) checkHit(S, f, S.p, m);
       if (!f.act) return;
@@ -392,7 +515,7 @@ const SIM = (function () {
   }
 
   function keepInArena(f) {
-    const d = Math.hypot(f.x, f.y), lim = ARENA_R - f.r;
+    const d = M.hypot(f.x, f.y), lim = ARENA_R - f.r;
     if (d > lim) { f.x *= lim / d; f.y *= lim / d; }
   }
   function moveF(f) {
@@ -402,7 +525,7 @@ const SIM = (function () {
   function separate(S) {
     const bodies = [S.p, ...alive(S)];
     for (let i = 0; i < bodies.length; i++) for (let j = i + 1; j < bodies.length; j++) {
-      const a = bodies[i], b = bodies[j], dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 0.01, min = a.r + b.r;
+      const a = bodies[i], b = bodies[j], dx = b.x - a.x, dy = b.y - a.y, d = M.hypot(dx, dy) || 0.01, min = a.r + b.r;
       if (d < min) { const push = (min - d) / 2; a.x -= dx / d * push; a.y -= dy / d * push; b.x += dx / d * push; b.y += dy / d * push; keepInArena(a); keepInArena(b); }
     }
   }
@@ -410,10 +533,10 @@ const SIM = (function () {
     const p = S.p, keep = [];
     for (const pr of S.projectiles) {
       pr.x += pr.vx; pr.y += pr.vy;
-      if (Math.hypot(pr.x, pr.y) > ARENA_R + 10 || S.tick - pr.born > 90) continue;
-      if (Math.hypot(pr.x - p.x, pr.y - p.y) > p.r + 3) { keep.push(pr); continue; }
+      if (M.hypot(pr.x, pr.y) > ARENA_R + 10 || S.tick - pr.born > 90) continue;
+      if (M.hypot(pr.x - p.x, pr.y - p.y) > p.r + 3) { keep.push(pr); continue; }
       if (p.iframe) { if (!pr.evaded) { pr.evaded = true; S.stats.dodges++; ev(S, `Rolled through ${pr.owner.name}’s ${pr.name}.`, 'good'); } keep.push(pr); continue; }
-      const from = Math.atan2(-pr.vy, -pr.vx), outsideGuard = Math.abs(angDiff(from, p.face)) >= 1.3;
+      const from = M.atan2(-pr.vy, -pr.vx), outsideGuard = Math.abs(angDiff(from, p.face)) >= 1.3;
       const plan = S.ai.plans[pr.inst];
       if (p.blocking && !outsideGuard) {
         let cost = pr.dmg * 1.6 * S.d.blockMult;
@@ -450,7 +573,7 @@ const SIM = (function () {
     for (const o of opts) if (o.s > best.s) best = o;
     if (temp <= 0.001) return best;
     let sum = 0;
-    const w = opts.map(o => { const x = Math.exp((o.s - best.s) / temp); sum += x; return x; });
+    const w = opts.map(o => { const x = M.exp((o.s - best.s) / temp); sum += x; return x; });
     let r = rng() * sum;
     for (let i = 0; i < opts.length; i++) { r -= w[i]; if (r <= 0) return opts[i]; }
     return best;
@@ -470,7 +593,7 @@ const SIM = (function () {
     const ai = S.ai, d = S.d, p = S.p, doc = DOCTRINES[S.cfg.doctrine];
     const b = ai.beliefs[i], plan = ai.plans[b.inst], snap = ai.snaps[i], m = b.def;
     const tta = m.windup - (snap.t + d.delay);
-    const dist = Math.hypot(p.x - snap.x, p.y - snap.y);
+    const dist = M.hypot(p.x - snap.x, p.y - snap.y);
     const reach = m.range + m.lunge + p.r + 6;
     plan.done = false;
     const opts = [];
@@ -482,7 +605,7 @@ const SIM = (function () {
       if (p.st < blockCost(S, m, d.perfect >= 3)) s -= 1.3 * (1 - 1.6 * d.greed);
       if (m.guardBreak) s -= 0.25;
       // Can it turn to face this attacker before the hit? Matters once there are two.
-      const turnNeed = Math.max(0, Math.abs(angDiff(Math.atan2(snap.y - p.y, snap.x - p.x), p.face)) - 1.1) / p.turn;
+      const turnNeed = Math.max(0, Math.abs(angDiff(M.atan2(snap.y - p.y, snap.x - p.x), p.face)) - 1.1) / p.turn;
       if (turnNeed > tta) s -= 1.2 * d.flankSense;
       // Blocking keeps it in reach to punish the recovery; a dodge usually carries it out of range.
       if (m.recovery >= MOVES.light.windup + 6) s += 0.15;
@@ -503,8 +626,8 @@ const SIM = (function () {
       const feint = ARCH[S.enemies[i].arch].moves.reduce((mx, k) => MOVES[k].lookalike === m.id ? Math.max(mx, MOVES[k].deceive) : mx, 0);
       P *= 1 - d.misread * feint;
       // A whiffed parry leaves it open to everyone nearby, so company makes it riskier.
-      const near = S.enemies.filter((o, j) => j !== i && !o.dead && Math.hypot(o.x - p.x, o.y - p.y) < (ARCH[o.arch].threatReach || 150) + 40).length;
-      P *= Math.pow(1 - 0.35 * d.flankSense, near);
+      const near = S.enemies.filter((o, j) => j !== i && !o.dead && M.hypot(o.x - p.x, o.y - p.y) < (ARCH[o.arch].threatReach || 150) + 40).length;
+      P *= M.pow(1 - 0.35 * d.flankSense, near);
       opts.push({ id: 'parry', s: 0.5 + 1.2 * P - 0.6 * (1 - P) + doc.parryBias, P });
     }
     opts.push({ id: 'none', s: -0.2 });
@@ -553,7 +676,7 @@ const SIM = (function () {
       const vv = pr.vx * pr.vx + pr.vy * pr.vy;
       const t = ((p.x - px) * pr.vx + (p.y - py) * pr.vy) / vv;
       if (t <= 0) continue;
-      const cx = px + pr.vx * t - p.x, cy = py + pr.vy * t - p.y, miss = Math.hypot(cx, cy);
+      const cx = px + pr.vx * t - p.x, cy = py + pr.vy * t - p.y, miss = M.hypot(cx, cy);
       if (miss > p.r + 7) continue;
       const tta = t - d.delay;
       let plan = ai.plans[pr.inst];
@@ -567,7 +690,7 @@ const SIM = (function () {
           plan.noStam = p.st < MOVES.dodge.stam;
           if (!plan.noStam) opts.push({ id: 'dodge', s: 0.95 + doc.dodgeBias });
           let bs = 0.9 + doc.blockBias;
-          const turnNeed = Math.max(0, Math.abs(angDiff(Math.atan2(-pr.vy, -pr.vx), p.face)) - 1.1) / p.turn;
+          const turnNeed = Math.max(0, Math.abs(angDiff(M.atan2(-pr.vy, -pr.vx), p.face)) - 1.1) / p.turn;
           if (turnNeed > tta) bs -= 1.2 * d.flankSense;
           if (p.st < pr.dmg * 1.6 * d.blockMult) bs -= 1.3;
           opts.push({ id: 'block', s: bs });
@@ -583,29 +706,29 @@ const SIM = (function () {
 
   function moveToward(S, ang, mag) {
     const p = S.p, spd = p.speed * S.d.moveMult * (p.blocking ? 0.5 : 1) * mag;
-    p.mvx = Math.cos(ang) * spd; p.mvy = Math.sin(ang) * spd;
+    p.mvx = M.cos(ang) * spd; p.mvy = M.sin(ang) * spd;
   }
 
   function doDodge(S, i, m) {
     const p = S.p, d = S.d, snap = S.ai.snaps[i];
-    const away = Math.atan2(p.y - snap.y, p.x - snap.x);
+    const away = M.atan2(p.y - snap.y, p.x - snap.x);
     let dir;
     if (S.rngA() < d.dodgeErr) dir = away + (S.rngA() * 2 - 1) * Math.PI; // panicked roll
     else {
       let best = -1e9;
-      const lx = snap.x + Math.cos(snap.face) * m.lunge, ly = snap.y + Math.sin(snap.face) * m.lunge;
+      const lx = snap.x + M.cos(snap.face) * m.lunge, ly = snap.y + M.sin(snap.face) * m.lunge;
       for (const r of [0, 0.8, -0.8, 1.57, -1.57]) {
-        const a = away + r, ex = p.x + Math.cos(a) * MOVES.dodge.dist, ey = p.y + Math.sin(a) * MOVES.dodge.dist;
+        const a = away + r, ex = p.x + M.cos(a) * MOVES.dodge.dist, ey = p.y + M.sin(a) * MOVES.dodge.dist;
         let s = 0;
-        if (Math.hypot(ex, ey) > ARENA_R - p.r - 8) s -= 3;
-        const dEnd = Math.hypot(ex - lx, ey - ly);
-        const off = Math.abs(angDiff(Math.atan2(ey - snap.y, ex - snap.x), snap.face));
+        if (M.hypot(ex, ey) > ARENA_R - p.r - 8) s -= 3;
+        const dEnd = M.hypot(ex - lx, ey - ly);
+        const off = Math.abs(angDiff(M.atan2(ey - snap.y, ex - snap.x), snap.face));
         if (dEnd > m.range + p.r + 4 || off > m.arc + 0.35) s += 2;
         s -= Math.abs(dEnd - 60) / 100;
         // Don't roll into the other enemy.
         S.enemies.forEach((o, j) => {
           if (j === i || o.dead) return;
-          const os = S.ai.snaps[j], od = Math.hypot(ex - os.x, ey - os.y);
+          const os = S.ai.snaps[j], od = M.hypot(ex - os.x, ey - os.y);
           if (od < ARCH[o.arch].threatReach) s -= 1.2 * d.flankSense;
         });
         if (s > best) { best = s; dir = a; }
@@ -660,7 +783,7 @@ const SIM = (function () {
     S.enemies.forEach((e, i) => {
       if (e.dead) return;
       const sn = ai.snaps[i], pi = phaseInfo(S, i);
-      const dist = Math.hypot(sn.x - p.x, sn.y - p.y);
+      const dist = M.hypot(sn.x - p.x, sn.y - p.y);
       const A = ARCH[e.arch];
       let s = (1 - e.hp / e.maxHp) * 0.6 - dist / (A.ranged ? 500 : 250) + (i === ai.target ? 0.25 : 0);
       if (A.fodder && e.hp <= MOVES.light.dmg) s += 0.4;   // one hit finishes it
@@ -682,7 +805,7 @@ const SIM = (function () {
     p.mvx = p.mvy = 0;
     if (S.tick % 6 === 0 || !S.enemies[ai.target] || S.enemies[ai.target].dead) pickTarget(S);
     const ti = ai.target, tgt = S.enemies[ti], snap = ai.snaps[ti];
-    const dist = Math.hypot(snap.x - p.x, snap.y - p.y), angE = Math.atan2(snap.y - p.y, snap.x - p.x);
+    const dist = M.hypot(snap.x - p.x, snap.y - p.y), angE = M.atan2(snap.y - p.y, snap.x - p.x);
 
     // Every attack it believes is coming, most imminent first.
     const threats = [];
@@ -690,8 +813,8 @@ const SIM = (function () {
       if (e.dead) return;
       const pi = phaseInfo(S, i);
       if (!pi || pi.inRecovery) return;
-      const sn = ai.snaps[i], dd = Math.hypot(sn.x - p.x, sn.y - p.y);
-      if (dd <= pi.m.range + pi.m.lunge + p.r + 40) threats.push({ i, pi, dist: dd, ang: Math.atan2(sn.y - p.y, sn.x - p.x) });
+      const sn = ai.snaps[i], dd = M.hypot(sn.x - p.x, sn.y - p.y);
+      if (dd <= pi.m.range + pi.m.lunge + p.r + 40) threats.push({ i, pi, dist: dd, ang: M.atan2(sn.y - p.y, sn.x - p.x) });
     });
     threats.sort((a, b) => a.pi.tta - b.pi.tta);
     const top = threats[0];
@@ -699,7 +822,7 @@ const SIM = (function () {
     const arrowGuard = (ai.projThreats || []).find(x => x.plan.done && x.plan.resp === 'block') || null;
     const arrowFirst = pt && (!top || pt.tta <= top.pi.tta);
     const faceArrow = (arrowFirst && pt.plan.resp === 'block') ? pt : (!top || (arrowGuard && arrowGuard.tta <= top.pi.tta)) ? arrowGuard : null;
-    turnToward(p, faceArrow ? Math.atan2(-faceArrow.pr.vy, -faceArrow.pr.vx) : top && (p.blocking || top.pi.tta < 12) ? top.ang : angE, p.turn);
+    turnToward(p, faceArrow ? M.atan2(-faceArrow.pr.vy, -faceArrow.pr.vx) : top && (p.blocking || top.pi.tta < 12) ? top.ang : angE, p.turn);
 
     // 0. An arrow that lands before any melee hit.
     if (arrowFirst) {
@@ -707,12 +830,12 @@ const SIM = (function () {
       ai.readout = `${pt.pr.owner.name}’s arrow lands in ${Math.max(0, pt.tta / HZ).toFixed(2)} s. Plan: ${PLAN_WORDS[pl.resp]}.`;
       ai.truth = '';
       if (pl.resp === 'sidestep') {
-        const away = pt.miss > 0.5 ? Math.atan2(-pt.cy, -pt.cx) : Math.atan2(pt.pr.vx, -pt.pr.vy);
+        const away = pt.miss > 0.5 ? M.atan2(-pt.cy, -pt.cx) : M.atan2(pt.pr.vx, -pt.pr.vy);
         moveToward(S, away, 1); ai.intent = 'Sidestep'; return;
       }
       if (pl.resp === 'dodge' && pt.tta <= pl.trigger) {
         pl.done = true;
-        if (p.st >= MOVES.dodge.stam) { p.dodgeDir = Math.atan2(pt.pr.vx, -pt.pr.vy) + (S.rngA() < 0.5 ? Math.PI : 0); startAct(S, p, 'dodge'); ai.intent = 'Dodge'; return; }
+        if (p.st >= MOVES.dodge.stam) { p.dodgeDir = M.atan2(pt.pr.vx, -pt.pr.vy) + (S.rngA() < 0.5 ? Math.PI : 0); startAct(S, p, 'dodge'); ai.intent = 'Dodge'; return; }
         pl.noStam = true;
       }
       if (pl.resp === 'block' && pt.tta <= pl.trigger) { pl.done = true; p.blocking = true; p.blockStart = S.tick; }
@@ -752,7 +875,7 @@ const SIM = (function () {
       ai.truth = '';
       const guardIdle = p.st >= p.maxSt * 0.5 && S.enemies.some((e, i) => {
         if (e.dead) return false;
-        const A = ARCH[e.arch], sn = ai.snaps[i], dd = Math.hypot(sn.x - p.x, sn.y - p.y);
+        const A = ARCH[e.arch], sn = ai.snaps[i], dd = M.hypot(sn.x - p.x, sn.y - p.y);
         return (doc.guardIdle && dd < A.threatReach + 25) ||
           (S.cfg.doctrine !== 'pressing' && dd < A.threatReach + 30 && Math.min(...A.moves.map(k => MOVES[k].windup)) < d.delay + 2);
       });
@@ -762,11 +885,11 @@ const SIM = (function () {
 
     // 2. Offense against the current target.
     const old = tgt.hist[Math.max(0, S.tick - d.delay - 3)];
-    const closing = (Math.hypot(p.x - old.x, p.y - old.y) - dist) / 3;
+    const closing = (M.hypot(p.x - old.x, p.y - old.y) - dist) / 3;
     const tpi = phaseInfo(S, ti);
     let guardLeft = 0;
     if (snap.id === 'sguard' && snap.t + d.delay <= MOVES.sguard.active &&
-        Math.abs(angDiff(Math.atan2(p.y - snap.y, p.x - snap.x), snap.face)) < 1.3) guardLeft = MOVES.sguard.active - (snap.t + d.delay);
+        Math.abs(angDiff(M.atan2(p.y - snap.y, p.x - snap.x), snap.face)) < 1.3) guardLeft = MOVES.sguard.active - (snap.t + d.delay);
     let window = null;
     if (ai.riposte && ai.riposte.idx === ti && ai.riposte.until > S.tick) window = ai.riposte.until - S.tick; // it knows how long a parry leaves them open
     else if (tpi && tpi.inRecovery && tpi.recLeft > 0) window = tpi.recLeft;
@@ -779,7 +902,7 @@ const SIM = (function () {
     S.enemies.forEach((e, i) => {
       if (i === ti || e.dead) return;
       const sn = ai.snaps[i], A2 = ARCH[e.arch], pi2 = phaseInfo(S, i);
-      const dd = Math.hypot(sn.x - p.x, sn.y - p.y);
+      const dd = M.hypot(sn.x - p.x, sn.y - p.y);
       const fastest = Math.min(...A2.moves.map(k => MOVES[k].windup));
       const walk = Math.max(0, dd - A2.threatReach) / e.speed;
       let t;
@@ -834,25 +957,25 @@ const SIM = (function () {
       const others = S.enemies.filter((e, i) => i !== ti && !e.dead);
       if (others.length && S.rngA() < d.flankSense) {
         const score = dir => {
-          const tx = p.x - Math.sin(angE) * dir * 25, ty = p.y + Math.cos(angE) * dir * 25;
-          return others.reduce((acc, o) => { const sn = ai.snaps[o.idx]; return acc + Math.abs(angDiff(Math.atan2(sn.y - ty, sn.x - tx), Math.atan2(snap.y - ty, snap.x - tx))); }, 0);
+          const tx = p.x - M.sin(angE) * dir * 25, ty = p.y + M.cos(angE) * dir * 25;
+          return others.reduce((acc, o) => { const sn = ai.snaps[o.idx]; return acc + Math.abs(angDiff(M.atan2(sn.y - ty, sn.x - tx), M.atan2(snap.y - ty, snap.x - tx))); }, 0);
         };
         ai.strafe = score(1) <= score(-1) ? 1 : -1;
       } else if (S.rngA() < 0.5) ai.strafe *= -1;
     }
     const radial = clamp((dist - want) / 20, -1, 1);
-    let vx = Math.cos(angE) * radial - Math.sin(angE) * ai.strafe * 0.45;
-    let vy = Math.sin(angE) * radial + Math.cos(angE) * ai.strafe * 0.45;
+    let vx = M.cos(angE) * radial - M.sin(angE) * ai.strafe * 0.45;
+    let vy = M.sin(angE) * radial + M.cos(angE) * ai.strafe * 0.45;
     S.enemies.forEach((e, i) => {
       if (i === ti || e.dead) return;
-      const sn = ai.snaps[i], dx = p.x - sn.x, dy = p.y - sn.y, dd = Math.hypot(dx, dy) || 1;
+      const sn = ai.snaps[i], dx = p.x - sn.x, dy = p.y - sn.y, dd = M.hypot(dx, dy) || 1;
       const lim = ARCH[e.arch].threatReach + 25 + 60 * d.flankSense;
       if (dd < lim) { const w = (lim - dd) / lim * 1.4 * d.flankSense; vx += dx / dd * w; vy += dy / dd * w; }
     });
-    const fromC = Math.hypot(p.x, p.y);
+    const fromC = M.hypot(p.x, p.y);
     if (fromC > ARENA_R - 45) { vx -= p.x / fromC * 0.9; vy -= p.y / fromC * 0.9; }
-    const mag = Math.hypot(vx, vy);
-    if (mag > 0.05) moveToward(S, Math.atan2(vy, vx), Math.min(1, mag));
+    const mag = M.hypot(vx, vy);
+    if (mag > 0.05) moveToward(S, M.atan2(vy, vx), Math.min(1, mag));
     if (!top) {
       ai.intent = ai.recoverT > 0 ? 'Recover' : (p.blocking ? 'Guard up' : 'Space');
       ai.readout = ai.recoverT > 0 ? 'Low stamina. Backing off to recover.'
@@ -864,7 +987,7 @@ const SIM = (function () {
   // ---------- Enemy AI (hand-authored, fixed skill) ----------
   function enemyThink(S, e) {
     const p = S.p, ai = e.ai, r = S.rngE;
-    const dx = p.x - e.x, dy = p.y - e.y, dist = Math.hypot(dx, dy), ang = Math.atan2(dy, dx);
+    const dx = p.x - e.x, dy = p.y - e.y, dist = M.hypot(dx, dy), ang = M.atan2(dy, dx);
     turnToward(e, ang, e.turn);
     if (ai.cool > 0) ai.cool--;
     const facing = Math.abs(angDiff(ang, e.face)) < 0.5;
@@ -880,8 +1003,8 @@ const SIM = (function () {
         S.enemies.some(o => o !== e && !o.dead && !ARCH[o.arch].fodder && !ARCH[o.arch].ranged && (o.ai.engagedUntil || 0) > S.tick && (ai.engagedUntil || 0) <= S.tick)) {
       const hold = Math.max(120, A0.threatReach + 40);
       const rad = clamp((dist - hold) / 25, -1, 1);
-      vx = Math.cos(ang) * rad - Math.sin(ang) * ai.dir * 0.6; vy = Math.sin(ang) * rad + Math.cos(ang) * ai.dir * 0.6;
-      const mag = Math.hypot(vx, vy) || 1;
+      vx = M.cos(ang) * rad - M.sin(ang) * ai.dir * 0.6; vy = M.sin(ang) * rad + M.cos(ang) * ai.dir * 0.6;
+      const mag = M.hypot(vx, vy) || 1;
       e.mvx = vx / Math.max(1, mag) * e.speed * 0.8; e.mvy = vy / Math.max(1, mag) * e.speed * 0.8;
       if (ai.mode === 'close') ai.mode = 'circle';
       return;
@@ -889,15 +1012,15 @@ const SIM = (function () {
     if (e.arch === 'stalker') {
       const pRec = p.act && p.act.kind === 'attack' && p.actT > p.act.windup + p.act.active;
       if (pRec && facing && canAttack && dist < 125 && ai.mode !== 'retreat') { startAct(S, e, dist < 60 ? 'slash' : 'lunge'); e.mvx = e.mvy = 0; return; }
-      if (ai.mode === 'retreat') { vx = -Math.cos(ang); vy = -Math.sin(ang); if (--ai.modeT <= 0) ai.mode = 'circle'; }
+      if (ai.mode === 'retreat') { vx = -M.cos(ang); vy = -M.sin(ang); if (--ai.modeT <= 0) ai.mode = 'circle'; }
       else if (ai.mode === 'close') {
-        vx = Math.cos(ang); vy = Math.sin(ang);
+        vx = M.cos(ang); vy = M.sin(ang);
         if (ai.feint && dist < 104) { ai.mode = 'retreat'; ai.modeT = 12; ai.cool = 6; }
         if (dist < 58 && facing && canAttack) { startAct(S, e, 'slash'); ai.mode = 'circle'; e.mvx = e.mvy = 0; return; }
       } else {
         const rad = clamp((dist - 105) / 25, -1, 1);
-        vx = Math.cos(ang) * rad - Math.sin(ang) * ai.dir * 0.8;
-        vy = Math.sin(ang) * rad + Math.cos(ang) * ai.dir * 0.8;
+        vx = M.cos(ang) * rad - M.sin(ang) * ai.dir * 0.8;
+        vy = M.sin(ang) * rad + M.cos(ang) * ai.dir * 0.8;
         if (r() < 0.01) ai.dir *= -1;
         if (ai.cool <= 0 && facing && canAttack) {
           if (dist < 60) { startAct(S, e, 'slash'); e.mvx = e.mvy = 0; return; }
@@ -907,8 +1030,8 @@ const SIM = (function () {
       }
     } else if (e.arch === 'sentry') {
       // Walks in to sword range. Mixes slashes and bashes, and sometimes raises its shield instead.
-      if (dist > 60) { vx = Math.cos(ang); vy = Math.sin(ang); }
-      else if (dist < 36) { vx = -Math.cos(ang) * 0.5; vy = -Math.sin(ang) * 0.5; }
+      if (dist > 60) { vx = M.cos(ang); vy = M.sin(ang); }
+      else if (dist < 36) { vx = -M.cos(ang) * 0.5; vy = -M.sin(ang) * 0.5; }
       if (ai.cool <= 0 && facing && canAttack && dist <= 72) {
         const x = r();
         if (x < 0.3 && S.tick - (ai.lastGuard || -999) > 120) { ai.lastGuard = S.tick; startAct(S, e, 'sguard'); e.mvx = e.mvy = 0; return; }
@@ -923,14 +1046,14 @@ const SIM = (function () {
       if (pWind && dist < 95 && S.tick >= (ai.hopReady || 0) && r() < 0.5) { ai.hopReady = S.tick + 50; ai.mode = 'retreat'; ai.modeT = 10; ai.hop = 10; ai.armed = true; }
       else if (ai.armed && pRec && facing && canAttack && dist > 50 && dist < 110) { ai.armed = false; startAct(S, e, 'leap'); e.mvx = e.mvy = 0; return; }
       if (ai.armed && !p.act && ai.mode !== 'retreat') ai.armed = false;
-      if (ai.mode === 'retreat') { vx = -Math.cos(ang) - Math.sin(ang) * ai.dir * 0.6; vy = -Math.sin(ang) + Math.cos(ang) * ai.dir * 0.6; if (--ai.modeT <= 0) ai.mode = 'circle'; }
+      if (ai.mode === 'retreat') { vx = -M.cos(ang) - M.sin(ang) * ai.dir * 0.6; vy = -M.sin(ang) + M.cos(ang) * ai.dir * 0.6; if (--ai.modeT <= 0) ai.mode = 'circle'; }
       else if (ai.mode === 'close') {
-        vx = Math.cos(ang); vy = Math.sin(ang);
+        vx = M.cos(ang); vy = M.sin(ang);
         if (dist < 44 && facing && canAttack) { startAct(S, e, 'bite'); ai.mode = 'circle'; e.mvx = e.mvy = 0; return; }
       } else {
         const rad = clamp((dist - 85) / 25, -1, 1);
-        vx = Math.cos(ang) * rad - Math.sin(ang) * ai.dir * 0.8;
-        vy = Math.sin(ang) * rad + Math.cos(ang) * ai.dir * 0.8;
+        vx = M.cos(ang) * rad - M.sin(ang) * ai.dir * 0.8;
+        vy = M.sin(ang) * rad + M.cos(ang) * ai.dir * 0.8;
         if (r() < 0.012) ai.dir *= -1;
         if (ai.cool <= 0 && facing && canAttack) {
           if (dist < 46) { startAct(S, e, 'bite'); e.mvx = e.mvy = 0; return; }
@@ -940,15 +1063,15 @@ const SIM = (function () {
       }
     } else if (e.arch === 'grunt') {
       // Walk in, fanning out to the sides a little so a pack can surround.
-      if (dist > 56) { vx = Math.cos(ang); vy = Math.sin(ang); if (dist < 150) { vx -= Math.sin(ang) * ai.dir * 0.5; vy += Math.cos(ang) * ai.dir * 0.5; } }
+      if (dist > 56) { vx = M.cos(ang); vy = M.sin(ang); if (dist < 150) { vx -= M.sin(ang) * ai.dir * 0.5; vy += M.cos(ang) * ai.dir * 0.5; } }
       if (ai.cool <= 0 && dist <= 62 && facing && canAttack) { startAct(S, e, 'chop'); e.mvx = e.mvy = 0; return; }
     } else if (e.arch === 'archer') {
-      if (dist < 110) { vx = -Math.cos(ang) - Math.sin(ang) * ai.dir * 0.4; vy = -Math.sin(ang) + Math.cos(ang) * ai.dir * 0.4; }
-      else if (dist > 210) { vx = Math.cos(ang); vy = Math.sin(ang); }
-      else { vx = -Math.sin(ang) * ai.dir * 0.4; vy = Math.cos(ang) * ai.dir * 0.4; if (r() < 0.01) ai.dir *= -1; }
+      if (dist < 110) { vx = -M.cos(ang) - M.sin(ang) * ai.dir * 0.4; vy = -M.sin(ang) + M.cos(ang) * ai.dir * 0.4; }
+      else if (dist > 210) { vx = M.cos(ang); vy = M.sin(ang); }
+      else { vx = -M.sin(ang) * ai.dir * 0.4; vy = M.cos(ang) * ai.dir * 0.4; if (r() < 0.01) ai.dir *= -1; }
       if (ai.cool <= 0 && dist <= MOVES.shot.range && facing && canAttack) { startAct(S, e, 'shot'); e.mvx = e.mvy = 0; return; }
     } else {
-      if (dist > 86) { vx = Math.cos(ang); vy = Math.sin(ang); }
+      if (dist > 86) { vx = M.cos(ang); vy = M.sin(ang); }
       if (ai.cool <= 0 && dist <= 92 && facing && canAttack) {
         const x = r();
         startAct(S, e, x < 0.45 ? 'swing' : x < 0.7 ? 'delayed' : 'overhead');
@@ -958,10 +1081,10 @@ const SIM = (function () {
     // Packs spread out a little rather than queuing behind each other.
     for (const o of S.enemies) {
       if (o === e || o.dead) continue;
-      const ox = e.x - o.x, oy = e.y - o.y, od = Math.hypot(ox, oy) || 1;
+      const ox = e.x - o.x, oy = e.y - o.y, od = M.hypot(ox, oy) || 1;
       if (od < 60) { vx += ox / od * 0.6; vy += oy / od * 0.6; }
     }
-    const mag = Math.hypot(vx, vy);
+    const mag = M.hypot(vx, vy);
     const burst = ai.hop > 0 ? (ai.hop--, 1.7) : 1;
     e.mvx = vx / Math.max(1, mag) * e.speed * burst; e.mvy = vy / Math.max(1, mag) * e.speed * burst;
   }

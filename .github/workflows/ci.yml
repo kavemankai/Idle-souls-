@@ -28,6 +28,7 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run world:check
+      - run: node combat/tools/sync-portable-math.js --check
       - run: npm test
       # Both print "different 0" when the simulator is unchanged for the legacy arena and the split matches main.
       - run: node combat/deep-stats/tools/regress.js

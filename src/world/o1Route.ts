@@ -1,3 +1,4 @@
+import { portableMath as M } from '../combat/portableMath';
 import type { PreparedRoom, SimApi } from '../combat/simApi';
 export interface Point { x: number; y: number }
 const CELL = 8;
@@ -25,7 +26,7 @@ export function planRoute(sim: SimApi, room: PreparedRoom, bounds: readonly [num
   const s = nearestWalkable(start), g = nearestWalkable(goal);
   if (s < 0 || g < 0) return null;
   const cost = new Float64Array(cols * rows).fill(Infinity), prev = new Int32Array(cols * rows).fill(-1), closed = new Uint8Array(cols * rows);
-  const h = (i: number) => { const a = toXY(i), b = toXY(g); return Math.hypot(a.x - b.x, a.y - b.y); };
+  const h = (i: number) => { const a = toXY(i), b = toXY(g); return M.hypot(a.x - b.x, a.y - b.y); };
   // Open list as a plain array scanned for the minimum: the grid is small and ties break on the lower index, which keeps the result deterministic.
   const open: number[] = [s]; cost[s] = 0;
   while (open.length) {
@@ -55,7 +56,7 @@ export function planRoute(sim: SimApi, room: PreparedRoom, bounds: readonly [num
   cells.reverse();
   const pts: Point[] = [from, ...cells.slice(1, -1), to];
   const clearLeg = (a: Point, b: Point) => {
-    const n = Math.max(1, Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / 3));
+    const n = Math.max(1, Math.ceil(M.hypot(b.x - a.x, b.y - a.y) / 3));
     for (let k = 0; k <= n; k++) if (!free(a.x + (b.x - a.x) * k / n, a.y + (b.y - a.y) * k / n)) return false;
     return true;
   };
