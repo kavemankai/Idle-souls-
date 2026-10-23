@@ -5,7 +5,7 @@ import { runExpedition, type ExpeditionConfig } from '../../src/expedition/run';
 
 const sim = loadSim();
 // The planner starts in fog (only the map in the save). Most specs use the Old Road shortcut map so presets have somewhere to go; the fog specs say known=save.
-const open = async (page: Page, query = '') => { await page.goto(`/?scene=expedition${query.includes('known=') ? '' : '&known=oldroad'}${query}`); await page.waitForFunction(() => window.__EXPEDITION_READY__); };
+const open = async (page: Page, query = '') => { await page.goto(`/?scene=expedition${query.includes('known=') ? '' : '&known=oldroad'}${query.includes('progress=') ? '' : '&progress=0'}${query}`); await page.waitForFunction(() => window.__EXPEDITION_READY__); };
 const noSideScroll = (page: Page) => page.evaluate(() => { const x = document.getElementById('xp')!; return x.scrollWidth <= x.clientWidth + 1; });
 
 for (const viewport of [{ width: 1280, height: 720 }, { width: 390, height: 844 }, { width: 844, height: 390 }]) {
@@ -62,6 +62,9 @@ test('browser and Node agree on expeditions across plans and seeds', async ({ pa
   const everything = ['C0', 'O1', 'O2', 'O3', 'KT', 'T1', 'T2', 'T3', 'MB', 'S1', 'S2', 'S3', 'K1', 'K2', 'K3', 'B1', 'SB'];
   cases.push({ seed: 6, level: 80, focus: 'balanced', hpOverride: 5000, known: everything, issueKeys: 1, plan: { ...defaultPlan(), retreatHpPct: 0, objectives: [{ id: 'g', kind: 'open', room: 'T2', to: 'MB' }, { id: 't', kind: 'reach', room: 'T3' }] } });
   cases.push({ seed: 8, level: 80, focus: 'balanced', hpOverride: 5000, known: everything, plan: { ...defaultPlan(), retreatHpPct: 0, returnRoute: 'shortest', objectives: [{ id: 's', kind: 'reach', room: 'S3' }, { id: 'o', kind: 'open', room: 'S3', to: 'C0' }, { id: 'x', kind: 'explore', room: 'K1' }] } });
+  const deepPlan = { ...defaultPlan(), doctrine: 'guarded' as const, retreatHpPct: 60, drinkBelowPct: 70, healingReserve: 1, sanctuaryChoice: 'riposte' as const, objectives: [obj('O3'), obj('S2')] };
+  for (const seed of [1, 2, 3, 4, 5, 6]) cases.push({ seed, level: 80, focus: 'balanced', known: ['C0', 'O1', 'O2', 'O3', 'KT', 'S1', 'S2'], progression: { startLevel: 4, kitRations: 2 }, plan: deepPlan });
+  cases.push({ seed: 2, level: 80, focus: 'balanced', known: ['C0', 'O1', 'O2', 'O3', 'KT'], progression: { startLevel: 1 }, plan: { ...defaultPlan(), objectives: [obj('O1', 'survey')] } });
   const inPage = await page.evaluate(cs => cs.map(c => window.__EXPEDITION_RUN__(c)), cases);
   inPage.forEach((r, i) => expect(r, `case ${i}`).toEqual(runExpedition(sim, cases[i]).chronicle));
 });
@@ -192,4 +195,37 @@ test('a banked key opens a gate only when issued; the gate then stays open and c
   await page.locator('#again').click();
   await expect(page.locator('#keys-line')).toContainText('Opened gates and shortcuts: 1');
   expect(await noSideScroll(page)).toBe(true);
+});
+
+// M5: temporary levels, rations and the sanctuary.
+for (const viewport of [{ width: 1280, height: 720 }, { width: 390, height: 844 }, { width: 844, height: 390 }]) {
+  test(`progression controls, level line and Chronicle progress at ${viewport.width}x${viewport.height}`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await open(page, '&progress=1&seed=3&startlevel=2');
+    await expect(page.locator('#drink')).toBeVisible();
+    await expect(page.locator('#reserve')).toBeVisible();
+    await expect(page.locator('#ration-rule')).toContainText('never banked');
+    await expect(page.locator('#sanctuary-rule')).toContainText('No banking here');
+    await page.locator('[data-seg=upgrade-riposte]').click();
+    await expect(page.locator('#sanctuary-rule')).toContainText('guards');
+    await page.locator('#reserve').selectOption('1');
+    expect(await noSideScroll(page)).toBe(true);
+    await page.locator('[data-preset=careful]').click();
+    await page.locator('#launch').click();
+    await expect(page.locator('#level-line')).toContainText('Levels and upgrades end with the expedition');
+    await expect(page.locator('#sanctuary-line')).toContainText(/no banking here/i);
+    expect(await noSideScroll(page)).toBe(true);
+    await page.locator('#skip').click();
+    await expect(page.locator('#progress-line')).toContainText('only banked loot stays');
+    expect(await noSideScroll(page)).toBe(true);
+    const save = await page.evaluate(() => window.__EXPEDITION_SAVE__());
+    expect(JSON.stringify(save)).not.toMatch(/"(xp|experience|sanctuary|upgrade)"/);
+  });
+}
+
+test('progress=0 hides the progression controls and keeps the fixed level field', async ({ page }) => {
+  await open(page, '&seed=3');
+  await expect(page.locator('#drink')).toHaveCount(0);
+  await expect(page.locator('#sanctuary-rule')).toHaveCount(0);
+  await expect(page.locator('#level')).toHaveCount(1);
 });

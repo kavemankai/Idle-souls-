@@ -2,6 +2,7 @@ import type { ArrivalCtx, LegResult, LiveCtx, NavDecision, Navigator } from '../
 import type { RetreatAnswer } from '../world/roomRunner';
 import type { WorldGraph } from '../world/worldGraph';
 import type { Cache } from '../save/saveTypes';
+import { Progress, REST_BELOW } from '../progression/experience';
 import { describeBank, type Gain } from './loot';
 import { WorldGraph as WG } from '../world/worldGraph';
 import { GATE_NEED, needText, stagingPoint, type GateInfo } from '../world/gates';
@@ -9,7 +10,7 @@ import { ROOMS } from '../world/roomRegistry';
 import { CAMP, MAX_OBJECTIVES, frontierRooms, name, styleOf, type ExpeditionPlan, type Objective, type ObjectiveStatus } from './plan';
 import { planRooms, type RoutePlan, type RouteStyle } from './planner';
 
-export type IntentKind = 'launch' | 'route' | 'objective' | 'discovery' | 'sweep' | 'fight' | 'retreat' | 'redirect' | 'skip' | 'order' | 'loot' | 'end';
+export type IntentKind = 'launch' | 'route' | 'objective' | 'discovery' | 'sweep' | 'fight' | 'retreat' | 'redirect' | 'skip' | 'order' | 'loot' | 'level' | 'ration' | 'sanctuary' | 'end';
 /** One line of the intent feed: what the adventurer is doing and why. `cause` is the rule or order behind it. */
 export interface Intent { tick: number; kind: IntentKind; room: string; text: string; cause: string }
 export type Mode = 'outbound' | 'returning' | 'blocked' | 'home';
@@ -42,7 +43,7 @@ export class Expedition implements Navigator {
   private lastRoute: string[] = [];
   private readonly avoid: Set<string>;
   private nextId = 100;
-  constructor(readonly plan: ExpeditionPlan, private readonly graph: WorldGraph, known: Iterable<string>, private readonly cache: Cache | null = null, openLinks: Iterable<string> = []) {
+  constructor(readonly plan: ExpeditionPlan, private readonly graph: WorldGraph, known: Iterable<string>, private readonly cache: Cache | null = null, openLinks: Iterable<string> = [], private readonly progress: Progress | null = null) {
     this.openLinks = new Set(openLinks);
     this.known = new Set(known);
     this.avoid = new Set(plan.avoid);
@@ -63,7 +64,22 @@ export class Expedition implements Navigator {
   }
   get pendingOrders(): readonly Order[] { return this.pending; }
   private say(tick: number, kind: IntentKind, room: string, text: string, cause: string) { this.intent.push({ tick, kind, room, text, cause }); }
-  private set(o: ObjectiveState, status: ObjectiveStatus, note = '') { o.status = status; o.note = note; }
+  private lastTick = 0;
+  private rationsDrunk = 0;
+  private set(o: ObjectiveState, status: ObjectiveStatus, note = '') {
+    if (status === 'completed' && o.status !== 'completed') this.progress?.objective(this.lastTick);
+    o.status = status; o.note = note;
+  }
+  /** Heard from the world runner: a ration was drunk. */
+  rationUsed(info: { from: 'kit' | 'found'; healed: number; left: number; hp: number }, ctx: LiveCtx) {
+    this.rationsDrunk++;
+    this.say(ctx.tick, 'ration', ctx.room, `Drank a ${info.from === 'kit' ? 'starter' : 'found'} ration: +${info.healed} health, now ${info.hp}. ${info.left} left.`, `Drinking rule: below ${this.plan.drinkBelowPct}% health, no enemy near, one at a time, never in a fight.`);
+  }
+  /** Heard from the world runner: the sanctuary took the plan's upgrade, or rested. It banks nothing. */
+  sanctuaryUsed(info: { kind: 'upgrade'; upgrade: string; name: string; visit: number } | { kind: 'rest'; healed: number; visit: number }, ctx: LiveCtx) {
+    const text = info.kind === 'upgrade' ? `At the Broken Pump sanctuary: took the ${info.name} upgrade for this expedition. No banking here.` : `Rested at the sanctuary: +${info.healed} health, stamina restored. One rest per expedition. No banking here.`;
+    this.say(ctx.tick, 'sanctuary', ctx.room, text, info.kind === 'upgrade' ? `The plan's default choice (${this.plan.sanctuaryChoice}); nothing waits for a decision.` : 'Hurt and safe: the first eligible rest (doc 09). Nothing is banked or secured.');
+  }
   private active(): ObjectiveState | undefined { return this.objectives.find(o => o.status === 'active' || o.status === 'queued'); }
 
   /**
@@ -75,7 +91,9 @@ export class Expedition implements Navigator {
     if (this.mode !== 'outbound' || this.retreatTried) return null;
     const manual = this.pending.some(o => o.type === 'retreat');
     const low = this.plan.retreatHpPct > 0 && pct(ctx.hp, ctx.hpMax) < this.plan.retreatHpPct;
-    if (!manual && !low) return null;
+    // Healing reserve (doc 04): once at least one ration has been drunk, head home when what is left is at or below the reserve.
+    const reserve = this.plan.healingReserve > 0 && this.rationsDrunk > 0 && (ctx.rations ?? Infinity) <= this.plan.healingReserve;
+    if (!manual && !low && !reserve) return null;
     this.pending = this.pending.filter(o => o.type !== 'retreat');
     if (ctx.room === CAMP) {
       this.startReturn(ctx, why0(manual, ctx, this.plan)[0], why0(manual, ctx, this.plan)[1]);
@@ -85,7 +103,7 @@ export class Expedition implements Navigator {
     }
     const style: RouteStyle = this.plan.returnRoute === 'shortest' ? 'shortest' : 'safe';
     const route = this.route0(ctx.room, CAMP, style);
-    const why = why0(manual, ctx, this.plan);
+    const why = !manual && !low && reserve ? [`Rations are down to ${ctx.rations}, at or below the healing reserve of ${this.plan.healingReserve}.`, 'Survival policy (healing reserve)'] as [string, string] : why0(manual, ctx, this.plan);
     if (!route) {
       this.retreatTried = true;
       const open = planRooms({ open: this.openLinks, graph: this.graph, known: this.known, from: ctx.room, to: CAMP, avoid: new Set(), style: 'shortest' });
@@ -146,9 +164,12 @@ export class Expedition implements Navigator {
 
   arrive(ctx: ArrivalCtx): NavDecision {
     const room = ctx.room, tick = ctx.tick;
+    this.lastTick = tick;
     this.visited.add(room);
+    for (const e of this.progress?.drainEvents() ?? []) this.say(tick, 'level', room, `Reached level ${e.level} of 9 (${e.xp} experience): ${e.cause}. It applies from here on and ends with the expedition.`, 'Temporary progression: training by use, learning from mistakes, finding out (doc 10).');
     if (!this.known.has(room)) {
       this.known.add(room);
+      this.progress?.discovery(tick);
       this.say(tick, 'discovery', room, `Entered ${name(this.graph, room)} for the first time. It is now on the map.`, 'Map memory is permanent.');
     }
     if (this.rooms[this.rooms.length - 1] !== room) this.rooms.push(room);
@@ -291,7 +312,10 @@ export class Expedition implements Navigator {
     }
     // Leaving by the door it came in is a U-turn (a dead end, or a look-around): walk to the middle of the room first.
     const exit = `to-${next}`;
-    return { exit, cross: true, label: this.mode === 'returning' ? 'back' : 'out', via: exit === ctx.entry ? { x: 0, y: 0 } : undefined };
+    // A sanctuary with something still on offer (the upgrade choice, or a rest for a hurt adventurer) is a short detour on the way through.
+    const sp = this.progress, spot = ROOMS[ctx.room]?.sanctuary;
+    const wantsSanctuary = !!sp && !!spot && (!sp.sanctuary.upgrade || (!sp.sanctuary.rested && ctx.hp < ctx.hpMax * REST_BELOW));
+    return { exit, cross: true, label: this.mode === 'returning' ? 'back' : 'out', via: wantsSanctuary ? { x: spot!.x, y: spot!.y } : exit === ctx.entry ? { x: 0, y: 0 } : undefined };
   }
 }
 const why0 = (manual: boolean, ctx: LiveCtx, plan: ExpeditionPlan): [string, string] => manual ? ['Player ordered a retreat.', 'Manual retreat outranks every objective.'] : [`Health ${pct(ctx.hp, ctx.hpMax)}% is below the ${plan.retreatHpPct}% retreat setting.`, 'Survival policy'];

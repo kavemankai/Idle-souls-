@@ -9,6 +9,8 @@ import { CAMP, MAX_OBJECTIVES, defaultPlan, frontierRooms, name, preflight, type
 import { finishChronicle, runExpedition, startExpedition, type ExpeditionConfig, type ExpeditionRun } from '../expedition/run';
 import type { Chronicle } from '../expedition/chronicle';
 import { describeBank } from '../expedition/loot';
+import { UPGRADES, upgradeById, type UpgradeId } from '../progression/experience';
+import { MAX_DESIGN_LEVEL } from '../progression/levelTable';
 import { settle, type Settlement } from '../expedition/settle';
 import { LocalStore, MemoryStore, exportSave, importSave, load, persist, type SaveStore } from '../save/save';
 import type { Save } from '../save/saveTypes';
@@ -72,7 +74,10 @@ export function mountExpedition(root: HTMLElement) {
   let issue = 0;
 
   const known = () => new Set<string>([...(KNOWLEDGE[knowledge].rooms === 'all' ? [...graph.rooms.keys()] : (KNOWLEDGE[knowledge].rooms as string[])), ...save.world.discovered]);
-  const cfg = (): ExpeditionConfig => ({ seed, level, focus, plan: { ...plan, objectives: objectives.map(o => ({ ...o })), avoid: plan.avoid.slice() }, known: [...known()], hpOverride, cache: save.camp.cache, issueKeys: Math.min(issue, 2, save.camp.bank.keys), claims: save.world.claims, openLinks: save.world.openedLinks });
+  // Temporary levels are on unless ?progress=0 (fixed level, kept for tests and comparisons).
+  const progressOn = params.get('progress') !== '0';
+  let startLevel = Math.max(1, Math.min(MAX_DESIGN_LEVEL, Math.round(Number(params.get('startlevel')) || 1)));
+  const cfg = (): ExpeditionConfig => ({ seed, level, focus, progression: progressOn ? { startLevel } : undefined, plan: { ...plan, objectives: objectives.map(o => ({ ...o })), avoid: plan.avoid.slice() }, known: [...known()], hpOverride, cache: save.camp.cache, issueKeys: Math.min(issue, 2, save.camp.bank.keys), claims: save.world.claims, openLinks: save.world.openedLinks });
 
   const screen = h('div', { class: 'xp', id: 'xp' });
   root.append(screen);
@@ -133,14 +138,21 @@ export function mountExpedition(root: HTMLElement) {
         seg<SimDoctrine>('Combat doctrine', 'doctrine', [['guarded', 'Guarded'], ['measured', 'Measured'], ['pressing', 'Pressing']], plan.doctrine, v => { plan.doctrine = v; }),
         seg<ReturnRoute>('Way home', 'return', [['safest', 'Safest'], ['shortest', 'Shortest']], plan.returnRoute, v => { plan.returnRoute = v; }),
         h('label', { class: 'range' }, `Head home when health is below ${plan.retreatHpPct}%`, h('input', { type: 'range', id: 'retreat', min: '0', max: '90', step: '5', value: String(plan.retreatHpPct), oninput: (e) => { plan.retreatHpPct = Number((e.target as HTMLInputElement).value); (e.target as HTMLElement).parentElement!.firstChild!.textContent = `Head home when health is below ${plan.retreatHpPct}%`; } })),
-        h('p', { class: 'hint' }, 'Checked all the time. In a fight the adventurer stops attacking and walks out by the nearest permitted way; enemies stay in their room, but they can still hit it on the way.')),
+        h('p', { class: 'hint' }, 'Checked all the time. In a fight the adventurer stops attacking and walks out by the nearest permitted way; enemies stay in their room, but they can still hit it on the way.'),
+        progressOn ? h('label', { class: 'range' }, `Drink a ration below ${plan.drinkBelowPct}% health`, h('input', { type: 'range', id: 'drink', min: '0', max: '90', step: '10', value: String(plan.drinkBelowPct), oninput: (e) => { plan.drinkBelowPct = Number((e.target as HTMLInputElement).value); (e.target as HTMLElement).parentElement!.firstChild!.textContent = `Drink a ration below ${plan.drinkBelowPct}% health`; } })) : null,
+        progressOn ? h('label', { class: 'range' }, 'Head home when rations are down to', h('select', { id: 'reserve', onchange: (e) => { plan.healingReserve = Number((e.target as HTMLSelectElement).value); renderPlan(); } }, ...[[0, 'Never (off)'], [1, '1 ration'], [2, '2 rations']].map(([v, t]) => { const op = h('option', { value: String(v) }, String(t)); if (plan.healingReserve === v) op.selected = true; return op; }))) : null,
+        progressOn ? h('p', { class: 'hint', id: 'ration-rule' }, 'You start with 2 starter rations. They are not loot: they are never banked or left in a cache. A ration heals about a third of your health, is drunk only when no enemy is near, one at a time, and never in a fight. Found rations are drunk after the starter ones.') : null,
+        progressOn ? seg<UpgradeId>('Sanctuary upgrade (one choice, taken for you)', 'upgrade', UPGRADES.map(u => [u.id, u.name] as [UpgradeId, string]), plan.sanctuaryChoice, v => { plan.sanctuaryChoice = v; }) : null,
+        progressOn ? h('p', { class: 'hint', id: 'sanctuary-rule' }, `${upgradeById(plan.sanctuaryChoice).text} The Broken Pump sanctuary lets you rest once and take that upgrade for this expedition. It never banks, protects a cache or takes you home. No banking here.`) : null),
       h('section', { class: 'card' }, h('h2', {}, 'Avoid'),
         h('p', { class: 'hint' }, 'The adventurer will not enter these rooms for any reason, including the way home.'),
         h('div', { class: 'chips' }, ...avoidable.map(r => h('button', { type: 'button', 'data-avoid': r, 'aria-pressed': String(plan.avoid.includes(r)), onclick: () => { plan.avoid = plan.avoid.includes(r) ? plan.avoid.filter(x => x !== r) : [...plan.avoid, r]; renderPlan(); } }, name(graph, r))))),
       h('details', { class: 'card' }, h('summary', {}, 'Advanced: seed, level, focus'),
         h('div', { class: 'grid3' },
           h('label', {}, 'Seed', h('input', { type: 'number', id: 'seed', min: '1', value: String(seed), onchange: (e) => { seed = Math.max(1, Math.round(Number((e.target as HTMLInputElement).value) || 1)); } })),
-          h('label', {}, 'Level', h('input', { type: 'number', id: 'level', min: '1', max: String(sim.MAX_LEVEL), value: String(level), onchange: (e) => { level = Math.max(1, Math.min(sim.MAX_LEVEL, Math.round(Number((e.target as HTMLInputElement).value) || 80))); } })),
+          progressOn
+            ? h('label', {}, 'Start level (1 to 9)', h('input', { type: 'number', id: 'startlevel', min: '1', max: String(MAX_DESIGN_LEVEL), value: String(startLevel), onchange: (e) => { startLevel = Math.max(1, Math.min(MAX_DESIGN_LEVEL, Math.round(Number((e.target as HTMLInputElement).value) || 1))); } }))
+            : h('label', {}, 'Level', h('input', { type: 'number', id: 'level', min: '1', max: String(sim.MAX_LEVEL), value: String(level), onchange: (e) => { level = Math.max(1, Math.min(sim.MAX_LEVEL, Math.round(Number((e.target as HTMLInputElement).value) || 80))); } })),
           h('label', {}, 'Focus', h('select', { id: 'focus', onchange: (e) => { focus = (e.target as HTMLSelectElement).value; } }, ...['balanced', 'duelist', 'bulwark', 'skirmisher', 'survivor'].map(f => { const op = h('option', { value: f }, cap(f)); if (f === focus) op.selected = true; return op; }))))),
       h('details', { class: 'card', id: 'save-card' }, h('summary', {}, 'Save: export, import'),
         h('p', { class: 'hint' }, 'The save is one text kept in this browser. Export it as a backup; import replaces it, after checking it.'),
@@ -175,7 +187,7 @@ export function mountExpedition(root: HTMLElement) {
   let feed: HTMLElement, objList: HTMLElement, status: HTMLElement, bar: HTMLElement, ctl: HTMLElement, result: HTMLElement, redirectSel: HTMLSelectElement;
   let feedCount = 0;
   let toast = '';
-  let carriedEl: HTMLElement;
+  let carriedEl: HTMLElement, levelEl: HTMLElement, sanctEl: HTMLElement;
   function renderRun() {
     screen.replaceChildren();
     const r = run!;
@@ -184,6 +196,8 @@ export function mountExpedition(root: HTMLElement) {
     status = h('p', { class: 'status', id: 'xstatus' });
     bar = h('div', { class: 'hpbar' }, h('i', {}));
     carriedEl = h('p', { id: 'carried-line' });
+    levelEl = h('p', { id: 'level-line' });
+    sanctEl = h('p', { id: 'sanctuary-line', class: 'hint' });
     result = h('section', { class: 'card result', id: 'result', hidden: true });
     const k = r.expedition.known;
     redirectSel = h('select', { id: 'redirect-room', 'aria-label': 'Redirect to' }, ...[...k, ...frontierRooms(graph, k, r.expedition.openLinks)].filter(x => x !== CAMP && !runCfg!.plan.avoid.includes(x)).sort().map(x => h('option', { value: x }, name(graph, x))));
@@ -196,7 +210,7 @@ export function mountExpedition(root: HTMLElement) {
       h('div', { class: 'bar' }, h('div', {}, h('p', { class: 'eyebrow' }, 'EXPEDITION · TRIAL SETTINGS'), h('h1', {}, 'On the road')),
         h('button', { type: 'button', id: 'back-to-plan', onclick: renderPlan }, 'Back to plan')),
       h('div', { class: 'cols' },
-        h('div', { class: 'left' }, h('section', { class: 'card mapcard' }, canvas, status, bar, carriedEl), ctl,
+        h('div', { class: 'left' }, h('section', { class: 'card mapcard' }, canvas, status, bar, levelEl, carriedEl, sanctEl), ctl,
           h('section', { class: 'card' }, h('h2', {}, 'Change course'), h('p', { class: 'hint' }, 'A redirect waits for the next doorway. A retreat does not.'),
             h('div', { class: 'redirect' }, redirectSel, h('button', { type: 'button', id: 'redirect-go', onclick: () => { toast = r.expedition.order({ type: 'redirect', room: redirectSel.value }) ?? `Redirect to ${name(graph, redirectSel.value)} queued for the next doorway.`; draw(); } }, 'Go there first'))),
           h('section', { class: 'card' }, h('h2', {}, 'Objectives'), objList)),
@@ -230,6 +244,9 @@ export function mountExpedition(root: HTMLElement) {
     objList.replaceChildren(...ex.objectives.map((o, i) => h('li', { class: o.status }, h('span', { class: 'chip' }, OBJ_LABEL[o.status]), `${i + 1}. ${o.kind === 'open' ? `Open the way from ${name(graph, o.room)} to ${name(graph, o.to ?? o.room)}` : o.kind === 'explore' ? `Explore on from ${name(graph, o.room)}` : `${cap(o.kind)} ${name(graph, o.room)}`}`, o.note ? h('small', {}, o.note) : null)));
     const secs = Math.round(w.tick / 30);
     status.textContent = `${w.terminal ? (w.state === 'home' ? 'Home' : w.state === 'defeated' ? 'Fallen' : 'Stopped') : 'Out'} · ${name(graph, w.room)} · ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')} · health ${Math.round(w.hp)} of ${w.hpMax}${toast ? ` · ${toast}` : ''}`;
+    const pg = w.progress;
+    levelEl.textContent = pg ? `Level ${pg.level} of ${MAX_DESIGN_LEVEL}${pg.xpToNext === null ? ' (highest)' : `, experience ${pg.xp} of ${pg.xpToNext}`} · rations ${w.ledger.rations} · upgrade: ${pg.sanctuary.upgrade ? upgradeById(pg.sanctuary.upgrade).name : 'none yet'}. Levels and upgrades end with the expedition.` : '';
+    sanctEl.textContent = pg ? (pg.sanctuary.visits === 0 ? 'Sanctuary: not visited. It never banks: no banking here.' : `Sanctuary: ${pg.sanctuary.rested ? 'rested' : 'not rested'}, upgrade taken. No banking here.`) : '';
     carriedEl.textContent = `Carried, at risk until camp: ${describeBank(w.ledger.carried)}.${w.ledger.cache ? ` A recovery cache waits in ${name(graph, w.ledger.cache.room)}.` : ''}`;
     (bar.firstChild as HTMLElement).style.width = `${Math.max(0, Math.min(100, w.hp / w.hpMax * 100))}%`;
     drawMap(r);
@@ -288,6 +305,8 @@ export function mountExpedition(root: HTMLElement) {
     result.replaceChildren(h('h2', {}, 'Chronicle'), h('div', { class: `badge ${c.outcome}`, id: 'outcome', 'data-outcome': c.outcome }, cap(c.outcome)), h('p', { class: 'sum', id: 'summary' }, c.summary),
       h('dl', {}, h('dt', {}, 'Route'), h('dd', {}, c.route.map(x => name(graph, x)).join(' > ')), h('dt', {}, 'Fights'), h('dd', {}, fights),
         h('dt', {}, 'Newly mapped'), h('dd', {}, c.discovered.length ? c.discovered.map(x => name(graph, x)).join(', ') : 'nothing'),
+        c.progress ? h('dt', {}, 'Levels and supplies') : null,
+        c.progress ? h('dd', { id: 'progress-line' }, `Level ${c.progress.startLevel} to ${c.progress.level} (${c.progress.xp} experience), ${c.progress.rationsUsed} ration${c.progress.rationsUsed === 1 ? '' : 's'} drunk, ${c.progress.rationsLeft} left. ${c.progress.sanctuary.visits ? `Sanctuary: ${c.progress.sanctuary.rested ? 'rested' : 'not rested'}, ${c.progress.sanctuary.upgrade ? upgradeById(c.progress.sanctuary.upgrade).name : 'no'} upgrade. No banking there.` : 'The sanctuary was not visited.'} Levels and upgrades are gone now; only banked loot stays.`) : null,
         h('dt', {}, 'Run id'), h('dd', {}, `seed ${c.seed} · ${c.digest}`)),
       h('h2', {}, 'What happened to the loot'),
       h('ul', { id: 'settle-lines' }, ...settlement!.lines.map(l => h('li', {}, l)), ...(settlement!.applied ? c.loot.opened.map(k => { const l = graph.links.find(x => WorldGraph.linkKey(x.from, x.to) === k); return h('li', {}, `Opened for good: ${l ? `${name(graph, l.from)} and ${name(graph, l.to)}` : k}.`); }) : [])),

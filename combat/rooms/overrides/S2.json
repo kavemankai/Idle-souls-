@@ -55,5 +55,9 @@
     "range": 160,
     "arcDegrees": 120,
     "alertRadius": 120
+  },
+  "sanctuary": {
+    "x": 140,
+    "y": -150
   }
 }

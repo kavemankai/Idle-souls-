@@ -5,6 +5,8 @@ import { RoomRunner, type RetreatAnswer, type RoomResult } from './roomRunner';
 import { Ledger, PICKUP_REACH, type DeathSpot, type Gain } from '../expedition/loot';
 import { GATE_NEED, stagingPoint, type GateInfo } from './gates';
 import type { Bank, Cache } from '../save/saveTypes';
+import { Progress, RATION_HEAL, DRINK_TICKS, MELEE_SAFE, REST_HEAL, REST_BELOW, upgradeById, type UpgradeId } from '../progression/experience';
+import { simLevel } from '../progression/levelTable';
 import type { Door, RoomManifest } from './roomTypes';
 import type { Point } from './o1Route';
 import { WorldGraph } from './worldGraph';
@@ -27,6 +29,13 @@ export interface WorldRunConfig {
   issuedKeys?: number; claims?: readonly string[]; openLinks?: readonly string[];
   /** Tests only. */
   hpOverride?: number; maxFightTicks?: number;
+  /**
+   * Temporary progression (M5). When given, the level comes from this object (design level through the level table) instead of `level`, experience and
+   * upgrades change it, and a new level applies at the next arrival in a room. Absent: the fixed `level`, exactly as before.
+   */
+  progress?: Progress;
+  /** Starter-kit rations (not loot: never banked or cached) and the health share below which the adventurer drinks one when no enemy is near. 0 turns drinking off. */
+  kitRations?: number; drinkBelowPct?: number;
 }
 export type WorldState = 'ready' | 'outbound' | 'homebound' | 'home' | 'defeated' | 'unresolved';
 /** What a navigator sees each time the adventurer starts a stretch inside a room (arriving, or turning round at a door). Everything is read-only. */
@@ -41,7 +50,7 @@ export interface ArrivalCtx {
 /** `exit` is a door of the current room. `cross` false means: walk to the door, then ask again from inside the same room (a turn-around). */
 export type NavDecision = { exit: string; cross: boolean; label?: string; via?: Point } | { goal: Point; label?: string } | { halt: string };
 /** What a navigator sees every tick while the adventurer is in a room and not walking a passage. */
-export interface LiveCtx { room: string; entry: string | null; tick: number; hp: number; hpMax: number; fighting: boolean; pos: Point; carried: Bank }
+export interface LiveCtx { room: string; entry: string | null; tick: number; hp: number; hpMax: number; fighting: boolean; pos: Point; carried: Bank; rations?: number }
 export interface Navigator {
   start: string;
   arrive(ctx: ArrivalCtx): NavDecision;
@@ -53,6 +62,10 @@ export interface Navigator {
   looted?(gain: Gain, ctx: LiveCtx): void;
   /** The adventurer stands at a sealed gate's staging point. Return true only if the plan deliberately asks to work this gate now (no automatic spending). */
   wantsInteraction?(gate: GateInfo, ctx: LiveCtx): boolean;
+  /** A ration was drunk (from the kit or a found one). */
+  rationUsed?(info: { from: 'kit' | 'found'; healed: number; left: number; hp: number }, ctx: LiveCtx): void;
+  /** The sanctuary did something: took the plan's upgrade, or rested. It never banks. */
+  sanctuaryUsed?(info: { kind: 'upgrade'; upgrade: UpgradeId; name: string; visit: number } | { kind: 'rest'; healed: number; visit: number }, ctx: LiveCtx): void;
   /** The result of working a gate: opened for good, or refused (no eligible key). */
   gateWorked?(gate: GateInfo, ok: boolean, ctx: LiveCtx): void;
   /** Called when a stretch ends, win or lose, before the next arrival. */
@@ -66,6 +79,8 @@ export interface WorldResult {
   maxWalkStep: number; maxFightStep: number;
   /** What is carried at the end and how it was gained. Nothing here is banked: `settle` decides that. */
   loot: { carried: Bank; gains: Gain[]; cache: Cache | null; recovered: Cache | null; deathSpot: DeathSpot | null; issued: number; spent: number; opened: string[]; claimed: string[] };
+  /** Temporary progression, present only when the run used it. Nothing here is banked. */
+  progress?: { startLevel: number; level: number; xp: number; levels: { tick: number; level: number; cause: string }[]; rationsUsed: number; rationsLeft: number; sanctuary: { visits: number; rested: boolean; upgrade: UpgradeId | null } };
   /** Per room, which of its enemies are dead at the end. */
   dead: Record<string, boolean[]>;
 }
@@ -124,8 +139,11 @@ export class WorldRunner {
   private passage: { to: Point; room: string; entry: string } | null = null;
   private face = 0;
   private hash = 2166136261;
-  private readonly speed: number;
-  private readonly derived: SimDerived;
+  private speed = 0;
+  private derived!: SimDerived;
+  readonly progress: Progress | null;
+  private legStartHp = 0;
+  private atSanctuary = false;
   /** Stamina and poise, carried from room to room and recovered while walking. */
   carry: SimCarry;
   readonly graph: WorldGraph;
@@ -133,12 +151,12 @@ export class WorldRunner {
     this.graph = graph;
     if (!cfg.navigator && (!cfg.from || !cfg.to)) throw new Error('a world run needs a navigator or both from and to');
     this.nav = cfg.navigator ?? new WalkNavigator(graph, manifests, cfg.from!, cfg.to!, cfg.turnDoor);
-    const derived = sim.derive(sim.allocate(cfg.level, cfg.focus, cfg.seed), false);
-    this.speed = sim.ARCH.adventurer.speed * derived.moveMult;
-    this.derived = derived;
-    this.carry = { st: derived.maxSt, poise: derived.poise };
-    this.hpMax = cfg.hpOverride ?? derived.hp; this.hp = this.hpMax;
+    this.progress = cfg.progress ?? null;
+    this.refreshStats();
+    this.carry = { st: this.derived.maxSt, poise: this.derived.poise };
+    this.hpMax = cfg.hpOverride ?? this.derived.hp; this.hp = this.hpMax;
     this.ledger = new Ledger(cfg.cache ?? null, cfg.issuedKeys ?? 0, new Set(cfg.claims ?? []), new Set(cfg.openLinks ?? []));
+    this.ledger.kitRations = cfg.kitRations ?? 0;
     this.room = this.nav.start;
     this.pos = toWorld(this.manifests[this.nav.start], { x: 0, y: 0 });
   }
@@ -152,6 +170,19 @@ export class WorldRunner {
     this.beginLeg(this.nav.start, null, { x: 0, y: 0 }, 0);
   }
   private manifest(id: string) { return this.manifests[id]; }
+  /** The simulator level in force now: the level table's row for the current design level, or the fixed level. */
+  get levelNow(): number { return this.progress ? simLevel(this.progress.level) : this.cfg.level; }
+  /** Recompute stats, walking speed and (with progression) maximum health, keeping the share of health. Called on arrival, never mid-fight. */
+  private refreshStats() {
+    const stats = this.sim.allocate(this.levelNow, this.cfg.focus, this.cfg.seed);
+    for (const [k, n] of Object.entries(this.progress?.statBonus() ?? {})) stats[k] = Math.min(20, (stats[k] ?? 1) + n);
+    this.derived = this.sim.derive(stats, false);
+    this.speed = this.sim.ARCH.adventurer.speed * this.derived.moveMult;
+    if (this.progress && this.cfg.hpOverride === undefined && this.hpMax > 0 && this.derived.hp !== this.hpMax) {
+      this.hp = Math.max(1, Math.round(this.hp / this.hpMax * this.derived.hp));
+      this.hpMax = this.derived.hp;
+    }
+  }
   private note(text: string) { this.notes.push(`${this.tick}: ${text}`); }
   private ctx(room: string, entry: string | null, pos: Point): ArrivalCtx {
     return { room, entry, tick: this.tick, hp: this.hp, hpMax: this.hpMax, pos, carried: this.ledger.carried, leg: this.legIdx, dead: this.dead, results: this.results };
@@ -160,6 +191,8 @@ export class WorldRunner {
   private beginLeg(room: string, entry: string | null, at: Point, face: number) {
     this.legIdx++;
     this.room = room; this.entry = entry;
+    if (this.progress) this.refreshStats();   // a level or upgrade gained since the last arrival applies now
+    this.legStartHp = this.hp;
     const m = this.manifest(room);
     const dec = this.nav.arrive(this.ctx(room, entry, at));
     this.decision = dec;
@@ -169,7 +202,8 @@ export class WorldRunner {
     if (!exitDoor) throw new Error(`${room} has no door ${'exit' in dec ? dec.exit : ''}`);
     const encounter = this.cfg.encounters?.[room] ?? (this.cfg.encounters ? undefined : OLD_ROAD_ENCOUNTERS[room]);
     this.runner = new RoomRunner(this.sim, {
-      seed: this.cfg.seed, level: this.cfg.level, focus: this.cfg.focus, doctrine: this.cfg.doctrine,
+      seed: this.cfg.seed, level: this.levelNow, focus: this.cfg.focus, doctrine: this.cfg.doctrine,
+      statBonus: this.progress?.statBonus(),
       encounter, room: m,
       entryDoor: entry ?? undefined, exitDoor: exitDoor.id, start: at, startFace: face,
       startHp: this.hp, hpOverride: this.hpMax, carry: this.carry, defeated: this.dead.get(room), seedOffset: this.legIdx * 100003 + 100003, maxFightTicks: this.cfg.maxFightTicks,
@@ -187,6 +221,7 @@ export class WorldRunner {
     else {
       const r = this.runner!;
       this.askLive(r);
+      this.maybeDrink(r);
       const ticksBefore = r.fightTicks;
       r.step();
       fighting = r.fightTicks > ticksBefore;   // this tick belonged to the simulator, which owns the adventurer's motion
@@ -204,9 +239,10 @@ export class WorldRunner {
   /** Pay kills, take pickups and the cache within reach. Kills pay once per enemy; nothing is taken while the simulator owns the adventurer. */
   private collect(r: RoomRunner, fighting: boolean) {
     const ctx = () => this.liveCtx(r);
-    r.foes.forEach((f, i) => { if (f.engaged && !f.alive) { const g = this.ledger.kill(f.arch, this.room, i); if (g) this.nav.looted?.(g, ctx()); } });
+    r.foes.forEach((f, i) => { if (f.engaged && !f.alive) { const g = this.ledger.kill(f.arch, this.room, i); if (g) { this.progress?.kill(f.arch, this.tick); this.nav.looted?.(g, ctx()); } } });
     if (fighting || r.state === 'fighting') return;
     const m = this.manifest(this.room), p = r.hero;
+    this.sanctuaryStep(r, m);
     for (const pk of m.pickups ?? []) if (M.hypot(pk.x - p.x, pk.y - p.y) <= PICKUP_REACH) { const g = this.ledger.pickup(this.room, pk); if (g) this.nav.looted?.(g, ctx()); }
     for (const n of this.graph.neighbours(this.room)) {
       if (!this.graph.isGated(n.type) || this.ledger.isOpen(n.key)) continue;
@@ -220,8 +256,50 @@ export class WorldRunner {
     const c = this.ledger.cache;
     if (c && c.room === this.room && M.hypot(c.x - p.x, c.y - p.y) <= PICKUP_REACH) { const g = this.ledger.recoverCache(); if (g) this.nav.looted?.(g, ctx()); }
   }
+  /** Nearest living enemy to the adventurer, or Infinity. Engaged or not: a drink or a rest needs the room quiet. */
+  private nearestFoe(r: RoomRunner): number {
+    let best = Infinity;
+    for (const f of r.foes) if (f.alive) best = Math.min(best, M.hypot(f.x - r.hero.x, f.y - r.hero.y));
+    return best;
+  }
+  /** Drink a ration when hurt and no enemy is near. One at a time, standing still; never in a fight. */
+  private maybeDrink(r: RoomRunner) {
+    const below = this.cfg.drinkBelowPct ?? 0;
+    if (below <= 0 || r.state !== 'travelling' || r.idleTicks > 0 || this.ledger.rations < 1) return;
+    if (r.hp / this.hpMax * 100 >= below || this.nearestFoe(r) < MELEE_SAFE) return;
+    const from = this.ledger.useRation();
+    if (!from) return;
+    const heal = Math.ceil(this.hpMax * RATION_HEAL), before = r.hp;
+    if (!r.drink(heal, DRINK_TICKS)) return;
+    this.hp = r.hp;
+    this.nav.rationUsed?.({ from, healed: Math.round(r.hp - before), left: this.ledger.rations, hp: Math.round(r.hp) }, this.liveCtx(r));
+  }
+  /**
+   * The sanctuary (doc 09): a safe place, not a bank. The first visit takes the plan's upgrade choice (no pause, no prompt); the first time the
+   * adventurer is hurt there it rests once. Later visits are waypoints. Nothing here touches what is carried, a cache, the bank or the way home.
+   */
+  private sanctuaryStep(r: RoomRunner, m: RoomManifest) {
+    const sp = this.progress, spot = m.sanctuary;
+    if (!sp || !spot) return;
+    const near = M.hypot(spot.x - r.hero.x, spot.y - r.hero.y) <= PICKUP_REACH && r.state === 'travelling' && this.nearestFoe(r) >= 150;
+    if (!near) { if (M.hypot(spot.x - r.hero.x, spot.y - r.hero.y) > PICKUP_REACH * 2) this.atSanctuary = false; return; }
+    const s = sp.sanctuary, ctx = this.liveCtx(r);
+    if (!this.atSanctuary) { this.atSanctuary = true; s.visits++; }
+    if (!s.upgrade) {
+      s.upgrade = sp.defaultUpgrade;
+      this.nav.sanctuaryUsed?.({ kind: 'upgrade', upgrade: s.upgrade, name: upgradeById(s.upgrade).name, visit: s.visits }, ctx);
+    }
+    if (!s.rested && r.hp < this.hpMax * REST_BELOW) {
+      const before = r.hp;
+      r.restoreTo(r.hp + this.hpMax * REST_HEAL);
+      r.carry = { st: this.derived.maxSt, poise: this.derived.poise };
+      this.hp = r.hp; this.carry = r.carry;
+      s.rested = true; s.restedAt = this.tick;
+      this.nav.sanctuaryUsed?.({ kind: 'rest', healed: Math.round(r.hp - before), visit: s.visits }, ctx);
+    }
+  }
   private liveCtx(r: RoomRunner): LiveCtx {
-    return { room: this.room, entry: this.entry, tick: this.tick, hp: r.hp, hpMax: this.hpMax, fighting: r.state === 'fighting', pos: { x: r.hero.x, y: r.hero.y }, carried: this.ledger.carried };
+    return { room: this.room, entry: this.entry, tick: this.tick, hp: r.hp, hpMax: this.hpMax, fighting: r.state === 'fighting', pos: { x: r.hero.x, y: r.hero.y }, carried: this.ledger.carried, rations: this.ledger.rations };
   }
   /** Let the navigator change the way out mid-room (a retreat order or a survival trigger). */
   private askLive(r: RoomRunner) {
@@ -248,6 +326,7 @@ export class WorldRunner {
     const lr: LegResult = { room, phase: ('exit' in dec || 'goal' in dec) ? dec.label ?? 'walk' : 'walk', entry: this.entry, result: r.result() };
     this.results.push(lr);
     this.dead.set(room, r.foes.map(f => f.engaged && !f.alive));
+    this.progress?.endLeg(Math.max(0, this.legStartHp - this.hp) / this.hpMax, r.state !== 'defeated' && lr.result.fights > 0, this.tick);
     this.nav.legEnded?.(lr, this.ctx(room, this.entry, r.hero));
     if (r.state === 'defeated') {
       this.state = 'defeated'; this.note('The adventurer fell.');
@@ -300,6 +379,7 @@ export class WorldRunner {
       fights: this.results.reduce((n, l) => n + l.result.fights, 0), enemiesDefeated: this.results.reduce((n, l) => n + l.result.enemiesDefeated, 0),
       hpLeft: Math.round(this.hp), hpMax: this.hpMax, finalPos: { x: Math.round(this.pos.x * 10) / 10, y: Math.round(this.pos.y * 10) / 10 }, digest: this.digest,
       maxWalkStep: Math.round(this.maxWalkStep * 1000) / 1000, maxFightStep: Math.round(this.maxFightStep * 1000) / 1000,
+      ...(this.progress ? { progress: { startLevel: this.progress.startLevel, level: this.progress.level, xp: this.progress.xp, levels: this.progress.events.map(e => ({ tick: e.tick, level: e.level, cause: e.cause })), rationsUsed: this.ledger.rationsUsed, rationsLeft: this.ledger.rations, sanctuary: { visits: this.progress.sanctuary.visits, rested: this.progress.sanctuary.rested, upgrade: this.progress.sanctuary.upgrade } } } : {}),
       dead: Object.fromEntries(this.dead),
       loot: { carried: this.ledger.carried, gains: this.ledger.gains, cache: this.ledger.cache, recovered: this.ledger.recovered, deathSpot: this.deathSpot, issued: this.ledger.issued, spent: this.ledger.spent, opened: [...this.ledger.opened].sort(), claimed: [...this.ledger.claimed].sort() },
     };

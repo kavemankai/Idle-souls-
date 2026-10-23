@@ -17,6 +17,8 @@ export interface RoomRunnerConfig {
   /** Expedition carry-over: health on entry, enemies already killed on an earlier visit (by index), and an offset that keeps fight seeds distinct per visit. */
   /** Stamina and poise on entry; defaults to full. */
   carry?: SimCarry;
+  /** Temporary extra stat points (a sanctuary upgrade), added after the level's allocation and capped at 20 per stat. */
+  statBonus?: Readonly<Record<string, number>>;
   startFace?: number; startHp?: number; defeated?: readonly boolean[]; seedOffset?: number;
   /** End the run on reaching this point instead of crossing the exit door. */
   goal?: Point;
@@ -91,6 +93,7 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
     this.exit = door(cfg.exitDoor ?? this.room.exitDoor, this.room.doors.find(d => d !== this.entry) ?? this.entry);
     this.prepared = sim.room.prepare(simRoom(this.room));
     this.stats = sim.allocate(cfg.level, cfg.focus, cfg.seed);
+    for (const [k, n] of Object.entries(cfg.statBonus ?? {})) this.stats[k] = Math.min(20, (this.stats[k] ?? 1) + n);
     const derived = sim.derive(this.stats, false);
     this.derived = derived;
     this.carry = cfg.carry ?? { st: derived.maxSt, poise: derived.poise };
@@ -139,13 +142,16 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
     if (!first || !second) { this.state = 'unresolved'; this.note(`No route to the ${this.exit.side} threshold.`); return; }
     this.route = first.concat(second);
   }
+  /** Ticks left standing still (drinking). The adventurer can still be seen and caught while it stands. */
+  idleTicks = 0;
   private travel() {
     this.carry = this.sim.rest(this.carry, this.derived, 1);
     const det = this.room.detection;
     const seer = this.foes.findIndex(f => f.alive && !f.engaged && sees(this.sim, this.prepared, f, this.hero, { range: det.range, arcDegrees: det.arcDegrees }));
     if (seer >= 0) { this.startFight(seer); return; }
-    let budget = this.speed;
     this.hero.moving = false;
+    if (this.idleTicks > 0) { this.idleTicks--; return; }
+    let budget = this.speed;
     while (budget > 1e-9 && this.route.length) {
       const next = this.route[0], dx = next.x - this.hero.x, dy = next.y - this.hero.y, d = M.hypot(dx, dy);
       if (d > 1e-9) this.hero.face = M.atan2(dy, dx);
@@ -229,6 +235,15 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
     this.note(`Heading for the ${door.side} door instead.`);
     return { ok: true, report: null };
   }
+  /** Drink: heal `amount` health now and stand still for `ticks`. Refused (false) unless walking: nothing is drunk in a fight or mid-attack. */
+  drink(amount: number, ticks = 20): boolean {
+    if (this.state !== 'travelling' || this.idleTicks > 0) return false;
+    this.hp = Math.min(this.hpMax, this.hp + amount);
+    this.idleTicks = ticks; this.note(`Drank a ration: +${Math.round(amount)} health.`);
+    return true;
+  }
+  /** Set health directly (a sanctuary rest), clamped to the maximum. */
+  restoreTo(hp: number) { this.hp = Math.max(0, Math.min(this.hpMax, hp)); }
   /** End the leg where the adventurer stands (a retreat ordered at camp). */
   finishHere() { this.state = 'completed'; this.hero.moving = false; this.note('Ended in place.'); }
   private note(text: string) { this.notes.push(`${this.tick}: ${text}`); }

@@ -95,7 +95,7 @@ export function buildWorld(): { rooms: Record<string, RoomManifest>; world: Worl
       doors,
       openings: doors.map(d => d.side === 'west' || d.side === 'east' ? { side: d.side, y: d.span } : { side: d.side, x: d.span }),
       ...(entryDoor ? { entryDoor } : {}), ...(exitDoor ? { exitDoor } : {}),
-      encounters: ov.encounters ?? {}, ...(ov.pickups ? { pickups: ov.pickups } : {}), detection: ov.detection ?? DETECTION,
+      encounters: ov.encounters ?? {}, ...(ov.pickups ? { pickups: ov.pickups } : {}), ...(ov.sanctuary ? { sanctuary: ov.sanctuary } : {}), detection: ov.detection ?? DETECTION,
     };
     const entry = entryDoor && doors.find(d => d.id === entryDoor), exit = exitDoor && doors.find(d => d.id === exitDoor);
     if (entry) m.entry = { x: entry.center.x, y: entry.center.y };

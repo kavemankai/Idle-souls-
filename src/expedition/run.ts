@@ -5,6 +5,7 @@ import { WorldRunner, type WorldResult } from '../world/worldRunner';
 import { buildChronicle, type Chronicle } from './chronicle';
 import { Expedition } from './expedition';
 import type { ExpeditionPlan } from './plan';
+import { Progress } from '../progression/experience';
 
 export interface ExpeditionConfig {
   seed: number; level: number; focus: string; plan: ExpeditionPlan;
@@ -14,14 +15,21 @@ export interface ExpeditionConfig {
   cache?: Cache | null;
   /** Gate Keys issued from camp (0 to 2, never more than the bank holds), one-time claims already made, links already open for good. */
   issueKeys?: number; claims?: readonly string[]; openLinks?: readonly string[];
+  /**
+   * Temporary progression (design level 1 to 9 through the level table; `level` is then ignored). The adventurer carries `kitRations` starter rations
+   * (default 2, not loot) and drinks and rests by the plan's rules. Omit for the fixed level with no drinking and no sanctuary, as before.
+   */
+  progression?: { startLevel: number; kitRations?: number };
   /** Tests only. */
   hpOverride?: number; maxFightTicks?: number; encounters?: Readonly<Record<string, string>>;
 }
 export interface ExpeditionRun { world: WorldRunner; expedition: Expedition; startKnown: ReadonlySet<string> }
 export function startExpedition(sim: SimApi, cfg: ExpeditionConfig, graph = new WorldGraph()): ExpeditionRun {
-  const expedition = new Expedition(cfg.plan, graph, cfg.known, cfg.cache ?? null, cfg.openLinks ?? []);
+  const progress = cfg.progression ? new Progress(cfg.progression.startLevel, cfg.plan.sanctuaryChoice) : null;
+  const expedition = new Expedition(cfg.plan, graph, cfg.known, cfg.cache ?? null, cfg.openLinks ?? [], progress);
   const world = new WorldRunner(sim, {
     seed: cfg.seed, level: cfg.level, focus: cfg.focus, doctrine: cfg.plan.doctrine, navigator: expedition,
+    progress: progress ?? undefined, kitRations: progress ? cfg.progression!.kitRations ?? 2 : 0, drinkBelowPct: progress ? cfg.plan.drinkBelowPct : 0,
     hpOverride: cfg.hpOverride, maxFightTicks: cfg.maxFightTicks, encounters: cfg.encounters, cache: cfg.cache, issuedKeys: cfg.issueKeys, claims: cfg.claims, openLinks: cfg.openLinks,
   }, graph);
   world.dispatch();

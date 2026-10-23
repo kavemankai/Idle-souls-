@@ -118,6 +118,10 @@
       "y": 60
     }
   ],
+  "sanctuary": {
+    "x": 140,
+    "y": -150
+  },
   "detection": {
     "range": 160,
     "arcDegrees": 120,
