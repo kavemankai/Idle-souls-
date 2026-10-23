@@ -3225,142 +3225,162 @@
     "step_hero": {
       "file": "audio/cues/step_hero.ogg",
       "source": "footsteps",
-      "original": "footsteps/step_cloth1.ogg",
-      "libraryFile": "audio/library/footsteps/000_step_cloth1.ogg",
-      "sha256": "24c0edbd5deed7368ed55a7db2f38f39c5293733bd65861af377cd2293e7b465"
+      "original": "footsteps/step_lth1.ogg",
+      "libraryFile": "audio/library/footsteps/004_step_lth1.ogg",
+      "sha256": "70c2c0860a8499346e86fd6ff38271088cc8cd26d244db2ef32eec564d743c31",
+      "selection": "curated candidate, not auditioned or approved"
     },
     "step_sentry": {
       "file": "audio/cues/step_sentry.ogg",
       "source": "footsteps",
-      "original": "footsteps/step_cloth1.ogg",
-      "libraryFile": "audio/library/footsteps/000_step_cloth1.ogg",
-      "sha256": "24c0edbd5deed7368ed55a7db2f38f39c5293733bd65861af377cd2293e7b465"
+      "original": "footsteps/step_metal (2).ogg",
+      "libraryFile": "audio/library/footsteps/008_step_metal_2.ogg",
+      "sha256": "92f9596e9f43c66a9f37bb0b91bb971946d903e8105e41048745151a3c22aa41",
+      "selection": "curated candidate, not auditioned or approved"
     },
     "step_mireling": {
       "file": "audio/cues/step_mireling.ogg",
       "source": "kenney_impact",
-      "original": "Audio/footstep_carpet_000.ogg",
-      "libraryFile": "audio/library/kenney_impact/000_footstep_carpet_000.ogg",
-      "sha256": "fb7ba91ad7d4b432eb120ddbe9371330125f3b1d953ad18f030abc7e390a0420"
+      "original": "Audio/footstep_grass_000.ogg",
+      "libraryFile": "audio/library/kenney_impact/010_footstep_grass_000.ogg",
+      "sha256": "ad616ebcca05c89ffc8d60bf4d522bcced4e6502426d35487aa8904cb9c0a918",
+      "selection": "curated candidate, not auditioned or approved"
     },
     "sword_swing": {
       "file": "audio/cues/sword_swing.ogg",
       "source": "swishes",
-      "original": "swishes/swish-1.wav",
-      "libraryFile": "audio/library/swishes/000_swish_1.ogg",
-      "sha256": "29d4da4ea1e183ef119821ea0ca15c42890ea2774ae2cf565f1583c88dfb9d3d"
+      "original": "swishes/swish-2.wav",
+      "libraryFile": "audio/library/swishes/005_swish_2.ogg",
+      "sha256": "a1b6cbfa4400bb57c6c169f25aeace7c6432af4f311710e7326e9dac91213b17",
+      "selection": "curated candidate, not auditioned or approved"
     },
     "heavy_swing": {
       "file": "audio/cues/heavy_swing.ogg",
       "source": "swishes",
-      "original": "swishes/swish-1.wav",
-      "libraryFile": "audio/library/swishes/000_swish_1.ogg",
-      "sha256": "29d4da4ea1e183ef119821ea0ca15c42890ea2774ae2cf565f1583c88dfb9d3d"
+      "original": "swishes/swish-9.wav",
+      "libraryFile": "audio/library/swishes/012_swish_9.ogg",
+      "sha256": "8b144ce4afbbda6b42cfbfadac4b9245149e6c87b420a42fbc1b2ea63b82e493",
+      "selection": "curated candidate, not auditioned or approved"
     },
     "sword_hit": {
       "file": "audio/cues/sword_hit.ogg",
       "source": "kenney_impact",
-      "original": "Audio/impactBell_heavy_000.ogg",
-      "libraryFile": "audio/library/kenney_impact/025_impactbell_heavy_000.ogg",
-      "sha256": "8b7f9cdcfe1886d81201a446d4e3384caf47b2071ed3021e9740d8956138f4f1"
+      "original": "Audio/impactMetal_medium_000.ogg",
+      "libraryFile": "audio/library/kenney_impact/060_impactmetal_medium_000.ogg",
+      "sha256": "c212047cfbb94a8ae0ae711805093d8f4814873dddc1978dcf33bdd4a862bdd9",
+      "selection": "curated candidate, not auditioned or approved"
     },
     "shield_block": {
       "file": "audio/cues/shield_block.ogg",
       "source": "shield",
       "original": "impact.1.ogg",
       "libraryFile": "audio/library/shield/000_impact_1.ogg",
-      "sha256": "6659524718aac6aa70a8f13ddaa8a9c1a2ad5b0e6ab2c758fdbecf078bbeecd1"
+      "sha256": "6659524718aac6aa70a8f13ddaa8a9c1a2ad5b0e6ab2c758fdbecf078bbeecd1",
+      "selection": "curated candidate, not auditioned or approved"
     },
     "perfect_block": {
       "file": "audio/cues/perfect_block.ogg",
       "source": "shield",
-      "original": "impact.1.ogg",
-      "libraryFile": "audio/library/shield/000_impact_1.ogg",
-      "sha256": "6659524718aac6aa70a8f13ddaa8a9c1a2ad5b0e6ab2c758fdbecf078bbeecd1"
+      "original": "impact.5.ogg",
+      "libraryFile": "audio/library/shield/005_impact_5.ogg",
+      "sha256": "191ef80fe9e158704749845bae6b7d981946a1f23682aca90852cdbd56193b85",
+      "selection": "curated candidate, not auditioned or approved"
     },
     "parry": {
       "file": "audio/cues/parry.ogg",
       "source": "kenney_impact",
-      "original": "Audio/impactBell_heavy_000.ogg",
-      "libraryFile": "audio/library/kenney_impact/025_impactbell_heavy_000.ogg",
-      "sha256": "8b7f9cdcfe1886d81201a446d4e3384caf47b2071ed3021e9740d8956138f4f1"
+      "original": "Audio/impactMetal_light_002.ogg",
+      "libraryFile": "audio/library/kenney_impact/057_impactmetal_light_002.ogg",
+      "sha256": "14f06ee4a48fc5f7fcf70e8679b00a81d7599868e45a55a0abbf3d39dce55c91",
+      "selection": "curated candidate, not auditioned or approved"
     },
     "stagger": {
       "file": "audio/cues/stagger.ogg",
       "source": "rpg_sfx",
-      "original": "creature_die_01.ogg",
-      "libraryFile": "audio/library/rpg_sfx/010_creature_die_01.ogg",
-      "sha256": "9872f6acafcbcbad8304431113d3f4c817bfe19650a552685ffa53a0e0ab06b9"
+      "original": "creature_hurt_02.ogg",
+      "libraryFile": "audio/library/rpg_sfx/012_creature_hurt_02.ogg",
+      "sha256": "042633aa58f86f5c2f5c54600190015b2ac6414733f9927a2ea2616c090e0aa3",
+      "selection": "curated candidate, not auditioned or approved"
     },
     "mireling_bite": {
       "file": "audio/cues/mireling_bite.ogg",
       "source": "creatures",
-      "original": "breath.ogg",
-      "libraryFile": "audio/library/creatures/008_breath.ogg",
-      "sha256": "f406dc2e8bc352f57ae7709fc22861caf6c7e6057554ac7a37dd1bec4b70dfbe"
+      "original": "bug_02.ogg",
+      "libraryFile": "audio/library/creatures/010_bug_02.ogg",
+      "sha256": "4cccf086035afea23659c95e6d5ac28efe9281272a0adb7545579f0a27e2e3d3",
+      "selection": "curated candidate, not auditioned or approved"
     },
     "mireling_death": {
       "file": "audio/cues/mireling_death.ogg",
       "source": "creatures",
-      "original": "grunt_01.ogg",
-      "libraryFile": "audio/library/creatures/034_grunt_01.ogg",
-      "sha256": "74845abfa3e08f15af685d5cfa7c14b611937355375d495048c24468bcc90f60"
+      "original": "hurt_03.ogg",
+      "libraryFile": "audio/library/creatures/042_hurt_03.ogg",
+      "sha256": "35bb741db4ca3d2506e059548a0e5ede23e552093e5385059786e5f3860c6b3b",
+      "selection": "curated candidate, not auditioned or approved"
     },
     "sentry_death": {
       "file": "audio/cues/sentry_death.ogg",
-      "source": "rpg_sfx",
-      "original": "creature_die_01.ogg",
-      "libraryFile": "audio/library/rpg_sfx/010_creature_die_01.ogg",
-      "sha256": "9872f6acafcbcbad8304431113d3f4c817bfe19650a552685ffa53a0e0ab06b9"
+      "source": "kenney_impact",
+      "original": "Audio/impactPlate_heavy_003.ogg",
+      "libraryFile": "audio/library/kenney_impact/078_impactplate_heavy_003.ogg",
+      "sha256": "4c9f2f186f9010ceb1aaff5a05919857d3d5ea251821bf6708eb15d369779c2f",
+      "selection": "curated candidate, not auditioned or approved"
     },
     "hero_death": {
       "file": "audio/cues/hero_death.ogg",
-      "source": "rpg_sfx",
-      "original": "creature_die_01.ogg",
-      "libraryFile": "audio/library/rpg_sfx/010_creature_die_01.ogg",
-      "sha256": "9872f6acafcbcbad8304431113d3f4c817bfe19650a552685ffa53a0e0ab06b9"
+      "source": "kenney_impact",
+      "original": "Audio/impactSoft_heavy_000.ogg",
+      "libraryFile": "audio/library/kenney_impact/100_impactsoft_heavy_000.ogg",
+      "sha256": "c794e50ad04a7d53785f642391c6aad9383ed5bfac9a9fc1d789a338e010fadc",
+      "selection": "curated candidate, not auditioned or approved"
     },
     "dodge": {
       "file": "audio/cues/dodge.ogg",
       "source": "swishes",
-      "original": "swishes/swish-1.wav",
-      "libraryFile": "audio/library/swishes/000_swish_1.ogg",
-      "sha256": "29d4da4ea1e183ef119821ea0ca15c42890ea2774ae2cf565f1583c88dfb9d3d"
+      "original": "swishes/swish-3.wav",
+      "libraryFile": "audio/library/swishes/006_swish_3.ogg",
+      "sha256": "2f099bcfdd4b65ae578875f4b27d86a3213a8106daeb20f32919cc3d8e58af37",
+      "selection": "curated candidate, not auditioned or approved"
     },
     "ui_select": {
       "file": "audio/cues/ui_select.ogg",
       "source": "kenney_ui",
-      "original": "kenney-ui-audio-master/addons/kenney_ui_audio/click1.wav",
-      "libraryFile": "audio/library/kenney_ui/000_click1.ogg",
-      "sha256": "de7c1f663e0dbfd8c103390556d96438f336602e3f8d32724fe1b6dae5eca180"
+      "original": "kenney-ui-audio-master/addons/kenney_ui_audio/click2.wav",
+      "libraryFile": "audio/library/kenney_ui/001_click2.ogg",
+      "sha256": "0eed3ded2984cd8ef13a9df749cac76df299e73ad4e0cc03b86d7acdc6026c36",
+      "selection": "curated candidate, not auditioned or approved"
     },
     "ui_dispatch": {
       "file": "audio/cues/ui_dispatch.ogg",
       "source": "kenney_ui",
-      "original": "kenney-ui-audio-master/addons/kenney_ui_audio/click1.wav",
-      "libraryFile": "audio/library/kenney_ui/000_click1.ogg",
-      "sha256": "de7c1f663e0dbfd8c103390556d96438f336602e3f8d32724fe1b6dae5eca180"
+      "original": "kenney-ui-audio-master/addons/kenney_ui_audio/switch5.wav",
+      "libraryFile": "audio/library/kenney_ui/046_switch5.ogg",
+      "sha256": "a7ae1b5c77a98a293634d4e7291a34fed27595237b881cdedc9236a086f87fd5",
+      "selection": "curated candidate, not auditioned or approved"
     },
     "ui_success": {
       "file": "audio/cues/ui_success.ogg",
       "source": "kenney_ui",
-      "original": "kenney-ui-audio-master/addons/kenney_ui_audio/switch1.wav",
-      "libraryFile": "audio/library/kenney_ui/013_switch1.ogg",
-      "sha256": "eef112191ddecd256dad6a81bf7dfe2b36d0adf6bd0dc0710f862435ab8a977b"
+      "original": "kenney-ui-audio-master/addons/kenney_ui_audio/switch11.wav",
+      "libraryFile": "audio/library/kenney_ui/015_switch11.ogg",
+      "sha256": "9bc2c7ca087dbfa698e723f42189d797b7e5ab2974a85f146b304997801bc6cf",
+      "selection": "curated candidate, not auditioned or approved"
     },
     "ui_failure": {
       "file": "audio/cues/ui_failure.ogg",
       "source": "kenney_ui",
-      "original": "kenney-ui-audio-master/addons/kenney_ui_audio/click1.wav",
-      "libraryFile": "audio/library/kenney_ui/000_click1.ogg",
-      "sha256": "de7c1f663e0dbfd8c103390556d96438f336602e3f8d32724fe1b6dae5eca180"
+      "original": "kenney-ui-audio-master/addons/kenney_ui_audio/switch17.wav",
+      "libraryFile": "audio/library/kenney_ui/021_switch17.ogg",
+      "sha256": "df7d240c6c299f876b229da19a483ba6074336f7f3cb80ea67b55f8beaf05ca4",
+      "selection": "curated candidate, not auditioned or approved"
     },
     "threshold": {
       "file": "audio/cues/threshold.ogg",
       "source": "rpg_sfx",
-      "original": "item_coins_01.ogg",
-      "libraryFile": "audio/library/rpg_sfx/032_item_coins_01.ogg",
-      "sha256": "e3496ebfa337adf0ec428a3834f679e865c51c958b294e675027f4b984a447b7"
+      "original": "spell_02.ogg",
+      "libraryFile": "audio/library/rpg_sfx/063_spell_02.ogg",
+      "sha256": "a2cf8bbcd2f0e1e9e5ba9406149863c7e004efe4c2ee3559f5a8f0d417d5b207",
+      "selection": "curated candidate, not auditioned or approved"
     }
   }
 }
