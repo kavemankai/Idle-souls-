@@ -9,6 +9,7 @@ export class OldRoadVisualScene extends Phaser.Scene {
   private actors: ActorRenderer[] = [];
   private keys!: Record<string, Phaser.Input.Keyboard.Key>;
   private proxy!: Phaser.GameObjects.Graphics;
+  private pivotLabel!: Phaser.GameObjects.Text;
   private debug = false;
   private reduced = false;
   private status!: HTMLElement;
@@ -25,6 +26,7 @@ export class OldRoadVisualScene extends Phaser.Scene {
     if(initialParams.get('floor')==='dark') this.children.list.forEach(o=>{if(o instanceof Phaser.GameObjects.Image || o instanceof Phaser.GameObjects.TileSprite)o.setTint(0x667c78);});
     this.actors=['adventurer','sentry','mireling'].map(kind=>new ActorRenderer(this,kind));
     this.proxy=this.add.graphics().setDepth(999);
+    this.pivotLabel=this.add.text(0,0,'',{fontFamily:'monospace',fontSize:'9px',color:'#efdfb9',backgroundColor:'#172b25dd',padding:{x:4,y:4}}).setDepth(1100).setVisible(false);
     const params=new URLSearchParams(location.search);
     this.calibration=['calibration','silhouette','attacks'].includes(params.get('scene')??'');
     if(['traversal','sentry','mireling','mixed'].includes(params.get('composition')??'')) this.viewer.composition=params.get('composition') as Composition;
@@ -142,6 +144,7 @@ export class OldRoadVisualScene extends Phaser.Scene {
       this.proxy.lineStyle(1,0xd8c496,.6).strokeRect(-267,-217,245,45).strokeRect(123,-217,114,45).strokeRect(-267,169,245,45).strokeRect(123,169,114,45);
     }
     const hero=snapshot.actors[0];
+    this.pivotLabel.setVisible(this.debug).setPosition(hero.x+17,hero.y+14).setText(`world feet (${Math.round(950+hero.x)}, ${Math.round(1750+hero.y)})\nr13 proposed proxy · not sword bounds`);
     this.status.textContent=results[0].missing?`${hero.action} ${hero.facing}: view unavailable · showing idle`:`${hero.action} / ${hero.phase} · ${hero.facing} · ${Math.round(results[0].width)}px silhouette`;
     window.__VISUAL_STATE__={source:snapshot.source,hero,zoom:this.cameras.main.zoom,build:__BUILD_SHA__,viewport:[this.scale.width,this.scale.height],missing:results.map(r=>r.missing)};
   }

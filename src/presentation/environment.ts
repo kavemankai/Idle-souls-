@@ -33,6 +33,6 @@ export function paintOldRoad(scene: Phaser.Scene) {
   image(-290,-12,'warm-light',460,460,900,.7);
   const textStyle = { fontFamily: 'Georgia', fontSize: '10px', color: '#c7c7ab', letterSpacing: 2 };
   scene.add.text(-294, 105, '← CAMPWARD', textStyle).setOrigin(.5).setAlpha(.68).setDepth(950);
-  scene.add.text(294, 105, 'CROSSROADS →', textStyle).setOrigin(.5).setAlpha(.68).setDepth(950);
+  scene.add.text(294, -95, 'CROSSROADS →', textStyle).setOrigin(.5).setAlpha(.68).setDepth(950);
   scene.add.text(195,-157,'O1', { ...textStyle, fontSize:'19px', color:'#bec1a2' }).setAlpha(.22).setDepth(-970);
 }

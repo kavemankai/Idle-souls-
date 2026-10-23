@@ -21,7 +21,7 @@ for folder in sorted(REND.iterdir()):
         if x+w+pad*2>width:x=0;y+=row;row=0
         placed.append((im,x+pad,y+pad));
         entries[f['name']]={'frame':{'x':x+pad,'y':y+pad,'w':w,'h':h},'rotated':False,'trimmed':True,'spriteSourceSize':{'x':box[0],'y':box[1],'w':w,'h':h},'sourceSize':{'w':192,'h':192},'pivot':{'x':.5,'y':.5}}
-        metadata.append(f|{'sourceHash':hashlib.sha256((ROOT/'assets'/f['source']).read_bytes()).hexdigest(),'file':None,'trimRect':[box[0],box[1],w,h],'trimmedPivot':[96-box[0],96-box[1]],'atlasPage':folder.name+'.png','atlasRect':[x+pad,y+pad,w,h]})
+        metadata.append(f|{'reviewStatus':'TECHNICAL_PROOF_NOT_APPROVED','timingAuthority':'VISUAL-ONLY exhibition; combat source not connected','sourceHash':hashlib.sha256((ROOT/'assets'/f['source']).read_bytes()).hexdigest(),'file':None,'trimRect':[box[0],box[1],w,h],'trimmedPivot':[96-box[0],96-box[1]],'atlasPage':folder.name+'.png','atlasRect':[x+pad,y+pad,w,h]})
         x+=w+pad*2;row=max(row,h+pad*2)
     height=2**max(1,(y+row-1).bit_length());atlas=Image.new('RGBA',(width,height))
     for im,x,y in placed:

@@ -45,15 +45,16 @@ for(const [name,width,height,query,gray,cvd] of shots){
  }
  await page.screenshot({path:`${output}/${name}.png`});
  const state=await page.evaluate(()=>window.__VISUAL_STATE__??null);
- records.push({file:`screenshots/${name}.png`,viewport:[width,height],deviceScaleFactor:1,url:query,grayscale:Boolean(gray),colourVisionSimulation:cvd??null,state,errors});await page.close();
+ const camera=await page.evaluate(()=>{const c=window.__IDLE_GAME__.scene.scenes[0].cameras.main;return {zoom:c.zoom,viewport:[c.x,c.y,c.width,c.height]};});
+ records.push({file:`screenshots/${name}.png`,viewport:[width,height],deviceScaleFactor:1,url:query,grayscale:Boolean(gray),colourVisionSimulation:cvd??null,camera,state,errors});await page.close();
 }
 // This is a cloud software renderer sample, explicitly not a physical phone benchmark.
 const page=await browser.newPage({viewport:{width:1280,height:720}});await page.goto(base);await page.waitForFunction(()=>window.__VISUAL_READY__);await page.waitForTimeout(1000);
-const timings=await page.evaluate(async()=>{
- const times:number[]=[];let last=performance.now();
- await new Promise<void>(resolve=>{function frame(now:number){times.push(now-last);last=now;if(times.length===120)resolve();else requestAnimationFrame(frame);}requestAnimationFrame(frame);});
+const timings=await page.evaluate(`(async()=>{
+ const times=[];let last=performance.now();
+ await new Promise(resolve=>{function frame(now){times.push(now-last);last=now;if(times.length===120)resolve();else requestAnimationFrame(frame);}requestAnimationFrame(frame);});
  times.shift();times.sort((a,b)=>a-b);
- return {samples:times.length,medianFrameMs:times[Math.floor(times.length*.5)],p95FrameMs:times[Math.floor(times.length*.95)],resources:performance.getEntriesByType('resource').map(r=>({name:r.name.split('/').slice(-3).join('/'),transferSize:(r as PerformanceResourceTiming).transferSize,decodedBodySize:(r as PerformanceResourceTiming).decodedBodySize}))};
-});
+ return {samples:times.length,medianFrameMs:times[Math.floor(times.length*.5)],p95FrameMs:times[Math.floor(times.length*.95)],resources:performance.getEntriesByType('resource').map(r=>({name:r.name.split('/').slice(-3).join('/'),transferSize:r.transferSize,decodedBodySize:r.decodedBodySize}))};
+})()`) as {samples:number;medianFrameMs:number;p95FrameMs:number;resources:unknown[]};
 writeFileSync('docs/visual_proof/capture-manifest.json',JSON.stringify({capturedAt:new Date().toISOString(),captureTool:'Chromium / Playwright, real Phaser runtime, CSS grayscale for recognition shot',checkoutSHA:execSync('git rev-parse HEAD').toString().trim(),base,shots:records,cloudPerformance:{renderer:'headless Chromium ANGLE SwiftShader in cloud container',physicalPhone:'NOT TESTED',...timings}},null,2)+'\n');
 await browser.close();console.log(`Captured ${records.length} real preview images with build/viewport metadata`);
