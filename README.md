@@ -38,4 +38,8 @@ npm run assets:reproduce
 
 See [delivery and evidence](docs/visual_proof/DELIVERY.md), [reversible decisions](docs/visual_proof/DECISIONS.md), [source provenance](assets/PROVENANCE.md) and [review matrix](docs/visual_proof/review-matrix.csv).
 
-[The production handoff](CODEX_VISUAL_PRODUCTION_HANDOFF.md) and [design library v0.17](autonomous_dungeon_design_library/00_START_HERE.md) remain authoritative. Preserve L22 Blender-to-2D, L23 fixed +75° orthographic camera and L24 eight-way locomotion/guard with selective attacks. The Ashen Reliquary look remains **PROPOSED**. No RUN dependency or combat implementation has been introduced.
+[The production handoff](CODEX_VISUAL_PRODUCTION_HANDOFF.md) and [design library v0.17](autonomous_dungeon_design_library/00_START_HERE.md) remain authoritative. Preserve L22 Blender-to-2D, L23 fixed +75° orthographic camera and L24 eight-way locomotion/guard with selective attacks. The Ashen Reliquary look remains **PROPOSED**. No RUN dependency has been introduced. The only combat code is the simulator in `combat/`, used by the O1 slice below.
+
+## O1 slice
+
+`npm run dev`, then open `?scene=o1`. Pick a seed and an opponent and press **Dispatch to O2**: the adventurer walks Old Road O1 from the west, may meet the Mireling (default) or the Sentry, and finishes at the east threshold, which is the slice endpoint. The simulator owns every tactical choice. The default page is still the visual study. Geometry and detection values are trial settings in `combat/rooms/o1.json`. Outcomes over 300 seeds: `docs/o1_slice/REPORT.md` (`npm run report:o1`). Captures: `npm run evidence:o1`.
