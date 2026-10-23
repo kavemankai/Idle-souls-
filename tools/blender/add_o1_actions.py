@@ -55,9 +55,36 @@ def mireling_bite(rig, frame):
         for leg in range(3):
             twist(rig, f'leg_{side}_{leg}', (0, 0, side * [23, -17, 3][stage]))
 
+
+def humanoid_death(rig, frame):
+    """Three key-poses for a fall, with the same rig, camera and equipment hands."""
+    i = frame - 1
+    rig.pose.bones['hips'].location.z = [0, -.18, -.37][i]
+    rig.pose.bones['hips'].location.y = [0, .02, .14][i]
+    twist(rig, 'hips', ([0, 19, 42][i], 0, [5, 15, 18][i]))
+    twist(rig, 'spine', ([19, 52, 79][i], 0, [-12, 12, 16][i]))
+    twist(rig, 'head', ([5, 11, 25][i], 0, 0))
+    twist(rig, 'shield_arm', ([-15, -27, -42][i], 0, [-5, -17, -24][i]))
+    twist(rig, 'weapon_arm', ([13, 36, 53][i], 0, [-25, -39, -52][i]))
+    twist(rig, 'foot_L', ([-7, -22, -38][i], 0, 8))
+    twist(rig, 'foot_R', ([12, 20, 35][i], 0, -7))
+
+def mireling_death(rig, frame):
+    """Crumple the Mireling through 3 poses; no hitbox or physics changes."""
+    i = frame - 1
+    rig.pose.bones['body'].location.z = [0, -.10, -.19][i]
+    rig.pose.bones['body'].location.y = [0, -.09, -.16][i]
+    twist(rig, 'body', ([0, 13, 26][i], 0, [8, 17, 23][i]))
+    twist(rig, 'head', ([12, 30, 49][i], 0, -10))
+    twist(rig, 'tail', (0, 0, [12, -22, -42][i]))
+    for side in (-1, 1):
+        for leg in range(3):
+            twist(rig, f'leg_{side}_{leg}', (0, 0, side * [13, 33, 58][i]))
+
 specs = (
-    ('sentry', {'reaction': (1, sentry_reaction)}),
-    ('mireling', {'light': (3, mireling_bite), 'reaction': (1, mireling_reaction)}),
+    ('adventurer', {'death': (3, humanoid_death)}),
+    ('sentry', {'reaction': (1, sentry_reaction), 'death': (3, humanoid_death)}),
+    ('mireling', {'light': (3, mireling_bite), 'reaction': (1, mireling_reaction), 'death': (3, mireling_death)}),
 )
 for kind, actions in specs:
     path = SRC / f'{kind}.blend'

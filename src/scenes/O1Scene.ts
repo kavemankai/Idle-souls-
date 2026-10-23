@@ -46,6 +46,9 @@ export class O1Scene extends Phaser.Scene {
   private debug = false;
   private reduced = false;
   private clips = new Set<string>();
+  private defence = { blocks: 0, parries: 0, perfects: 0 };
+  private shieldCue: 'block' | 'parry' | 'perfect' | null = null;
+  private shieldCueMs = 0;
   private hud!: HTMLElement;
   constructor() { super('O1'); }
   preload() { loadOldRoadAssets(this); }
@@ -88,6 +91,8 @@ export class O1Scene extends Phaser.Scene {
     this.controller = new O1Controller(this.sim, this.config());
     this.adapter = new O1PresentationAdapter(this.controller);
     this.clips.clear(); this.acc = 0;
+    this.defence = { blocks: 0, parries: 0, perfects: 0 };
+    this.shieldCue = null; this.shieldCueMs = 0;
   }
   private drawEndpoint() {
     const x = O1.threshold.x, [y0, y1] = O1.threshold.y;
@@ -220,13 +225,24 @@ export class O1Scene extends Phaser.Scene {
       this.acc += Math.min(delta, 100) * this.speed;
       while (this.acc >= TICK_MS && !c.terminal) { c.step(); this.acc -= TICK_MS; }
     }
-    const snapshot = this.adapter.read();
+    const snapshot = this.adapter.read(delta);
     this.moveCamera(delta, snapshot);
     const [hero, enemy] = snapshot.actors;
-    const results = [this.hero.draw(hero, this.debug, this.reduced)];
+    const counts = snapshot.combat?.totals;
+    if (counts) {
+      // Confirmed successful player defensive actions only, never guessed from a guard pose.
+      const next = counts.parries > this.defence.parries ? 'parry'
+        : counts.perfects > this.defence.perfects ? 'perfect'
+        : counts.blocks > this.defence.blocks ? 'block' : null;
+      if (next) { this.shieldCue = next; this.shieldCueMs = 165; }
+      this.defence = { blocks: counts.blocks, parries: counts.parries, perfects: counts.perfects };
+    }
+    this.shieldCueMs = Math.max(0, this.shieldCueMs - Math.min(delta, 100));
+    const playerTruth = snapshot.combat?.combatants[0], enemyTruth = snapshot.combat?.combatants[1];
+    const results = [this.hero.draw(hero, this.debug, this.reduced, playerTruth, this.shieldCueMs > 0 ? this.shieldCue : null)];
     for (const key of Object.keys(this.enemies) as O1Opponent[]) {
       const mine = key === c.cfg.opponent;
-      const r = this.enemies[key].draw(mine ? enemy : { ...enemy, visible: false }, this.debug, this.reduced);
+      const r = this.enemies[key].draw(mine ? enemy : { ...enemy, visible: false }, this.debug, this.reduced, mine ? enemyTruth : undefined);
       if (mine) results.push(r);
     }
     [hero, enemy].forEach((a, i) => { if (results[i].missing && a.visible) this.clips.add(`${a.kind} ${a.action} ${a.facing}`); });
