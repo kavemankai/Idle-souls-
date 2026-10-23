@@ -2,6 +2,12 @@
 
 Measured against `?scene=o1`: 600 fights (Mireling and Sentry, three doctrines, 100 seeds each, level 80 balanced) were played headless through the real controller and adapter. 627,971 drawn actor frames were checked against the runtime atlases. 60,456 of them (9.6%) asked for a clip that does not exist and fell back to idle. Priorities follow `29A_OLD_ROAD_ART_ASSET_MANIFEST.csv`. Nothing here is approved art; all of it follows L22 (Blender to 2D), L23 (fixed +75 degree camera) and L24 (eight-way locomotion and guard, selective attacks, no mirroring).
 
+## Status after art waves 1 to 4 (merged with multi-enemy support)
+
+Measured again with the same method on the merged branch: 600 fights across all four O1 encounters (Mireling, Sentry, Two Mirelings, Sentry and Mireling; three doctrines; 50 seeds each; level 80 balanced), 1,254,675 drawn actor frames, **0 fallbacks to a missing clip** (was 60,456 of 627,971). Sections 1 and 2 (character clips, wall returns, doorway caps, endpoint marker) and the combat VFX of section 3 are delivered as proofs, not approved art; see `WAVE1_ASSET_DELIVERY.md` to `WAVE4_COMBAT_VFX.md` and `ENVIRONMENT_ART_DELIVERY.md`.
+
+Still open: audio (section 5), interface art and the font decision (section 4), the parry deflect and perfect-block flash polish, the detection cue, wall cutaway, fog edge, ground transition and crack decals, contact shadows. Human and phone review of everything delivered.
+
 ## 1. Character clips the slice already requests and does not have
 
 Counts are fallback frames out of the 600 fights. The simulator decides which clip is needed, so these are the real gaps.

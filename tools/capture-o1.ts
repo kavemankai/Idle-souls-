@@ -16,6 +16,8 @@ const moments: [string, string][] = [
   ['combat-tab', '?scene=o1&opponent=sentry&ticks=175&tab=combat&hold&ghosts'],
   ['totals-tab', '?scene=o1&opponent=sentry&ticks=400&tab=totals&hold'],
   ['build-tab', '?scene=o1&opponent=sentry&ticks=175&tab=build&hold'],
+  ['pair-fight', '?scene=o1&opponent=sentryMireling&ticks=190&hold&cam=action'],
+  ['two-mirelings', '?scene=o1&opponent=mireling2&ticks=190&hold'],
   ['action-cam', '?scene=o1&opponent=sentry&ticks=175&hold&cam=action'],
   ['zoom-2', '?scene=o1&opponent=sentry&ticks=175&hold&cam=zoom2'],
   ['log-tab', '?scene=o1&opponent=sentry&ticks=400&tab=log&hold'],

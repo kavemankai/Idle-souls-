@@ -60,6 +60,14 @@ test('legacy circular-arena fights are unchanged', () => {
   assert.equal(r.status, 0, r.stdout + r.stderr);
   assert.match(r.stdout, /different 0/);
 });
-test('the manifest rooms keep spawns inside the floor and clear of solids', () => {
-  for (const [name, s] of Object.entries(O1.spawns)) assert.ok(sim.room.nearest(room, s.x, s.y).d >= sim.ARCH[name].r, `${name} spawn is clear`);
+test('every manifest encounter keeps its enemies on the floor, clear of solids, away from the entry and close enough to be a group', () => {
+  for (const [id, enc] of Object.entries(O1.encounters)) {
+    enc.enemies.forEach((e, i) => {
+      assert.ok(sim.room.nearest(room, e.x, e.y).d >= sim.ARCH[e.arch].r + 13, `${id} enemy ${i} is clear of solids`);
+      assert.ok(Math.hypot(e.x - O1.entry.x, e.y - O1.entry.y) >= 110, `${id} enemy ${i} starts at least 110 from the entry`);
+    });
+    const archs = enc.enemies.map(e => e.arch);
+    assert.deepEqual(archs, (sim as unknown as { ENCOUNTERS: Record<string, { enemies: string[] }> }).ENCOUNTERS[id].enemies, `${id} lists the simulator's archetypes in order`);
+    for (const a of enc.enemies) for (const b of enc.enemies) assert.ok(Math.hypot(a.x - b.x, a.y - b.y) <= O1.detection.alertRadius, `${id} enemies are within the alert radius of each other`);
+  }
 });

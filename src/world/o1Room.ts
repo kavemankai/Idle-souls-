@@ -5,12 +5,14 @@ import type { SimRoom } from '../combat/simApi';
 /** One O1 geometry for travel, sight, combat and rendering. Values are trial settings, not design locks. */
 export interface Circle { id: string; x: number; y: number; r: number }
 export interface SpawnSpec { x: number; y: number; facing: Facing }
+export interface EnemySpec extends SpawnSpec { arch: string }
+export interface EncounterSpec { name: string; enemies: EnemySpec[] }
 export interface RoomManifest {
   id: string; floor: { x: [number, number]; y: [number, number] }; bounds: [number, number, number, number];
   solids: { rects: number[][]; circles: Circle[] };
   openings: { side: 'west' | 'east'; y: [number, number] }[];
   entry: { x: number; y: number }; threshold: { x: number; y: [number, number] };
-  spawns: Record<string, SpawnSpec>; detection: { range: number; arcDegrees: number };
+  encounters: Record<string, EncounterSpec>; detection: { range: number; arcDegrees: number; alertRadius: number };
 }
 export const O1: RoomManifest = manifest as unknown as RoomManifest;
 export function simRoom(room: RoomManifest = O1): SimRoom { return { bounds: room.bounds, solids: room.solids }; }

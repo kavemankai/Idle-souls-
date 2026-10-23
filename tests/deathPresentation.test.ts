@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { loadSim } from '../src/combat/loadSimNode';
 import { O1Controller } from '../src/world/o1Controller';
 import { O1PresentationAdapter } from '../src/world/o1Adapter';
+import { O1 } from '../src/world/o1Room';
 import { FACINGS, type ActorView } from '../src/contracts/presentation';
 import { chooseFrame } from '../src/presentation/spriteSelection';
 const atlas = (kind: string): Record<string, unknown> => JSON.parse(readFileSync(`assets/characters/runtime/${kind}.json`, 'utf8')).frames;
@@ -33,11 +34,29 @@ test('dead player settles while the 30 Hz simulation is stopped', () => {
 
 test('winning O1 retains the enemy corpse at the simulator final position', () => {
   const sim=loadSim(), c=new O1Controller(sim,{seed:1,opponent:'sentry',level:80,focus:'balanced',doctrine:'measured'});
-  c.fight=sim.createFight({seed:1,stats:sim.allocate(80,'balanced',1),god:false,doctrine:'measured',encounter:'sentry'});
-  const e=c.fight.enemies[0];e.dead=true;e.hp=0;
-  c.enemy.alive=false;c.state='travelling';
+  c.dispatch();
+  while (c.state !== 'fighting') c.step();
+  while (c.state === 'fighting') c.step();
+  assert.equal(c.state, 'travelling');
+  const e=c.fight!.enemies[0];
+  assert.ok(e.dead);
   const corpse=new O1PresentationAdapter(c).read().actors[1];
   assert.equal(corpse.visible,true);
   assert.equal(corpse.action,'death');
   assert.equal(corpse.x,e.x);assert.equal(corpse.y,e.y);
+});
+
+test('an enemy that fell in an earlier fight stays down through the next one', () => {
+  const sim=loadSim();
+  const far=[{...O1.encounters.mireling2.enemies[0]},{arch:'mireling',x:180,y:-60,facing:'SW' as const}];
+  const c=new O1Controller(sim,{seed:3,opponent:'mireling2',level:80,focus:'balanced',doctrine:'measured',enemies:far}), a=new O1PresentationAdapter(c);
+  c.dispatch();
+  while (c.state !== 'fighting') c.step();
+  while (c.state === 'fighting') c.step();
+  const down={x:c.foes[0].x,y:c.foes[0].y};
+  while (c.state === 'travelling') c.step();
+  assert.equal(c.state,'fighting'); assert.equal(c.fights,2);
+  const [,first,second]=a.read().actors;
+  assert.equal(first.action,'death'); assert.equal(first.visible,true); assert.equal(first.x,down.x); assert.equal(first.y,down.y);
+  assert.notEqual(second.action,'death'); assert.equal(second.visible,true);
 });
