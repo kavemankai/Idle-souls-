@@ -2,7 +2,7 @@
 
 A standalone Phaser **4.2.1** / TypeScript **7.0.2** / Vite **8.3.5** visual workbench. Explore a modular Old Road diorama with Blender-rendered adventurer, Ashen Sentry and Mireling tests. **VISUAL-ONLY:** movement and exhibition poses are artist controls; combat, collision, extraction and progression are not implemented. The authoritative combat source is absent.
 
-Requires Node 22.12+ and npm:
+This repositor contains the modular game-design, combat interface and art-production specifications, plus the combat simulation in `combat/`. There is no full game yet. The combat code (deterministic sim, adventurer AI, enemy AI, balance runner and bench page) is the source of truth for combat numbers and overrides the design library where they disagree. Read `combat/CLAUDE.md` and `combat/CLAUDE_CODE_COMBAT_HANDOFF.md` before changing it.
 
 ```sh
 npm ci

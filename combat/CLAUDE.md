@@ -1,0 +1,12 @@
+# Combat system: rules for Claude Code
+
+Read `CLAUDE_CODE_COMBAT_HANDOFF.md` before any change.
+
+- This code overrides the design library on combat. Combat is the heart of the game.
+- Work in `deep-stats/`. Keep `main/` frozen as the regression baseline.
+- The engine stays deterministic (seeded `rngA`/`rngE`, 30 Hz, no `Math.random`, no clock) and never renders.
+- Edit `combat-sim.js` and `bench-shell.html`, then run `node build.js`. Never edit `combat-bench.html` by hand.
+- Mind stats are AI handicaps; physical stats only change move numbers. Every hit taken is blamed on one stat.
+- No adaptive difficulty, no hidden multipliers, no global weakening of the player AI, no AI rewrite without evidence.
+- Done means: `node tools/regress.js` prints `different 0` (or the difference is explained), `node balance.js` before/after on affected encounters with all doctrines and two or more focus profiles at 300 seeds, and `node tools/body-vs-mind.js 150` for any physical-stat or health change.
+- Report results bluntly with numbers. Kyle prefers direct feedback.

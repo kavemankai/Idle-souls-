@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Combat bench: deep-stats split</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@500;700&family=Alegreya+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #d9ddd8; --panel: #e8ebe6; --ink: #1f262b; --muted: #59646b; --line: #b2bab6;
+  --floor: #c6ccc7; --floor2: #bcc3be; --steel: #2d5f8c; --rust: #a43a27; --amber: #9c650c; --good: #3b742c;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #1a2229; --panel: #232d36; --ink: #e8e2d4; --muted: #9ba4a9; --line: #3a4753;
+    --floor: #27323c; --floor2: #2d3943; --steel: #8fb6da; --rust: #d0644c; --amber: #e2a540; --good: #93c47e;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #1a2229; --panel: #232d36; --ink: #e8e2d4; --muted: #9ba4a9; --line: #3a4753;
+  --floor: #27323c; --floor2: #2d3943; --steel: #8fb6da; --rust: #d0644c; --amber: #e2a540; --good: #93c47e;
+}
+*, *::before, *::after { box-sizing: inherit; }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 400 16px/1.45 "Alegreya Sans", "Gill Sans", "Segoe UI", system-ui, sans-serif;
+}
+.wrap { max-width: 1120px; margin: 0 auto; padding: 16px 14px 40px; display: grid; gap: 18px; }
+@media (min-width: 920px) { .wrap { grid-template-columns: minmax(0, 560px) minmax(0, 1fr); align-items: start; padding-top: 28px; } }
+header { grid-column: 1 / -1; }
+h1 { font: 700 1.7rem/1.1 Alegreya, Georgia, serif; margin: 0 0 4px; letter-spacing: -0.01em; }
+header p { margin: 0; color: var(--muted); max-width: 62ch; }
+h2 { font: 700 1.15rem/1.2 Alegreya, Georgia, serif; margin: 0 0 10px; }
+.stage { display: grid; gap: 10px; }
+canvas { width: 100%; aspect-ratio: 1; display: block; border-radius: 50%; touch-action: manipulation; }
+.thought { font: 500 1.12rem/1.35 Alegreya, Georgia, serif; min-height: 3em; margin: 0; }
+.thought small { display: block; font: 400 0.9rem/1.3 "Alegreya Sans", sans-serif; color: var(--rust); min-height: 1.3em; }
+.bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+button, .seg button {
+  font: 500 0.95rem/1 "Alegreya Sans", sans-serif; color: var(--ink); background: var(--panel);
+  border: 1px solid var(--line); border-radius: 6px; padding: 9px 12px; cursor: pointer; min-height: 38px;
+}
+button:hover { border-color: var(--muted); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--steel); outline-offset: 2px; }
+button.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); min-width: 84px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.seg button { border: 0; border-radius: 0; border-right: 1px solid var(--line); background: transparent; }
+.seg button:last-child { border-right: 0; }
+.wrapseg { display: flex; flex-wrap: wrap; }
+.wrapseg button { flex: 1 1 auto; border-bottom: 1px solid var(--line); margin-bottom: -1px; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.seed { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 0.95rem; }
+.seed input { width: 72px; font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 8px; }
+section.panel { background: var(--panel); border-radius: 10px; padding: 16px; }
+.side { display: grid; gap: 18px; }
+.row { display: grid; gap: 8px; margin-bottom: 14px; }
+.row > span { color: var(--muted); font-size: 0.95rem; }
+.stat { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; padding: 8px 0; border-top: 1px solid var(--line); }
+.stat:first-of-type { border-top: 0; }
+.stat label { font-weight: 700; }
+.stat output { font-variant-numeric: tabular-nums; font-weight: 700; text-align: right; }
+.stat input { grid-column: 1 / -1; width: 100%; accent-color: var(--steel); }
+.stat p { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 0.9rem; }
+.stat p b { color: var(--ink); font-weight: 500; }
+details.fam { border-top: 1px solid var(--line); padding: 4px 0; }
+details.fam summary { cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 8px 0; font-weight: 700; list-style: none; }
+details.fam summary::-webkit-details-marker { display: none; }
+details.fam summary::before { content: "▸"; margin-right: 8px; color: var(--muted); }
+details.fam[open] summary::before { content: "▾"; }
+details.fam summary span:first-child { flex: 1; }
+details.fam summary .avg { font-variant-numeric: tabular-nums; color: var(--muted); font-weight: 500; }
+.godnote { color: var(--muted); font-size: 0.9rem; margin: 6px 0 0; }
+.check { display: inline-flex; gap: 8px; align-items: center; cursor: pointer; }
+.check input { width: 18px; height: 18px; accent-color: var(--steel); }
+.results { display: grid; gap: 10px; margin-top: 12px; }
+.wl { display: flex; height: 14px; border-radius: 3px; overflow: hidden; background: var(--line); }
+.wl i { display: block; height: 100%; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; color: var(--muted); font-size: 0.92rem; }
+.legend b { color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; }
+.causes { display: grid; gap: 6px; }
+.cause { display: grid; grid-template-columns: 9.5em 1fr 3em; gap: 8px; align-items: center; font-size: 0.92rem; }
+.cause .track { height: 10px; background: var(--line); border-radius: 2px; overflow: hidden; }
+.cause .track i { display: block; height: 100%; background: var(--rust); }
+.cause span:last-child { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+.log { list-style: none; margin: 0; padding: 0; max-height: 300px; overflow: auto; font-size: 0.93rem; }
+.log li { display: grid; grid-template-columns: 3em 1fr; gap: 8px; padding: 5px 0; border-top: 1px solid var(--line); }
+.log time { color: var(--muted); font-variant-numeric: tabular-nums; }
+.log .good { color: var(--good); } .log .bad { color: var(--rust); } .log .end { font-weight: 700; }
+.muted { color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Combat bench <span class="muted" style="font-size:0.6em">deep-stats split</span></h1>
+    <p>Split branch: an 18-stat line. Sword arm, shield arm, legs and body change what the adventurer’s body can do; five mind stats add back the AI’s mistakes. Change a stat and the fight restarts on the same seed, so you see exactly what that point bought. Against groups, the ring marks the one it’s focused on. Squares are archers. An amber shield is a Sentry’s guard stance: a light attack into it gets countered, a heavy breaks it. A green flash is the adventurer’s parry window; after a dodge that makes an attack miss it can follow up with a fast rolling slash.</p>
+  </header>
+
+  <div class="stage">
+    <canvas id="arena" aria-label="Top-down arena showing the adventurer and the enemy"></canvas>
+    <p class="thought" id="thought">Press play.<small id="truth"></small></p>
+    <div class="bar">
+      <button class="primary" id="play">Play</button>
+      <button id="restart">Restart</button>
+      <div class="seg" id="speed" role="group" aria-label="Speed">
+        <button data-v="0.25">¼×</button><button data-v="1" aria-pressed="true">1×</button><button data-v="2">2×</button><button data-v="4">4×</button>
+      </div>
+      <label class="seed">Seed <input id="seed" type="number" min="1" value="7"></label>
+      <button id="reseed">New seed</button>
+    </div>
+    <label class="check"><input type="checkbox" id="ghost" checked> Show where it thinks the enemy is (its reaction lag)</label>
+    <section class="panel">
+      <h2>Fight log</h2>
+      <ul class="log" id="log"></ul>
+    </section>
+  </div>
+
+  <div class="side">
+    <section class="panel">
+      <h2>Setup</h2>
+      <div class="row" id="encounter" role="group" aria-label="Encounter"><span>Regulars (Old Road)</span>
+        <div class="seg wrapseg">
+          <button data-v="mireling">Mireling</button><button data-v="mireling2">2 Mirelings</button><button data-v="sentry" aria-pressed="true">Ashen Sentry</button><button data-v="sentryMireling">Sentry + Mireling</button>
+        </div>
+        <span>Mobs (fodder, one or two hits each)</span>
+        <div class="seg wrapseg">
+          <button data-v="grunts3">3 Grunts</button><button data-v="gruntsArcher">2 Grunts + Archer</button><button data-v="archers">Grunt + 2 Archers</button><button data-v="mob">4 Grunts + Archer</button>
+        </div>
+        <span>Elites (mini-boss tier)</span>
+        <div class="seg wrapseg">
+          <button data-v="breaker">Breaker</button><button data-v="stalker">Stalker</button><button data-v="stalker2">2 Stalkers</button><button data-v="mixed">Stalker + Breaker</button><button data-v="breaker2">2 Breakers</button>
+        </div>
+      </div>
+      <div class="row"><span>Doctrine</span>
+        <div class="seg" id="doctrine" role="group" aria-label="Doctrine">
+          <button data-v="measured" aria-pressed="true">Measured</button><button data-v="guarded">Guarded</button><button data-v="pressing">Pressing</button>
+        </div>
+      </div>
+      <div class="row"><span>Training focus</span>
+        <div class="seg wrapseg" id="focus" role="group" aria-label="Training focus">
+          <button data-v="balanced" aria-pressed="true">Balanced</button><button data-v="duelist">Duelist</button><button data-v="bulwark">Bulwark</button><button data-v="skirmisher">Skirmisher</button><button data-v="survivor">Survivor</button>
+        </div>
+      </div>
+      <div class="row"><span>Level</span>
+        <div class="bar">
+          <button data-level="1">Fresh</button><button data-level="40">40</button><button data-level="80">80</button><button data-level="140">140</button><button data-level="9999">Max</button>
+          <label class="check"><input type="checkbox" id="god"> Perfect mind</label>
+        </div>
+        <p class="godnote">Sword, shield, legs and body change the adventurer’s moves. Mind stats are the AI’s handicaps. Perfect mind removes every mind handicap and leaves the body as set.</p>
+        <p class="godnote" id="lvl"></p>
+      </div>
+      <div id="stats"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Test this build</h2>
+      <div class="bar"><button id="batch">Run 300 fights</button><span class="muted" id="batchStatus">Same build, enemy and doctrine, seeds 1 to 300.</span></div>
+      <div class="results" id="results" hidden>
+        <div class="wl" id="wl"></div>
+        <div class="legend" id="wlLegend"></div>
+        <div class="muted">Damage taken per fight, by what went wrong:</div>
+        <div class="causes" id="causes"></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+/*SIM*/
+</script>
+<script>
+(function () {
+  'use strict';
+  const { HZ, ARENA_R, MOVES, STATS, CAUSES } = SIM;
+  const $ = id => document.getElementById(id);
+  const state = { stats: SIM.allocate(1, 'balanced'), focus: 'balanced', encounter: 'sentry', doctrine: 'measured', god: false, seed: 7, speed: 1, playing: false };
+
+  // ---- Stat sliders, grouped by family ----
+  const statBox = $('stats');
+  const pct = x => Math.round(x * 100) + '%', ms = t => Math.round(t * 1000 / HZ) + ' ms';
+  function describe(key, d, mv) {
+    switch (key) {
+      case 'swingSpeed': return `Light windup <b>${mv.light.windup}</b> ticks, heavy <b>${mv.heavy.windup}</b>`;
+      case 'swingPower': return `Light <b>${mv.light.dmg}</b> damage, heavy <b>${mv.heavy.dmg}</b>, poise ×<b>${d.poisePower.toFixed(2)}</b>`;
+      case 'swingSkill': return `Tracking ×<b>${d.trackMult.toFixed(2)}</b>, arc ×<b>${d.arcMult.toFixed(2)}</b>${d.glance < 1 ? `, edge hits do <b>${pct(d.glance)}</b>` : ''}, chains up to <b>${d.chainMax}</b> light${d.chainMax > 1 ? 's' : ''}`;
+      case 'guardSpeed': return `Shield up in <b>${d.raise}</b> tick${d.raise === 1 ? '' : 's'}, parry startup <b>${d.parryStart}</b>`;
+      case 'guardStrength': return `Blocks cost <b>${pct(d.blockMult)}</b>, guard-break chip <b>${pct(d.chip)}</b>, break stagger <b>${d.breakStag}</b> ticks`;
+      case 'guardSkill': return `Perfect block <b>${ms(d.perfect)}</b>, parry window <b>${ms(d.parry)}</b>, guard ±<b>${Math.round(d.guardArc * 180 / Math.PI)}°</b>`;
+      case 'moveSpeed': return `Moves at <b>${pct(d.moveMult)}</b> speed`;
+      case 'dodgePower': return `Dodge covers <b>${d.dodgeDist}</b> units`;
+      case 'dodgeSkill': return `<b>${d.iframes}</b> invulnerable ticks, <b>${d.dodgeStam}</b> stamina, rolling-slash window <b>${d.counterWin}</b> ticks`;
+      case 'endurance': return `Max stamina <b>${d.maxSt}</b>`;
+      case 'wind': return `Regains <b>${d.regen.toFixed(2)}</b> a tick after a <b>${d.regenPause}</b>-tick pause`;
+      case 'balance': return `Poise <b>${d.poise}</b>, staggers last ×<b>${d.staggerMult.toFixed(2)}</b>`;
+      case 'vitality': return `Health <b>${d.hp}</b>`;
+      case 'reflex': return `Reacts after <b>${ms(d.delay)}</b>`;
+      case 'perception': return `Misreads a deceptive attack <b>${pct(d.misread)}</b> of the time`;
+      case 'discipline': return `Keeps <b>${Math.round(d.reserve)}</b> stamina back, greed <b>${d.greed.toFixed(2)}</b>`;
+      case 'composure': return `Decision noise <b>${d.temp.toFixed(2)}</b>`;
+      case 'positioning': return `Spacing off by up to <b>${Math.round(d.spacingErr)}</b>, panicked rolls <b>${pct(d.dodgeErr)}</b>, awareness of other enemies <b>${d.flankSense.toFixed(2)}</b>`;
+    }
+  }
+  SIM.FAMILIES.forEach(f => {
+    const det = document.createElement('details');
+    det.className = 'fam';
+    det.innerHTML = `<summary><span>${f.name}</span><span class="avg" id="avg-${f.key}"></span></summary>`;
+    STATS.filter(s => s.family === f.key).forEach(s => {
+      const el = document.createElement('div');
+      el.className = 'stat';
+      el.innerHTML = `<label for="st-${s.key}">${s.name}</label><output id="out-${s.key}"></output>
+        <input type="range" id="st-${s.key}" min="1" max="20" step="1" value="${state.stats[s.key]}">
+        <p id="desc-${s.key}"></p>`;
+      det.appendChild(el);
+      el.querySelector('input').addEventListener('input', e => { state.stats[s.key] = +e.target.value; syncStats(); restart(); });
+    });
+    statBox.appendChild(det);
+  });
+  function syncStats() {
+    const d = SIM.derive(state.stats, state.god), mv = SIM.playerMoves(d);
+    STATS.forEach(s => {
+      const mind = s.family === 'mind';
+      $('st-' + s.key).value = state.stats[s.key];
+      $('st-' + s.key).disabled = state.god && mind;
+      $('out-' + s.key).textContent = state.god && mind ? 'perfect' : state.stats[s.key];
+      $('desc-' + s.key).innerHTML = describe(s.key, d, mv);
+    });
+    SIM.FAMILIES.forEach(f => {
+      const ks = STATS.filter(s => s.family === f.key);
+      $('avg-' + f.key).textContent = state.god && f.key === 'mind' ? 'perfect' : 'avg ' + (ks.reduce((a, s) => a + state.stats[s.key], 0) / ks.length).toFixed(1);
+    });
+    $('lvl').innerHTML = `Level <b>${SIM.playerLevel(state.stats)}</b> of ${SIM.MAX_LEVEL}, health <b>${d.hp}</b>. A fresh adventurer has body stats 7 and mind stats 1; each level above 1 adds ${SIM.POINTS_PER_LEVEL} stat points (${SIM.pointsSpent(state.stats)} spent).`;
+  }
+
+  function bindSeg(id, key) {
+    const seg = $(id);
+    seg.addEventListener('click', e => {
+      const b = e.target.closest('button'); if (!b) return;
+      seg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+      if (key === 'speed') state.speed = +b.dataset.v; else { state[key] = b.dataset.v; restart(); }
+    });
+  }
+  bindSeg('encounter', 'encounter'); bindSeg('doctrine', 'doctrine'); bindSeg('speed', 'speed');
+  // Training focus re-spreads the current level's points; level presets spread a level's points by the focus.
+  $('focus').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    $('focus').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+    state.focus = b.dataset.v; state.stats = SIM.allocate(SIM.playerLevel(state.stats), state.focus); syncStats(); restart();
+  });
+  document.querySelectorAll('[data-level]').forEach(b => b.addEventListener('click', () => {
+    state.stats = SIM.allocate(+b.dataset.level, state.focus); syncStats(); restart();
+  }));
+  $('god').addEventListener('change', e => { state.god = e.target.checked; syncStats(); restart(); });
+  $('seed').addEventListener('change', e => { state.seed = Math.max(1, Math.floor(+e.target.value || 1)); restart(); });
+  $('reseed').addEventListener('click', () => { state.seed = 1 + Math.floor(Math.random() * 9999); $('seed').value = state.seed; restart(); });
+  $('play').addEventListener('click', () => {
+    if (S.over) restart();
+    state.playing = !state.playing; $('play').textContent = state.playing ? 'Pause' : 'Play';
+  });
+  $('restart').addEventListener('click', () => restart());
+
+  // ---- Fight ----
+  let S, logged = 0, acc = 0;
+  function cfg(seed) { return { seed, stats: { ...state.stats }, god: state.god, doctrine: state.doctrine, encounter: state.encounter }; }
+  function restart() {
+    S = SIM.createFight(cfg(state.seed)); logged = 0; acc = 0;
+    $('log').innerHTML = '';
+    $('thought').firstChild.textContent = state.playing ? '' : 'Press play.';
+    $('truth').textContent = '';
+    draw();
+  }
+
+  function flushLog() {
+    const ul = $('log');
+    while (logged < S.events.length) {
+      const e = S.events[logged++];
+      const li = document.createElement('li');
+      li.innerHTML = `<time>${SIM.fmt(e.tick)}</time><span class="${e.kind}"></span>`;
+      li.lastChild.textContent = e.text;
+      ul.prepend(li);
+    }
+  }
+
+  // ---- Drawing ----
+  const cv = $('arena'), ctx = cv.getContext('2d');
+  let C = {};
+  function readColors() { const cs = getComputedStyle(document.documentElement); ['bg', 'ink', 'muted', 'line', 'floor', 'floor2', 'steel', 'rust', 'amber', 'good'].forEach(k => C[k] = cs.getPropertyValue('--' + k).trim()); }
+  function resize() {
+    const w = cv.clientWidth, dpr = window.devicePixelRatio || 1;
+    cv.width = Math.round(w * dpr); cv.height = Math.round(w * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    draw();
+  }
+  window.addEventListener('resize', resize);
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { readColors(); draw(); });
+
+  function sector(x, y, face, r, half) { ctx.beginPath(); ctx.moveTo(x, y); ctx.arc(x, y, r, face - half, face + half); ctx.closePath(); }
+  function attackShape(f, color, sc) {
+    if (f.act && f.act.kind === 'ranged' && f.stagger <= 0 && f.actT <= f.act.windup) {
+      const prog = Math.min(1, f.actT / f.act.windup), len = 40 + 140 * prog;
+      ctx.save(); ctx.setLineDash([6, 5]); ctx.lineWidth = 1.5 + prog; ctx.strokeStyle = C.amber; ctx.globalAlpha = 0.4 + 0.5 * prog;
+      ctx.beginPath(); ctx.moveTo(f.x * sc, f.y * sc); ctx.lineTo((f.x + Math.cos(f.face) * len) * sc, (f.y + Math.sin(f.face) * len) * sc); ctx.stroke(); ctx.restore();
+      return;
+    }
+    if (!f.act || f.act.kind !== 'attack' || f.stagger > 0) return;
+    const m = f.act, t = f.actT;
+    const tellM = m.tell ? MOVES[m.tell] : m; // what the attack looks like, not what it is
+    const reach = (tellM.range + tellM.lunge) * sc;
+    const danger = tellM.id === 'overhead' || tellM.id === 'lunge';
+    const col = f === S.p ? C.steel : (danger ? C.rust : C.amber);
+    ctx.save();
+    if (t <= m.windup) {
+      const prog = Math.min(1, t / tellM.windup);
+      sector(f.x * sc, f.y * sc, f.face, reach, tellM.arc);
+      ctx.globalAlpha = 0.10 + 0.22 * prog; ctx.fillStyle = col; ctx.fill();
+      ctx.globalAlpha = 0.9; ctx.lineWidth = 2; ctx.strokeStyle = col;
+      ctx.beginPath(); ctx.arc(f.x * sc, f.y * sc, reach * prog, f.face - tellM.arc, f.face + tellM.arc); ctx.stroke();
+    } else if (t <= m.windup + m.active) {
+      sector(f.x * sc, f.y * sc, f.face, m.range * sc, m.arc);
+      ctx.globalAlpha = 0.55; ctx.fillStyle = col; ctx.fill();
+    }
+    ctx.restore();
+  }
+  function fighter(f, col, sc) {
+    const x = f.x * sc, y = f.y * sc, r = f.r * sc;
+    ctx.save();
+    if (f.iframe) ctx.globalAlpha = 0.35;
+    ctx.beginPath();
+    if (SIM.ARCH[f.arch].ranged) ctx.rect(x - r, y - r, r * 2, r * 2); else ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = f.flash > 0 && f.flash % 2 ? C.ink : col; ctx.fill();
+    if (f.stagger > 0) { ctx.setLineDash([3, 3]); ctx.lineWidth = 2; ctx.strokeStyle = C.ink; ctx.stroke(); ctx.setLineDash([]); }
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.cos(f.face) * r * 1.5, y + Math.sin(f.face) * r * 1.5);
+    ctx.lineWidth = Math.max(2, r * 0.35); ctx.lineCap = 'round'; ctx.strokeStyle = C.ink; ctx.stroke();
+    if (f.act && f.act.kind === 'parry') {
+      const live = f.actT > f.act.windup && f.actT <= f.act.windup + f.parryWin;
+      ctx.beginPath(); ctx.arc(x, y, r + 6, f.face - 0.9, f.face + 0.9); ctx.lineWidth = live ? 6 : 2; ctx.strokeStyle = live ? C.good : C.muted; ctx.stroke();
+    }
+    const stance = f.act && f.act.kind === 'guard' && f.actT <= f.act.active;
+    if (f.blocking || stance) { ctx.beginPath(); ctx.arc(x, y, r + 5, f.face - 1.0, f.face + 1.0); ctx.lineWidth = stance ? 6 : 4; ctx.strokeStyle = stance ? C.amber : C.ink; ctx.stroke(); }
+    ctx.restore();
+  }
+  function bars(f, sc, showSt) {
+    const w = 46, x = f.x * sc - w / 2; let y = f.y * sc - f.r * sc - 16;
+    const bar = (v, col) => { ctx.fillStyle = C.line; ctx.fillRect(x, y, w, 4); ctx.fillStyle = col; ctx.fillRect(x, y, w * Math.max(0, v), 4); y += 6; };
+    bar(f.hp / f.maxHp, C.rust);
+    if (showSt) bar(f.st / f.maxSt, C.amber); else bar(f.poise / f.maxPoise, C.muted);
+  }
+  function draw() {
+    if (!S) return;
+    const w = cv.clientWidth; if (!w) return;
+    const sc = (w / 2 - 4) / ARENA_R;
+    ctx.save(); ctx.clearRect(0, 0, w, w); ctx.translate(w / 2, w / 2);
+    ctx.beginPath(); ctx.arc(0, 0, ARENA_R * sc, 0, Math.PI * 2); ctx.fillStyle = C.floor; ctx.fill();
+    ctx.strokeStyle = C.floor2; ctx.lineWidth = 1;
+    for (let r = 60; r < ARENA_R; r += 60) { ctx.beginPath(); ctx.arc(0, 0, r * sc, 0, Math.PI * 2); ctx.stroke(); }
+    for (let a = 0; a < 12; a++) { const t = a * Math.PI / 6; ctx.beginPath(); ctx.moveTo(Math.cos(t) * 60 * sc, Math.sin(t) * 60 * sc); ctx.lineTo(Math.cos(t) * ARENA_R * sc, Math.sin(t) * ARENA_R * sc); ctx.stroke(); }
+    ctx.beginPath(); ctx.arc(0, 0, ARENA_R * sc - 1, 0, Math.PI * 2); ctx.lineWidth = 2; ctx.strokeStyle = C.line; ctx.stroke();
+
+    const live = S.enemies.filter(e => !e.dead);
+    live.forEach(e => attackShape(e, null, sc)); attackShape(S.p, null, sc);
+    if ($('ghost').checked) {
+      ctx.save(); ctx.setLineDash([4, 4]); ctx.lineWidth = 1.5; ctx.strokeStyle = C.muted;
+      live.forEach(e => { const sn = S.ai.snaps[e.idx]; if (!sn) return; ctx.beginPath(); ctx.arc(sn.x * sc, sn.y * sc, e.r * sc, 0, Math.PI * 2); ctx.stroke(); });
+      ctx.restore();
+    }
+    S.enemies.filter(e => e.dead).forEach(e => { ctx.save(); ctx.globalAlpha = 0.25; fighter(e, C.rust, sc); ctx.restore(); });
+    live.forEach(e => fighter(e, C.rust, sc)); fighter(S.p, C.steel, sc);
+    const tg = S.enemies[S.ai.target];
+    if (tg && !tg.dead && S.enemies.length > 1 && !S.over) {
+      ctx.save(); ctx.strokeStyle = C.steel; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(tg.x * sc, tg.y * sc, tg.r * sc + 7, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
+    }
+    ctx.save(); ctx.strokeStyle = C.ink; ctx.lineWidth = 2.5; ctx.lineCap = 'round';
+    for (const pr of S.projectiles) { ctx.beginPath(); ctx.moveTo((pr.x - pr.vx * 2.5) * sc, (pr.y - pr.vy * 2.5) * sc); ctx.lineTo(pr.x * sc, pr.y * sc); ctx.stroke(); }
+    ctx.restore();
+    live.forEach(e => bars(e, sc, false)); bars(S.p, sc, true);
+    if (S.enemies.length > 1) {
+      ctx.font = '500 12px "Alegreya Sans", sans-serif'; ctx.textAlign = 'center'; ctx.fillStyle = C.muted;
+      live.forEach(e => { const tag = e.name.match(/ ([A-D])$/); if (tag) ctx.fillText(tag[1], e.x * sc, e.y * sc + e.r * sc + 15); });
+    }
+    ctx.font = '500 13px "Alegreya Sans", sans-serif'; ctx.textAlign = 'center'; ctx.fillStyle = C.ink;
+    if (S.ai.intent && !S.over) ctx.fillText(S.ai.intent, S.p.x * sc, S.p.y * sc + S.p.r * sc + 16);
+    if (S.over) {
+      ctx.font = '700 22px Alegreya, Georgia, serif';
+      ctx.fillText(S.winner === 'adventurer' ? 'Won' : S.winner === 'enemy' ? 'Dead' : 'Draw', 0, -ARENA_R * sc + 40);
+    }
+    ctx.restore();
+  }
+
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    if (state.playing && S && !S.over) {
+      acc += dt * HZ * state.speed;
+      let n = 0;
+      while (acc >= 1 && !S.over && n < 200) { SIM.step(S); acc -= 1; n++; }
+      if (n) {
+        $('thought').firstChild.textContent = S.ai.readout || '';
+        $('truth').textContent = S.ai.truth || '';
+        flushLog();
+      }
+      if (S.over) { state.playing = false; $('play').textContent = 'Play again'; $('thought').firstChild.textContent = S.winner === 'adventurer' ? 'Won. Check the log for what it got wrong on the way.' : S.winner === 'enemy' ? 'Dead. The log says why each hit landed.' : 'Draw: nobody committed.'; $('truth').textContent = ''; }
+    }
+    draw();
+    requestAnimationFrame(frame);
+  }
+
+  // ---- Batch test ----
+  const CAUSE_COLORS = ['late', 'misread', 'committed', 'stamina', 'dodge', 'short', 'iframes', 'parry', 'gamble', 'surrounded', 'hesitated', 'guardbreak'];
+  $('batch').addEventListener('click', () => {
+    const N = 300, base = cfg(1);
+    let i = 0, w = 0, l = 0, d = 0, ticks = 0, hpLeft = 0, parries = 0, rolls = 0; const dmg = {}; CAUSE_COLORS.forEach(k => dmg[k] = 0);
+    $('batch').disabled = true;
+    (function chunk() {
+      const end = Math.min(N, i + 15);
+      for (; i < end; i++) {
+        const F = SIM.runFight({ ...base, seed: i + 1 });
+        if (F.winner === 'adventurer') { w++; hpLeft += F.p.hp; } else if (F.winner === 'enemy') l++; else d++;
+        parries += F.stats.parries; rolls += F.stats.dodgeCounters;
+        ticks += F.tick; for (const k in dmg) dmg[k] += F.stats.dmgBy[k];
+      }
+      $('batchStatus').textContent = `Running ${i} of ${N}…`;
+      if (i < N) return setTimeout(chunk, 0);
+      $('batch').disabled = false;
+      const who = `Level ${SIM.playerLevel(state.stats)}, ${state.focus} focus${state.god ? ', perfect mind' : ''}`;
+      $('batchStatus').textContent = `${who}, ${SIM.DOCTRINES[state.doctrine].name}, vs ${SIM.ENCOUNTERS[state.encounter].name}.`;
+      $('results').hidden = false;
+      $('wl').innerHTML = `<i style="width:${w / N * 100}%;background:var(--good)"></i><i style="width:${d / N * 100}%;background:var(--muted)"></i><i style="width:${l / N * 100}%;background:var(--rust)"></i>`;
+      $('wlLegend').innerHTML = `<span>Won <b>${Math.round(w / N * 100)}%</b></span><span>Drew <b>${Math.round(d / N * 100)}%</b></span><span>Lost <b>${Math.round(l / N * 100)}%</b></span><span>Average fight <b>${(ticks / N / HZ).toFixed(0)} s</b></span><span>Health left after a win <b>${w ? Math.round(hpLeft / w) : '–'}</b></span><span>Parries <b>${(parries / N).toFixed(1)}</b> a fight</span><span>Rolling slashes landed <b>${(rolls / N).toFixed(1)}</b></span>`;
+      const max = Math.max(1, ...Object.values(dmg).map(v => v / N));
+      $('causes').innerHTML = CAUSE_COLORS.map(k => {
+        const v = dmg[k] / N, st = STATS.find(s => s.key === CAUSES[k][1]);
+        return `<div class="cause"><span>${CAUSES[k][0]}<br><span class="muted">${st.name}</span></span><div class="track"><i style="width:${v / max * 100}%"></i></div><span>${v.toFixed(1)}</span></div>`;
+      }).join('');
+    })();
+  });
+
+  readColors(); syncStats(); restart(); resize();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
