@@ -1,0 +1,104 @@
+{
+  "id": "O2",
+  "name": "Crossroads",
+  "note": "Generated placeholder geometry from the room schedule and connections. Valid walls and doors, not tuned and not art-reviewed. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "generated",
+  "plan": {
+    "center": {
+      "x": 1450,
+      "y": 1700
+    },
+    "difficulty": "EARLY",
+    "candidateEncounter": "Mireling / Sentry solo",
+    "purpose": "Fork: tower, trial, lower passage",
+    "region": "Old Road"
+  },
+  "floor": {
+    "x": [-270, 270],
+    "y": [-240, 240]
+  },
+  "bounds": [-330, -280, 330, 280],
+  "solids": {
+    "rects": [
+      [-330, -280, -87, -220],
+      [87, -280, 330, -220],
+      [-330, 220, -212, 280],
+      [-38, 220, 38, 280],
+      [212, 220, 330, 280],
+      [-330, -220, -270, -87],
+      [-330, 87, -270, 220],
+      [270, -220, 330, 220]
+    ],
+    "circles": []
+  },
+  "doors": [
+    {
+      "id": "to-O1",
+      "to": "O1",
+      "side": "west",
+      "linkType": "ordinary",
+      "center": {
+        "x": -270,
+        "y": 0
+      },
+      "span": [-87, 87]
+    },
+    {
+      "id": "to-T1",
+      "to": "T1",
+      "side": "north",
+      "linkType": "ordinary",
+      "center": {
+        "x": 0,
+        "y": -220
+      },
+      "span": [-87, 87]
+    },
+    {
+      "id": "to-KT",
+      "to": "KT",
+      "side": "south",
+      "linkType": "ordinary",
+      "center": {
+        "x": -125,
+        "y": 220
+      },
+      "span": [-212, -38]
+    },
+    {
+      "id": "to-O3",
+      "to": "O3",
+      "side": "south",
+      "linkType": "ordinary",
+      "center": {
+        "x": 125,
+        "y": 220
+      },
+      "span": [38, 212]
+    }
+  ],
+  "openings": [
+    {
+      "side": "west",
+      "y": [-87, 87]
+    },
+    {
+      "side": "north",
+      "x": [-87, 87]
+    },
+    {
+      "side": "south",
+      "x": [-212, -38]
+    },
+    {
+      "side": "south",
+      "x": [38, 212]
+    }
+  ],
+  "encounters": {},
+  "detection": {
+    "range": 160,
+    "arcDegrees": 120,
+    "alertRadius": 120
+  }
+}

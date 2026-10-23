@@ -1,0 +1,104 @@
+{
+  "id": "T2",
+  "name": "Tower Barracks",
+  "note": "Generated placeholder geometry from the room schedule and connections. Valid walls and doors, not tuned and not art-reviewed. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "generated",
+  "plan": {
+    "center": {
+      "x": 2600,
+      "y": 920
+    },
+    "difficulty": "MID",
+    "candidateEncounter": "Sentry + Harrier (telegraphed)",
+    "purpose": "Approach both miniboss and crypt gallery",
+    "region": "Watchtower"
+  },
+  "floor": {
+    "x": [-280, 280],
+    "y": [-260, 260]
+  },
+  "bounds": [-340, -300, 340, 240],
+  "solids": {
+    "rects": [
+      [-340, -300, -87, -240],
+      [87, -300, 340, -240],
+      [-340, 240, 340, 300],
+      [-340, -240, -280, -87],
+      [-340, 87, -280, 240],
+      [280, -240, 340, -207],
+      [280, -33, 340, 33],
+      [280, 207, 340, 240]
+    ],
+    "circles": []
+  },
+  "doors": [
+    {
+      "id": "to-T1",
+      "to": "T1",
+      "side": "west",
+      "linkType": "ordinary",
+      "center": {
+        "x": -280,
+        "y": 0
+      },
+      "span": [-87, 87]
+    },
+    {
+      "id": "to-MB",
+      "to": "MB",
+      "side": "east",
+      "linkType": "fog_one_key",
+      "center": {
+        "x": 280,
+        "y": -120
+      },
+      "span": [-207, -33]
+    },
+    {
+      "id": "to-K3",
+      "to": "K3",
+      "side": "east",
+      "linkType": "ordinary",
+      "center": {
+        "x": 280,
+        "y": 120
+      },
+      "span": [33, 207]
+    },
+    {
+      "id": "to-T3",
+      "to": "T3",
+      "side": "north",
+      "linkType": "ordinary",
+      "center": {
+        "x": 0,
+        "y": -240
+      },
+      "span": [-87, 87]
+    }
+  ],
+  "openings": [
+    {
+      "side": "west",
+      "y": [-87, 87]
+    },
+    {
+      "side": "east",
+      "y": [-207, -33]
+    },
+    {
+      "side": "east",
+      "y": [33, 207]
+    },
+    {
+      "side": "north",
+      "x": [-87, 87]
+    }
+  ],
+  "encounters": {},
+  "detection": {
+    "range": 160,
+    "arcDegrees": 120,
+    "alertRadius": 120
+  }
+}

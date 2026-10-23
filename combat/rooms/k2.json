@@ -1,0 +1,104 @@
+{
+  "id": "K2",
+  "name": "Ossuary",
+  "note": "Generated placeholder geometry from the room schedule and connections. Valid walls and doors, not tuned and not art-reviewed. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "generated",
+  "plan": {
+    "center": {
+      "x": 3900,
+      "y": 1870
+    },
+    "difficulty": "HIGH",
+    "candidateEncounter": "Crypt Duelist solo",
+    "purpose": "One hard encounter before main boss",
+    "region": "Forgotten Crypt"
+  },
+  "floor": {
+    "x": [-280, 280],
+    "y": [-260, 260]
+  },
+  "bounds": [-340, -300, 340, 240],
+  "solids": {
+    "rects": [
+      [-340, -300, -217, -240],
+      [-43, -300, 43, -240],
+      [217, -300, 340, -240],
+      [-340, 240, 340, 300],
+      [-340, -240, -280, -87],
+      [-340, 87, -280, 240],
+      [280, -240, 340, -87],
+      [280, 87, 340, 240]
+    ],
+    "circles": []
+  },
+  "doors": [
+    {
+      "id": "to-K1",
+      "to": "K1",
+      "side": "west",
+      "linkType": "ordinary",
+      "center": {
+        "x": -280,
+        "y": 0
+      },
+      "span": [-87, 87]
+    },
+    {
+      "id": "to-B1",
+      "to": "B1",
+      "side": "east",
+      "linkType": "fog_one_key",
+      "center": {
+        "x": 280,
+        "y": 0
+      },
+      "span": [-87, 87]
+    },
+    {
+      "id": "to-MB",
+      "to": "MB",
+      "side": "north",
+      "linkType": "post_miniboss_shortcut",
+      "center": {
+        "x": -130,
+        "y": -240
+      },
+      "span": [-217, -43]
+    },
+    {
+      "id": "to-K3",
+      "to": "K3",
+      "side": "north",
+      "linkType": "ordinary",
+      "center": {
+        "x": 130,
+        "y": -240
+      },
+      "span": [43, 217]
+    }
+  ],
+  "openings": [
+    {
+      "side": "west",
+      "y": [-87, 87]
+    },
+    {
+      "side": "east",
+      "y": [-87, 87]
+    },
+    {
+      "side": "north",
+      "x": [-217, -43]
+    },
+    {
+      "side": "north",
+      "x": [43, 217]
+    }
+  ],
+  "encounters": {},
+  "detection": {
+    "range": 160,
+    "arcDegrees": 120,
+    "alertRadius": 120
+  }
+}

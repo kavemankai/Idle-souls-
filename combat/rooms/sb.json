@@ -1,0 +1,56 @@
+{
+  "id": "SB",
+  "name": "Unmoored Surveyor",
+  "note": "Generated placeholder geometry from the room schedule and connections. Valid walls and doors, not tuned and not art-reviewed. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "generated",
+  "plan": {
+    "center": {
+      "x": 4540,
+      "y": 640
+    },
+    "difficulty": "SECRET",
+    "candidateEncounter": "Unmoored Surveyor",
+    "purpose": "Optional special-key concept only; no mandatory route",
+    "region": "Secret Boss Pocket"
+  },
+  "floor": {
+    "x": [-370, 370],
+    "y": [-360, 360]
+  },
+  "bounds": [-430, -340, 430, 340],
+  "solids": {
+    "rects": [
+      [-430, -400, 430, -340],
+      [-430, 340, 430, 400],
+      [-430, -340, -370, -87],
+      [-430, 87, -370, 340],
+      [370, -340, 430, 340]
+    ],
+    "circles": []
+  },
+  "doors": [
+    {
+      "id": "to-K3",
+      "to": "K3",
+      "side": "west",
+      "linkType": "special_optional_proposal",
+      "center": {
+        "x": -370,
+        "y": 0
+      },
+      "span": [-87, 87]
+    }
+  ],
+  "openings": [
+    {
+      "side": "west",
+      "y": [-87, 87]
+    }
+  ],
+  "encounters": {},
+  "detection": {
+    "range": 160,
+    "arcDegrees": 120,
+    "alertRadius": 120
+  }
+}

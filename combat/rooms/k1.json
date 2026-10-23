@@ -1,0 +1,72 @@
+{
+  "id": "K1",
+  "name": "Crypt Threshold",
+  "note": "Generated placeholder geometry from the room schedule and connections. Valid walls and doors, not tuned and not art-reviewed. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "generated",
+  "plan": {
+    "center": {
+      "x": 3360,
+      "y": 2180
+    },
+    "difficulty": "HIGH",
+    "candidateEncounter": "Sentry + Spitter staged",
+    "purpose": "Threat warning, not unavoidable overlap",
+    "region": "Forgotten Crypt"
+  },
+  "floor": {
+    "x": [-280, 280],
+    "y": [-270, 270]
+  },
+  "bounds": [-340, -250, 340, 250],
+  "solids": {
+    "rects": [
+      [-340, -310, 340, -250],
+      [-340, 250, 340, 310],
+      [-340, -250, -280, -87],
+      [-340, 87, -280, 250],
+      [280, -250, 340, -87],
+      [280, 87, 340, 250]
+    ],
+    "circles": []
+  },
+  "doors": [
+    {
+      "id": "to-S2",
+      "to": "S2",
+      "side": "west",
+      "linkType": "ordinary",
+      "center": {
+        "x": -280,
+        "y": 0
+      },
+      "span": [-87, 87]
+    },
+    {
+      "id": "to-K2",
+      "to": "K2",
+      "side": "east",
+      "linkType": "ordinary",
+      "center": {
+        "x": 280,
+        "y": 0
+      },
+      "span": [-87, 87]
+    }
+  ],
+  "openings": [
+    {
+      "side": "west",
+      "y": [-87, 87]
+    },
+    {
+      "side": "east",
+      "y": [-87, 87]
+    }
+  ],
+  "encounters": {},
+  "detection": {
+    "range": 160,
+    "arcDegrees": 120,
+    "alertRadius": 120
+  }
+}

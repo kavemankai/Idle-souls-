@@ -1,0 +1,56 @@
+{
+  "id": "T3",
+  "name": "High Gallery",
+  "note": "Generated placeholder geometry from the room schedule and connections. Valid walls and doors, not tuned and not art-reviewed. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "generated",
+  "plan": {
+    "center": {
+      "x": 2460,
+      "y": 490
+    },
+    "difficulty": "MID",
+    "candidateEncounter": "Harrier + Mireling optional",
+    "purpose": "Alternate viewpoint/rare cache",
+    "region": "Watchtower"
+  },
+  "floor": {
+    "x": [-250, 250],
+    "y": [-180, 180]
+  },
+  "bounds": [-310, -160, 310, 220],
+  "solids": {
+    "rects": [
+      [-310, -220, 310, -160],
+      [-310, 160, -87, 220],
+      [87, 160, 310, 220],
+      [-310, -160, -250, 160],
+      [250, -160, 310, 160]
+    ],
+    "circles": []
+  },
+  "doors": [
+    {
+      "id": "to-T2",
+      "to": "T2",
+      "side": "south",
+      "linkType": "ordinary",
+      "center": {
+        "x": 0,
+        "y": 160
+      },
+      "span": [-87, 87]
+    }
+  ],
+  "openings": [
+    {
+      "side": "south",
+      "x": [-87, 87]
+    }
+  ],
+  "encounters": {},
+  "detection": {
+    "range": 160,
+    "arcDegrees": 120,
+    "alertRadius": 120
+  }
+}

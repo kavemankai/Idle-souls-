@@ -1,0 +1,56 @@
+{
+  "id": "KT",
+  "name": "Key Trial Watchpost",
+  "note": "Generated placeholder geometry from the room schedule and connections. Valid walls and doors, not tuned and not art-reviewed. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "generated",
+  "plan": {
+    "center": {
+      "x": 980,
+      "y": 2170
+    },
+    "difficulty": "TRIAL",
+    "candidateEncounter": "3 staged enemies/waves",
+    "purpose": "Repeatable, keyless access; claimed key must extract",
+    "region": "Old Road"
+  },
+  "floor": {
+    "x": [-250, 250],
+    "y": [-210, 210]
+  },
+  "bounds": [-310, -250, 310, 190],
+  "solids": {
+    "rects": [
+      [-310, -250, -87, -190],
+      [87, -250, 310, -190],
+      [-310, 190, 310, 250],
+      [-310, -190, -250, 190],
+      [250, -190, 310, 190]
+    ],
+    "circles": []
+  },
+  "doors": [
+    {
+      "id": "to-O2",
+      "to": "O2",
+      "side": "north",
+      "linkType": "ordinary",
+      "center": {
+        "x": 0,
+        "y": -190
+      },
+      "span": [-87, 87]
+    }
+  ],
+  "openings": [
+    {
+      "side": "north",
+      "x": [-87, 87]
+    }
+  ],
+  "encounters": {},
+  "detection": {
+    "range": 160,
+    "arcDegrees": 120,
+    "alertRadius": 120
+  }
+}

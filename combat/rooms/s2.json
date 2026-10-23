@@ -1,0 +1,88 @@
+{
+  "id": "S2",
+  "name": "Broken Pump",
+  "note": "Generated placeholder geometry from the room schedule and connections. Valid walls and doors, not tuned and not art-reviewed. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "generated",
+  "plan": {
+    "center": {
+      "x": 2750,
+      "y": 2780
+    },
+    "difficulty": "HIGH",
+    "candidateEncounter": "Mudjaw Brute solo",
+    "purpose": "Sanctuary nearby; optional dangerous route",
+    "region": "Sunken Passage"
+  },
+  "floor": {
+    "x": [-310, 310],
+    "y": [-260, 260]
+  },
+  "bounds": [-370, -240, 370, 300],
+  "solids": {
+    "rects": [
+      [-370, -300, 370, -240],
+      [-370, 240, -87, 300],
+      [87, 240, 370, 300],
+      [-370, -240, -310, -87],
+      [-370, 87, -310, 240],
+      [310, -240, 370, -87],
+      [310, 87, 370, 240]
+    ],
+    "circles": []
+  },
+  "doors": [
+    {
+      "id": "to-S1",
+      "to": "S1",
+      "side": "west",
+      "linkType": "ordinary",
+      "center": {
+        "x": -310,
+        "y": 0
+      },
+      "span": [-87, 87]
+    },
+    {
+      "id": "to-K1",
+      "to": "K1",
+      "side": "east",
+      "linkType": "ordinary",
+      "center": {
+        "x": 310,
+        "y": 0
+      },
+      "span": [-87, 87]
+    },
+    {
+      "id": "to-S3",
+      "to": "S3",
+      "side": "south",
+      "linkType": "ordinary",
+      "center": {
+        "x": 0,
+        "y": 240
+      },
+      "span": [-87, 87]
+    }
+  ],
+  "openings": [
+    {
+      "side": "west",
+      "y": [-87, 87]
+    },
+    {
+      "side": "east",
+      "y": [-87, 87]
+    },
+    {
+      "side": "south",
+      "x": [-87, 87]
+    }
+  ],
+  "encounters": {},
+  "detection": {
+    "range": 160,
+    "arcDegrees": 120,
+    "alertRadius": 120
+  }
+}

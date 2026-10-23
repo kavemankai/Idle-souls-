@@ -2,60 +2,30 @@
   "id": "O1",
   "name": "Outer Road",
   "note": "Trial settings. Positions, openings and detection values are not design locks. Local frame: centre (0,0), x east, y south, simulation units. World centre (950,1750).",
-  "floor": {
-    "x": [
-      -240,
-      240
-    ],
-    "y": [
-      -220,
-      220
-    ]
+  "status": "authored",
+  "plan": {
+    "center": {
+      "x": 950,
+      "y": 1750
+    },
+    "difficulty": "EARLY",
+    "candidateEncounter": "1 Mireling",
+    "purpose": "Initial single enemy; open exit",
+    "region": "Old Road"
   },
-  "bounds": [
-    -300,
-    -200,
-    300,
-    200
-  ],
+  "floor": {
+    "x": [-240, 240],
+    "y": [-220, 220]
+  },
+  "bounds": [-300, -200, 300, 200],
   "solids": {
     "rects": [
-      [
-        -300,
-        -260,
-        300,
-        -200
-      ],
-      [
-        -300,
-        200,
-        300,
-        260
-      ],
-      [
-        -300,
-        -200,
-        -240,
-        -87
-      ],
-      [
-        -300,
-        87,
-        -240,
-        200
-      ],
-      [
-        240,
-        -200,
-        300,
-        -87
-      ],
-      [
-        240,
-        87,
-        300,
-        200
-      ]
+      [-300, -260, 300, -200],
+      [-300, 200, 300, 260],
+      [-300, -200, -240, -87],
+      [-300, 87, -240, 200],
+      [240, -200, 300, -87],
+      [240, 87, 300, 200]
     ],
     "circles": [
       {
@@ -66,33 +36,42 @@
       }
     ]
   },
+  "doors": [
+    {
+      "id": "to-C0",
+      "to": "C0",
+      "side": "west",
+      "linkType": "ordinary",
+      "center": {
+        "x": -240,
+        "y": 0
+      },
+      "span": [-87, 87]
+    },
+    {
+      "id": "to-O2",
+      "to": "O2",
+      "side": "east",
+      "linkType": "ordinary",
+      "center": {
+        "x": 240,
+        "y": 0
+      },
+      "span": [-87, 87]
+    }
+  ],
   "openings": [
     {
       "side": "west",
-      "y": [
-        -87,
-        87
-      ]
+      "y": [-87, 87]
     },
     {
       "side": "east",
-      "y": [
-        -87,
-        87
-      ]
+      "y": [-87, 87]
     }
   ],
-  "entry": {
-    "x": -240,
-    "y": 0
-  },
-  "threshold": {
-    "x": 240,
-    "y": [
-      -87,
-      87
-    ]
-  },
+  "entryDoor": "to-C0",
+  "exitDoor": "to-O2",
   "encounters": {
     "mireling": {
       "name": "Mireling",
@@ -155,5 +134,13 @@
     "range": 160,
     "arcDegrees": 120,
     "alertRadius": 120
+  },
+  "entry": {
+    "x": -240,
+    "y": 0
+  },
+  "threshold": {
+    "x": 240,
+    "y": [-87, 87]
   }
 }

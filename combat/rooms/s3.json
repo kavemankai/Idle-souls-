@@ -1,0 +1,72 @@
+{
+  "id": "S3",
+  "name": "Low Gallery",
+  "note": "Generated placeholder geometry from the room schedule and connections. Valid walls and doors, not tuned and not art-reviewed. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "generated",
+  "plan": {
+    "center": {
+      "x": 2540,
+      "y": 3260
+    },
+    "difficulty": "MID",
+    "candidateEncounter": "Spitter / Grunt escort",
+    "purpose": "Opens persistent sluice shortcut back to camp",
+    "region": "Sunken Passage"
+  },
+  "floor": {
+    "x": [-260, 260],
+    "y": [-190, 190]
+  },
+  "bounds": [-320, -230, 320, 170],
+  "solids": {
+    "rects": [
+      [-320, -230, -87, -170],
+      [87, -230, 320, -170],
+      [-320, 170, 320, 230],
+      [-320, -170, -260, -87],
+      [-320, 87, -260, 170],
+      [260, -170, 320, 170]
+    ],
+    "circles": []
+  },
+  "doors": [
+    {
+      "id": "to-C0",
+      "to": "C0",
+      "side": "west",
+      "linkType": "unlockable_shortcut",
+      "center": {
+        "x": -260,
+        "y": 0
+      },
+      "span": [-87, 87]
+    },
+    {
+      "id": "to-S2",
+      "to": "S2",
+      "side": "north",
+      "linkType": "ordinary",
+      "center": {
+        "x": 0,
+        "y": -170
+      },
+      "span": [-87, 87]
+    }
+  ],
+  "openings": [
+    {
+      "side": "west",
+      "y": [-87, 87]
+    },
+    {
+      "side": "north",
+      "x": [-87, 87]
+    }
+  ],
+  "encounters": {},
+  "detection": {
+    "range": 160,
+    "arcDegrees": 120,
+    "alertRadius": 120
+  }
+}
