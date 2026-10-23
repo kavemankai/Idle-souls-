@@ -2,13 +2,23 @@
   "actors": [
     {
       "actor": "adventurer",
-      "frames": 128,
+      "frames": 152,
       "width": 1024,
       "height": 1024,
       "rgbaBytes": 4194304,
-      "pngBytes": 667661,
-      "sha256": "3016e4c10a5ff222d587be0a78d1e61632c06162f3beeab5baa57df7642f178b",
+      "pngBytes": 824456,
+      "sha256": "558f7b1189cb5ac659cf54e35906767b5b58b76599de9c750a11f7abbe90662e",
       "directions": {
+        "death": [
+          "E",
+          "N",
+          "NE",
+          "NW",
+          "S",
+          "SE",
+          "SW",
+          "W"
+        ],
         "dodge": [
           "E",
           "N",
@@ -124,13 +134,23 @@
     },
     {
       "actor": "mireling",
-      "frames": 96,
+      "frames": 120,
       "width": 1024,
       "height": 1024,
       "rgbaBytes": 4194304,
-      "pngBytes": 766200,
-      "sha256": "266c7c1c3ca14f0dc55975138e8d253810336548a9e2eca63b4cd0f2697cbdf2",
+      "pngBytes": 934954,
+      "sha256": "3e2fdc0980ab102b458e7c1d216a8473299850cb195818f8b86688ecd8c0ac7b",
       "directions": {
+        "death": [
+          "E",
+          "N",
+          "NE",
+          "NW",
+          "S",
+          "SE",
+          "SW",
+          "W"
+        ],
         "idle": [
           "E",
           "N",
@@ -185,14 +205,24 @@
     },
     {
       "actor": "sentry",
-      "frames": 120,
+      "frames": 144,
       "width": 1024,
       "height": 1024,
       "rgbaBytes": 4194304,
-      "pngBytes": 547394,
-      "sha256": "fae98238d927c6a2bd9b1ba68f54116749efd64a94d3391239db680bfb35cfb5",
+      "pngBytes": 693131,
+      "sha256": "430e5763c5e522aadfe76a72872174b2d1079ac51cce5bdaee54bfedfdc28a40",
       "directions": {
         "bash": [
+          "E",
+          "N",
+          "NE",
+          "NW",
+          "S",
+          "SE",
+          "SW",
+          "W"
+        ],
+        "death": [
           "E",
           "N",
           "NE",
@@ -256,7 +286,7 @@
     }
   ],
   "totalRGBABytes": 14680064,
-  "totalPNGBytes": 2281784,
+  "totalPNGBytes": 2753070,
   "padding": 3,
   "edgeExtrusion": 2,
   "physicalPhonePerformance": "NOT TESTED"
