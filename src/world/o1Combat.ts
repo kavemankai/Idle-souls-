@@ -76,3 +76,12 @@ export function combatView(sim: SimApi, S: SimFight): CombatView {
     events: S.events, over: S.over, winner: S.winner,
   };
 }
+
+export interface DefenceCounts { blocks: number; parries: number; perfects: number }
+/** A shield cue only when the simulator's own totals went up. A new fight restarts the totals at 0, so the baseline restarts too. */
+export function defenceCue(prev: DefenceCounts, now: DefenceCounts | undefined, newFight: boolean): { cue: 'parry' | 'perfect' | 'block' | null; counts: DefenceCounts } {
+  const base = newFight ? { blocks: 0, parries: 0, perfects: 0 } : prev;
+  if (!now) return { cue: null, counts: base };
+  const cue = now.parries > base.parries ? 'parry' : now.perfects > base.perfects ? 'perfect' : now.blocks > base.blocks ? 'block' : null;
+  return { cue, counts: { blocks: now.blocks, parries: now.parries, perfects: now.perfects } };
+}

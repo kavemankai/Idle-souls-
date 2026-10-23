@@ -1,7 +1,7 @@
 {
- "capturedAt": "2026-10-23T07:54:56.912Z",
+ "capturedAt": "2026-10-23T08:30:50.830Z",
  "tool": "Chromium / Playwright against the built preview, real Phaser runtime and the real simulator",
- "checkoutSHA": "2ddefdf57b3d72df3eab333df632771ed883752d",
+ "checkoutSHA": "034876f7b190d98084b7d15762ff7f3a58452f78",
  "note": "Software-rendered cloud captures. No human review and no physical device or touch testing is claimed. State fields come from window.__O1_STATE__.",
  "captures": [
   {
@@ -28,7 +28,7 @@
     "digest": "811c9dc5",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      1280,
      720
@@ -68,7 +68,7 @@
     "digest": "686fac05",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      1280,
      720
@@ -108,7 +108,7 @@
     "digest": "d1300f25",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      1280,
      720
@@ -146,11 +146,9 @@
     "enemiesAlive": 1,
     "fights": 1,
     "digest": "9f384541",
-    "missing": [
-     "sentry light W"
-    ],
+    "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      1280,
      720
@@ -190,7 +188,7 @@
     "digest": "8146a30b",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      1280,
      720
@@ -228,11 +226,9 @@
     "enemiesAlive": 1,
     "fights": 1,
     "digest": "72bae384",
-    "missing": [
-     "adventurer reaction W"
-    ],
+    "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      1280,
      720
@@ -270,11 +266,9 @@
     "enemiesAlive": 1,
     "fights": 1,
     "digest": "bd3d2db9",
-    "missing": [
-     "sentry light W"
-    ],
+    "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      1280,
      720
@@ -314,7 +308,7 @@
     "digest": "05269cdc",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      1280,
      720
@@ -352,11 +346,9 @@
     "enemiesAlive": 1,
     "fights": 1,
     "digest": "bd3d2db9",
-    "missing": [
-     "sentry light W"
-    ],
+    "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      1280,
      720
@@ -396,7 +388,7 @@
     "digest": "8348ce3f",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      1280,
      720
@@ -436,7 +428,7 @@
     "digest": "e97d3c37",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      1280,
      720
@@ -474,11 +466,9 @@
     "enemiesAlive": 1,
     "fights": 1,
     "digest": "bd3d2db9",
-    "missing": [
-     "sentry light W"
-    ],
+    "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      1280,
      720
@@ -516,11 +506,9 @@
     "enemiesAlive": 1,
     "fights": 1,
     "digest": "bd3d2db9",
-    "missing": [
-     "sentry light W"
-    ],
+    "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      1280,
      720
@@ -560,7 +548,7 @@
     "digest": "05269cdc",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      1280,
      720
@@ -600,7 +588,7 @@
     "digest": "d1300f25",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      1920,
      1080
@@ -640,7 +628,7 @@
     "digest": "811c9dc5",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      390,
      844
@@ -680,7 +668,7 @@
     "digest": "ea729e21",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      390,
      844
@@ -707,7 +695,7 @@
    "state": {
     "source": "authoritative",
     "state": "fighting",
-    "tick": 195,
+    "tick": 194,
     "fought": true,
     "hp": 90,
     "hpMax": 90,
@@ -717,10 +705,10 @@
     },
     "enemiesAlive": 1,
     "fights": 1,
-    "digest": "9e9b9b0c",
+    "digest": "aa29d806",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      390,
      844
@@ -747,7 +735,7 @@
    "state": {
     "source": "authoritative",
     "state": "fighting",
-    "tick": 174,
+    "tick": 173,
     "fought": true,
     "hp": 74,
     "hpMax": 90,
@@ -757,12 +745,10 @@
     },
     "enemiesAlive": 1,
     "fights": 1,
-    "digest": "408b5b3e",
-    "missing": [
-     "sentry light W"
-    ],
+    "digest": "9f384541",
+    "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      390,
      844
@@ -802,7 +788,7 @@
     "digest": "8146a30b",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      390,
      844
@@ -840,11 +826,9 @@
     "enemiesAlive": 1,
     "fights": 1,
     "digest": "72bae384",
-    "missing": [
-     "adventurer reaction W"
-    ],
+    "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      390,
      844
@@ -882,11 +866,9 @@
     "enemiesAlive": 1,
     "fights": 1,
     "digest": "bd3d2db9",
-    "missing": [
-     "sentry light W"
-    ],
+    "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      390,
      844
@@ -926,7 +908,7 @@
     "digest": "05269cdc",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      390,
      844
@@ -964,11 +946,9 @@
     "enemiesAlive": 1,
     "fights": 1,
     "digest": "bd3d2db9",
-    "missing": [
-     "sentry light W"
-    ],
+    "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      390,
      844
@@ -1008,7 +988,7 @@
     "digest": "8348ce3f",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      390,
      844
@@ -1048,7 +1028,7 @@
     "digest": "e97d3c37",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      390,
      844
@@ -1086,11 +1066,9 @@
     "enemiesAlive": 1,
     "fights": 1,
     "digest": "bd3d2db9",
-    "missing": [
-     "sentry light W"
-    ],
+    "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      390,
      844
@@ -1128,11 +1106,9 @@
     "enemiesAlive": 1,
     "fights": 1,
     "digest": "bd3d2db9",
-    "missing": [
-     "sentry light W"
-    ],
+    "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      390,
      844
@@ -1172,7 +1148,7 @@
     "digest": "05269cdc",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      390,
      844
@@ -1212,7 +1188,7 @@
     "digest": "811c9dc5",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      844,
      390
@@ -1252,7 +1228,7 @@
     "digest": "ea729e21",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      844,
      390
@@ -1279,7 +1255,7 @@
    "state": {
     "source": "authoritative",
     "state": "fighting",
-    "tick": 194,
+    "tick": 193,
     "fought": true,
     "hp": 90,
     "hpMax": 90,
@@ -1289,10 +1265,10 @@
     },
     "enemiesAlive": 1,
     "fights": 1,
-    "digest": "aa29d806",
+    "digest": "d1300f25",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      844,
      390
@@ -1319,7 +1295,7 @@
    "state": {
     "source": "authoritative",
     "state": "fighting",
-    "tick": 176,
+    "tick": 173,
     "fought": true,
     "hp": 74,
     "hpMax": 90,
@@ -1329,12 +1305,10 @@
     },
     "enemiesAlive": 1,
     "fights": 1,
-    "digest": "090d0cf6",
-    "missing": [
-     "sentry light W"
-    ],
+    "digest": "9f384541",
+    "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      844,
      390
@@ -1374,7 +1348,7 @@
     "digest": "8146a30b",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      844,
      390
@@ -1412,11 +1386,9 @@
     "enemiesAlive": 1,
     "fights": 1,
     "digest": "72bae384",
-    "missing": [
-     "adventurer reaction W"
-    ],
+    "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      844,
      390
@@ -1454,11 +1426,9 @@
     "enemiesAlive": 1,
     "fights": 1,
     "digest": "bd3d2db9",
-    "missing": [
-     "sentry light W"
-    ],
+    "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      844,
      390
@@ -1498,7 +1468,7 @@
     "digest": "05269cdc",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      844,
      390
@@ -1536,11 +1506,9 @@
     "enemiesAlive": 1,
     "fights": 1,
     "digest": "bd3d2db9",
-    "missing": [
-     "sentry light W"
-    ],
+    "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      844,
      390
@@ -1580,7 +1548,7 @@
     "digest": "8348ce3f",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      844,
      390
@@ -1620,7 +1588,7 @@
     "digest": "e97d3c37",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      844,
      390
@@ -1658,11 +1626,9 @@
     "enemiesAlive": 1,
     "fights": 1,
     "digest": "bd3d2db9",
-    "missing": [
-     "sentry light W"
-    ],
+    "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      844,
      390
@@ -1700,11 +1666,9 @@
     "enemiesAlive": 1,
     "fights": 1,
     "digest": "bd3d2db9",
-    "missing": [
-     "sentry light W"
-    ],
+    "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      844,
      390
@@ -1744,7 +1708,7 @@
     "digest": "05269cdc",
     "missing": [],
     "speed": 1,
-    "build": "2ddefdf",
+    "build": "034876f",
     "viewport": [
      844,
      390

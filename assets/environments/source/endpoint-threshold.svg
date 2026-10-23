@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="256" viewBox="0 0 64 256"><defs>
+    <linearGradient id="stone" x1="0" y1="0" x2="0.8" y2="1"><stop stop-color="#a0a694"/><stop offset=".36" stop-color="#788677"/><stop offset="1" stop-color="#485e53"/></linearGradient>
+    <linearGradient id="side" x1="0" y1="0" x2="1" y2=".5"><stop stop-color="#364a41"/><stop offset="1" stop-color="#54685a"/></linearGradient>
+    </defs><g id="thin-in-world-endpoint-line" stroke="#d1a46d" opacity=".7" fill="none"><path d="M28 14L28 242" stroke-width="3" stroke-dasharray="13 9"/><path d="M22 14h13M22 242h13" stroke-width="3"/></g>
+<g id="directional-worn-chevrons" fill="none" stroke="#d6b47c" stroke-width="2" opacity=".9"><path d="M36 42l9 9-9 9M36 120l9 9-9 9M36 193l9 9-9 9"/></g><g id="edge-hatching" fill="#5b695a" opacity=".35"><path d="M16 20l8 0 0 216 -8 0Z"/></g></svg>

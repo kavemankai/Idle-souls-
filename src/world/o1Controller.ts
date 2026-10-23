@@ -73,6 +73,8 @@ export class O1Controller {
     const k = this.fightIdx.indexOf(i);
     return this.fight && k >= 0 ? this.fight.enemies[k] : null;
   }
+  /** Index of foe `i` among the current fight's enemies, or -1 when it is not in that fight. */
+  fightSlot(i: number): number { return this.fight ? this.fightIdx.indexOf(i) : -1; }
   dispatch() {
     if (this.state !== 'ready') return;
     this.state = 'travelling';

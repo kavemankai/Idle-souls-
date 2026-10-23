@@ -7,6 +7,7 @@ import type { SimApi, SimDoctrine } from '../combat/simApi';
 import { O1Controller, runO1, type O1Config, type O1Opponent, type O1Result } from '../world/o1Controller';
 import { O1PresentationAdapter } from '../world/o1Adapter';
 import { O1 } from '../world/o1Room';
+import { defenceCue } from '../world/o1Combat';
 import { combatPane, totalsPane, buildPane, logPane } from './o1Panels';
 import { drawCues } from './o1Cues';
 import type { PresentationSnapshot } from '../contracts/presentation';
@@ -48,6 +49,10 @@ export class O1Scene extends Phaser.Scene {
   private debug = false;
   private reduced = false;
   private clips = new Set<string>();
+  private defence = { blocks: 0, parries: 0, perfects: 0 };
+  private shieldCue: 'block' | 'parry' | 'perfect' | null = null;
+  private shieldCueMs = 0;
+  private defenceFight = 0;
   private hud!: HTMLElement;
   constructor() { super('O1'); }
   preload() { loadOldRoadAssets(this); }
@@ -90,11 +95,13 @@ export class O1Scene extends Phaser.Scene {
     this.controller = new O1Controller(this.sim, this.config());
     this.adapter = new O1PresentationAdapter(this.controller);
     this.clips.clear(); this.acc = 0;
+    this.defence = { blocks: 0, parries: 0, perfects: 0 };
+    this.shieldCue = null; this.shieldCueMs = 0; this.defenceFight = 0;
   }
   private drawEndpoint() {
     const x = O1.threshold.x, [y0, y1] = O1.threshold.y;
-    this.add.rectangle(x, (y0 + y1) / 2, 3, y1 - y0, 0xe3c27a, .85).setDepth(940);
-    for (let y = y0; y < y1; y += 22) this.add.rectangle(x + 9, y + 6, 8, 2, 0xe3c27a, .5).setDepth(940);
+    // Thin in-world slice-end marker, not a gate or an extraction affordance.
+    this.add.image(x, (y0 + y1) / 2, 'endpoint-threshold').setDisplaySize(22, y1 - y0).setDepth(940).setAlpha(.9);
     this.add.text(x - 6, y0 - 4, 'SLICE ENDPOINT', { fontFamily: 'Arial', fontSize: '10px', color: '#f1d49a', backgroundColor: '#172b25dd', padding: { x: 4, y: 3 } }).setOrigin(1, 1).setDepth(960);
     this.add.text(x - 6, y1 + 4, 'O2 is not built', { fontFamily: 'Arial', fontSize: '9px', color: '#c7c7ab', backgroundColor: '#172b25bb', padding: { x: 4, y: 2 } }).setOrigin(1, 0).setDepth(960);
     this.add.text(-294, 105, '← CAMPWARD', { fontFamily: 'Georgia', fontSize: '10px', color: '#c7c7ab', letterSpacing: 2 }).setOrigin(.5).setAlpha(.68).setDepth(950);
@@ -224,12 +231,18 @@ export class O1Scene extends Phaser.Scene {
       this.acc += Math.min(delta, 100) * this.speed;
       while (this.acc >= TICK_MS && !c.terminal) { c.step(); this.acc -= TICK_MS; }
     }
-    const snapshot = this.adapter.read();
+    const snapshot = this.adapter.read(delta);
     this.moveCamera(delta, snapshot);
     const [hero, ...foes] = snapshot.actors;
-    const drawn = [{ a: hero, r: this.hero.draw(hero, this.debug, this.reduced) }];
+    // Confirmed successful player defensive actions only, never guessed from a guard pose.
+    const dc = defenceCue(this.defence, snapshot.combat?.totals, c.fights !== this.defenceFight);
+    this.defenceFight = c.fights; this.defence = dc.counts;
+    if (dc.cue) { this.shieldCue = dc.cue; this.shieldCueMs = 165; }
+    this.shieldCueMs = Math.max(0, this.shieldCueMs - Math.min(delta, 100));
+    const truthOf = (i: number) => { const slot = c.fightSlot(i); return slot >= 0 && c.foes[i].engaged ? snapshot.combat?.combatants[1 + slot] : undefined; };
+    const drawn = [{ a: hero, r: this.hero.draw(hero, this.debug, this.reduced, snapshot.combat?.combatants[0], this.shieldCueMs > 0 ? this.shieldCue : null) }];
     const used: Record<string, number> = {};
-    for (const a of foes) { const n = used[a.kind] ?? 0; used[a.kind] = n + 1; drawn.push({ a, r: this.pool[a.kind][n].draw(a, this.debug, this.reduced) }); }
+    foes.forEach((a, i) => { const n = used[a.kind] ?? 0; used[a.kind] = n + 1; drawn.push({ a, r: this.pool[a.kind][n].draw(a, this.debug, this.reduced, truthOf(i)) }); });
     for (const kind of Object.keys(this.pool)) this.pool[kind].slice(used[kind] ?? 0).forEach(r => r.draw({ ...hero, visible: false }, false, false));
     drawn.forEach(({ a, r }) => { if (r.missing && a.visible) this.clips.add(`${a.kind} ${a.action} ${a.facing}`); });
     const cueOn = this.showCues && !this.reduced && !!snapshot.combat;

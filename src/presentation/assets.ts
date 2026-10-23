@@ -4,5 +4,5 @@ import { ENVIRONMENT_TEXTURES } from './environment';
 export function loadOldRoadAssets(scene: Phaser.Scene) {
   ENVIRONMENT_TEXTURES.forEach(key => scene.load.image(key, `environments/runtime/${key}.png`));
   ['adventurer', 'sentry', 'mireling', 'mannequin'].forEach(key => scene.load.atlas(key, `characters/runtime/${key}.png`, `characters/runtime/${key}.json`));
-  ['slash', 'heavy', 'impact', 'landing'].forEach(key => scene.load.image(`fx-${key}`, `vfx/runtime/${key}.png`));
+  ['slash', 'heavy', 'impact', 'landing', 'contact', 'stagger', 'dodge', 'block', 'parry', 'perfect'].forEach(key => scene.load.image(`fx-${key}`, `vfx/runtime/${key}.png`));
 }

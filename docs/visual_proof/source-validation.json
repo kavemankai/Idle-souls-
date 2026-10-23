@@ -11,6 +11,7 @@
     "bones": 10,
     "meshes": 24,
     "actions": [
+      "adventurer__death",
       "adventurer__dodge",
       "adventurer__guard",
       "adventurer__heavy",
@@ -51,8 +52,11 @@
     "bones": 10,
     "meshes": 20,
     "actions": [
+      "mireling__death",
       "mireling__idle",
       "mireling__leap",
+      "mireling__light",
+      "mireling__reaction",
       "mireling__walk"
     ],
     "status": "PASS"
@@ -70,9 +74,11 @@
     "meshes": 24,
     "actions": [
       "sentry__bash",
+      "sentry__death",
       "sentry__guard",
       "sentry__idle",
       "sentry__light",
+      "sentry__reaction",
       "sentry__walk"
     ],
     "status": "PASS"

@@ -13,7 +13,9 @@ KINDS=['mannequin','adventurer','sentry','mireling']
 if '--actor' in ARGS: KINDS=[ARGS[ARGS.index('--actor')+1]]
 SAMPLE='--sample' in ARGS
 if '--output' in ARGS: REND=ROOT/ARGS[ARGS.index('--output')+1];REND.mkdir(parents=True,exist_ok=True)
-FACINGS=['N','NE','E','SE','S','SW','W','NW']; SELECT=['N','NE','E','S','SW']
+FACINGS=['N','NE','E','SE','S','SW','W','NW']
+# O1 wave 1: true eight-heading output of EXISTING saved rig actions.
+# Combat traces request W/NW/SE; never mirror another heading to fill them.
 PRESET={'revision':'p0-75-v1','elevation':75,'azimuth':-90,'orthoScale':5.4,'canvas':[192,192], 'cameraTarget':[0,0,0], 'world':'+Y north, +Z up; screen Y down', 'engine':'BLENDER_WORKBENCH','worldUnitsPerBlenderUnit':22.4,'license':'Original project-generated geometry; CC0-1.0 asset grant; no third-party imagery'}
 HASH=hashlib.sha256(json.dumps(PRESET,sort_keys=True).encode()).hexdigest()[:16]
 ALL=[]
@@ -165,9 +167,9 @@ for kind in KINDS:
     creature=kind=='mireling'
     clips={'idle':(FACINGS,1),'walk':(FACINGS,4)}
     if not creature:clips['guard']=(FACINGS,3)
-    if kind=='adventurer':clips.update({'light':(SELECT,3),'heavy':(FACINGS,3),'dodge':(SELECT,1),'reaction':(SELECT,1)})
-    if kind=='sentry':clips.update({'light':(SELECT,3),'bash':(SELECT,3)})
-    if creature:clips['leap']=(FACINGS,3)
+    if kind=='adventurer':clips.update({'light':(FACINGS,3),'heavy':(FACINGS,3),'dodge':(FACINGS,1),'reaction':(FACINGS,1),'death':(FACINGS,3)})
+    if kind=='sentry':clips.update({'light':(FACINGS,3),'bash':(FACINGS,3),'reaction':(FACINGS,1),'death':(FACINGS,3)})
+    if creature:clips.update({'leap':(FACINGS,3),'light':(FACINGS,3),'reaction':(FACINGS,1),'death':(FACINGS,3)})
     rig.animation_data_create()
     for action,(facings,count) in ([] if '--from-blend' in ARGS else clips.items()):
         act=bpy.data.actions.new(f'{kind}__{action}');rig.animation_data.action=act
@@ -190,7 +192,7 @@ for kind in KINDS:
                 name=f'{kind}__{action}__{facing}__{i:02d}'
                 dest=REND/kind/f'{name}.png';dest.parent.mkdir(parents=True,exist_ok=True)
                 scene.render.filepath=str(dest);bpy.ops.render.render(write_still=True)
-                ALL.append({'name':name,'actor':kind,'action':action,'facing':facing,'modelYaw':-FACINGS.index(facing)*45,'sourceFrame':i+1,'sourceHash':source_hash,'frameIndex':i,'phase':(['windup','active','recovery'][i] if action in ['light','heavy','bash','leap'] else 'loop'),'phaseProgress':(i+.1)/count,'sourceCanvas':[192,192],'feetPivot':[96,96],'renderPresetHash':HASH,'renderPreset':PRESET,'source':f'characters/source/{kind}.blend','license':'CC0-1.0','file':str(dest.relative_to(ROOT))})
+                ALL.append({'name':name,'actor':kind,'action':action,'facing':facing,'modelYaw':-FACINGS.index(facing)*45,'sourceFrame':i+1,'sourceHash':source_hash,'frameIndex':i,'phase':(['windup','active','recovery'][i] if action in ['light','heavy','bash','leap','death'] else 'loop'),'phaseProgress':(i+.1)/count,'sourceCanvas':[192,192],'feetPivot':[96,96],'renderPresetHash':HASH,'renderPreset':PRESET,'source':f'characters/source/{kind}.blend','license':'CC0-1.0','file':str(dest.relative_to(ROOT))})
     if not SAMPLE: (REND/kind/'frames.json').write_text(json.dumps(ALL[-sum(len(f)*n for f,n in clips.values()):],indent=2)+'\n')
 (SRC/'render-preset.json').write_text(json.dumps(PRESET|{'hash':HASH},indent=2)+'\n')
 print('IDLE SOULS EXPORT COMPLETE',len(ALL),'frames')

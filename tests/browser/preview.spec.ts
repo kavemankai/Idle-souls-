@@ -11,12 +11,14 @@ for(const viewport of [{width:1280,height:720},{width:390,height:844},{width:844
       expect(box!.x).toBeGreaterThanOrEqual(0);expect(box!.x+box!.width).toBeLessThanOrEqual(viewport.width);
     }
     await page.selectOption('#facing','W');await page.selectOption('#action','light');
-    await expect(page.locator('#status')).toContainText('view unavailable');
+    // Wave 1 authored light at W, NW and SE, so this view is real art now; the fallback rule is covered by tests/directions.test.ts.
+    await expect(page.locator('#status')).toContainText('light');
+    await expect(page.locator('#status')).not.toContainText('view unavailable');
     const frames=await page.evaluate(()=>{
       const sprites=window.__IDLE_GAME__.scene.scenes[0].children.list.filter(o=>o.type==='Sprite') as import('phaser').GameObjects.Sprite[];
       return sprites.map(s=>({frame:s.frame.name,flipX:s.flipX,origin:[s.originX,s.originY],visible:s.visible}));
     });
-    expect(frames.find(f=>String(f.frame).startsWith('adventurer__'))!.frame).toBe('adventurer__idle__W__00');expect(frames.every(f=>!f.flipX)).toBe(true);
+    expect(String(frames.find(f=>String(f.frame).startsWith('adventurer__'))!.frame)).toMatch(/^adventurer__light__W__0[0-2]$/);expect(frames.every(f=>!f.flipX)).toBe(true);
     await page.selectOption('#composition','traversal');
     await expect.poll(async()=>page.evaluate(()=>{
       const sprites=window.__IDLE_GAME__.scene.scenes[0].children.list.filter(o=>o.type==='Sprite') as import('phaser').GameObjects.Sprite[];

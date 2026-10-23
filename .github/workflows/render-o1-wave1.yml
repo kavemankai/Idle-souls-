@@ -1,0 +1,81 @@
+name: Render O1 directional sprite waves 1–3
+
+on:
+  push:
+    branches: [art/o1-attack-facings-wave1, art/o1-reactions-bite-wave2, art/o1-death-wave3]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  render-and-validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Blender headless dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libegl1 libgl1 libx11-6 libx11-xcb1 libxi6 libxrender1 libxkbcommon0 libsm6 libglib2.0-0 libopengl0
+      - name: Install pinned Blender 4.3.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=https://download.blender.org/release/Blender4.3
+          ARCHIVE=blender-4.3.2-linux-x64.tar.xz
+          curl -fL --retry 3 --retry-delay 5 "$BASE/$ARCHIVE" -o "$ARCHIVE"
+          curl -fL --retry 3 --retry-delay 5 "$BASE/blender-4.3.2.sha256" -o blender.sha256
+          grep -F "$ARCHIVE" blender.sha256 | sed 's/\*/ /g' | sha256sum --check
+          tar -xf "$ARCHIVE"
+          echo "$PWD/blender-4.3.2-linux-x64" >> "$GITHUB_PATH"
+      - name: Render retained Blender sources and regenerate atlases
+        run: |
+          npm ci
+          python -m pip install -r tools/requirements.txt
+          if test -f tools/blender/add_o1_actions.py; then
+            blender -b -t 4 --python tools/blender/add_o1_actions.py
+          fi
+          npm run assets:characters
+          npm run assets:atlas
+          npm run assets:validate
+          blender -b -t 4 --python tools/blender/validate.py
+          npm run assets:reproduce
+      - name: Validate coverage and runtime
+        run: |
+          npm run lint
+          npm run typecheck
+          npm test
+          npm run build
+      - name: Publish render proof for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: o1-wave3-death-sprites
+          path: |
+            assets/characters/runtime/*.png
+            assets/characters/runtime/atlas-report.json
+            docs/visual_proof/*-compass.png
+            docs/visual_proof/atlas-validation.json
+          retention-days: 14
+      - name: Commit reproducible runtime sprite output
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/characters/runtime assets/characters/source/adventurer.blend assets/characters/source/sentry.blend assets/characters/source/mireling.blend docs/visual_proof/atlas-validation.json docs/visual_proof/source-validation.json docs/visual_proof/reproducibility.json docs/visual_proof/adventurer-compass.png docs/visual_proof/sentry-compass.png docs/visual_proof/mireling-compass.png docs/visual_proof/mannequin-compass.png
+          if git diff --cached --quiet; then
+            echo "No changed render artifacts: previous generated assets match."
+            exit 0
+          fi
+          git commit -m "art(o1): render directional sprite atlases from retained rigs"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
