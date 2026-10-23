@@ -48,3 +48,11 @@ test('visual fixture cannot mutate simulation and never produces combat outcomes
   assert.equal('damage' in after,false);assert.equal('hp' in after.actors[0],false);
   fixture.paused=true;const time=fixture.time;fixture.update(500);assert.equal(fixture.time,time);
 });
+
+test('attack pose follows supplied phase even when move phase durations are unequal', () => {
+  const frames=atlas('adventurer').frames;
+  for (const [phase,progress,index] of [['windup',.8,'00'],['active',.05,'01'],['recovery',.1,'02']] as const) {
+    const actor:ActorView={id:'hero',kind:'adventurer',x:0,y:0,visible:true,action:'heavy',facing:'NE',phase,progress};
+    assert.equal(chooseFrame(actor,n=>Boolean(frames[n])).frame,`adventurer__heavy__NE__${index}`);
+  }
+});
