@@ -54,3 +54,6 @@
 @media (min-width:640px){.xp .obj{grid-template-columns:24px minmax(0,1fr) minmax(0,1.5fr) auto}.xp .obj .row-btns{grid-column:auto}}
 @media (min-width:900px){.xp .cols{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px}.xp .feed{max-height:520px}}
 @media (prefers-reduced-motion:reduce){.xp *{scroll-behavior:auto!important}}
+.xp textarea{width:100%;margin:8px 0;padding:8px;font:12px Arial,sans-serif;border:1px solid #a7b4953b;border-radius:4px;background:#21342c;color:#e0decb}
+.xp ul{margin:6px 0;padding-left:18px}.xp li{margin:2px 0}
+.xp #carried-line{margin:8px 0 0;font-size:12px;color:#c4cdb9}

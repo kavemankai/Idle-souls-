@@ -1,6 +1,6 @@
 {
  "directSurvey/1": {
-  "version": 1,
+  "version": 2,
   "seed": 1,
   "outcome": "extracted",
   "summary": "Back at camp alive with 20 of 90 health after 2 fights.",
@@ -94,6 +94,13 @@
     "cause": "Direct exploration: shortest walking distance."
    },
    {
+    "tick": 1586,
+    "kind": "loot",
+    "room": "O1",
+    "text": "Defeated mireling in Outer Road: 6 gold, 2 mastery. Carried, at risk until camp.",
+    "cause": "Loot is banked only by arriving at camp alive (doc 08)."
+   },
+   {
     "tick": 1682,
     "kind": "fight",
     "room": "O1",
@@ -177,10 +184,35 @@
     "text": "Arrived at camp alive. Banking comes with M3.",
     "cause": "Extraction means arriving at camp alive."
    }
-  ]
+  ],
+  "loot": {
+   "carried": {
+    "gold": 6,
+    "supplies": {},
+    "gear": [],
+    "mastery": 2
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    }
+   ],
+   "startCache": null,
+   "cacheRecovered": false,
+   "deathSpot": null
+  },
+  "bossesDefeated": []
  },
  "directSurvey/2": {
-  "version": 1,
+  "version": 2,
   "seed": 2,
   "outcome": "extracted",
   "summary": "Back at camp alive with 34 of 90 health after 2 fights.",
@@ -274,6 +306,13 @@
     "cause": "Direct exploration: shortest walking distance."
    },
    {
+    "tick": 705,
+    "kind": "loot",
+    "room": "O1",
+    "text": "Defeated mireling in Outer Road: 6 gold, 2 mastery. Carried, at risk until camp.",
+    "cause": "Loot is banked only by arriving at camp alive (doc 08)."
+   },
+   {
     "tick": 804,
     "kind": "fight",
     "room": "O1",
@@ -357,10 +396,35 @@
     "text": "Arrived at camp alive. Banking comes with M3.",
     "cause": "Extraction means arriving at camp alive."
    }
-  ]
+  ],
+  "loot": {
+   "carried": {
+    "gold": 6,
+    "supplies": {},
+    "gear": [],
+    "mastery": 2
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    }
+   ],
+   "startCache": null,
+   "cacheRecovered": false,
+   "deathSpot": null
+  },
+  "bossesDefeated": []
  },
  "directSurvey/3": {
-  "version": 1,
+  "version": 2,
   "seed": 3,
   "outcome": "extracted",
   "summary": "Back at camp alive with 26 of 90 health after 2 fights.",
@@ -454,6 +518,13 @@
     "cause": "Direct exploration: shortest walking distance."
    },
    {
+    "tick": 874,
+    "kind": "loot",
+    "room": "O1",
+    "text": "Defeated mireling in Outer Road: 6 gold, 2 mastery. Carried, at risk until camp.",
+    "cause": "Loot is banked only by arriving at camp alive (doc 08)."
+   },
+   {
     "tick": 1024,
     "kind": "fight",
     "room": "O1",
@@ -517,6 +588,13 @@
     "cause": "Phase 1 of a retreat: break contact. Enemies stay in their room."
    },
    {
+    "tick": 2254,
+    "kind": "loot",
+    "room": "O2",
+    "text": "Defeated sentry in Crossroads: 15 gold, 5 mastery. Carried, at risk until camp.",
+    "cause": "Loot is banked only by arriving at camp alive (doc 08)."
+   },
+   {
     "tick": 2467,
     "kind": "fight",
     "room": "O2",
@@ -537,10 +615,46 @@
     "text": "Arrived at camp alive. Banking comes with M3.",
     "cause": "Extraction means arriving at camp alive."
    }
-  ]
+  ],
+  "loot": {
+   "carried": {
+    "gold": 21,
+    "supplies": {},
+    "gear": [],
+    "mastery": 7
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O2",
+     "label": "sentry defeated",
+     "bundle": {
+      "gold": 15,
+      "supplies": {},
+      "gear": [],
+      "mastery": 5
+     }
+    }
+   ],
+   "startCache": null,
+   "cacheRecovered": false,
+   "deathSpot": null
+  },
+  "bossesDefeated": []
  },
  "directSurvey/4": {
-  "version": 1,
+  "version": 2,
   "seed": 4,
   "outcome": "extracted",
   "summary": "Back at camp alive with 3 of 90 health after 3 fights.",
@@ -643,6 +757,13 @@
     "cause": "Direct exploration: shortest walking distance."
    },
    {
+    "tick": 354,
+    "kind": "loot",
+    "room": "O1",
+    "text": "Defeated mireling in Outer Road: 6 gold, 2 mastery. Carried, at risk until camp.",
+    "cause": "Loot is banked only by arriving at camp alive (doc 08)."
+   },
+   {
     "tick": 477,
     "kind": "fight",
     "room": "O1",
@@ -692,6 +813,20 @@
     "cause": "Direct exploration: shortest walking distance."
    },
    {
+    "tick": 1677,
+    "kind": "loot",
+    "room": "O2",
+    "text": "Defeated sentry in Crossroads: 15 gold, 5 mastery. Carried, at risk until camp.",
+    "cause": "Loot is banked only by arriving at camp alive (doc 08)."
+   },
+   {
+    "tick": 1741,
+    "kind": "loot",
+    "room": "O2",
+    "text": "Picked up ration in Crossroads. Carried, at risk until camp.",
+    "cause": "Loot is banked only by arriving at camp alive (doc 08)."
+   },
+   {
     "tick": 1796,
     "kind": "fight",
     "room": "O2",
@@ -720,6 +855,27 @@
     "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
    },
    {
+    "tick": 1882,
+    "kind": "loot",
+    "room": "O3",
+    "text": "Picked up cracked-buckler in Broken Causeway. Carried, at risk until camp.",
+    "cause": "Loot is banked only by arriving at camp alive (doc 08)."
+   },
+   {
+    "tick": 2180,
+    "kind": "loot",
+    "room": "O3",
+    "text": "Defeated mireling in Broken Causeway: 6 gold, 2 mastery. Carried, at risk until camp.",
+    "cause": "Loot is banked only by arriving at camp alive (doc 08)."
+   },
+   {
+    "tick": 2542,
+    "kind": "loot",
+    "room": "O3",
+    "text": "Defeated mireling in Broken Causeway: 6 gold, 2 mastery. Carried, at risk until camp.",
+    "cause": "Loot is banked only by arriving at camp alive (doc 08)."
+   },
+   {
     "tick": 2731,
     "kind": "fight",
     "room": "O3",
@@ -740,10 +896,98 @@
     "text": "Arrived at camp alive. Banking comes with M3.",
     "cause": "Extraction means arriving at camp alive."
    }
-  ]
+  ],
+  "loot": {
+   "carried": {
+    "gold": 33,
+    "supplies": {
+     "ration": 1
+    },
+    "gear": [
+     "cracked-buckler"
+    ],
+    "mastery": 11
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O2",
+     "label": "sentry defeated",
+     "bundle": {
+      "gold": 15,
+      "supplies": {},
+      "gear": [],
+      "mastery": 5
+     }
+    },
+    {
+     "source": "pickup",
+     "room": "O2",
+     "label": "ration",
+     "bundle": {
+      "gold": 0,
+      "supplies": {
+       "ration": 1
+      },
+      "gear": [],
+      "mastery": 0
+     }
+    },
+    {
+     "source": "pickup",
+     "room": "O3",
+     "label": "cracked-buckler",
+     "bundle": {
+      "gold": 0,
+      "supplies": {},
+      "gear": [
+       "cracked-buckler"
+      ],
+      "mastery": 0
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O3",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O3",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    }
+   ],
+   "startCache": null,
+   "cacheRecovered": false,
+   "deathSpot": null
+  },
+  "bossesDefeated": []
  },
  "thoroughSurvey/1": {
-  "version": 1,
+  "version": 2,
   "seed": 1,
   "outcome": "extracted",
   "summary": "Back at camp alive with 80 of 90 health after 1 fight.",
@@ -819,6 +1063,13 @@
     "room": "C0",
     "text": "Objective 1: C0 > O1 > O2 > T1 (ends at unexplored ground). No other permitted way.",
     "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 926,
+    "kind": "loot",
+    "room": "O1",
+    "text": "Defeated mireling in Outer Road: 6 gold, 2 mastery. Carried, at risk until camp.",
+    "cause": "Loot is banked only by arriving at camp alive (doc 08)."
    },
    {
     "tick": 977,
@@ -911,10 +1162,35 @@
     "text": "Arrived at camp alive. Banking comes with M3.",
     "cause": "Extraction means arriving at camp alive."
    }
-  ]
+  ],
+  "loot": {
+   "carried": {
+    "gold": 6,
+    "supplies": {},
+    "gear": [],
+    "mastery": 2
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    }
+   ],
+   "startCache": null,
+   "cacheRecovered": false,
+   "deathSpot": null
+  },
+  "bossesDefeated": []
  },
  "thoroughSurvey/2": {
-  "version": 1,
+  "version": 2,
   "seed": 2,
   "outcome": "extracted",
   "summary": "Back at camp alive with 80 of 90 health after 1 fight.",
@@ -990,6 +1266,13 @@
     "room": "C0",
     "text": "Objective 1: C0 > O1 > O2 > T1 (ends at unexplored ground). No other permitted way.",
     "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 1156,
+    "kind": "loot",
+    "room": "O1",
+    "text": "Defeated mireling in Outer Road: 6 gold, 2 mastery. Carried, at risk until camp.",
+    "cause": "Loot is banked only by arriving at camp alive (doc 08)."
    },
    {
     "tick": 1236,
@@ -1082,10 +1365,35 @@
     "text": "Arrived at camp alive. Banking comes with M3.",
     "cause": "Extraction means arriving at camp alive."
    }
-  ]
+  ],
+  "loot": {
+   "carried": {
+    "gold": 6,
+    "supplies": {},
+    "gear": [],
+    "mastery": 2
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    }
+   ],
+   "startCache": null,
+   "cacheRecovered": false,
+   "deathSpot": null
+  },
+  "bossesDefeated": []
  },
  "thoroughSurvey/3": {
-  "version": 1,
+  "version": 2,
   "seed": 3,
   "outcome": "extracted",
   "summary": "Back at camp alive with 80 of 90 health after 1 fight.",
@@ -1161,6 +1469,13 @@
     "room": "C0",
     "text": "Objective 1: C0 > O1 > O2 > T1 (ends at unexplored ground). No other permitted way.",
     "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 1217,
+    "kind": "loot",
+    "room": "O1",
+    "text": "Defeated mireling in Outer Road: 6 gold, 2 mastery. Carried, at risk until camp.",
+    "cause": "Loot is banked only by arriving at camp alive (doc 08)."
    },
    {
     "tick": 1298,
@@ -1253,10 +1568,35 @@
     "text": "Arrived at camp alive. Banking comes with M3.",
     "cause": "Extraction means arriving at camp alive."
    }
-  ]
+  ],
+  "loot": {
+   "carried": {
+    "gold": 6,
+    "supplies": {},
+    "gear": [],
+    "mastery": 2
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    }
+   ],
+   "startCache": null,
+   "cacheRecovered": false,
+   "deathSpot": null
+  },
+  "bossesDefeated": []
  },
  "thoroughSurvey/4": {
-  "version": 1,
+  "version": 2,
   "seed": 4,
   "outcome": "extracted",
   "summary": "Back at camp alive with 90 of 90 health after 1 fight.",
@@ -1332,6 +1672,13 @@
     "room": "C0",
     "text": "Objective 1: C0 > O1 > O2 > T1 (ends at unexplored ground). No other permitted way.",
     "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 629,
+    "kind": "loot",
+    "room": "O1",
+    "text": "Defeated mireling in Outer Road: 6 gold, 2 mastery. Carried, at risk until camp.",
+    "cause": "Loot is banked only by arriving at camp alive (doc 08)."
    },
    {
     "tick": 812,
@@ -1424,10 +1771,35 @@
     "text": "Arrived at camp alive. Banking comes with M3.",
     "cause": "Extraction means arriving at camp alive."
    }
-  ]
+  ],
+  "loot": {
+   "carried": {
+    "gold": 6,
+    "supplies": {},
+    "gear": [],
+    "mastery": 2
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    }
+   ],
+   "startCache": null,
+   "cacheRecovered": false,
+   "deathSpot": null
+  },
+  "bossesDefeated": []
  },
  "cautious/1": {
-  "version": 1,
+  "version": 2,
   "seed": 1,
   "outcome": "extracted",
   "summary": "Back at camp alive with 66 of 90 health after 1 fight.",
@@ -1535,10 +1907,23 @@
     "text": "Arrived at camp alive. Banking comes with M3.",
     "cause": "Extraction means arriving at camp alive."
    }
-  ]
+  ],
+  "loot": {
+   "carried": {
+    "gold": 0,
+    "supplies": {},
+    "gear": [],
+    "mastery": 0
+   },
+   "gains": [],
+   "startCache": null,
+   "cacheRecovered": false,
+   "deathSpot": null
+  },
+  "bossesDefeated": []
  },
  "cautious/2": {
-  "version": 1,
+  "version": 2,
   "seed": 2,
   "outcome": "extracted",
   "summary": "Back at camp alive with 55 of 90 health after 1 fight.",
@@ -1646,10 +2031,23 @@
     "text": "Arrived at camp alive. Banking comes with M3.",
     "cause": "Extraction means arriving at camp alive."
    }
-  ]
+  ],
+  "loot": {
+   "carried": {
+    "gold": 0,
+    "supplies": {},
+    "gear": [],
+    "mastery": 0
+   },
+   "gains": [],
+   "startCache": null,
+   "cacheRecovered": false,
+   "deathSpot": null
+  },
+  "bossesDefeated": []
  },
  "cautious/3": {
-  "version": 1,
+  "version": 2,
   "seed": 3,
   "outcome": "extracted",
   "summary": "Back at camp alive with 46 of 90 health after 1 fight.",
@@ -1757,10 +2155,23 @@
     "text": "Arrived at camp alive. Banking comes with M3.",
     "cause": "Extraction means arriving at camp alive."
    }
-  ]
+  ],
+  "loot": {
+   "carried": {
+    "gold": 0,
+    "supplies": {},
+    "gear": [],
+    "mastery": 0
+   },
+   "gains": [],
+   "startCache": null,
+   "cacheRecovered": false,
+   "deathSpot": null
+  },
+  "bossesDefeated": []
  },
  "cautious/4": {
-  "version": 1,
+  "version": 2,
   "seed": 4,
   "outcome": "extracted",
   "summary": "Back at camp alive with 66 of 90 health after 1 fight.",
@@ -1868,6 +2279,19 @@
     "text": "Arrived at camp alive. Banking comes with M3.",
     "cause": "Extraction means arriving at camp alive."
    }
-  ]
+  ],
+  "loot": {
+   "carried": {
+    "gold": 0,
+    "supplies": {},
+    "gear": [],
+    "mastery": 0
+   },
+   "gains": [],
+   "startCache": null,
+   "cacheRecovered": false,
+   "deathSpot": null
+  },
+  "bossesDefeated": []
  }
 }

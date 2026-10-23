@@ -50,13 +50,14 @@ test('the page and Node produce the same Chronicle for the same plan', async ({ 
 
 test('browser and Node agree on expeditions across plans and seeds', async ({ page }) => {
   await open(page);
-  const obj = (room: string, kind: 'reach' | 'survey' = 'reach') => ({ id: `${kind}-${room}`, kind, room });
+  const obj = (room: string, kind: 'reach' | 'survey' | 'recover' = 'reach') => ({ id: `${kind}-${room}`, kind, room });
   const cases: ExpeditionConfig[] = [];
   for (const seed of [1, 2, 3]) {
     cases.push({ seed, level: 80, focus: 'balanced', known: ['C0', 'O1', 'O2', 'O3', 'KT'], plan: { ...defaultPlan(), exploration: 'direct', objectives: [obj('T1', 'survey'), obj('O3')] } });
     cases.push({ seed, level: 80, focus: 'balanced', known: ['C0', 'O1', 'O2', 'O3', 'KT'], plan: { ...defaultPlan(), retreatHpPct: 95, doctrine: 'pressing', objectives: [obj('O3'), obj('KT')] } });
   }
   cases.push({ seed: 7, level: 80, focus: 'balanced', hpOverride: 5000, known: ['C0', 'O1', 'O2', 'O3', 'KT', 'T1', 'T2', 'K3', 'K2', 'S1', 'S2', 'K1'], plan: { ...defaultPlan(), avoid: ['T1'], returnRoute: 'shortest', objectives: [obj('K2')] } });
+  cases.push({ seed: 4, level: 80, focus: 'balanced', hpOverride: 5000, known: ['C0', 'O1', 'O2', 'O3', 'KT'], cache: { room: 'O1', x: -100, y: 0, contents: { gold: 50, supplies: { ration: 1 }, gear: [], mastery: 3 } }, plan: { ...defaultPlan(), objectives: [obj('O1', 'recover'), obj('O3')] } });
   const inPage = await page.evaluate(cs => cs.map(c => window.__EXPEDITION_RUN__(c)), cases);
   inPage.forEach((r, i) => expect(r, `case ${i}`).toEqual(runExpedition(sim, cases[i]).chronicle));
 });
@@ -93,4 +94,51 @@ test('the fresh map offers only what is on it and a preset drops places it canno
   const options = await page.locator('[data-obj-room="0"] option').allTextContents();
   expect(options.some(o => o.includes('Crossroads'))).toBe(true);
   expect(options.some(o => o.includes('Tower'))).toBe(false);
+});
+
+const SAVE = '&save=memory';
+const finish = async (page: Page) => { if (await page.locator('#skip').isEnabled()) await page.locator('#skip').click(); await expect(page.locator('#outcome')).toBeVisible(); };
+
+test('a returning expedition banks its loot once, and the camp shows it next time', async ({ page }) => {
+  await open(page, `&seed=1&hp=5000${SAVE}`);
+  await expect(page.locator('#bank-line')).toContainText('nothing');
+  await page.locator('[data-preset=cross]').click();
+  await expect(page.locator('#risk-rule')).toContainText('Only camp banks it');
+  await page.locator('#launch').click();
+  await expect(page.locator('#carried-line')).toContainText('Carried, at risk until camp');
+  await finish(page);
+  await expect(page.locator('#outcome')).toHaveAttribute('data-outcome', 'extracted');
+  await expect(page.locator('#settle-lines li').first()).toContainText('Banked: 33 gold');
+  const save = await page.evaluate(() => window.__EXPEDITION_SAVE__());
+  expect(save.camp.bank.gold).toBe(33); expect(save.camp.expeditions).toBe(1); expect(save.camp.cache).toBeNull();
+  await page.locator('#again').click();
+  await expect(page.locator('#bank-line')).toContainText('33 gold');
+  expect(await noSideScroll(page)).toBe(true);
+});
+
+test('a fall leaves one cache, the camp warns about it, and a recover objective brings it home', async ({ page }) => {
+  await open(page, `&seed=1&hp=45&known=oldroad${SAVE}`);
+  await page.locator('[data-preset=cross]').click();
+  await page.locator('#retreat').fill('0');
+  await page.locator('#launch').click();
+  await finish(page);
+  await expect(page.locator('#outcome')).toHaveAttribute('data-outcome', 'died');
+  await expect(page.locator('#settle-lines')).toContainText('recovery cache');
+  const dead = await page.evaluate(() => window.__EXPEDITION_SAVE__());
+  expect(dead.camp.bank.gold).toBe(0); expect(dead.camp.deaths).toBe(1); expect(dead.camp.cache).not.toBeNull();
+  await page.locator('#again').click();
+  await expect(page.locator('#cache-line')).toContainText('A new fall before you collect it replaces it');
+  await expect(page.locator('#add-recover')).toBeEnabled();
+  await page.locator('#add-recover').click();
+  await expect(page.locator('#preflight')).toHaveAttribute('data-status', 'confirmed');
+});
+
+test('the save can be exported and imported, and a damaged save is refused', async ({ page }) => {
+  await open(page, `&seed=1&hp=5000${SAVE}`);
+  await page.locator('#save-card summary').click();
+  await expect(page.locator('#export-save')).toHaveAttribute('href', /idle-souls-save/);
+  await page.locator('#import-text').fill('not a save');
+  await page.locator('#import-go').click();
+  await expect(page.locator('.warn').first()).toBeVisible();
+  expect((await page.evaluate(() => window.__EXPEDITION_SAVE__())).camp.expeditions).toBe(0);
 });
