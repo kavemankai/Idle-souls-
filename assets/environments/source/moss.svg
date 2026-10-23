@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="192" height="160" viewBox="0 0 192 160"><defs>
+<linearGradient id="stone" x2=".3" y2="1"><stop stop-color="#747d75"/><stop offset=".48" stop-color="#626e67"/><stop offset="1" stop-color="#475751"/></linearGradient>
+<linearGradient id="wall" x2=".2" y2="1"><stop stop-color="#879087"/><stop offset="1" stop-color="#515f59"/></linearGradient>
+<radialGradient id="soil"><stop stop-color="#4a4c3d"/><stop offset="1" stop-color="#252f2b"/></radialGradient>
+<radialGradient id="light"><stop stop-color="#dfab6b" stop-opacity=".23"/><stop offset="1" stop-color="#dfab6b" stop-opacity="0"/></radialGradient>
+</defs><g id="soft-olive-underpainting" fill="#3d4b36" opacity=".55"><path d="M8 91Q29 37 69 61Q112 17 141 59Q187 62 177 117Q137 150 101 126Q50 157 8 91Z"/></g><g id="moss-brushes" fill="none" stroke-linecap="round"><path d="M24 92l16 -8m-8 22 28 -12m-3 -18 21 -10m10 34 29 -18m-3 -15 16 -7m12 44 19 -12m-21 22 21 -8m-90 14 18 -7" stroke="#66734b" stroke-width="5" opacity=".45"/><path d="M42 75l10 -5m48 4 15 -5m18 46 10 -4" stroke="#89916a" stroke-width="2" opacity=".38"/></g></svg>

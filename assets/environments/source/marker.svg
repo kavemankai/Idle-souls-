@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="160" height="240" viewBox="0 0 160 240"><defs>
+<linearGradient id="stone" x2=".3" y2="1"><stop stop-color="#747d75"/><stop offset=".48" stop-color="#626e67"/><stop offset="1" stop-color="#475751"/></linearGradient>
+<linearGradient id="wall" x2=".2" y2="1"><stop stop-color="#879087"/><stop offset="1" stop-color="#515f59"/></linearGradient>
+<radialGradient id="soil"><stop stop-color="#4a4c3d"/><stop offset="1" stop-color="#252f2b"/></radialGradient>
+<radialGradient id="light"><stop stop-color="#dfab6b" stop-opacity=".23"/><stop offset="1" stop-color="#dfab6b" stop-opacity="0"/></radialGradient>
+</defs><g id="shadow"><ellipse cx="90" cy="208" rx="48" ry="18" fill="#0c211a" opacity=".5"/></g><g id="standing-stone"><path d="M51 205L48 79 69 28 102 21 119 65 114 207Z" fill="#687a69" stroke="#344d3d" stroke-width="4"/><path d="M51 78L69 28 101 22 98 195 57 204Z" fill="#8a947b"/><path d="M63 84l34 -8M66 95l27 -6M70 111l18 -3" stroke="#3c5743" stroke-width="3"/><path d="M75 136v35m-13 -17 24 -3" stroke="#bcc0a0" stroke-width="3" opacity=".5"/><path d="M61 46l8 -13 21 -7" fill="none" stroke="#c1c2a5" stroke-width="3" opacity=".4"/></g></svg>
