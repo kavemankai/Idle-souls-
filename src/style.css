@@ -16,10 +16,15 @@ input:focus-visible{outline:2px solid #ddd0a7;outline-offset:3px}
 #log li{margin:0 0 2px}
 #clips{font-size:9px;color:#9daa97;margin:4px 0 0}
 [hidden]{display:none!important}
+.o1-cam{position:absolute;display:flex;gap:4px;pointer-events:auto}
+.o1-cam button{min-width:44px;padding:0 10px;background:#14241fe6;font-size:15px}
+.o1-cam #camAction{font-size:11px;letter-spacing:.3px}
+.o1-cam button[aria-pressed=true]{border-color:var(--brass);color:#f1d49a;background:#2b3c30}
 .o1-tabs{display:flex;gap:4px;margin-bottom:6px}
 .o1-tabs button{flex:1;min-width:0;font-size:11px;padding:0 2px}
 .o1-tabs button[aria-selected=true]{border-color:var(--brass);color:#f1d49a;background:#2b3c30}
-.o1-pane{max-height:min(50vh,370px);overflow:auto;overscroll-behavior:contain;padding-right:2px}
+.zoomed .scene-title{display:none}
+.o1-pane{max-height:min(54vh,400px);overflow:auto;overscroll-behavior:contain;padding-right:2px}
 .o1-pane h4{font:11px Arial,sans-serif;letter-spacing:1.2px;text-transform:uppercase;color:var(--brass);margin:8px 0 4px}
 .o1-pane .muted{font-size:11px;margin:4px 0}
 .gauge{position:relative;height:16px;margin:3px 0;background:#0f1b18;border:1px solid #a7b4952e;border-radius:2px;overflow:hidden}

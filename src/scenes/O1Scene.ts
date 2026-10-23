@@ -12,6 +12,8 @@ import { drawCues } from './o1Cues';
 import type { PresentationSnapshot } from '../contracts/presentation';
 declare const __BUILD_SHA__: string;
 const TICK_MS = 1000 / 30;
+/** Zoom steps relative to the fit-the-room view. */
+const CAM_STEPS = [1, 1.6, 2.4, 3.4];
 const FOCUSES = ['balanced', 'duelist', 'bulwark', 'skirmisher', 'survivor'];
 const DOCTRINES: SimDoctrine[] = ['measured', 'guarded', 'pressing'];
 const OUTCOME_TEXT: Record<string, string> = {
@@ -33,6 +35,12 @@ export class O1Scene extends Phaser.Scene {
   private tab = 'run';
   private paneKey = '';
   private hold = false;
+  private camMode: 'overview' | 'manual' | 'action' = 'overview';
+  private camStep = 0;
+  private fit = 1;
+  private view = { w: 1, h: 1 };
+  private cam = { x: 0, y: 0, z: 1, ready: false };
+  private punch = 0;
   private acc = 0;
   private speed = 1;
   private debug = false;
@@ -51,7 +59,9 @@ export class O1Scene extends Phaser.Scene {
     this.cues = this.add.graphics().setDepth(998);
     this.intent = this.add.text(0, 0, '', { fontFamily: 'Arial', fontSize: '10px', color: '#f1e8cf', backgroundColor: '#172b25cc', padding: { x: 3, y: 2 } }).setOrigin(.5, 0).setDepth(1001).setVisible(false);
     const params = new URLSearchParams(location.search);
-    this.debug = params.has('debug'); this.reduced = params.has('reduced'); this.hold = params.has('hold'); this.showCues = !params.has('nocues'); this.showGhosts = params.has('ghosts');
+    this.debug = params.has('debug'); this.reduced = params.has('reduced'); this.hold = params.has('hold');
+    if (params.get('cam') === 'action') this.camMode = 'action';
+    else if (/^zoom[1-3]$/.test(params.get('cam') ?? '')) { this.camMode = 'manual'; this.camStep = Number(params.get('cam')!.slice(4)); } this.showCues = !params.has('nocues'); this.showGhosts = params.has('ghosts');
     if (['run', 'combat', 'totals', 'build', 'log'].includes(params.get('tab') ?? '')) this.tab = params.get('tab')!;
     this.speed = Math.max(1, Math.min(16, Number(params.get('speed')) || 1));
     this.makeHUD(params);
@@ -105,6 +115,7 @@ export class O1Scene extends Phaser.Scene {
     <div class="o1-pane" id="pane-combat" role="tabpanel" hidden><div class="toggles"><button id="cues" aria-pressed="${this.showCues}">Combat cues</button><button id="ghosts" aria-pressed="${this.showGhosts}">Reaction lag</button></div><div id="body-combat"></div></div>
     <div class="o1-pane" id="pane-totals" role="tabpanel" hidden></div><div class="o1-pane" id="pane-build" role="tabpanel" hidden></div><div class="o1-pane" id="pane-log" role="tabpanel" hidden></div>
     <p id="status" aria-live="polite"></p><p id="result" aria-live="polite"></p></section>
+    <div class="o1-cam" role="group" aria-label="Camera"><button id="camOut" aria-label="Zoom out">&minus;</button><button id="camIn" aria-label="Zoom in">+</button><button id="camAction" aria-pressed="${this.camMode === 'action'}" aria-label="Action camera">Action cam</button></div>
     <footer><span>Slice endpoint is the east threshold · no rewards, retreat or O2</span><span id="build">${__BUILD_SHA__} · PHASER ${Phaser.VERSION}</span></footer>`;
     document.body.append(hud);
     const q = <T extends HTMLElement>(id: string) => hud.querySelector<T>(`#${id}`)!;
@@ -112,7 +123,13 @@ export class O1Scene extends Phaser.Scene {
     q('dispatch').addEventListener('click', () => { if (this.controller.state !== 'ready') this.reset(); this.controller.dispatch(); this.syncHud(); });
     q('speed').addEventListener('click', e => { this.speed = this.speed > 1 ? 1 : 4; (e.currentTarget as HTMLElement).setAttribute('aria-pressed', String(this.speed > 1)); (e.currentTarget as HTMLElement).textContent = `Speed x${this.speed > 1 ? this.speed : 4}`; });
     q('proxy').addEventListener('click', e => { this.debug = !this.debug; (e.currentTarget as HTMLElement).setAttribute('aria-pressed', String(this.debug)); });
-    this.setTab(this.tab);
+    this.setTab(this.tab); this.setCam(this.camMode);
+    q('camIn').addEventListener('click', () => this.zoomBy(1));
+    q('camOut').addEventListener('click', () => this.zoomBy(-1));
+    q('camAction').addEventListener('click', () => this.setCam(this.camMode === 'action' ? 'overview' : 'action'));
+    this.input.keyboard!.on('keydown-C', () => { if (!this.inForm()) this.setCam(this.camMode === 'action' ? 'overview' : 'action'); });
+    this.input.keyboard!.on('keydown-PLUS', () => { if (!this.inForm()) this.zoomBy(1); });
+    this.input.keyboard!.on('keydown-MINUS', () => { if (!this.inForm()) this.zoomBy(-1); });
     hud.querySelectorAll<HTMLButtonElement>('[data-tab]').forEach(b => b.addEventListener('click', () => this.setTab(b.dataset.tab!)));
     q('cues').addEventListener('click', e => { this.showCues = !this.showCues; (e.currentTarget as HTMLElement).setAttribute('aria-pressed', String(this.showCues)); });
     q('ghosts').addEventListener('click', e => { this.showGhosts = !this.showGhosts; (e.currentTarget as HTMLElement).setAttribute('aria-pressed', String(this.showGhosts)); });
@@ -140,18 +157,62 @@ export class O1Scene extends Phaser.Scene {
       if (atEnd) el.scrollTop = el.scrollHeight;
     }
   }
+  private inForm() { return ['INPUT', 'SELECT'].includes(document.activeElement?.tagName ?? ''); }
+  private setCam(mode: 'overview' | 'manual' | 'action') {
+    this.camMode = mode; if (mode === 'overview') this.camStep = 0;
+    this.hud.querySelector('#camAction')!.setAttribute('aria-pressed', String(mode === 'action'));
+    this.hud.classList.toggle('zoomed', mode !== 'overview');
+  }
+  private zoomBy(dir: number) {
+    const step = Math.max(0, Math.min(CAM_STEPS.length - 1, (this.camMode === 'manual' ? this.camStep : this.camMode === 'action' ? 1 : 0) + dir));
+    this.camStep = step;
+    this.setCam(step === 0 ? 'overview' : 'manual');
+  }
   private layout() {
-    const w = this.scale.width, h = this.scale.height;
+    const w = this.scale.width;
     const rect = (sel: string) => this.hud.querySelector(sel)!.getBoundingClientRect();
     const head = rect('header'), foot = rect('footer'), bench = rect('.o1-bench');
     const portrait = bench.width > w * .75;
     const top = head.bottom, vw = portrait ? w : Math.max(200, bench.left - 8), vh = Math.max(120, (portrait ? bench.top : foot.top) - top);
     const cam = this.cameras.main;
     cam.setViewport(0, top, vw, vh);
-    cam.setZoom(Math.max(.3, Math.min(1.5, Math.min(vw / 640, vh / 500))));
-    cam.centerOn(0, 0);
-    document.documentElement.style.setProperty('--scene-zoom', String(cam.zoom));
-    void h;
+    this.fit = Math.max(.3, Math.min(1.5, Math.min(vw / 640, vh / 500)));
+    this.view = { w: vw, h: vh };
+    this.cam.ready = false;
+    cam.setZoom(this.fit); cam.centerOn(0, 0);
+    const ctl = this.hud.querySelector<HTMLElement>('.o1-cam')!;
+    ctl.style.top = `${top + 8}px`; ctl.style.left = `${Math.max(8, vw - ctl.offsetWidth - 10)}px`;
+    document.documentElement.style.setProperty('--scene-zoom', String(this.fit));
+  }
+  /** Where the camera wants to be. Presentation only: it reads actor positions from the snapshot and never touches the run. */
+  private camTarget(snap: PresentationSnapshot) {
+    const [hero, enemy] = snap.actors, fighting = this.controller.state === 'fighting' && enemy.visible, fit = this.fit;
+    let x = 0, y = 0, z = fit;
+    if (this.camMode === 'manual') {
+      z = fit * CAM_STEPS[this.camStep];
+      x = fighting ? (hero.x + enemy.x) / 2 : hero.x; y = fighting ? (hero.y + enemy.y) / 2 : hero.y;
+    } else if (this.camMode === 'action') {
+      if (fighting) {
+        x = (hero.x + enemy.x) / 2; y = (hero.y + enemy.y) / 2;
+        z = Math.max(fit * 1.3, Math.min(fit * 3.6, Math.min(this.view.w / (Math.abs(hero.x - enemy.x) + 300), this.view.h / (Math.abs(hero.y - enemy.y) + 260))));
+      } else {
+        const a = Math.atan2(Math.sin(this.controller.hero.face), Math.cos(this.controller.hero.face));
+        x = hero.x + Math.cos(a) * 40; y = hero.y + Math.sin(a) * 20; z = fit * 1.9;
+      }
+    }
+    if (this.camMode !== 'overview' && this.punch > 0) z *= 1 + this.punch;
+    const halfW = this.view.w / z / 2, halfH = this.view.h / z / 2;
+    x = halfW >= 300 ? 0 : Math.max(-300 + halfW, Math.min(300 - halfW, x));
+    y = halfH >= 260 ? 0 : Math.max(-260 + halfH, Math.min(260 - halfH, y));
+    return { x, y, z };
+  }
+  private moveCamera(delta: number, snap: PresentationSnapshot) {
+    const hit = snap.combat?.combatants.some(c => c.flash >= 7) ?? false;
+    this.punch = hit && !this.reduced ? .07 : Math.max(0, this.punch - delta / 1500);
+    const t = this.camTarget(snap), c = this.cam, k = c.ready ? 1 - Math.exp(-Math.min(delta, 100) / 170) : 1;
+    c.x += (t.x - c.x) * k; c.y += (t.y - c.y) * k; c.z = Math.exp(Math.log(c.z) + (Math.log(t.z) - Math.log(c.z)) * (c.ready ? k : 1));
+    c.ready = true;
+    this.cameras.main.setZoom(c.z); this.cameras.main.centerOn(c.x, c.y);
   }
   update(_time: number, delta: number) {
     const c = this.controller;
@@ -160,6 +221,7 @@ export class O1Scene extends Phaser.Scene {
       while (this.acc >= TICK_MS && !c.terminal) { c.step(); this.acc -= TICK_MS; }
     }
     const snapshot = this.adapter.read();
+    this.moveCamera(delta, snapshot);
     const [hero, enemy] = snapshot.actors;
     const results = [this.hero.draw(hero, this.debug, this.reduced)];
     for (const key of Object.keys(this.enemies) as O1Opponent[]) {
@@ -177,7 +239,7 @@ export class O1Scene extends Phaser.Scene {
     this.drawOverlay();
     this.syncHud();
     const hx = Math.round(c.hero.x * 10) / 10, hy = Math.round(c.hero.y * 10) / 10;
-    window.__O1_STATE__ = { source: snapshot.source, state: c.state, tick: c.tick, fought: c.fought, hp: Math.round(c.hp), hpMax: c.hpMax, hero: { x: hx, y: hy }, enemyAlive: c.enemy.alive, digest: c.digest, missing: [...this.clips], speed: this.speed, build: __BUILD_SHA__, viewport: [this.scale.width, this.scale.height], zoom: this.cameras.main.zoom };
+    window.__O1_STATE__ = { source: snapshot.source, state: c.state, tick: c.tick, fought: c.fought, hp: Math.round(c.hp), hpMax: c.hpMax, hero: { x: hx, y: hy }, enemyAlive: c.enemy.alive, digest: c.digest, missing: [...this.clips], speed: this.speed, build: __BUILD_SHA__, viewport: [this.scale.width, this.scale.height], zoom: this.cameras.main.zoom, fit: this.fit, cam: { mode: this.camMode, step: this.camStep, x: Math.round(this.cam.x * 10) / 10, y: Math.round(this.cam.y * 10) / 10 } };
   }
   private drawOverlay() {
     const g = this.overlay.clear();

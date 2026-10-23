@@ -1,7 +1,7 @@
 {
- "capturedAt": "2026-10-23T07:21:13.160Z",
+ "capturedAt": "2026-10-23T07:32:33.299Z",
  "tool": "Chromium / Playwright against the built preview, real Phaser runtime and the real simulator",
- "checkoutSHA": "0f7ffed1d2a2f206d0d5e7809b4d2d055cee464f",
+ "checkoutSHA": "2a48eada3677f20561f970e33649143eb3099ac8",
  "note": "Software-rendered cloud captures. No human review and no physical device or touch testing is claimed. State fields come from window.__O1_STATE__.",
  "captures": [
   {
@@ -27,12 +27,19 @@
     "digest": "811c9dc5",
     "missing": [],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      1280,
      720
     ],
-    "zoom": 1.176
+    "zoom": 1.176,
+    "fit": 1.176,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -59,12 +66,19 @@
     "digest": "1d38465b",
     "missing": [],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      1280,
      720
     ],
-    "zoom": 1.176
+    "zoom": 1.176,
+    "fit": 1.176,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -79,7 +93,7 @@
    "state": {
     "source": "authoritative",
     "state": "fighting",
-    "tick": 193,
+    "tick": 194,
     "fought": true,
     "hp": 90,
     "hpMax": 90,
@@ -88,15 +102,22 @@
      "y": 0
     },
     "enemyAlive": true,
-    "digest": "e5a5006b",
+    "digest": "61f861ba",
     "missing": [],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      1280,
      720
     ],
-    "zoom": 1.176
+    "zoom": 1.176,
+    "fit": 1.176,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -125,12 +146,19 @@
      "sentry light W"
     ],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      1280,
      720
     ],
-    "zoom": 1.176
+    "zoom": 1.176,
+    "fit": 1.176,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -157,12 +185,19 @@
     "digest": "23e59215",
     "missing": [],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      1280,
      720
     ],
-    "zoom": 1.176
+    "zoom": 1.176,
+    "fit": 1.176,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -191,12 +226,19 @@
      "adventurer reaction W"
     ],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      1280,
      720
     ],
-    "zoom": 1.176
+    "zoom": 1.176,
+    "fit": 1.176,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -225,12 +267,19 @@
      "sentry light W"
     ],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      1280,
      720
     ],
-    "zoom": 1.176
+    "zoom": 1.176,
+    "fit": 1.176,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -257,12 +306,19 @@
     "digest": "61ee37f0",
     "missing": [],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      1280,
      720
     ],
-    "zoom": 1.176
+    "zoom": 1.176,
+    "fit": 1.176,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -291,12 +347,101 @@
      "sentry light W"
     ],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      1280,
      720
     ],
-    "zoom": 1.176
+    "zoom": 1.176,
+    "fit": 1.176,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-desktop-action-cam.png",
+   "viewport": [
+    1280,
+    720
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=sentry&ticks=175&hold&cam=action",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 175,
+    "fought": true,
+    "hp": 74,
+    "hpMax": 90,
+    "hero": {
+     "x": -65.8,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "788670eb",
+    "missing": [
+     "sentry light W"
+    ],
+    "speed": 1,
+    "build": "2a48ead",
+    "viewport": [
+     1280,
+     720
+    ],
+    "zoom": 1.9049426671392342,
+    "fit": 1.176,
+    "cam": {
+     "mode": "action",
+     "step": 0,
+     "x": -1.7,
+     "y": 16.1
+    }
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-desktop-zoom-2.png",
+   "viewport": [
+    1280,
+    720
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=sentry&ticks=175&hold&cam=zoom2",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 175,
+    "fought": true,
+    "hp": 74,
+    "hpMax": 90,
+    "hero": {
+     "x": -65.8,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "788670eb",
+    "missing": [
+     "sentry light W"
+    ],
+    "speed": 1,
+    "build": "2a48ead",
+    "viewport": [
+     1280,
+     720
+    ],
+    "zoom": 2.8224000000000005,
+    "fit": 1.176,
+    "cam": {
+     "mode": "manual",
+     "step": 2,
+     "x": -1.7,
+     "y": 16.1
+    }
    },
    "errors": []
   },
@@ -323,12 +468,19 @@
     "digest": "61ee37f0",
     "missing": [],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      1280,
      720
     ],
-    "zoom": 1.176
+    "zoom": 1.176,
+    "fit": 1.176,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -355,12 +507,19 @@
     "digest": "61f861ba",
     "missing": [],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      1920,
      1080
     ],
-    "zoom": 1.5
+    "zoom": 1.5,
+    "fit": 1.5,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -387,12 +546,19 @@
     "digest": "811c9dc5",
     "missing": [],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      390,
      844
     ],
-    "zoom": 0.609375
+    "zoom": 0.609375,
+    "fit": 0.609375,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -407,24 +573,31 @@
    "state": {
     "source": "authoritative",
     "state": "travelling",
-    "tick": 45,
+    "tick": 44,
     "fought": false,
     "hp": 90,
     "hpMax": 90,
     "hero": {
-     "x": -138.2,
+     "x": -140.4,
      "y": 0
     },
     "enemyAlive": true,
-    "digest": "3d3d2ed5",
+    "digest": "cddcd849",
     "missing": [],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      390,
      844
     ],
-    "zoom": 0.609375
+    "zoom": 0.609375,
+    "fit": 0.609375,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -451,12 +624,19 @@
     "digest": "61f861ba",
     "missing": [],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      390,
      844
     ],
-    "zoom": 0.609375
+    "zoom": 0.609375,
+    "fit": 0.609375,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -471,7 +651,7 @@
    "state": {
     "source": "authoritative",
     "state": "fighting",
-    "tick": 173,
+    "tick": 175,
     "fought": true,
     "hp": 74,
     "hpMax": 90,
@@ -480,17 +660,24 @@
      "y": 0
     },
     "enemyAlive": true,
-    "digest": "5e2bdb73",
+    "digest": "788670eb",
     "missing": [
      "sentry light W"
     ],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      390,
      844
     ],
-    "zoom": 0.609375
+    "zoom": 0.609375,
+    "fit": 0.609375,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -517,12 +704,19 @@
     "digest": "23e59215",
     "missing": [],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      390,
      844
     ],
-    "zoom": 0.609375
+    "zoom": 0.609375,
+    "fit": 0.609375,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -551,12 +745,19 @@
      "adventurer reaction W"
     ],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      390,
      844
     ],
-    "zoom": 0.609375
+    "zoom": 0.609375,
+    "fit": 0.609375,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -585,12 +786,19 @@
      "sentry light W"
     ],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      390,
      844
     ],
-    "zoom": 0.609375
+    "zoom": 0.609375,
+    "fit": 0.609375,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -617,12 +825,19 @@
     "digest": "61ee37f0",
     "missing": [],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      390,
      844
     ],
-    "zoom": 0.609375
+    "zoom": 0.609375,
+    "fit": 0.609375,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -651,12 +866,101 @@
      "sentry light W"
     ],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      390,
      844
     ],
-    "zoom": 0.609375
+    "zoom": 0.609375,
+    "fit": 0.609375,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-portrait-action-cam.png",
+   "viewport": [
+    390,
+    844
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=sentry&ticks=175&hold&cam=action",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 175,
+    "fought": true,
+    "hp": 74,
+    "hpMax": 90,
+    "hero": {
+     "x": -65.8,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "788670eb",
+    "missing": [
+     "sentry light W"
+    ],
+    "speed": 1,
+    "build": "2a48ead",
+    "viewport": [
+     390,
+     844
+    ],
+    "zoom": 1.1054430659691563,
+    "fit": 0.609375,
+    "cam": {
+     "mode": "action",
+     "step": 0,
+     "x": -1.7,
+     "y": 16.1
+    }
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-portrait-zoom-2.png",
+   "viewport": [
+    390,
+    844
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=sentry&ticks=175&hold&cam=zoom2",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 175,
+    "fought": true,
+    "hp": 74,
+    "hpMax": 90,
+    "hero": {
+     "x": -65.8,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "788670eb",
+    "missing": [
+     "sentry light W"
+    ],
+    "speed": 1,
+    "build": "2a48ead",
+    "viewport": [
+     390,
+     844
+    ],
+    "zoom": 1.4625,
+    "fit": 0.609375,
+    "cam": {
+     "mode": "manual",
+     "step": 2,
+     "x": -1.7,
+     "y": 16.1
+    }
    },
    "errors": []
   },
@@ -683,12 +987,19 @@
     "digest": "61ee37f0",
     "missing": [],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      390,
      844
     ],
-    "zoom": 0.609375
+    "zoom": 0.609375,
+    "fit": 0.609375,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -715,12 +1026,19 @@
     "digest": "811c9dc5",
     "missing": [],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      844,
      390
     ],
-    "zoom": 0.606
+    "zoom": 0.606,
+    "fit": 0.606,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -747,12 +1065,19 @@
     "digest": "3d3d2ed5",
     "missing": [],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      844,
      390
     ],
-    "zoom": 0.606
+    "zoom": 0.606,
+    "fit": 0.606,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -767,7 +1092,7 @@
    "state": {
     "source": "authoritative",
     "state": "fighting",
-    "tick": 193,
+    "tick": 194,
     "fought": true,
     "hp": 90,
     "hpMax": 90,
@@ -776,15 +1101,22 @@
      "y": 0
     },
     "enemyAlive": true,
-    "digest": "e5a5006b",
+    "digest": "61f861ba",
     "missing": [],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      844,
      390
     ],
-    "zoom": 0.606
+    "zoom": 0.606,
+    "fit": 0.606,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -813,12 +1145,19 @@
      "sentry light W"
     ],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      844,
      390
     ],
-    "zoom": 0.606
+    "zoom": 0.606,
+    "fit": 0.606,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -845,12 +1184,19 @@
     "digest": "23e59215",
     "missing": [],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      844,
      390
     ],
-    "zoom": 0.606
+    "zoom": 0.606,
+    "fit": 0.606,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -879,12 +1225,19 @@
      "adventurer reaction W"
     ],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      844,
      390
     ],
-    "zoom": 0.606
+    "zoom": 0.606,
+    "fit": 0.606,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -913,12 +1266,19 @@
      "sentry light W"
     ],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      844,
      390
     ],
-    "zoom": 0.606
+    "zoom": 0.606,
+    "fit": 0.606,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -945,12 +1305,19 @@
     "digest": "61ee37f0",
     "missing": [],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      844,
      390
     ],
-    "zoom": 0.606
+    "zoom": 0.606,
+    "fit": 0.606,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   },
@@ -979,12 +1346,101 @@
      "sentry light W"
     ],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      844,
      390
     ],
-    "zoom": 0.606
+    "zoom": 0.606,
+    "fit": 0.606,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-landscape-action-cam.png",
+   "viewport": [
+    844,
+    390
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=sentry&ticks=175&hold&cam=action",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 175,
+    "fought": true,
+    "hp": 74,
+    "hpMax": 90,
+    "hero": {
+     "x": -65.8,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "788670eb",
+    "missing": [
+     "sentry light W"
+    ],
+    "speed": 1,
+    "build": "2a48ead",
+    "viewport": [
+     844,
+     390
+    ],
+    "zoom": 0.981628619291136,
+    "fit": 0.606,
+    "cam": {
+     "mode": "action",
+     "step": 0,
+     "x": -1.7,
+     "y": 16.1
+    }
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-landscape-zoom-2.png",
+   "viewport": [
+    844,
+    390
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=sentry&ticks=175&hold&cam=zoom2",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 175,
+    "fought": true,
+    "hp": 74,
+    "hpMax": 90,
+    "hero": {
+     "x": -65.8,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "788670eb",
+    "missing": [
+     "sentry light W"
+    ],
+    "speed": 1,
+    "build": "2a48ead",
+    "viewport": [
+     844,
+     390
+    ],
+    "zoom": 1.4544,
+    "fit": 0.606,
+    "cam": {
+     "mode": "manual",
+     "step": 2,
+     "x": -1.7,
+     "y": 16.1
+    }
    },
    "errors": []
   },
@@ -1011,12 +1467,19 @@
     "digest": "61ee37f0",
     "missing": [],
     "speed": 1,
-    "build": "0f7ffed",
+    "build": "2a48ead",
     "viewport": [
      844,
      390
     ],
-    "zoom": 0.606
+    "zoom": 0.606,
+    "fit": 0.606,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
    },
    "errors": []
   }
