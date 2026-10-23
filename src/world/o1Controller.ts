@@ -109,7 +109,7 @@ export class O1Controller {
     const S = this.fight!;
     this.sim.step(S);
     this.fightTicks++;
-    this.hp = S.p.hp;
+    this.hp = Math.max(0, S.p.hp);
     const e = S.enemies[0];
     this.enemy.x = e.x; this.enemy.y = e.y; this.enemy.face = e.face; this.enemy.alive = !e.dead;
     if (S.over) {
