@@ -1,0 +1,22 @@
+{
+  "name": "Unmoored Surveyor",
+  "note": "Secret pocket for the optional special key. Out of the slice: geometry only, no encounter, and no route in requires it (P16). Trial settings; positions and detection values are not design locks. No environment art yet. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "authored",
+  "solids": {
+    "rects": [],
+    "circles": [
+      {
+        "id": "slab",
+        "x": 0,
+        "y": 0,
+        "r": 60
+      }
+    ]
+  },
+  "encounters": {},
+  "detection": {
+    "range": 160,
+    "arcDegrees": 120,
+    "alertRadius": 120
+  }
+}

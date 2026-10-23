@@ -1,0 +1,55 @@
+{
+  "name": "Tower Barracks",
+  "note": "Telegraphed pair: the Harrier shows across the yard before the Sentry closes in. Doors lead on to the Bell Warden and the crypt gallery. Trial settings; positions and detection values are not design locks. No environment art yet. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "authored",
+  "entryDoor": "to-T1",
+  "exitDoor": "to-K3",
+  "solids": {
+    "rects": [
+      [
+        -130,
+        -170,
+        -70,
+        -90
+      ]
+    ],
+    "circles": [
+      {
+        "id": "brazier",
+        "x": -100,
+        "y": 190,
+        "r": 30
+      },
+      {
+        "id": "post",
+        "x": 170,
+        "y": -30,
+        "r": 26
+      }
+    ]
+  },
+  "encounters": {
+    "harrierSentry": {
+      "name": "Harrier and Sentry",
+      "enemies": [
+        {
+          "arch": "harrier",
+          "x": 120,
+          "y": -110,
+          "facing": "W"
+        },
+        {
+          "arch": "sentry",
+          "x": 50,
+          "y": 70,
+          "facing": "NW"
+        }
+      ]
+    }
+  },
+  "detection": {
+    "range": 220,
+    "arcDegrees": 140,
+    "alertRadius": 140
+  }
+}

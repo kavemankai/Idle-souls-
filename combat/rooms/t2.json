@@ -1,8 +1,8 @@
 {
   "id": "T2",
   "name": "Tower Barracks",
-  "note": "Generated placeholder geometry from the room schedule and connections. Valid walls and doors, not tuned and not art-reviewed. Local frame: centre (0,0), x east, y south, simulation units.",
-  "status": "generated",
+  "note": "Telegraphed pair: the Harrier shows across the yard before the Sentry closes in. Doors lead on to the Bell Warden and the crypt gallery. Trial settings; positions and detection values are not design locks. No environment art yet. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "authored",
   "plan": {
     "center": {
       "x": 2600,
@@ -27,9 +27,23 @@
       [-340, 87, -280, 240],
       [280, -240, 340, -207],
       [280, -33, 340, 33],
-      [280, 207, 340, 240]
+      [280, 207, 340, 240],
+      [-130, -170, -70, -90]
     ],
-    "circles": []
+    "circles": [
+      {
+        "id": "brazier",
+        "x": -100,
+        "y": 190,
+        "r": 30
+      },
+      {
+        "id": "post",
+        "x": 170,
+        "y": -30,
+        "r": 26
+      }
+    ]
   },
   "doors": [
     {
@@ -95,10 +109,38 @@
       "x": [-87, 87]
     }
   ],
-  "encounters": {},
+  "entryDoor": "to-T1",
+  "exitDoor": "to-K3",
+  "encounters": {
+    "harrierSentry": {
+      "name": "Harrier and Sentry",
+      "enemies": [
+        {
+          "arch": "harrier",
+          "x": 120,
+          "y": -110,
+          "facing": "W"
+        },
+        {
+          "arch": "sentry",
+          "x": 50,
+          "y": 70,
+          "facing": "NW"
+        }
+      ]
+    }
+  },
   "detection": {
-    "range": 160,
-    "arcDegrees": 120,
-    "alertRadius": 120
+    "range": 220,
+    "arcDegrees": 140,
+    "alertRadius": 140
+  },
+  "entry": {
+    "x": -280,
+    "y": 0
+  },
+  "threshold": {
+    "x": 280,
+    "y": [33, 207]
   }
 }

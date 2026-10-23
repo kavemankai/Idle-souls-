@@ -1,0 +1,54 @@
+{
+  "name": "Crypt Threshold",
+  "note": "Threat warning, not a trap: the Sentry stands where it is seen from the door, the Spitter is staged further in and far from the exit. Trial settings; positions and detection values are not design locks. No environment art yet. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "authored",
+  "entryDoor": "to-S2",
+  "exitDoor": "to-K2",
+  "solids": {
+    "rects": [],
+    "circles": [
+      {
+        "id": "column-a",
+        "x": 60,
+        "y": -115,
+        "r": 30
+      },
+      {
+        "id": "column-b",
+        "x": 60,
+        "y": 115,
+        "r": 30
+      },
+      {
+        "id": "column-c",
+        "x": -130,
+        "y": -120,
+        "r": 24
+      }
+    ]
+  },
+  "encounters": {
+    "sentrySpitter": {
+      "name": "Sentry and Spitter",
+      "enemies": [
+        {
+          "arch": "sentry",
+          "x": 110,
+          "y": -170,
+          "facing": "SW"
+        },
+        {
+          "arch": "spitter",
+          "x": 190,
+          "y": 150,
+          "facing": "NW"
+        }
+      ]
+    }
+  },
+  "detection": {
+    "range": 220,
+    "arcDegrees": 140,
+    "alertRadius": 140
+  }
+}

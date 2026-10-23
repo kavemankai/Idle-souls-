@@ -119,7 +119,7 @@ if (process.argv[1]?.endsWith('build-rooms.ts')) {
   if (write) { for (const [p, t] of Object.entries(want)) writeFileSync(p, t); console.log(`wrote ${Object.keys(want).length} files`); }
   if (check) {
     const bad = Object.entries(want).filter(([p, t]) => !existsSync(p) || readFileSync(p, 'utf8') !== t).map(([p]) => p);
-    const stray = readdirSync(ROOMS_DIR).filter(f => f.endsWith('.json') && !Object.keys(want).some(p => p.endsWith(`/${f}`)));
+    const stray = readdirSync(ROOMS_DIR).filter(f => f.endsWith('.json') && f !== 'ENCOUNTER_CONTRACT.json' && !Object.keys(want).some(p => p.endsWith(`/${f}`)));
     if (bad.length || stray.length) { console.error(`out of date: ${[...bad, ...stray.map(s => `${s} (not generated)`)].join(', ')}\nrun npm run world:build`); process.exit(1); }
     console.log(`world files are current (${Object.keys(want).length} files)`);
   }

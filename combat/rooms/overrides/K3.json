@@ -1,0 +1,59 @@
+{
+  "name": "Upper Crypt",
+  "note": "Long upper approach, an alternative to the south. Either a Duelist or a Harrier and Sentry holds it; the east door to the special pocket stays shut. Trial settings; positions and detection values are not design locks. No environment art yet. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "authored",
+  "entryDoor": "to-T2",
+  "exitDoor": "to-K2",
+  "solids": {
+    "rects": [],
+    "circles": [
+      {
+        "id": "pillar-n",
+        "x": -100,
+        "y": -115,
+        "r": 26
+      },
+      {
+        "id": "pillar-e",
+        "x": 120,
+        "y": -110,
+        "r": 26
+      }
+    ]
+  },
+  "encounters": {
+    "duelist": {
+      "name": "Crypt Duelist",
+      "enemies": [
+        {
+          "arch": "duelist",
+          "x": 60,
+          "y": -30,
+          "facing": "W"
+        }
+      ]
+    },
+    "harrierSentry": {
+      "name": "Harrier and Sentry",
+      "enemies": [
+        {
+          "arch": "harrier",
+          "x": 200,
+          "y": -100,
+          "facing": "SW"
+        },
+        {
+          "arch": "sentry",
+          "x": -30,
+          "y": -60,
+          "facing": "SE"
+        }
+      ]
+    }
+  },
+  "detection": {
+    "range": 220,
+    "arcDegrees": 140,
+    "alertRadius": 140
+  }
+}

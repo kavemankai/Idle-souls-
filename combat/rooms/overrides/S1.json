@@ -1,0 +1,49 @@
+{
+  "name": "Sludge Ford",
+  "note": "Hazard warning room with an open escape back west. The Spitter's ground hazard is not built; the pillars stand in for the ford's stepping stones. Trial settings; positions and detection values are not design locks. No environment art yet. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "authored",
+  "entryDoor": "to-O3",
+  "exitDoor": "to-S2",
+  "solids": {
+    "rects": [
+      [
+        20,
+        90,
+        80,
+        160
+      ]
+    ],
+    "circles": [
+      {
+        "id": "stone-a",
+        "x": -100,
+        "y": -120,
+        "r": 30
+      },
+      {
+        "id": "stone-b",
+        "x": 100,
+        "y": -110,
+        "r": 26
+      }
+    ]
+  },
+  "encounters": {
+    "spitter": {
+      "name": "Silt Spitter",
+      "enemies": [
+        {
+          "arch": "spitter",
+          "x": 150,
+          "y": -50,
+          "facing": "SW"
+        }
+      ]
+    }
+  },
+  "detection": {
+    "range": 220,
+    "arcDegrees": 140,
+    "alertRadius": 140
+  }
+}
