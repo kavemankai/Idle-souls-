@@ -3,7 +3,7 @@
 export const FACINGS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'] as const;
 export type Facing = typeof FACINGS[number];
 export type ActorKind = 'mannequin' | 'adventurer' | 'sentry' | 'mireling';
-export type Action = 'idle' | 'walk' | 'guard' | 'light' | 'heavy' | 'bash' | 'leap' | 'dodge' | 'reaction';
+export type Action = 'idle' | 'walk' | 'guard' | 'light' | 'heavy' | 'bash' | 'leap' | 'dodge' | 'reaction' | 'death';
 export type Phase = 'windup' | 'active' | 'recovery';
 export interface ActorView {
   readonly id: string;

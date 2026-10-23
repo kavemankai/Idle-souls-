@@ -220,7 +220,7 @@ export class O1Scene extends Phaser.Scene {
       this.acc += Math.min(delta, 100) * this.speed;
       while (this.acc >= TICK_MS && !c.terminal) { c.step(); this.acc -= TICK_MS; }
     }
-    const snapshot = this.adapter.read();
+    const snapshot = this.adapter.read(delta);
     this.moveCamera(delta, snapshot);
     const [hero, enemy] = snapshot.actors;
     const results = [this.hero.draw(hero, this.debug, this.reduced)];

@@ -14,7 +14,7 @@ type View = Pick<ActorView, 'action' | 'phase' | 'progress'>;
 
 /** Read-only mapping from a simulator fighter to a presentation pose. Nothing here feeds back into the fight. */
 export function poseOf(f: SimFighter, S: SimFight): View {
-  if (f.dead || f.hp <= 0) return { action: 'reaction', phase: 'recovery', progress: .9 };
+  if (f.dead || f.hp <= 0) return { action: 'death', phase: 'recovery', progress: 1 };
   if (f.stagger > 0) return { action: 'reaction', phase: 'active', progress: .5 };
   const m = f.act;
   if (m) {
@@ -35,21 +35,38 @@ export function poseOf(f: SimFighter, S: SimFight): View {
 
 export class O1PresentationAdapter implements PresentationAdapter {
   private build?: BuildView;
+  private visualMs = 0;
+  private firstDeadMs = new Map<string, number>();
+  /** Cosmetic fall timing never calls sim.step or changes authoritative fighter state. */
+  private deathPose(id: string): View {
+    if (!this.firstDeadMs.has(id)) this.firstDeadMs.set(id, this.visualMs);
+    const age = this.visualMs - this.firstDeadMs.get(id)!;
+    const phase: Phase = age < 140 ? 'windup' : age < 310 ? 'active' : 'recovery';
+    return { action: 'death', phase, progress: phase === 'recovery' ? 1 : 0 };
+  }
   constructor(private readonly c: O1Controller) {}
-  read(): PresentationSnapshot {
+  read(deltaMs = 0): PresentationSnapshot {
+    this.visualMs += Math.max(0, Math.min(250, deltaMs));
     const c = this.c, S = c.fight;
     const kind = c.cfg.opponent as ActorKind;
     const facing = (a: number) => facingFromVector(Math.cos(a), Math.sin(a));
     const live = c.state === 'fighting' || (S !== null && (c.state === 'defeated' || c.state === 'unresolved'));
+    const viewPose = (id: string, f: SimFighter): View => (f.dead || f.hp <= 0) ? this.deathPose(id) : poseOf(f, S!);
     let hero: ActorView, enemy: ActorView;
     if (live && S) {
       const e = S.enemies[0];
-      hero = { id: 'hero', kind: 'adventurer', x: S.p.x, y: S.p.y, facing: facing(S.p.face), ...poseOf(S.p, S), visible: true };
-      enemy = { id: 'enemy', kind, x: e.x, y: e.y, facing: facing(e.face), ...poseOf(e, S), visible: !e.dead };
+      hero = { id: 'hero', kind: 'adventurer', x: S.p.x, y: S.p.y, facing: facing(S.p.face), ...viewPose('hero', S.p), visible: true };
+      enemy = { id: 'enemy', kind, x: e.x, y: e.y, facing: facing(e.face), ...viewPose('enemy', e), visible: true };
     } else {
       const walking = c.state === 'travelling' && c.hero.moving;
       hero = { id: 'hero', kind: 'adventurer', x: c.hero.x, y: c.hero.y, facing: facing(c.hero.face), action: walking ? 'walk' : 'idle', phase: 'active', progress: walking ? (c.tick % 18) / 18 : 0, visible: true };
-      enemy = { id: 'enemy', kind, x: c.enemy.x, y: c.enemy.y, facing: facing(c.enemy.face), action: 'idle', phase: 'active', progress: 0, visible: c.enemy.alive };
+      // Preserve the corpse at the last authoritative position after victory.
+      if (S && !c.enemy.alive && (S.enemies[0].dead || S.enemies[0].hp <= 0)) {
+        const e = S.enemies[0];
+        enemy = { id: 'enemy', kind, x: e.x, y: e.y, facing: facing(e.face), ...this.deathPose('enemy'), visible: true };
+      } else {
+        enemy = { id: 'enemy', kind, x: c.enemy.x, y: c.enemy.y, facing: facing(c.enemy.face), action: 'idle', phase: 'active', progress: 0, visible: c.enemy.alive };
+      }
     }
     this.build ??= buildView(c.sim, c.stats, c.cfg.focus, c.cfg.doctrine);
     return { source: 'authoritative', tick: c.tick, actors: [hero, enemy], build: this.build, combat: S ? combatView(c.sim, S) : undefined };
