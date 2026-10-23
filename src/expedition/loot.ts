@@ -54,6 +54,10 @@ export class Ledger {
   readonly claimed = new Set<string>();
   /** Gate Keys issued from camp at launch. */
   readonly issued: number;
+  /** Rations from the starter kit: drunk first, never banked and never put in a cache (they are not loot). */
+  kitRations = 0;
+  /** Rations drunk this expedition, from the kit or from loot. */
+  rationsUsed = 0;
   private readonly taken = new Set<string>();
   private readonly paid = new Set<string>();
   constructor(cache: Cache | null = null, issued = 0, private readonly priorClaims: ReadonlySet<string> = new Set(), private readonly priorOpen: ReadonlySet<string> = new Set()) {
@@ -87,6 +91,16 @@ export class Ledger {
     if (!c) return null;
     this.cache = null; this.recovered = c;
     return this.add({ source: 'cache', room: c.room, label: 'recovery cache', bundle: cloneBank(c.contents) });
+  }
+  get rations(): number { return this.kitRations + (this.carried.supplies.ration ?? 0); }
+  /** Drink one ration: the kit's first, then a found one. Returns where it came from, or null when none is left. */
+  useRation(): 'kit' | 'found' | null {
+    if (this.kitRations > 0) { this.kitRations--; this.rationsUsed++; return 'kit'; }
+    const n = this.carried.supplies.ration ?? 0;
+    if (n < 1) return null;
+    this.carried = { ...this.carried, supplies: { ...this.carried.supplies, ration: n - 1 } };
+    this.rationsUsed++;
+    return 'found';
   }
   /** Spend one prepared (eligible) key to open a sealed gate for good. Fresh keys cannot do this (L19). Returns false and changes nothing when no eligible key is carried. */
   spendKey(link: string): boolean {

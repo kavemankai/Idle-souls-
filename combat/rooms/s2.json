@@ -1,8 +1,8 @@
 {
   "id": "S2",
   "name": "Broken Pump",
-  "note": "Generated placeholder geometry from the room schedule and connections. Valid walls and doors, not tuned and not art-reviewed. Local frame: centre (0,0), x east, y south, simulation units.",
-  "status": "generated",
+  "note": "Trial settings. The slice's one sanctuary lies near the pump (doc 09): a safe place to rest once and choose one temporary upgrade. It never banks. Enemies and cover are authored separately. Local frame: centre (0,0), x east, y south, simulation units. World centre (2750,2780).",
+  "status": "authored",
   "plan": {
     "center": {
       "x": 2750,
@@ -80,6 +80,10 @@
     }
   ],
   "encounters": {},
+  "sanctuary": {
+    "x": 140,
+    "y": -150
+  },
   "detection": {
     "range": 160,
     "arcDegrees": 120,

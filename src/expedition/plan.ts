@@ -1,6 +1,7 @@
 import type { SimDoctrine } from '../combat/simApi';
 import type { WorldGraph } from '../world/worldGraph';
 import type { Cache } from '../save/saveTypes';
+import type { UpgradeId } from '../progression/experience';
 import { gates } from '../world/gates';
 import { WorldGraph as WG } from '../world/worldGraph';
 import { planRooms, type RoutePlan, type RouteStyle } from './planner';
@@ -22,10 +23,16 @@ export interface ExpeditionPlan {
   /** Head for camp at the next junction once health falls below this share of the maximum. 0 turns it off. */
   retreatHpPct: number;
   returnRoute: ReturnRoute;
+  /** Drink a ration when health falls below this share and no enemy is near (0 turns drinking off). Needs progression to be on. */
+  drinkBelowPct: number;
+  /** Head home once rations, after at least one was drunk, are at or below this many (0 turns it off). Doc 04's healing reserve. */
+  healingReserve: number;
+  /** The sanctuary's one major choice. The plan makes it, so an unattended expedition never waits. */
+  sanctuaryChoice: UpgradeId;
 }
 export const MAX_OBJECTIVES = 5;
 export const CAMP = 'C0';
-export const defaultPlan = (): ExpeditionPlan => ({ objectives: [], avoid: [], exploration: 'safe', doctrine: 'measured', retreatHpPct: 40, returnRoute: 'safest' });
+export const defaultPlan = (): ExpeditionPlan => ({ objectives: [], avoid: [], exploration: 'safe', doctrine: 'measured', retreatHpPct: 40, returnRoute: 'safest', drinkBelowPct: 50, healingReserve: 0, sanctuaryChoice: 'steadfast' });
 
 /** Rooms the player has seen. A room next to a seen room by an ordinary link is a frontier room: known to exist, not yet entered. */
 export function frontierRooms(graph: WorldGraph, known: ReadonlySet<string>, open: ReadonlySet<string> = new Set()): string[] {

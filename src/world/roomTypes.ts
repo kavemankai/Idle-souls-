@@ -30,6 +30,8 @@ export interface RoomManifest {
   entry?: { x: number; y: number }; threshold?: { x: number; y: [number, number] };
   encounters: Record<string, EncounterSpec>;
   pickups?: Pickup[];
+  /** A safe place to rest (doc 09): one rest and one upgrade choice per expedition. It never banks, secures a cache or extracts. */
+  sanctuary?: { x: number; y: number };
   detection: { range: number; arcDegrees: number; alertRadius: number };
 }
 export interface WorldRoom { id: string; name: string; region: string; center: { x: number; y: number }; floor: { w: number; h: number }; difficulty: string; candidateEncounter: string; purpose: string; status: string }
