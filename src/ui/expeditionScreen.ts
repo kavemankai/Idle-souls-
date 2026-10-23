@@ -1,9 +1,6 @@
 import { loadSim } from '../combat/loadSimBrowser';
 import type { SimApi, SimDoctrine } from '../combat/simApi';
 import { WorldGraph } from '../world/worldGraph';
-import { ROOMS } from '../world/roomRegistry';
-import { toWorld } from '../world/worldRunner';
-import { DANGER } from '../expedition/planner';
 import { gates, needText } from '../world/gates';
 import { CAMP, MAX_OBJECTIVES, defaultPlan, frontierRooms, name, preflight, type Exploration, type ExpeditionPlan, type Objective, type ObjectiveKind, type ReturnRoute } from '../expedition/plan';
 import { finishChronicle, runExpedition, startExpedition, type ExpeditionConfig, type ExpeditionRun } from '../expedition/run';
@@ -14,6 +11,14 @@ import { MAX_DESIGN_LEVEL } from '../progression/levelTable';
 import { settle, type Settlement } from '../expedition/settle';
 import { LocalStore, MemoryStore, exportSave, importSave, load, persist, type SaveStore } from '../save/save';
 import type { Save } from '../save/saveTypes';
+import { PrefsStore } from './prefs';
+import { History, entryId } from './history';
+import { applyPalette } from './palette';
+import { drawWorldMap } from './mapDraw';
+import { CampMap } from './mapScreen';
+import { Guide, glossaryDrawer } from './onboarding';
+import { ExpeditionAudio } from './audioCues';
+import { describeDeath, renderChronicle } from './chronicleView';
 import './expedition.css';
 
 const KNOWLEDGE: Record<string, { label: string; rooms: string[] | 'all' }> = {
@@ -32,6 +37,8 @@ const PRESETS: Record<string, Preset> = {
   careful: { label: 'Careful sweep', plan: { objectives: [['reach', 'O3'], ['reach', 'KT']], exploration: 'safe', doctrine: 'guarded', retreatHpPct: 60 } },
 };
 const STATUS_LABEL: Record<string, string> = { confirmed: 'Known route', frontier: 'Ends at unexplored ground', blocked: 'Blocked', conflicted: 'Conflicted' };
+/** A text mark in front of the feed lines that matter, so no kind is told apart by colour alone. */
+const MARK: Record<string, string> = { discovery: '◇ ', retreat: '↩ ', redirect: '↪ ', sanctuary: '✚ ', end: '■ ', level: '▲ ', loot: '● ' };
 const OBJ_LABEL: Record<string, string> = { queued: 'Queued', active: 'Active', completed: 'Completed', skipped_blocked: 'Skipped, blocked', cancelled: 'Cancelled', suspended: 'Suspended by retreat' };
 
 type Kids = (Node | string | null | false)[];
@@ -79,15 +86,65 @@ export function mountExpedition(root: HTMLElement) {
   let startLevel = Math.max(1, Math.min(MAX_DESIGN_LEVEL, Math.round(Number(params.get('startlevel')) || 1)));
   const cfg = (): ExpeditionConfig => ({ seed, level, focus, progression: progressOn ? { startLevel } : undefined, plan: { ...plan, objectives: objectives.map(o => ({ ...o })), avoid: plan.avoid.slice() }, known: [...known()], hpOverride, cache: save.camp.cache, issueKeys: Math.min(issue, 2, save.camp.bank.keys), claims: save.world.claims, openLinks: save.world.openedLinks });
 
+  // Per-device settings and the Chronicle history live under their own keys, never in the save. ?save=memory keeps them in memory too (tests).
+  const memory = params.get('save') === 'memory';
+  const prefs = new PrefsStore(memory ? new MemoryStore() : new LocalStore('idle-souls.prefs'));
+  const history = new History(memory ? new MemoryStore() : new LocalStore('idle-souls.history'));
+  const guide = new Guide(prefs);
+  const campMap = new CampMap();
+  // The visual pair of every cue: a line of text in a live region that stays on every screen.
+  const cueBanner = h('p', { class: 'cue-banner', id: 'cue-banner', role: 'status', 'aria-live': 'polite' });
+  const audio = new ExpeditionAudio((text) => {
+    cueBanner.textContent = text; cueBanner.classList.remove('flash'); void cueBanner.offsetWidth; cueBanner.classList.add('flash');
+  });
+  audio.setLevels(prefs.get().music, prefs.get().effects);
+  window.__EXPEDITION_AUDIO__ = audio;
+  const motionQuery = typeof matchMedia === 'function' ? matchMedia('(prefers-reduced-motion: reduce)') : null;
+  let view: 'plan' | 'run' | 'history' | 'entry' = 'plan';
+  let entryOpen = '';
+
   const screen = h('div', { class: 'xp', id: 'xp' });
+  applyPalette(screen);
   root.append(screen);
+  function applyPrefs() {
+    screen.classList.toggle('big', prefs.get().bigText);
+    screen.classList.toggle('calm', prefs.reducedMotion(!!motionQuery?.matches));
+  }
+  applyPrefs();
+  motionQuery?.addEventListener?.('change', applyPrefs);
+  /** Skip link, settings row and the cue banner: shown on every screen. Each control is a labelled button of at least 44 px. */
+  /** While an expedition is out, the buttons that would leave the screen are off, so a stray press cannot drop the run. */
+  const busy = () => view === 'run' && !!run && !run.world.terminal;
+  function toolbar(): Node {
+    const wrap = h('div', { id: 'tools' });
+    const rerender = () => wrap.replaceChildren(...build());
+    wrap.append(...build());
+    return wrap;
+    function build(): Node[] {
+    const p = prefs.get();
+    return [
+      h('a', { class: 'skip-link', href: '#main', onclick: (e) => { e.preventDefault(); (screen.querySelector('#main') as HTMLElement | null)?.focus(); } }, 'Skip to main content'),
+      h('div', { class: 'toolbar', role: 'toolbar', 'aria-label': 'Settings' },
+        h('button', { type: 'button', id: 'help-btn', disabled: busy(), onclick: () => { guide.open(); view = 'plan'; renderPlan(); } }, 'Help'),
+        h('button', { type: 'button', id: 'history-btn', disabled: busy(), onclick: () => { cancelAnimationFrame(raf); run = null; renderHistory(); } }, 'Past expeditions'),
+        h('button', { type: 'button', id: 'bigtext', 'aria-pressed': String(p.bigText), onclick: () => { prefs.set({ bigText: !prefs.get().bigText }); applyPrefs(); rerender(); } }, 'Larger text'),
+        h('button', { type: 'button', id: 'calm-btn', 'aria-pressed': String(prefs.reducedMotion(!!motionQuery?.matches)), onclick: () => { prefs.set({ reduceMotion: !prefs.reducedMotion(!!motionQuery?.matches) }); applyPrefs(); rerender(); } }, 'Reduce motion'),
+        h('button', { type: 'button', id: 'audio-btn', 'aria-pressed': String(audio.enabled), onclick: () => { if (audio.enabled) audio.disable(); else audio.enable(); rerender(); } }, audio.enabled ? 'Audio on' : 'Enable audio'),
+        audio.enabled ? h('label', { class: 'vol' }, 'Music', h('input', { type: 'range', id: 'vol-music', min: '0', max: '100', value: String(Math.round(p.music * 100)), oninput: (e) => { const v = Number((e.target as HTMLInputElement).value) / 100; prefs.set({ music: v }); audio.setLevels(v, prefs.get().effects); } })) : null,
+        audio.enabled ? h('label', { class: 'vol' }, 'Effects', h('input', { type: 'range', id: 'vol-effects', min: '0', max: '100', value: String(Math.round(p.effects * 100)), oninput: (e) => { const v = Number((e.target as HTMLInputElement).value) / 100; prefs.set({ effects: v }); audio.setLevels(prefs.get().music, v); } })) : null),
+      cueBanner,
+    ];
+    }
+  }
 
   // ---------- Planning ----------
   function renderPlan() {
     cancelAnimationFrame(raf);
-    run = null;
+    run = null; view = 'plan';
     window.__EXPEDITION_STATE__ = () => ({ view: 'plan' });
-    screen.replaceChildren();
+    screen.replaceChildren(toolbar());
+    const main = h('main', { id: 'main', tabindex: '-1' });
+    screen.append(main);
     const k = known(), frontier = frontierRooms(graph, k, new Set(save.world.openedLinks));
     const choices = [...[...k].filter(r => r !== CAMP), ...frontier].sort((a, b) => a.localeCompare(b));
     objectives = objectives.filter(o => choices.includes(o.room));
@@ -114,10 +171,19 @@ export function mountExpedition(root: HTMLElement) {
         h('button', { type: 'button', 'aria-label': 'Remove', 'data-remove': String(i), onclick: () => { objectives.splice(i, 1); renderPlan(); } }, '✕')),
       h('p', { class: 'why' }, pf.objectives[i] ? `${STATUS_LABEL[pf.objectives[i].status]}. ${pf.objectives[i].reason}` : '')));
     const avoidable = [...k].filter(r => r !== CAMP).sort();
-    screen.append(
+    // The map previews the route to the last objective as the preflight already judged it. A conflicted plan has no drawable route, so it shows as blocked.
+    const lastPf = pf.objectives[pf.objectives.length - 1];
+    const preview = lastPf ? { route: lastPf.route ? lastPf.route.rooms : null, kind: (lastPf.status === 'confirmed' || lastPf.status === 'frontier' ? lastPf.status : 'blocked') as 'confirmed' | 'frontier' | 'blocked' } : null;
+    const mapCard = campMap.render({
+      graph, known: k, open: openSet, avoid: plan.avoid, cache: save.camp.cache, preview, atCapacity: objectives.length >= MAX_OBJECTIVES,
+      onAdd: (kind, room) => { objectives.push({ id: `o${nextId++}`, kind, room }); renderPlan(); (screen.querySelector('#add-objective') as HTMLElement | null)?.focus(); },
+      onToggleAvoid: (room) => { plan.avoid = plan.avoid.includes(room) ? plan.avoid.filter(x => x !== room) : [...plan.avoid, room]; renderPlan(); (screen.querySelector(`[data-map-avoid="${room}"]`) as HTMLElement | null)?.focus(); },
+    });
+    main.append(
       h('div', { class: 'bar' }, h('div', {}, h('p', { class: 'eyebrow' }, 'CAMP · EXPEDITION PLAN · TRIAL SETTINGS'), h('h1', {}, 'Plan an expedition')),
         h('label', { class: 'know' }, 'Map ', h('select', { id: 'knowledge', onchange: (e) => { knowledge = (e.target as HTMLSelectElement).value; renderPlan(); } },
           ...Object.entries(KNOWLEDGE).map(([v, d]) => { const op = h('option', { value: v }, d.label); if (v === knowledge) op.selected = true; return op; })))),
+      guide.render(renderPlan) ?? '',
       h('section', { class: 'card', id: 'camp-card' }, h('h2', {}, 'Camp'),
         h('p', { id: 'bank-line' }, `Banked: ${describeBank(save.camp.bank)}.`),
         h('p', { class: 'hint', id: 'tally-line' }, `${save.camp.expeditions} expedition${save.camp.expeditions === 1 ? '' : 's'}, ${save.camp.deaths} fall${save.camp.deaths === 1 ? '' : 's'}. The starter sword and shield are never lost.`),
@@ -127,6 +193,7 @@ export function mountExpedition(root: HTMLElement) {
         save.camp.cache ? h('p', { class: 'warn', id: 'cache-line' }, `A recovery cache waits in ${name(graph, save.camp.cache.room)}: ${describeBank(save.camp.cache.contents)}. A new fall before you collect it replaces it, and what it holds is lost for good.`) : h('p', { class: 'hint', id: 'cache-line' }, 'No recovery cache is waiting.'),
         save.camp.cache ? h('button', { type: 'button', id: 'add-recover', disabled: objectives.length >= MAX_OBJECTIVES || objectives.some(o => o.kind === 'recover'), onclick: () => { objectives.push({ id: `o${nextId++}`, kind: 'recover', room: save.camp.cache!.room }); renderPlan(); } }, 'Add: recover the cache') : null,
         saveNote ? h('p', { class: 'warn' }, saveNote) : null),
+      mapCard,
       h('section', { class: 'card' }, h('h2', {}, 'Quick start'),
         h('div', { class: 'presets' }, ...Object.entries(PRESETS).map(([id, p]) => h('button', { type: 'button', 'data-preset': id, onclick: () => applyPreset(p) }, p.label)))),
       h('section', { class: 'card' }, h('h2', {}, `Objectives (${objectives.length} of ${MAX_OBJECTIVES})`),
@@ -164,8 +231,9 @@ export function mountExpedition(root: HTMLElement) {
         h('p', { class: 'hint', id: 'home-line' }, objectives.length ? `Way home: ${pf.home.route ? pf.home.route.rooms.map(r => name(graph, r)).join(' > ') : pf.home.reason}` : ''),
         ...pf.messages.map(m => h('p', { class: 'warn' }, m)),
         h('p', { class: 'hint', id: 'risk-rule' }, 'Everything you win or pick up is carried and at risk until you reach camp alive. Only camp banks it: not a retreat, a quiet corner or a boss. If you fall, what you carry stays in one recovery cache where you fell.'),
-        h('button', { type: 'button', id: 'launch', class: 'primary', disabled: !pf.launchable, onclick: launch }, 'Launch expedition')));
-    if (notice) { screen.append(h('p', { class: 'warn' }, notice)); notice = ''; }
+        h('button', { type: 'button', id: 'launch', class: 'primary', disabled: !pf.launchable, onclick: launch }, 'Launch expedition')),
+      glossaryDrawer());
+    if (notice) { main.append(h('p', { class: 'warn', role: 'status' }, notice)); notice = ''; }
   }
   function applyPreset(p: Preset) {
     const k = known(), frontier = frontierRooms(graph, k);
@@ -183,17 +251,18 @@ export function mountExpedition(root: HTMLElement) {
     chronicle = null; paused = false; acc = 0; last = 0; toast = '';
     renderRun();
   }
-  const canvas = h('canvas', { id: 'map', width: 640, height: 420, role: 'img', 'aria-label': 'Expedition map' });
+  const canvas = h('canvas', { id: 'map', width: 640, height: 420, role: 'img', 'aria-label': 'Expedition map', 'aria-describedby': 'xstatus' });
   let feed: HTMLElement, objList: HTMLElement, status: HTMLElement, bar: HTMLElement, ctl: HTMLElement, result: HTMLElement, redirectSel: HTMLSelectElement;
   let feedCount = 0;
   let toast = '';
   let carriedEl: HTMLElement, levelEl: HTMLElement, sanctEl: HTMLElement;
   function renderRun() {
-    screen.replaceChildren();
+    view = 'run';
+    screen.replaceChildren(toolbar());
     const r = run!;
-    feed = h('ol', { class: 'feed', id: 'feed', 'aria-live': 'polite' });
+    feed = h('ol', { class: 'feed', id: 'feed', role: 'log', 'aria-label': 'Intent feed', tabindex: '0' });
     objList = h('ol', { class: 'objstat', id: 'objstat' });
-    status = h('p', { class: 'status', id: 'xstatus' });
+    status = h('p', { class: 'status', id: 'xstatus', role: 'status' });
     bar = h('div', { class: 'hpbar' }, h('i', {}));
     carriedEl = h('p', { id: 'carried-line' });
     levelEl = h('p', { id: 'level-line' });
@@ -206,7 +275,7 @@ export function mountExpedition(root: HTMLElement) {
       h('button', { type: 'button', id: 'xp-pause', 'aria-pressed': String(paused), onclick: () => { paused = !paused; syncCtl(); } }, 'Pause'),
       h('button', { type: 'button', id: 'skip', onclick: () => { while (!r.world.terminal && r.world.tick < 30 * 3000) r.world.step(); draw(); } }, 'Skip to end'),
       h('button', { type: 'button', id: 'retreat-now', class: 'danger', onclick: () => { toast = r.expedition.order({ type: 'retreat' }) ?? 'Retreat ordered. It starts now; in a fight the adventurer disengages first.'; draw(); } }, 'Retreat to camp'));
-    screen.append(
+    screen.append(h('main', { id: 'main', tabindex: '-1' },
       h('div', { class: 'bar' }, h('div', {}, h('p', { class: 'eyebrow' }, 'EXPEDITION · TRIAL SETTINGS'), h('h1', {}, 'On the road')),
         h('button', { type: 'button', id: 'back-to-plan', onclick: renderPlan }, 'Back to plan')),
       h('div', { class: 'cols' },
@@ -214,7 +283,7 @@ export function mountExpedition(root: HTMLElement) {
           h('section', { class: 'card' }, h('h2', {}, 'Change course'), h('p', { class: 'hint' }, 'A redirect waits for the next doorway. A retreat does not.'),
             h('div', { class: 'redirect' }, redirectSel, h('button', { type: 'button', id: 'redirect-go', onclick: () => { toast = r.expedition.order({ type: 'redirect', room: redirectSel.value }) ?? `Redirect to ${name(graph, redirectSel.value)} queued for the next doorway.`; draw(); } }, 'Go there first'))),
           h('section', { class: 'card' }, h('h2', {}, 'Objectives'), objList)),
-        h('div', { class: 'right' }, h('section', { class: 'card' }, h('h2', {}, 'Intent feed'), feed), result)));
+        h('div', { class: 'right' }, h('section', { class: 'card' }, h('h2', {}, 'Intent feed'), feed), result))));
     feedCount = 0; syncCtl();
     cancelAnimationFrame(raf); raf = requestAnimationFrame(frame);
     draw();
@@ -232,14 +301,14 @@ export function mountExpedition(root: HTMLElement) {
     draw();
     if (!r.world.terminal) raf = requestAnimationFrame(frame);
   }
-  const worldPos = (id: string) => toWorld(ROOMS[id], { x: 0, y: 0 });
   function draw() {
     const r = run; if (!r) return;
     const ex = r.expedition, w = r.world;
     while (feedCount < ex.intent.length) {
       const i = ex.intent[feedCount++];
-      feed.append(h('li', { class: `k-${i.kind}`, 'data-kind': i.kind }, h('b', {}, i.text), h('small', {}, `${Math.round(i.tick / 30)}s · ${i.cause}`)));
+      feed.append(h('li', { class: `k-${i.kind}`, 'data-kind': i.kind, 'data-mark': MARK[i.kind] ?? '' }, h('b', {}, i.text), h('small', {}, `${Math.round(i.tick / 30)}s · ${i.cause}`)));
       feed.scrollTop = feed.scrollHeight;
+      audio.onIntent(i);
     }
     objList.replaceChildren(...ex.objectives.map((o, i) => h('li', { class: o.status }, h('span', { class: 'chip' }, OBJ_LABEL[o.status]), `${i + 1}. ${o.kind === 'open' ? `Open the way from ${name(graph, o.room)} to ${name(graph, o.to ?? o.room)}` : o.kind === 'explore' ? `Explore on from ${name(graph, o.room)}` : `${cap(o.kind)} ${name(graph, o.room)}`}`, o.note ? h('small', {}, o.note) : null)));
     const secs = Math.round(w.tick / 30);
@@ -248,70 +317,57 @@ export function mountExpedition(root: HTMLElement) {
     levelEl.textContent = pg ? `Level ${pg.level} of ${MAX_DESIGN_LEVEL}${pg.xpToNext === null ? ' (highest)' : `, experience ${pg.xp} of ${pg.xpToNext}`} · rations ${w.ledger.rations} · upgrade: ${pg.sanctuary.upgrade ? upgradeById(pg.sanctuary.upgrade).name : 'none yet'}. Levels and upgrades end with the expedition.` : '';
     sanctEl.textContent = pg ? (pg.sanctuary.visits === 0 ? 'Sanctuary: not visited. It never banks: no banking here.' : `Sanctuary: ${pg.sanctuary.rested ? 'rested' : 'not rested'}, upgrade taken. No banking here.`) : '';
     carriedEl.textContent = `Carried, at risk until camp: ${describeBank(w.ledger.carried)}.${w.ledger.cache ? ` A recovery cache waits in ${name(graph, w.ledger.cache.room)}.` : ''}`;
-    (bar.firstChild as HTMLElement).style.width = `${Math.max(0, Math.min(100, w.hp / w.hpMax * 100))}%`;
+    const hpPct = Math.max(0, Math.min(100, w.hp / w.hpMax * 100));
+    (bar.firstChild as HTMLElement).style.width = `${hpPct}%`;
+    (bar.firstChild as HTMLElement).classList.toggle('low', hpPct < runCfg!.plan.retreatHpPct);
     drawMap(r);
     if (w.terminal) for (const id of ['retreat-now', 'redirect-go', 'skip']) (ctl.parentElement!.querySelector(`#${id}`) as HTMLButtonElement | null)?.setAttribute('disabled', '');
     if (w.terminal && !chronicle) finish(r);
     window.__EXPEDITION_STATE__ = () => ({ view: 'run', state: w.state, tick: w.tick, room: w.room, mode: ex.mode, hp: w.hp, intents: ex.intent.length, digest: w.digest, terminal: w.terminal });
   }
   function drawMap(r: ExpeditionRun) {
-    const g = canvas.getContext('2d'); if (!g) return;
-    const ex = r.expedition, shown = [...ex.known, ...frontierRooms(graph, ex.known, ex.openLinks)];
-    const W = canvas.width, H = canvas.height, pad = 40;
-    // Drawn at 0.6 of the real floor so neighbouring rooms do not overlap on the schematic.
-    const pts = shown.map(id => ({ id, p: worldPos(id), f: { w: graph.room(id).floor.w * 0.6, h: graph.room(id).floor.h * 0.6 } }));
-    // Gates seen from a known room: a link to a shown room, or a short stub out of the door's wall (the room beyond stays hidden).
-    const gateLines = gates(graph, ex.known, ex.openLinks).filter(g => g.state !== 'unseen').map(g => {
-      const a = ex.known.has(g.from) ? g.from : g.to, b = a === g.from ? g.to : g.from, pa = worldPos(a);
-      let end = worldPos(b);
-      if (!shown.includes(b)) { const dir = { west: [-1, 0], east: [1, 0], north: [0, -1], south: [0, 1] }[ROOMS[a].doors.find(d => d.to === b)!.side]; end = { x: pa.x + dir[0] * 420, y: pa.y + dir[1] * 420 }; }
-      return { g, from: pa, to: end };
-    });
-    const xs = [...pts.flatMap(q => [q.p.x - q.f.w / 2, q.p.x + q.f.w / 2]), ...gateLines.map(l => l.to.x)], ys = [...pts.flatMap(q => [q.p.y - q.f.h / 2, q.p.y + q.f.h / 2]), ...gateLines.map(l => l.to.y)];
-    const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
-    const s = Math.min((W - pad * 2) / (x1 - x0), (H - pad * 2) / (y1 - y0));
-    const X = (x: number) => pad + (x - x0) * s + ((W - pad * 2) - (x1 - x0) * s) / 2, Y = (y: number) => pad + (y - y0) * s + ((H - pad * 2) - (y1 - y0) * s) / 2;
-    g.clearRect(0, 0, W, H); g.fillStyle = '#10201d'; g.fillRect(0, 0, W, H);
-    const avoid = new Set(runCfg!.plan.avoid), here = r.world.room, target = ex.target;
-    g.lineWidth = 2; g.strokeStyle = '#3d5a50';
-    for (const l of graph.links) if (shown.includes(l.from) && shown.includes(l.to) && l.type === 'ordinary') { g.beginPath(); g.moveTo(X(worldPos(l.from).x), Y(worldPos(l.from).y)); g.lineTo(X(worldPos(l.to).x), Y(worldPos(l.to).y)); g.stroke(); }
-    for (const l of gateLines) {
-      g.setLineDash(l.g.state === 'open' ? [] : [6, 5]); g.strokeStyle = l.g.state === 'open' ? '#8fc29a' : '#c0594a'; g.lineWidth = 3;
-      g.beginPath(); g.moveTo(X(l.from.x), Y(l.from.y)); g.lineTo(X(l.to.x), Y(l.to.y)); g.stroke(); g.setLineDash([]);
-      g.fillStyle = l.g.state === 'open' ? '#8fc29a' : '#e8a27c'; g.font = 'bold 13px Arial, sans-serif'; g.fillText(l.g.state === 'open' ? '◇' : '▣', X((l.from.x + l.to.x) / 2), Y((l.from.y + l.to.y) / 2) + 4);
-    }
-    g.font = '12px Arial, sans-serif';
-    if (ex.route) { g.strokeStyle = '#e1b862'; g.lineWidth = 4; g.beginPath(); ex.route.rooms.forEach((id, i) => { const p = worldPos(id); if (i) g.lineTo(X(p.x), Y(p.y)); else g.moveTo(X(p.x), Y(p.y)); }); g.stroke(); }
-    g.font = '12px Arial, sans-serif'; g.textAlign = 'center';
-    for (const q of pts) {
-      const isKnown = ex.known.has(q.id), w = q.f.w * s, hh = q.f.h * s, x = X(q.p.x) - w / 2, y = Y(q.p.y) - hh / 2;
-      g.fillStyle = isKnown ? (ex.visited.has(q.id) ? '#2d4a40' : '#223a33') : '#17262a';
-      g.fillRect(x, y, w, hh);
-      g.setLineDash(isKnown ? [] : [5, 4]); g.strokeStyle = q.id === here ? '#f1d49a' : q.id === target ? '#e1b862' : '#6f8a7c'; g.lineWidth = q.id === here ? 3 : 1.5; g.strokeRect(x, y, w, hh); g.setLineDash([]);
-      if (avoid.has(q.id)) { g.save(); g.beginPath(); g.rect(x, y, w, hh); g.clip(); g.strokeStyle = '#c0594a'; g.lineWidth = 1.5; for (let d = -hh; d < w; d += 10) { g.beginPath(); g.moveTo(x + d, y + hh); g.lineTo(x + d + hh, y); g.stroke(); } g.restore(); }
-      g.fillStyle = '#e0decb'; g.fillText(isKnown ? q.id : '?', X(q.p.x), Y(q.p.y) + 4);
-      const dz = DANGER[graph.room(q.id).difficulty] ?? 0;
-      if (isKnown && dz >= 3) { g.fillStyle = dz >= 6 ? '#d98c6a' : '#c9b06a'; g.fillText(dz >= 6 ? '!!' : '!', X(q.p.x), y + 14); }
-    }
-    const hp = r.world.pos;
-    g.fillStyle = '#f6efd0'; g.beginPath(); g.arc(X(hp.x), Y(hp.y), 6, 0, Math.PI * 2); g.fill(); g.strokeStyle = '#10201d'; g.lineWidth = 2; g.stroke();
+    const ex = r.expedition;
+    drawWorldMap(canvas, { graph, known: ex.known, open: ex.openLinks, visited: ex.visited, avoid: new Set(runCfg!.plan.avoid), route: ex.route ? ex.route.rooms : null, routeKind: 'confirmed', here: r.world.room, target: ex.target, hero: r.world.pos, cache: r.world.ledger.cache });
   }
   function finish(r: ExpeditionRun) {
     const c = finishChronicle(runCfg!, r).chronicle; chronicle = c;
     settlement = settle(save, c, startedAt);
     if (settlement.applied) { try { persist(store, settlement.save); save = settlement.save; } catch (e) { settlement = { ...settlement, applied: false, refused: `The save could not be written: ${(e as Error).message}`, lines: [`The save could not be written: ${(e as Error).message}`] }; } }
-    const fights = c.fights.length ? c.fights.map(f => `${name(graph, f.room)}: ${f.won ? 'won' : 'lost'}, ${f.enemiesDefeated} down, health ${f.hpLeft} of ${f.hpMax}`).join('; ') : 'none';
+    const deathCause = describeDeath(sim, graph, r);
+    const opened = settlement!.applied ? c.loot.opened.map(k => { const l = graph.links.find(x => WorldGraph.linkKey(x.from, x.to) === k); return `Opened for good: ${l ? `${name(graph, l.from)} and ${name(graph, l.to)}` : k}.`; }) : [];
+    const lines = [...settlement!.lines, ...opened];
+    history.add({ id: entryId(c, save.camp.expeditions), at: Date.now(), chronicle: c, settlement: lines, deathCause });
+    if (c.outcome === 'died') audio.cue('death');
     result.hidden = false;
-    result.replaceChildren(h('h2', {}, 'Chronicle'), h('div', { class: `badge ${c.outcome}`, id: 'outcome', 'data-outcome': c.outcome }, cap(c.outcome)), h('p', { class: 'sum', id: 'summary' }, c.summary),
-      h('dl', {}, h('dt', {}, 'Route'), h('dd', {}, c.route.map(x => name(graph, x)).join(' > ')), h('dt', {}, 'Fights'), h('dd', {}, fights),
-        h('dt', {}, 'Newly mapped'), h('dd', {}, c.discovered.length ? c.discovered.map(x => name(graph, x)).join(', ') : 'nothing'),
-        c.progress ? h('dt', {}, 'Levels and supplies') : null,
-        c.progress ? h('dd', { id: 'progress-line' }, `Level ${c.progress.startLevel} to ${c.progress.level} (${c.progress.xp} experience), ${c.progress.rationsUsed} ration${c.progress.rationsUsed === 1 ? '' : 's'} drunk, ${c.progress.rationsLeft} left. ${c.progress.sanctuary.visits ? `Sanctuary: ${c.progress.sanctuary.rested ? 'rested' : 'not rested'}, ${c.progress.sanctuary.upgrade ? upgradeById(c.progress.sanctuary.upgrade).name : 'no'} upgrade. No banking there.` : 'The sanctuary was not visited.'} Levels and upgrades are gone now; only banked loot stays.`) : null,
-        h('dt', {}, 'Run id'), h('dd', {}, `seed ${c.seed} · ${c.digest}`)),
-      h('h2', {}, 'What happened to the loot'),
-      h('ul', { id: 'settle-lines' }, ...settlement!.lines.map(l => h('li', {}, l)), ...(settlement!.applied ? c.loot.opened.map(k => { const l = graph.links.find(x => WorldGraph.linkKey(x.from, x.to) === k); return h('li', {}, `Opened for good: ${l ? `${name(graph, l.from)} and ${name(graph, l.to)}` : k}.`); }) : [])),
-      h('a', { class: 'btn', id: 'download', href: `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(c, null, 1))}`, download: `chronicle-seed${c.seed}.json` }, 'Download Chronicle (JSON)'),
-      h('button', { type: 'button', id: 'again', onclick: renderPlan }, 'Plan another'));
+    result.replaceChildren(renderChronicle(c, { graph, settlement: lines, deathCause, actions: [h('button', { type: 'button', id: 'again', onclick: renderPlan }, 'Plan another')] }));
+    screen.querySelector('#tools')?.replaceWith(toolbar());
+  }
+
+  // ---------- Past expeditions ----------
+  function renderHistory() {
+    view = entryOpen ? 'entry' : 'history';
+    window.__EXPEDITION_STATE__ = () => ({ view: 'history', open: entryOpen });
+    screen.replaceChildren(toolbar());
+    const all = history.list();
+    const e = entryOpen ? history.get(entryOpen) : undefined;
+    const main = h('main', { id: 'main', tabindex: '-1' });
+    screen.append(main);
+    if (e) {
+      main.append(h('div', { class: 'bar' }, h('div', {}, h('p', { class: 'eyebrow' }, 'PAST EXPEDITION'), h('h1', {}, 'Chronicle')),
+        h('button', { type: 'button', id: 'history-back', onclick: () => { entryOpen = ''; renderHistory(); } }, 'Back to the list')),
+        h('section', { class: 'card result', id: 'history-entry' }, renderChronicle(e.chronicle, { graph, settlement: e.settlement, deathCause: e.deathCause })));
+      return;
+    }
+    entryOpen = '';
+    main.append(h('div', { class: 'bar' }, h('div', {}, h('p', { class: 'eyebrow' }, 'CAMP · RECORDS'), h('h1', {}, 'Past expeditions')),
+      h('button', { type: 'button', id: 'history-plan', onclick: renderPlan }, 'Back to plan')),
+      h('section', { class: 'card' }, h('h2', {}, `Last ${all.length} of up to 20`),
+        h('p', { class: 'hint' }, 'Kept in this browser only, apart from the save. Clearing it never touches your bank, cache or map.'),
+        all.length
+          ? h('ol', { class: 'history', id: 'history-list' }, ...all.map(x => h('li', {}, h('button', { type: 'button', 'data-history': x.id, onclick: () => { entryOpen = x.id; renderHistory(); } },
+            `${new Date(x.at).toLocaleString()} · ${cap(x.chronicle.outcome)} · ${x.chronicle.route.length} rooms · seed ${x.chronicle.seed}`))))
+          : h('p', { class: 'hint', id: 'history-empty' }, 'Nothing here yet. Finished expeditions appear in this list.'),
+        all.length ? h('button', { type: 'button', id: 'history-clear', onclick: () => { history.clear(); renderHistory(); } }, 'Clear the list') : null));
   }
 
   window.__EXPEDITION_RUN__ = (c: ExpeditionConfig) => runExpedition(sim, c, 30 * 3000, graph).chronicle;
@@ -324,6 +380,6 @@ export function mountExpedition(root: HTMLElement) {
 declare global {
   interface Window {
     __EXPEDITION_READY__: boolean; __EXPEDITION_RUN__: (c: ExpeditionConfig) => Chronicle;
-    __EXPEDITION_STATE__: () => Record<string, unknown>; __EXPEDITION_SAVE__: () => Save; __EXPEDITION_SET_SAVE__?: (s: Save) => void;
+    __EXPEDITION_STATE__: () => Record<string, unknown>; __EXPEDITION_AUDIO__: ExpeditionAudio; __EXPEDITION_SAVE__: () => Save; __EXPEDITION_SET_SAVE__?: (s: Save) => void;
   }
 }
