@@ -2,6 +2,7 @@ import { test, expect, type Page } from '@playwright/test';
 import { loadSim } from '../../src/combat/loadSimNode';
 import { O1Controller, runO1, type O1Config } from '../../src/world/o1Controller';
 import { O1PresentationAdapter } from '../../src/world/o1Adapter';
+import { runWorld, type WorldRunConfig } from '../../src/world/worldRunner';
 
 const sim = loadSim();
 interface PageState { state: string; tick: number; digest: string; hp: number; fought: boolean; hero: { x: number; y: number }; source: string }
@@ -51,6 +52,15 @@ test('browser and Node agree on seeded O1 runs across opponents and doctrines', 
   cases.push({ seed: 4, opponent: 'sentry', level: 1, focus: 'balanced', doctrine: 'measured' }, { seed: 4, opponent: 'mireling', level: 140, focus: 'survivor', doctrine: 'pressing' });
   const inPage = await page.evaluate(cs => cs.map(c => window.__O1_RUN__(c)), cases);
   inPage.forEach((r, i) => expect(r, JSON.stringify(cases[i])).toEqual(runO1(sim, cases[i])));
+});
+
+test('browser and Node agree on the walking expedition from camp to the Broken Causeway and back', async ({ page }) => {
+  await ready(page, '/?scene=o1');
+  const cases: WorldRunConfig[] = [];
+  for (const doctrine of ['measured', 'pressing'] as const) for (const seed of [1, 2, 3]) cases.push({ seed, level: 80, focus: 'balanced', doctrine, from: 'C0', to: 'O3' });
+  cases.push({ seed: 5, level: 80, focus: 'balanced', doctrine: 'measured', from: 'C0', to: 'O3', encounters: { O1: 'mireling2', O2: 'mireling', O3: 'sentry' }, hpOverride: 5000 });
+  const inPage = await page.evaluate(cs => cs.map(c => window.__WORLD_RUN__(c)), cases);
+  inPage.forEach((r, i) => expect(r, JSON.stringify(cases[i])).toEqual(runWorld(sim, cases[i])));
 });
 
 test('the visual study and its scenes still load without the O1 scene', async ({ page }) => {

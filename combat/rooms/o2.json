@@ -1,8 +1,8 @@
 {
   "id": "O2",
   "name": "Crossroads",
-  "note": "Generated placeholder geometry from the room schedule and connections. Valid walls and doors, not tuned and not art-reviewed. Local frame: centre (0,0), x east, y south, simulation units.",
-  "status": "generated",
+  "note": "Trial settings. Positions and detection values are not design locks. Local frame: centre (0,0), x east, y south, simulation units. World centre (1450,1700).",
+  "status": "authored",
   "plan": {
     "center": {
       "x": 1450,
@@ -29,7 +29,14 @@
       [-330, 87, -270, 220],
       [270, -220, 330, 220]
     ],
-    "circles": []
+    "circles": [
+      {
+        "id": "milestone",
+        "x": -40,
+        "y": 60,
+        "r": 30
+      }
+    ]
   },
   "doors": [
     {
@@ -95,10 +102,39 @@
       "x": [38, 212]
     }
   ],
-  "encounters": {},
+  "entryDoor": "to-O1",
+  "exitDoor": "to-O3",
+  "encounters": {
+    "mireling": {
+      "name": "Mireling",
+      "enemies": [
+        {
+          "arch": "mireling",
+          "x": 80,
+          "y": 70,
+          "facing": "NW"
+        }
+      ]
+    },
+    "sentry": {
+      "name": "Ashen Sentry",
+      "enemies": [
+        {
+          "arch": "sentry",
+          "x": 70,
+          "y": 90,
+          "facing": "NW"
+        }
+      ]
+    }
+  },
   "detection": {
     "range": 160,
     "arcDegrees": 120,
     "alertRadius": 120
+  },
+  "entry": {
+    "x": -270,
+    "y": 0
   }
 }
