@@ -1,5 +1,5 @@
 # Autonomous Dungeon Crawler — Design Library
-**Version:** 0.16 detailed design library (locked 75° orthographic sprite camera and character production standards)  
+**Version:** 0.17 detailed design library (locked 75° orthographic camera and selective eight-direction sprites)  
 **Updated:** 2026-10-23  
 **Platform:** standalone browser/PC/mobile-capable project with RUN.world as a possible distribution target; exact targets OPEN  
 **Status:** Living design documents, not a final abbreviated GDD
@@ -59,6 +59,9 @@ A requirement must **not** become LOCKED merely because it appeared in an earlie
 | [`31_LOCKED_75DEG_CAMERA_AND_CHARACTER_SPRITE_STANDARDS.md`](31_LOCKED_75DEG_CAMERA_AND_CHARACTER_SPRITE_STANDARDS.md) | L23 camera contract, modelling/rig standards, pivots, animation timing, sprite export and QA |
 | [`31A_CAMERA_SILHOUETTE_SHOT_LIST.csv`](31A_CAMERA_SILHOUETTE_SHOT_LIST.csv) | Proposed P0 +75° camera calibration and hero/Sentry/Mireling screenshot checklist |
 | [`31B_CAMERA_CHARACTER_DELIVERABLES.csv`](31B_CAMERA_CHARACTER_DELIVERABLES.csv) | Source files, outputs, parity and runtime review deliverables; none yet produced |
+
+| [`32_SELECTIVE_EIGHT_DIRECTION_ANIMATION_STANDARD.md`](32_SELECTIVE_EIGHT_DIRECTION_ANIMATION_STANDARD.md) | L24 eight-way locomotion/guard and selective attack coverage |
+| [`32A_DIRECTIONAL_CLIP_MATRIX.csv`](32A_DIRECTIONAL_CLIP_MATRIX.csv) | Per-actor directional production and review obligations |
 
 ## Source-of-truth rules
 1. Geography and permanence: `02` and `17`.

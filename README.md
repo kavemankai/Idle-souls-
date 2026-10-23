@@ -1,11 +1,8 @@
-# Autonomous Dungeon Crawler — Design & Art Production Library
+# Idle Souls — Old Road visual proof
+Phaser 4 / TypeScript / Vite presentation workbench. Combat AI is separately owned and absent from this repository. This scene is VISUAL-ONLY; no fight outcomes, progression or banking are simulated.
 
-**Design library version:** v0.17 (Workshop 24, 2026-10-23).
+Requires Node 22.12+ and npm. `npm ci`, then `npm run dev` (http://localhost:5173). `npm run build` and `npm run preview` serve the production bundle.
 
-This repository contains the modular game-design, combat interface and art-production specifications. It does **not** include an executable game or a verified combat implementation. The core protagonist AI and combat bench are tracked separately by the implementation workstream.
+Checks: `npm run lint`, `npm run typecheck`, `npm test`, `npm run test:browser`.
 
-Latest creator-lock: **L24** — eight-direction character locomotion and guard sprites; selective per-move directional animation coverage for attacks. Also preserve hybrid Blender-to-2D pipeline L22, fixed 75° orthographic camera L23 and all game/economy locks L01–L21.
-
-Read `autonomous_dungeon_design_library/00_START_HERE.md`, `16_DECISIONS_AND_OPEN_QUESTIONS.md`, `32_SELECTIVE_EIGHT_DIRECTION_ANIMATION_STANDARD.md` and `32A_DIRECTIONAL_CLIP_MATRIX.csv`.
-
-**GitHub destination is not configured.** Do not assume this design library belongs in the generic `Run.world-starter-` repository.
+Read [the production handoff](CODEX_VISUAL_PRODUCTION_HANDOFF.md) and [design library](autonomous_dungeon_design_library/00_START_HERE.md). Camera +75° orthographic, Blender character workflow, eight-way locomotion/guard and selective attacks remain locked. The Ashen Reliquary appearance remains proposed.
