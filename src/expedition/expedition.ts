@@ -1,10 +1,12 @@
 import type { ArrivalCtx, LegResult, LiveCtx, NavDecision, Navigator } from '../world/worldRunner';
 import type { RetreatAnswer } from '../world/roomRunner';
 import type { WorldGraph } from '../world/worldGraph';
+import type { Cache } from '../save/saveTypes';
+import { describeBank, type Gain } from './loot';
 import { CAMP, MAX_OBJECTIVES, frontierRooms, name, styleOf, type ExpeditionPlan, type Objective, type ObjectiveStatus } from './plan';
 import { planRooms, type RoutePlan, type RouteStyle } from './planner';
 
-export type IntentKind = 'launch' | 'route' | 'objective' | 'discovery' | 'sweep' | 'fight' | 'retreat' | 'redirect' | 'skip' | 'order' | 'end';
+export type IntentKind = 'launch' | 'route' | 'objective' | 'discovery' | 'sweep' | 'fight' | 'retreat' | 'redirect' | 'skip' | 'order' | 'loot' | 'end';
 /** One line of the intent feed: what the adventurer is doing and why. `cause` is the rule or order behind it. */
 export interface Intent { tick: number; kind: IntentKind; room: string; text: string; cause: string }
 export type Mode = 'outbound' | 'returning' | 'blocked' | 'home';
@@ -37,7 +39,7 @@ export class Expedition implements Navigator {
   private lastRoute: string[] = [];
   private readonly avoid: Set<string>;
   private nextId = 100;
-  constructor(readonly plan: ExpeditionPlan, private readonly graph: WorldGraph, known: Iterable<string>) {
+  constructor(readonly plan: ExpeditionPlan, private readonly graph: WorldGraph, known: Iterable<string>, private readonly cache: Cache | null = null) {
     this.known = new Set(known);
     this.avoid = new Set(plan.avoid);
     if (plan.objectives.length > MAX_OBJECTIVES) throw new Error(`at most ${MAX_OBJECTIVES} objectives`);
@@ -101,6 +103,14 @@ export class Expedition implements Navigator {
     } else this.say(ctx.tick, 'retreat', ctx.room, `Withdraw: heads for the ${door} door, then ${list(route.rooms)}.`, 'Phase 2 of a retreat: leave by the permitted way home.');
   }
   private retreatTried = false;
+  private cacheRecovered = false;
+  private cacheTries = 0;
+  /** Heard from the world runner: something was gained. Everything gained is carried and at risk until camp. */
+  looted(g: Gain, ctx: LiveCtx) {
+    if (g.source === 'cache') this.cacheRecovered = true;
+    const text = g.source === 'kill' ? `Defeated ${g.label.replace(' defeated', '')} in ${name(this.graph, g.room)}: ${describeBank(g.bundle)}.` : g.source === 'pickup' ? `Picked up ${g.label} in ${name(this.graph, g.room)}.` : `Recovered the cache in ${name(this.graph, g.room)}: ${describeBank(g.bundle)}.`;
+    this.say(ctx.tick, 'loot', g.room, `${text} Carried, at risk until camp.`, 'Loot is banked only by arriving at camp alive (doc 08).');
+  }
   private liveRoute: RoutePlan | null = null;
 
   legEnded(lr: LegResult, ctx: ArrivalCtx) {
@@ -129,6 +139,21 @@ export class Expedition implements Navigator {
       const o = this.active();
       if (!o) { this.startReturn(ctx, 'Every objective is done or skipped.', 'Return to Camp ends every plan.'); return this.goHome(ctx); }
       if (o.status === 'queued') { this.set(o, 'active'); this.say(tick, 'objective', room, `Objective ${this.index(o)}: ${o.kind === 'survey' ? 'survey' : 'reach'} ${name(this.graph, o.room)}.`, 'Next in the plan order.'); }
+      if (o.kind === 'recover' && this.cacheRecovered) {
+        this.set(o, 'completed', 'Cache recovered; still at risk until camp.');
+        this.say(tick, 'objective', room, `Objective ${this.index(o)} done: the recovery cache is in hand. It is not banked until camp.`, 'The cache was picked up.');
+        continue;
+      }
+      if (o.kind === 'recover' && o.room === room && this.cache) {
+        if (++this.cacheTries > 2) {
+          this.set(o, 'skipped_blocked', 'The cache could not be reached.');
+          this.say(tick, 'skip', room, `Objective ${this.index(o)} skipped, blocked: the cache could not be reached.`, 'L14: try legal alternatives, then skip and continue in order.');
+          continue;
+        }
+        this.say(tick, 'objective', room, `Walking to the recovery cache in ${name(this.graph, room)}.`, 'Recover objective.');
+        const back = ctx.entry ?? this.graph.neighbours(room)[0].door;
+        return { exit: back, cross: true, label: 'out', via: { x: this.cache.x, y: this.cache.y } };
+      }
       if (o.room === room) {
         this.set(o, 'completed', o.kind === 'survey' ? 'Surveyed.' : 'Reached.');
         this.say(tick, 'objective', room, `Objective ${this.index(o)} done: ${o.kind === 'survey' ? 'surveyed' : 'reached'} ${name(this.graph, room)}.`, 'Arrival at the objective room.');

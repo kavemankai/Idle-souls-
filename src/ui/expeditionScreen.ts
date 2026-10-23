@@ -7,6 +7,10 @@ import { DANGER } from '../expedition/planner';
 import { CAMP, MAX_OBJECTIVES, defaultPlan, frontierRooms, name, preflight, type Exploration, type ExpeditionPlan, type Objective, type ObjectiveKind, type ReturnRoute } from '../expedition/plan';
 import { finishChronicle, runExpedition, startExpedition, type ExpeditionConfig, type ExpeditionRun } from '../expedition/run';
 import type { Chronicle } from '../expedition/chronicle';
+import { describeBank } from '../expedition/loot';
+import { settle, type Settlement } from '../expedition/settle';
+import { LocalStore, MemoryStore, exportSave, importSave, load, persist, type SaveStore } from '../save/save';
+import type { SaveV1 } from '../save/saveTypes';
 import './expedition.css';
 
 const KNOWLEDGE: Record<string, { label: string; rooms: string[] | 'all' }> = {
@@ -53,9 +57,16 @@ export function mountExpedition(root: HTMLElement) {
   let chronicle: Chronicle | null = null;
   let acc = 0, last = 0, raf = 0;
   let notice = '';
+  // The save lives in browser storage (memory only with ?save=memory, for tests). Nothing changes it except a finished expedition and an import.
+  const store: SaveStore = params.get('save') === 'memory' ? new MemoryStore() : new LocalStore();
+  const loaded = load(store);
+  let save: SaveV1 = loaded.save;
+  let saveNote = loaded.note ?? '';
+  let settlement: Settlement | null = null;
+  let startedAt = 0;
 
-  const known = () => new Set<string>(KNOWLEDGE[knowledge].rooms === 'all' ? [...graph.rooms.keys()] : (KNOWLEDGE[knowledge].rooms as string[]));
-  const cfg = (): ExpeditionConfig => ({ seed, level, focus, plan: { ...plan, objectives: objectives.map(o => ({ ...o })), avoid: plan.avoid.slice() }, known: [...known()], hpOverride });
+  const known = () => new Set<string>([...(KNOWLEDGE[knowledge].rooms === 'all' ? [...graph.rooms.keys()] : (KNOWLEDGE[knowledge].rooms as string[])), ...save.world.discovered]);
+  const cfg = (): ExpeditionConfig => ({ seed, level, focus, plan: { ...plan, objectives: objectives.map(o => ({ ...o })), avoid: plan.avoid.slice() }, known: [...known()], hpOverride, cache: save.camp.cache });
 
   const screen = h('div', { class: 'xp', id: 'xp' });
   root.append(screen);
@@ -71,14 +82,14 @@ export function mountExpedition(root: HTMLElement) {
     objectives = objectives.filter(o => choices.includes(o.room));
     plan.avoid = plan.avoid.filter(r => k.has(r));
     plan.objectives = objectives;
-    const pf = preflight(plan, graph, k);
+    const pf = preflight(plan, graph, k, CAMP, save.camp.cache);
     const seg = <T extends string>(label: string, id: string, opts: [T, string][], cur: T, set: (v: T) => void) =>
       h('fieldset', { class: 'seg' }, h('legend', {}, label), ...opts.map(([v, t]) => h('button', { type: 'button', 'aria-pressed': String(v === cur), 'data-seg': `${id}-${v}`, onclick: () => { set(v); renderPlan(); } }, t)));
     const objRows = objectives.map((o, i) => h('li', { class: `obj ${pf.objectives[i]?.status ?? ''}` },
       h('span', { class: 'n' }, String(i + 1)),
-      h('select', { 'aria-label': `Objective ${i + 1} action`, 'data-obj-kind': String(i), onchange: (e) => { o.kind = (e.target as HTMLSelectElement).value as ObjectiveKind; renderPlan(); } },
-        ...(['reach', 'survey'] as const).map(v => { const op = h('option', { value: v }, cap(v)); if (o.kind === v) op.selected = true; return op; })),
-      h('select', { 'aria-label': `Objective ${i + 1} place`, 'data-obj-room': String(i), onchange: (e) => { o.room = (e.target as HTMLSelectElement).value; renderPlan(); } },
+      h('select', { 'aria-label': `Objective ${i + 1} action`, 'data-obj-kind': String(i), onchange: (e) => { o.kind = (e.target as HTMLSelectElement).value as ObjectiveKind; if (o.kind === 'recover' && save.camp.cache) o.room = save.camp.cache.room; renderPlan(); } },
+        ...((save.camp.cache ? ['reach', 'survey', 'recover'] : ['reach', 'survey']) as ObjectiveKind[]).map(v => { const op = h('option', { value: v }, cap(v)); if (o.kind === v) op.selected = true; return op; })),
+      h('select', { 'aria-label': `Objective ${i + 1} place`, 'data-obj-room': String(i), disabled: o.kind === 'recover', onchange: (e) => { o.room = (e.target as HTMLSelectElement).value; renderPlan(); } },
         ...choices.map(r => { const op = h('option', { value: r }, `${name(graph, r)}${k.has(r) ? '' : ' (unexplored)'}`); if (o.room === r) op.selected = true; return op; })),
       h('span', { class: 'row-btns' },
         h('button', { type: 'button', 'aria-label': 'Move up', disabled: i === 0, onclick: () => { [objectives[i - 1], objectives[i]] = [objectives[i], objectives[i - 1]]; renderPlan(); } }, '↑'),
@@ -90,6 +101,12 @@ export function mountExpedition(root: HTMLElement) {
       h('div', { class: 'bar' }, h('div', {}, h('p', { class: 'eyebrow' }, 'CAMP · EXPEDITION PLAN · TRIAL SETTINGS'), h('h1', {}, 'Plan an expedition')),
         h('label', { class: 'know' }, 'Map ', h('select', { id: 'knowledge', onchange: (e) => { knowledge = (e.target as HTMLSelectElement).value; renderPlan(); } },
           ...Object.entries(KNOWLEDGE).map(([v, d]) => { const op = h('option', { value: v }, d.label); if (v === knowledge) op.selected = true; return op; })))),
+      h('section', { class: 'card', id: 'camp-card' }, h('h2', {}, 'Camp'),
+        h('p', { id: 'bank-line' }, `Banked: ${describeBank(save.camp.bank)}.`),
+        h('p', { class: 'hint', id: 'tally-line' }, `${save.camp.expeditions} expedition${save.camp.expeditions === 1 ? '' : 's'}, ${save.camp.deaths} fall${save.camp.deaths === 1 ? '' : 's'}. The starter sword and shield are never lost.`),
+        save.camp.cache ? h('p', { class: 'warn', id: 'cache-line' }, `A recovery cache waits in ${name(graph, save.camp.cache.room)}: ${describeBank(save.camp.cache.contents)}. A new fall before you collect it replaces it, and what it holds is lost for good.`) : h('p', { class: 'hint', id: 'cache-line' }, 'No recovery cache is waiting.'),
+        save.camp.cache ? h('button', { type: 'button', id: 'add-recover', disabled: objectives.length >= MAX_OBJECTIVES || objectives.some(o => o.kind === 'recover'), onclick: () => { objectives.push({ id: `o${nextId++}`, kind: 'recover', room: save.camp.cache!.room }); renderPlan(); } }, 'Add: recover the cache') : null,
+        saveNote ? h('p', { class: 'warn' }, saveNote) : null),
       h('section', { class: 'card' }, h('h2', {}, 'Quick start'),
         h('div', { class: 'presets' }, ...Object.entries(PRESETS).map(([id, p]) => h('button', { type: 'button', 'data-preset': id, onclick: () => applyPreset(p) }, p.label)))),
       h('section', { class: 'card' }, h('h2', {}, `Objectives (${objectives.length} of ${MAX_OBJECTIVES})`),
@@ -110,11 +127,16 @@ export function mountExpedition(root: HTMLElement) {
           h('label', {}, 'Seed', h('input', { type: 'number', id: 'seed', min: '1', value: String(seed), onchange: (e) => { seed = Math.max(1, Math.round(Number((e.target as HTMLInputElement).value) || 1)); } })),
           h('label', {}, 'Level', h('input', { type: 'number', id: 'level', min: '1', max: String(sim.MAX_LEVEL), value: String(level), onchange: (e) => { level = Math.max(1, Math.min(sim.MAX_LEVEL, Math.round(Number((e.target as HTMLInputElement).value) || 80))); } })),
           h('label', {}, 'Focus', h('select', { id: 'focus', onchange: (e) => { focus = (e.target as HTMLSelectElement).value; } }, ...['balanced', 'duelist', 'bulwark', 'skirmisher', 'survivor'].map(f => { const op = h('option', { value: f }, cap(f)); if (f === focus) op.selected = true; return op; }))))),
+      h('details', { class: 'card', id: 'save-card' }, h('summary', {}, 'Save: export, import'),
+        h('p', { class: 'hint' }, 'The save is one text kept in this browser. Export it as a backup; import replaces it, after checking it.'),
+        h('a', { class: 'btn', id: 'export-save', href: `data:application/json;charset=utf-8,${encodeURIComponent(exportSave(save))}`, download: 'idle-souls-save.json' }, 'Export save'),
+        h('textarea', { id: 'import-text', rows: '3', 'aria-label': 'Save text to import' }),
+        h('button', { type: 'button', id: 'import-go', onclick: () => { const r = importSave(store, (screen.querySelector('#import-text') as HTMLTextAreaElement).value); if (r.ok) { save = load(store).save; saveNote = 'Save imported.'; } else saveNote = r.error; renderPlan(); } }, 'Import save')),
       h('section', { class: 'card launch' },
         h('div', { class: `badge ${pf.status}`, id: 'preflight', 'data-status': pf.status }, STATUS_LABEL[pf.status] ?? pf.status),
         h('p', { class: 'hint', id: 'home-line' }, objectives.length ? `Way home: ${pf.home.route ? pf.home.route.rooms.map(r => name(graph, r)).join(' > ') : pf.home.reason}` : ''),
         ...pf.messages.map(m => h('p', { class: 'warn' }, m)),
-        h('p', { class: 'hint' }, 'Nothing is carried, banked or lost yet. That arrives with the loss rules in M3.'),
+        h('p', { class: 'hint', id: 'risk-rule' }, 'Everything you win or pick up is carried and at risk until you reach camp alive. Only camp banks it: not a retreat, a quiet corner or a boss. If you fall, what you carry stays in one recovery cache where you fell.'),
         h('button', { type: 'button', id: 'launch', class: 'primary', disabled: !pf.launchable, onclick: launch }, 'Launch expedition')));
     if (notice) { screen.append(h('p', { class: 'warn' }, notice)); notice = ''; }
   }
@@ -129,7 +151,7 @@ export function mountExpedition(root: HTMLElement) {
 
   // ---------- Expedition ----------
   function launch() {
-    runCfg = cfg();
+    runCfg = cfg(); startedAt = save.camp.expeditions; settlement = null;
     run = startExpedition(sim, runCfg, graph);
     chronicle = null; paused = false; acc = 0; last = 0; toast = '';
     renderRun();
@@ -138,6 +160,7 @@ export function mountExpedition(root: HTMLElement) {
   let feed: HTMLElement, objList: HTMLElement, status: HTMLElement, bar: HTMLElement, ctl: HTMLElement, result: HTMLElement, redirectSel: HTMLSelectElement;
   let feedCount = 0;
   let toast = '';
+  let carriedEl: HTMLElement;
   function renderRun() {
     screen.replaceChildren();
     const r = run!;
@@ -145,6 +168,7 @@ export function mountExpedition(root: HTMLElement) {
     objList = h('ol', { class: 'objstat', id: 'objstat' });
     status = h('p', { class: 'status', id: 'xstatus' });
     bar = h('div', { class: 'hpbar' }, h('i', {}));
+    carriedEl = h('p', { id: 'carried-line' });
     result = h('section', { class: 'card result', id: 'result', hidden: true });
     const k = r.expedition.known;
     redirectSel = h('select', { id: 'redirect-room', 'aria-label': 'Redirect to' }, ...[...k, ...frontierRooms(graph, k)].filter(x => x !== CAMP && !runCfg!.plan.avoid.includes(x)).sort().map(x => h('option', { value: x }, name(graph, x))));
@@ -157,7 +181,7 @@ export function mountExpedition(root: HTMLElement) {
       h('div', { class: 'bar' }, h('div', {}, h('p', { class: 'eyebrow' }, 'EXPEDITION · TRIAL SETTINGS'), h('h1', {}, 'On the road')),
         h('button', { type: 'button', id: 'back-to-plan', onclick: renderPlan }, 'Back to plan')),
       h('div', { class: 'cols' },
-        h('div', { class: 'left' }, h('section', { class: 'card mapcard' }, canvas, status, bar), ctl,
+        h('div', { class: 'left' }, h('section', { class: 'card mapcard' }, canvas, status, bar, carriedEl), ctl,
           h('section', { class: 'card' }, h('h2', {}, 'Change course'), h('p', { class: 'hint' }, 'A redirect waits for the next doorway. A retreat does not.'),
             h('div', { class: 'redirect' }, redirectSel, h('button', { type: 'button', id: 'redirect-go', onclick: () => { toast = r.expedition.order({ type: 'redirect', room: redirectSel.value }) ?? `Redirect to ${name(graph, redirectSel.value)} queued for the next doorway.`; draw(); } }, 'Go there first'))),
           h('section', { class: 'card' }, h('h2', {}, 'Objectives'), objList)),
@@ -191,6 +215,7 @@ export function mountExpedition(root: HTMLElement) {
     objList.replaceChildren(...ex.objectives.map((o, i) => h('li', { class: o.status }, h('span', { class: 'chip' }, OBJ_LABEL[o.status]), `${i + 1}. ${cap(o.kind)} ${name(graph, o.room)}`, o.note ? h('small', {}, o.note) : null)));
     const secs = Math.round(w.tick / 30);
     status.textContent = `${w.terminal ? (w.state === 'home' ? 'Home' : w.state === 'defeated' ? 'Fallen' : 'Stopped') : 'Out'} · ${name(graph, w.room)} · ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')} · health ${Math.round(w.hp)} of ${w.hpMax}${toast ? ` · ${toast}` : ''}`;
+    carriedEl.textContent = `Carried, at risk until camp: ${describeBank(w.ledger.carried)}.${w.ledger.cache ? ` A recovery cache waits in ${name(graph, w.ledger.cache.room)}.` : ''}`;
     (bar.firstChild as HTMLElement).style.width = `${Math.max(0, Math.min(100, w.hp / w.hpMax * 100))}%`;
     drawMap(r);
     if (w.terminal) for (const id of ['retreat-now', 'redirect-go', 'skip']) (ctl.parentElement!.querySelector(`#${id}`) as HTMLButtonElement | null)?.setAttribute('disabled', '');
@@ -228,24 +253,28 @@ export function mountExpedition(root: HTMLElement) {
   }
   function finish(r: ExpeditionRun) {
     const c = finishChronicle(runCfg!, r).chronicle; chronicle = c;
+    settlement = settle(save, c, startedAt);
+    if (settlement.applied) { try { persist(store, settlement.save); save = settlement.save; } catch (e) { settlement = { ...settlement, applied: false, refused: `The save could not be written: ${(e as Error).message}`, lines: [`The save could not be written: ${(e as Error).message}`] }; } }
     const fights = c.fights.length ? c.fights.map(f => `${name(graph, f.room)}: ${f.won ? 'won' : 'lost'}, ${f.enemiesDefeated} down, health ${f.hpLeft} of ${f.hpMax}`).join('; ') : 'none';
     result.hidden = false;
     result.replaceChildren(h('h2', {}, 'Chronicle'), h('div', { class: `badge ${c.outcome}`, id: 'outcome', 'data-outcome': c.outcome }, cap(c.outcome)), h('p', { class: 'sum', id: 'summary' }, c.summary),
       h('dl', {}, h('dt', {}, 'Route'), h('dd', {}, c.route.map(x => name(graph, x)).join(' > ')), h('dt', {}, 'Fights'), h('dd', {}, fights),
         h('dt', {}, 'Newly mapped'), h('dd', {}, c.discovered.length ? c.discovered.map(x => name(graph, x)).join(', ') : 'nothing'),
         h('dt', {}, 'Run id'), h('dd', {}, `seed ${c.seed} · ${c.digest}`)),
-      h('p', { class: 'hint' }, 'Nothing was carried, banked or lost. Loot and the death cache arrive in M3.'),
+      h('h2', {}, 'What happened to the loot'),
+      h('ul', { id: 'settle-lines' }, ...settlement!.lines.map(l => h('li', {}, l))),
       h('a', { class: 'btn', id: 'download', href: `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(c, null, 1))}`, download: `chronicle-seed${c.seed}.json` }, 'Download Chronicle (JSON)'),
       h('button', { type: 'button', id: 'again', onclick: renderPlan }, 'Plan another'));
   }
 
   window.__EXPEDITION_RUN__ = (c: ExpeditionConfig) => runExpedition(sim, c, 30 * 3000, graph).chronicle;
+  window.__EXPEDITION_SAVE__ = () => save;
   window.__EXPEDITION_READY__ = true;
   renderPlan();
 }
 declare global {
   interface Window {
     __EXPEDITION_READY__: boolean; __EXPEDITION_RUN__: (c: ExpeditionConfig) => Chronicle;
-    __EXPEDITION_STATE__: () => Record<string, unknown>;
+    __EXPEDITION_STATE__: () => Record<string, unknown>; __EXPEDITION_SAVE__: () => SaveV1;
   }
 }

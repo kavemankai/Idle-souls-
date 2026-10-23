@@ -93,6 +93,34 @@
    "O2": [
     false
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 6,
+    "supplies": {},
+    "gear": [],
+    "mastery": 2
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": {
+    "room": "O2",
+    "x": -214.9,
+    "y": 23.5
+   }
   }
  },
  "default/measured/2": {
@@ -298,6 +326,78 @@
     true,
     true
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 33,
+    "supplies": {
+     "ration": 1
+    },
+    "gear": [],
+    "mastery": 11
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O2",
+     "label": "sentry defeated",
+     "bundle": {
+      "gold": 15,
+      "supplies": {},
+      "gear": [],
+      "mastery": 5
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O3",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O3",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "pickup",
+     "room": "O2",
+     "label": "ration",
+     "bundle": {
+      "gold": 0,
+      "supplies": {
+       "ration": 1
+      },
+      "gear": [],
+      "mastery": 0
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": null
   }
  },
  "default/measured/3": {
@@ -394,6 +494,34 @@
    "O2": [
     false
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 6,
+    "supplies": {},
+    "gear": [],
+    "mastery": 2
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": {
+    "room": "O2",
+    "x": -130.1,
+    "y": 258.4
+   }
   }
  },
  "default/measured/4": {
@@ -515,6 +643,56 @@
     true,
     false
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 27,
+    "supplies": {},
+    "gear": [],
+    "mastery": 9
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O2",
+     "label": "sentry defeated",
+     "bundle": {
+      "gold": 15,
+      "supplies": {},
+      "gear": [],
+      "mastery": 5
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O3",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": {
+    "room": "O3",
+    "x": 38.1,
+    "y": -114
+   }
   }
  },
  "default/guarded/1": {
@@ -720,6 +898,78 @@
     true,
     true
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 33,
+    "supplies": {
+     "ration": 1
+    },
+    "gear": [],
+    "mastery": 11
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O2",
+     "label": "sentry defeated",
+     "bundle": {
+      "gold": 15,
+      "supplies": {},
+      "gear": [],
+      "mastery": 5
+     }
+    },
+    {
+     "source": "pickup",
+     "room": "O2",
+     "label": "ration",
+     "bundle": {
+      "gold": 0,
+      "supplies": {
+       "ration": 1
+      },
+      "gear": [],
+      "mastery": 0
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O3",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O3",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": null
   }
  },
  "default/guarded/2": {
@@ -925,6 +1175,78 @@
     true,
     true
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 33,
+    "supplies": {
+     "ration": 1
+    },
+    "gear": [],
+    "mastery": 11
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O2",
+     "label": "sentry defeated",
+     "bundle": {
+      "gold": 15,
+      "supplies": {},
+      "gear": [],
+      "mastery": 5
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O3",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O3",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "pickup",
+     "room": "O2",
+     "label": "ration",
+     "bundle": {
+      "gold": 0,
+      "supplies": {
+       "ration": 1
+      },
+      "gear": [],
+      "mastery": 0
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": null
   }
  },
  "default/guarded/3": {
@@ -1046,6 +1368,60 @@
     false,
     false
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 21,
+    "supplies": {
+     "ration": 1
+    },
+    "gear": [],
+    "mastery": 7
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O2",
+     "label": "sentry defeated",
+     "bundle": {
+      "gold": 15,
+      "supplies": {},
+      "gear": [],
+      "mastery": 5
+     }
+    },
+    {
+     "source": "pickup",
+     "room": "O2",
+     "label": "ration",
+     "bundle": {
+      "gold": 0,
+      "supplies": {
+       "ration": 1
+      },
+      "gear": [],
+      "mastery": 0
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": {
+    "room": "O3",
+    "x": 143.3,
+    "y": 116.8
+   }
   }
  },
  "default/guarded/4": {
@@ -1167,6 +1543,56 @@
     true,
     false
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 27,
+    "supplies": {},
+    "gear": [],
+    "mastery": 9
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O2",
+     "label": "sentry defeated",
+     "bundle": {
+      "gold": 15,
+      "supplies": {},
+      "gear": [],
+      "mastery": 5
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O3",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": {
+    "room": "O3",
+    "x": 211.4,
+    "y": 139.5
+   }
   }
  },
  "default/pressing/1": {
@@ -1288,6 +1714,56 @@
     true,
     false
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 27,
+    "supplies": {},
+    "gear": [],
+    "mastery": 9
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O2",
+     "label": "sentry defeated",
+     "bundle": {
+      "gold": 15,
+      "supplies": {},
+      "gear": [],
+      "mastery": 5
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O3",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": {
+    "room": "O3",
+    "x": 105.9,
+    "y": -128.5
+   }
   }
  },
  "default/pressing/2": {
@@ -1409,6 +1885,45 @@
     false,
     false
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 21,
+    "supplies": {},
+    "gear": [],
+    "mastery": 7
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O2",
+     "label": "sentry defeated",
+     "bundle": {
+      "gold": 15,
+      "supplies": {},
+      "gear": [],
+      "mastery": 5
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": {
+    "room": "O3",
+    "x": 28,
+    "y": -195
+   }
   }
  },
  "default/pressing/3": {
@@ -1505,6 +2020,34 @@
    "O2": [
     false
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 6,
+    "supplies": {},
+    "gear": [],
+    "mastery": 2
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": {
+    "room": "O2",
+    "x": 2.4,
+    "y": 155.3
+   }
   }
  },
  "default/pressing/4": {
@@ -1626,6 +2169,56 @@
     true,
     false
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 27,
+    "supplies": {},
+    "gear": [],
+    "mastery": 9
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O2",
+     "label": "sentry defeated",
+     "bundle": {
+      "gold": 15,
+      "supplies": {},
+      "gear": [],
+      "mastery": 5
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O3",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": {
+    "room": "O3",
+    "x": 228.2,
+    "y": -59.4
+   }
   }
  },
  "alt/measured/1": {
@@ -1747,6 +2340,56 @@
    "O3": [
     false
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 18,
+    "supplies": {},
+    "gear": [],
+    "mastery": 6
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O2",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": {
+    "room": "O3",
+    "x": 82.6,
+    "y": -50.5
+   }
   }
  },
  "alt/measured/2": {
@@ -1868,6 +2511,71 @@
    "O3": [
     false
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 18,
+    "supplies": {
+     "ration": 1
+    },
+    "gear": [],
+    "mastery": 6
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O2",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "pickup",
+     "room": "O2",
+     "label": "ration",
+     "bundle": {
+      "gold": 0,
+      "supplies": {
+       "ration": 1
+      },
+      "gear": [],
+      "mastery": 0
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": {
+    "room": "O3",
+    "x": 92.4,
+    "y": -55
+   }
   }
  },
  "alt/measured/3": {
@@ -1989,6 +2697,56 @@
    "O3": [
     false
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 18,
+    "supplies": {},
+    "gear": [],
+    "mastery": 6
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O2",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": {
+    "room": "O3",
+    "x": 31.1,
+    "y": -110.7
+   }
   }
  },
  "alt/measured/4": {
@@ -2194,6 +2952,93 @@
    "O3": [
     true
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 33,
+    "supplies": {
+     "ration": 1
+    },
+    "gear": [
+     "cracked-buckler"
+    ],
+    "mastery": 11
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O2",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "pickup",
+     "room": "O2",
+     "label": "ration",
+     "bundle": {
+      "gold": 0,
+      "supplies": {
+       "ration": 1
+      },
+      "gear": [],
+      "mastery": 0
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O3",
+     "label": "sentry defeated",
+     "bundle": {
+      "gold": 15,
+      "supplies": {},
+      "gear": [],
+      "mastery": 5
+     }
+    },
+    {
+     "source": "pickup",
+     "room": "O3",
+     "label": "cracked-buckler",
+     "bundle": {
+      "gold": 0,
+      "supplies": {},
+      "gear": [
+       "cracked-buckler"
+      ],
+      "mastery": 0
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": null
   }
  },
  "alt/guarded/1": {
@@ -2399,6 +3244,78 @@
    "O3": [
     true
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 33,
+    "supplies": {
+     "ration": 1
+    },
+    "gear": [],
+    "mastery": 11
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O2",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "pickup",
+     "room": "O2",
+     "label": "ration",
+     "bundle": {
+      "gold": 0,
+      "supplies": {
+       "ration": 1
+      },
+      "gear": [],
+      "mastery": 0
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O3",
+     "label": "sentry defeated",
+     "bundle": {
+      "gold": 15,
+      "supplies": {},
+      "gear": [],
+      "mastery": 5
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": null
   }
  },
  "alt/guarded/2": {
@@ -2604,6 +3521,93 @@
    "O3": [
     true
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 33,
+    "supplies": {
+     "ration": 1
+    },
+    "gear": [
+     "cracked-buckler"
+    ],
+    "mastery": 11
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O2",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "pickup",
+     "room": "O2",
+     "label": "ration",
+     "bundle": {
+      "gold": 0,
+      "supplies": {
+       "ration": 1
+      },
+      "gear": [],
+      "mastery": 0
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O3",
+     "label": "sentry defeated",
+     "bundle": {
+      "gold": 15,
+      "supplies": {},
+      "gear": [],
+      "mastery": 5
+     }
+    },
+    {
+     "source": "pickup",
+     "room": "O3",
+     "label": "cracked-buckler",
+     "bundle": {
+      "gold": 0,
+      "supplies": {},
+      "gear": [
+       "cracked-buckler"
+      ],
+      "mastery": 0
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": null
   }
  },
  "alt/guarded/3": {
@@ -2725,6 +3729,71 @@
    "O3": [
     false
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 18,
+    "supplies": {
+     "ration": 1
+    },
+    "gear": [],
+    "mastery": 6
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O2",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "pickup",
+     "room": "O2",
+     "label": "ration",
+     "bundle": {
+      "gold": 0,
+      "supplies": {
+       "ration": 1
+      },
+      "gear": [],
+      "mastery": 0
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": {
+    "room": "O3",
+    "x": 63.7,
+    "y": -71.1
+   }
   }
  },
  "alt/guarded/4": {
@@ -2930,6 +3999,93 @@
    "O3": [
     true
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 33,
+    "supplies": {
+     "ration": 1
+    },
+    "gear": [
+     "cracked-buckler"
+    ],
+    "mastery": 11
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O2",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O3",
+     "label": "sentry defeated",
+     "bundle": {
+      "gold": 15,
+      "supplies": {},
+      "gear": [],
+      "mastery": 5
+     }
+    },
+    {
+     "source": "pickup",
+     "room": "O3",
+     "label": "cracked-buckler",
+     "bundle": {
+      "gold": 0,
+      "supplies": {},
+      "gear": [
+       "cracked-buckler"
+      ],
+      "mastery": 0
+     }
+    },
+    {
+     "source": "pickup",
+     "room": "O2",
+     "label": "ration",
+     "bundle": {
+      "gold": 0,
+      "supplies": {
+       "ration": 1
+      },
+      "gear": [],
+      "mastery": 0
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": null
   }
  },
  "alt/pressing/1": {
@@ -3051,6 +4207,56 @@
    "O3": [
     false
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 18,
+    "supplies": {},
+    "gear": [],
+    "mastery": 6
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O2",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": {
+    "room": "O3",
+    "x": 95.2,
+    "y": -68.8
+   }
   }
  },
  "alt/pressing/2": {
@@ -3148,6 +4354,45 @@
    "O2": [
     false
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 12,
+    "supplies": {},
+    "gear": [],
+    "mastery": 4
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": {
+    "room": "O2",
+    "x": 18.8,
+    "y": -20.8
+   }
   }
  },
  "alt/pressing/3": {
@@ -3245,6 +4490,45 @@
    "O2": [
     false
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 12,
+    "supplies": {},
+    "gear": [],
+    "mastery": 4
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    },
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": {
+    "room": "O2",
+    "x": -79.5,
+    "y": 129.7
+   }
   }
  },
  "alt/pressing/4": {
@@ -3318,6 +4602,34 @@
     false,
     true
    ]
+  },
+  "loot": {
+   "carried": {
+    "gold": 6,
+    "supplies": {},
+    "gear": [],
+    "mastery": 2
+   },
+   "gains": [
+    {
+     "source": "kill",
+     "room": "O1",
+     "label": "mireling defeated",
+     "bundle": {
+      "gold": 6,
+      "supplies": {},
+      "gear": [],
+      "mastery": 2
+     }
+    }
+   ],
+   "cache": null,
+   "recovered": null,
+   "deathSpot": {
+    "room": "O1",
+    "x": -131.3,
+    "y": 24.4
+   }
   }
  }
 }

@@ -1,4 +1,4 @@
-import { SAVE_VERSION, defaultSave, type Bank, type SaveV1 } from './saveTypes';
+import { SAVE_VERSION, STARTER_KIT, defaultSave, type Bank, type SaveV1 } from './saveTypes';
 export * from './saveTypes';
 
 /** Stable text for a save: keys sorted, then a checksum line so a hand-edited or truncated file is caught. */
@@ -71,6 +71,9 @@ export function validateInvariants(save: SaveV1): string[] {
     if (b.gold < 0 || b.mastery < 0 || !Number.isFinite(b.gold)) p.push(`${name} has negative or invalid gold or mastery`);
     for (const [k, n] of Object.entries(b.supplies)) if (n < 0 || !Number.isInteger(n)) p.push(`${name} has an invalid count of ${k}`);
   }
+  for (const [name, b] of banks) if (b.gear.some(g => STARTER_KIT.includes(g))) p.push(`${name} holds starter kit, which is never loot`);
+  if (save.camp.cache && Object.values(save.camp.cache.contents).every(v => (typeof v === 'number' ? v === 0 : Array.isArray(v) ? v.length === 0 : Object.values(v).every(n => n === 0)))) p.push('an empty cache is a meaningless marker');
+  if (save.camp.deaths > save.camp.expeditions) p.push('more deaths than expeditions');
   if (save.world.keysBanked < 0 || !Number.isInteger(save.world.keysBanked)) p.push('banked keys must be a whole number of at least 0');
   if (new Set(save.world.discovered).size !== save.world.discovered.length) p.push('a room is discovered twice');
   return p;

@@ -7,12 +7,51 @@
   "solids": {
     "rects": [],
     "circles": [
-      { "id": "milestone", "x": -40, "y": 60, "r": 30 }
+      {
+        "id": "milestone",
+        "x": -40,
+        "y": 60,
+        "r": 30
+      }
     ]
   },
   "encounters": {
-    "mireling": { "name": "Mireling", "enemies": [{ "arch": "mireling", "x": 80, "y": 70, "facing": "NW" }] },
-    "sentry": { "name": "Ashen Sentry", "enemies": [{ "arch": "sentry", "x": 70, "y": 90, "facing": "NW" }] }
+    "mireling": {
+      "name": "Mireling",
+      "enemies": [
+        {
+          "arch": "mireling",
+          "x": 80,
+          "y": 70,
+          "facing": "NW"
+        }
+      ]
+    },
+    "sentry": {
+      "name": "Ashen Sentry",
+      "enemies": [
+        {
+          "arch": "sentry",
+          "x": 70,
+          "y": 90,
+          "facing": "NW"
+        }
+      ]
+    }
   },
-  "detection": { "range": 160, "arcDegrees": 120, "alertRadius": 120 }
+  "detection": {
+    "range": 160,
+    "arcDegrees": 120,
+    "alertRadius": 120
+  },
+  "pickups": [
+    {
+      "id": "o2-ration",
+      "kind": "supplies",
+      "item": "ration",
+      "qty": 1,
+      "x": 40,
+      "y": 150
+    }
+  ]
 }

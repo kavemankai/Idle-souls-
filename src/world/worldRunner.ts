@@ -2,6 +2,8 @@ import { portableMath as M } from '../combat/portableMath';
 import type { SimApi, SimCarry, SimDerived, SimDoctrine } from '../combat/simApi';
 import { ROOMS } from './roomRegistry';
 import { RoomRunner, type RetreatAnswer, type RoomResult } from './roomRunner';
+import { Ledger, PICKUP_REACH, type DeathSpot, type Gain } from '../expedition/loot';
+import type { Bank, Cache } from '../save/saveTypes';
 import type { Door, RoomManifest } from './roomTypes';
 import type { Point } from './o1Route';
 import { WorldGraph } from './worldGraph';
@@ -18,6 +20,8 @@ export interface WorldRunConfig {
   encounters?: Readonly<Record<string, string>>;
   /** Door of the turn-around room that marks the frontier of the known world. Defaults to its first door that is not on the way in. */
   turnDoor?: string;
+  /** The recovery cache waiting at the start of this expedition, if any. */
+  cache?: Cache | null;
   /** Tests only. */
   hpOverride?: number; maxFightTicks?: number;
 }
@@ -40,6 +44,8 @@ export interface Navigator {
   live?(ctx: LiveCtx): { exit: string } | { end: true } | null;
   /** The room runner's answer to a `live` request: accepted (with what a retreat in a fight faces) or refused. */
   liveAnswer?(answer: RetreatAnswer, ctx: LiveCtx): void;
+  /** Something was gained: a kill paid, a pickup taken, or the cache recovered. */
+  looted?(gain: Gain, ctx: LiveCtx): void;
   /** Called when a stretch ends, win or lose, before the next arrival. */
   legEnded?(result: LegResult, ctx: ArrivalCtx): void;
 }
@@ -49,6 +55,8 @@ export interface WorldResult {
   hpLeft: number; hpMax: number; finalPos: Point; digest: string;
   /** Largest distance covered in one tick while walking (rooms and the passages between them) and while the simulator moved the adventurer. */
   maxWalkStep: number; maxFightStep: number;
+  /** What is carried at the end and how it was gained. Nothing here is banked: `settle` decides that. */
+  loot: { carried: Bank; gains: Gain[]; cache: Cache | null; recovered: Cache | null; deathSpot: DeathSpot | null };
   /** Per room, which of its enemies are dead at the end. */
   dead: Record<string, boolean[]>;
 }
@@ -98,6 +106,8 @@ export class WorldRunner {
   hp = 0; hpMax = 0;
   maxWalkStep = 0; maxFightStep = 0;
   haltReason: string | null = null;
+  readonly ledger: Ledger;
+  deathSpot: DeathSpot | null = null;
   notes: string[] = [];
   private legIdx = -1;
   private decision: NavDecision | null = null;
@@ -119,6 +129,7 @@ export class WorldRunner {
     this.derived = derived;
     this.carry = { st: derived.maxSt, poise: derived.poise };
     this.hpMax = cfg.hpOverride ?? derived.hp; this.hp = this.hpMax;
+    this.ledger = new Ledger(cfg.cache ?? null);
     this.room = this.nav.start;
     this.pos = toWorld(this.manifests[this.nav.start], { x: 0, y: 0 });
   }
@@ -173,12 +184,26 @@ export class WorldRunner {
       // While the simulator owns the fight the adventurer's place is the fighter's, not the walker's.
       this.pos = toWorld(this.manifest(this.room), fighting && r.fight && r.state !== 'travelling' ? r.fight.p : r.hero);
       this.hp = r.hp; this.carry = r.carry;
+      this.collect(r, fighting);
       if (r.terminal) this.endLeg(r);
     }
     const d = M.hypot(this.pos.x - before.x, this.pos.y - before.y);
     if (fighting) this.maxFightStep = Math.max(this.maxFightStep, d); else this.maxWalkStep = Math.max(this.maxWalkStep, d);
     this.tick++;
     this.mix();
+  }
+  /** Pay kills, take pickups and the cache within reach. Kills pay once per enemy; nothing is taken while the simulator owns the adventurer. */
+  private collect(r: RoomRunner, fighting: boolean) {
+    const ctx = () => this.liveCtx(r);
+    r.foes.forEach((f, i) => { if (f.engaged && !f.alive) { const g = this.ledger.kill(f.arch, this.room, i); if (g) this.nav.looted?.(g, ctx()); } });
+    if (fighting || r.state === 'fighting') return;
+    const m = this.manifest(this.room), p = r.hero;
+    for (const pk of m.pickups ?? []) if (M.hypot(pk.x - p.x, pk.y - p.y) <= PICKUP_REACH) { const g = this.ledger.pickup(this.room, pk); if (g) this.nav.looted?.(g, ctx()); }
+    const c = this.ledger.cache;
+    if (c && c.room === this.room && M.hypot(c.x - p.x, c.y - p.y) <= PICKUP_REACH) { const g = this.ledger.recoverCache(); if (g) this.nav.looted?.(g, ctx()); }
+  }
+  private liveCtx(r: RoomRunner): LiveCtx {
+    return { room: this.room, entry: this.entry, tick: this.tick, hp: r.hp, hpMax: this.hpMax, fighting: r.state === 'fighting', pos: { x: r.hero.x, y: r.hero.y } };
   }
   /** Let the navigator change the way out mid-room (a retreat order or a survival trigger). */
   private askLive(r: RoomRunner) {
@@ -201,7 +226,12 @@ export class WorldRunner {
     this.results.push(lr);
     this.dead.set(room, r.foes.map(f => f.engaged && !f.alive));
     this.nav.legEnded?.(lr, this.ctx(room, this.entry, r.hero));
-    if (r.state === 'defeated') { this.state = 'defeated'; this.note('The adventurer fell.'); return; }
+    if (r.state === 'defeated') {
+      this.state = 'defeated'; this.note('The adventurer fell.');
+      const at = r.fight ? r.fight.p : r.hero;
+      this.deathSpot = { room, x: Math.round(at.x * 10) / 10, y: Math.round(at.y * 10) / 10 };
+      return;
+    }
     if (r.state === 'unresolved') { this.state = 'unresolved'; this.note(`Stopped in ${room}: ${r.notes[r.notes.length - 1]}`); return; }
     if ('goal' in dec) { this.state = 'home'; this.note(`Back at ${this.nav.start}.`); this.runner = null; return; }
     const exit = 'exit' in dec ? dec : null;
@@ -248,6 +278,7 @@ export class WorldRunner {
       hpLeft: Math.round(this.hp), hpMax: this.hpMax, finalPos: { x: Math.round(this.pos.x * 10) / 10, y: Math.round(this.pos.y * 10) / 10 }, digest: this.digest,
       maxWalkStep: Math.round(this.maxWalkStep * 1000) / 1000, maxFightStep: Math.round(this.maxFightStep * 1000) / 1000,
       dead: Object.fromEntries(this.dead),
+      loot: { carried: this.ledger.carried, gains: this.ledger.gains, cache: this.ledger.cache, recovered: this.ledger.recovered, deathSpot: this.deathSpot },
     };
   }
 }

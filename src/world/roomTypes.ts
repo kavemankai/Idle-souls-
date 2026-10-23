@@ -4,6 +4,8 @@ export type Side = 'west' | 'east' | 'north' | 'south';
 export interface Circle { id: string; x: number; y: number; r: number }
 export interface SpawnSpec { x: number; y: number; facing: Facing }
 export interface EnemySpec extends SpawnSpec { arch: string }
+/** Something lying in a room. The adventurer takes it when it passes within reach; it is carried (at risk) until camp. It refills every expedition. */
+export interface Pickup { id: string; kind: 'supplies' | 'gear'; item: string; qty: number; x: number; y: number }
 export interface EncounterSpec { name: string; enemies: EnemySpec[] }
 export interface Door {
   id: string; to: string; side: Side; linkType: string;
@@ -23,6 +25,7 @@ export interface RoomManifest {
   entryDoor?: string; exitDoor?: string;
   entry?: { x: number; y: number }; threshold?: { x: number; y: [number, number] };
   encounters: Record<string, EncounterSpec>;
+  pickups?: Pickup[];
   detection: { range: number; arcDegrees: number; alertRadius: number };
 }
 export interface WorldRoom { id: string; name: string; region: string; center: { x: number; y: number }; floor: { w: number; h: number }; difficulty: string; candidateEncounter: string; purpose: string; status: string }

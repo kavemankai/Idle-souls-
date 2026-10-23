@@ -1,5 +1,7 @@
 /** The save document. One versioned JSON text; the format knows nothing about where it is stored, so it can sync to an account later. */
 export const SAVE_VERSION = 1;
+/** The starter sword and shield are guaranteed and are never loot: they appear in no bank and no cache. */
+export const STARTER_KIT: readonly string[] = ['starter-sword', 'starter-shield'];
 export interface Bank { gold: number; supplies: Record<string, number>; gear: string[]; mastery: number }
 export interface Cache { room: string; x: number; y: number; contents: Bank }
 export interface SaveV1 {

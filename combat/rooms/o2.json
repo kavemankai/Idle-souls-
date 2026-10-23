@@ -128,6 +128,16 @@
       ]
     }
   },
+  "pickups": [
+    {
+      "id": "o2-ration",
+      "kind": "supplies",
+      "item": "ration",
+      "qty": 1,
+      "x": 40,
+      "y": 150
+    }
+  ],
   "detection": {
     "range": 160,
     "arcDegrees": 120,

@@ -1,11 +1,12 @@
 import type { SimDoctrine } from '../combat/simApi';
 import type { WorldGraph } from '../world/worldGraph';
+import type { Cache } from '../save/saveTypes';
 import { planRooms, type RoutePlan, type RouteStyle } from './planner';
 
 export type Exploration = 'safe' | 'thorough' | 'direct';
 export type ReturnRoute = 'safest' | 'shortest';
-/** Reach walks to a room. Survey walks into it; a Thorough survey also looks into the rooms beside it. Other kinds (gather, recover, open, challenge) need systems that come later. */
-export type ObjectiveKind = 'reach' | 'survey';
+/** Reach walks to a room. Survey walks into it; a Thorough survey also looks into the rooms beside it. Recover walks to the recovery cache and picks it up (it is still at risk until camp). Other kinds (gather, open, challenge) need systems that come later. */
+export type ObjectiveKind = 'reach' | 'survey' | 'recover';
 export interface Objective { id: string; kind: ObjectiveKind; room: string }
 export type ObjectiveStatus = 'queued' | 'active' | 'completed' | 'skipped_blocked' | 'cancelled' | 'suspended';
 export interface ExpeditionPlan {
@@ -43,7 +44,7 @@ export interface Preflight {
 const RANK: Record<PreflightStatus, number> = { confirmed: 0, frontier: 1, blocked: 2, conflicted: 3 };
 
 /** What the plan screen shows before launch. Only known geography is used; nothing is routed through fog and no enemy position is read. */
-export function preflight(plan: ExpeditionPlan, graph: WorldGraph, known: ReadonlySet<string>, start = CAMP): Preflight {
+export function preflight(plan: ExpeditionPlan, graph: WorldGraph, known: ReadonlySet<string>, start = CAMP, cache: Cache | null = null): Preflight {
   const avoid = new Set(plan.avoid), style = styleOf(plan.exploration);
   const messages: string[] = [];
   const objectives: ObjectivePreflight[] = [];
@@ -53,6 +54,7 @@ export function preflight(plan: ExpeditionPlan, graph: WorldGraph, known: Readon
   for (const o of plan.objectives) {
     let status: PreflightStatus, reason: string, route: RoutePlan | null = null;
     if (!graph.rooms.has(o.room)) { status = 'blocked'; reason = `Unknown room ${o.room}.`; }
+    else if (o.kind === 'recover' && (!cache || cache.room !== o.room)) { status = 'blocked'; reason = `There is no recovery cache in ${name(graph, o.room)}.`; }
     else if (avoid.has(o.room)) { status = 'conflicted'; reason = `${name(graph, o.room)} is on the avoid list.`; }
     else {
       route = planRooms({ graph, known, from, to: o.room, avoid, style });

@@ -102,6 +102,16 @@
       ]
     }
   },
+  "pickups": [
+    {
+      "id": "o3-buckler",
+      "kind": "gear",
+      "item": "cracked-buckler",
+      "qty": 1,
+      "x": 35,
+      "y": -95
+    }
+  ],
   "detection": {
     "range": 160,
     "arcDegrees": 120,
