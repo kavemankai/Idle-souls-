@@ -84,7 +84,7 @@
       "difficulty": "TRIAL",
       "candidateEncounter": "3 staged enemies/waves",
       "purpose": "Repeatable, keyless access; claimed key must extract",
-      "status": "generated"
+      "status": "authored"
     },
     {
       "id": "T1",
@@ -135,7 +135,7 @@
       "difficulty": "MID",
       "candidateEncounter": "Harrier + Mireling optional",
       "purpose": "Alternate viewpoint/rare cache",
-      "status": "generated"
+      "status": "authored"
     },
     {
       "id": "MB",

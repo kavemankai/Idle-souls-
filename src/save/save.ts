@@ -1,4 +1,4 @@
-import { SAVE_VERSION, STARTER_KIT, defaultSave, type Bank, type SaveV1 } from './saveTypes';
+import { SAVE_VERSION, STARTER_KIT, defaultSave, type Bank, type Save } from './saveTypes';
 export * from './saveTypes';
 
 /** Stable text for a save: keys sorted, then a checksum line so a hand-edited or truncated file is caught. */
@@ -14,9 +14,9 @@ export function checksum(text: string): string {
 }
 /** Wrap any document in the save envelope. Used for saves and for migration tests. */
 export function wrap(doc: unknown): string { return JSON.stringify({ format: 'idle-souls-save', checksum: checksum(canonical(doc)), data: doc }); }
-export function serialize(save: SaveV1): string { return wrap(JSON.parse(canonical(save))); }
+export function serialize(save: Save): string { return wrap(JSON.parse(canonical(save))); }
 
-export type ParseResult = { ok: true; save: SaveV1; migratedFrom: number | null } | { ok: false; error: string };
+export type ParseResult = { ok: true; save: Save; migratedFrom: number | null } | { ok: false; error: string };
 type Migration = (old: Record<string, unknown>) => Record<string, unknown>;
 /** MIGRATIONS[n] turns a version n document into version n + 1. Version 0 was a sketch with a flat shape; it exists to prove the chain. */
 export const MIGRATIONS: Record<number, Migration> = {
@@ -26,6 +26,15 @@ export const MIGRATIONS: Record<number, Migration> = {
     camp: { bank: { gold: Number(old.gold ?? 0), supplies: {}, gear: [], mastery: 0 }, cache: null, expeditions: 0, deaths: 0 },
     settings: defaultSave().settings,
   }),
+  // Version 2 tracks Gate Keys: the banked stock moves from the world record into the bank, carried bundles gain `keys` and `prepared`, and one-time claims start empty.
+  1: old => {
+    const w = old.world as { discovered: string[]; openedLinks: string[]; defeatedBosses: string[]; keysBanked?: number }, c = old.camp as { bank: Record<string, unknown>; cache: { contents: Record<string, unknown> } | null };
+    return {
+      ...old, version: 2,
+      world: { discovered: w.discovered, openedLinks: w.openedLinks, defeatedBosses: w.defeatedBosses, claims: [] },
+      camp: { ...c, bank: { ...c.bank, keys: Number(w.keysBanked ?? 0), prepared: 0 }, cache: c.cache ? { ...c.cache, contents: { ...c.cache.contents, keys: 0, prepared: 0 } } : null },
+    };
+  },
 };
 
 export function parse(text: string): ParseResult {
@@ -47,16 +56,16 @@ export function parse(text: string): ParseResult {
   }
   const problems = validate(doc);
   if (problems.length) return { ok: false, error: `The save is not valid: ${problems.join('; ')}.` };
-  return { ok: true, save: doc as unknown as SaveV1, migratedFrom: from === SAVE_VERSION ? null : from };
+  return { ok: true, save: doc as unknown as Save, migratedFrom: from === SAVE_VERSION ? null : from };
 }
 
-const isBank = (b: unknown): b is Bank => !!b && typeof b === 'object' && typeof (b as Bank).gold === 'number' && typeof (b as Bank).mastery === 'number' && Array.isArray((b as Bank).gear) && !!(b as Bank).supplies && typeof (b as Bank).supplies === 'object';
-/** Shape check for a version 1 document. */
+const isBank = (b: unknown): b is Bank => !!b && typeof b === 'object' && typeof (b as Bank).gold === 'number' && typeof (b as Bank).mastery === 'number' && typeof (b as Bank).keys === 'number' && typeof (b as Bank).prepared === 'number' && Array.isArray((b as Bank).gear) && !!(b as Bank).supplies && typeof (b as Bank).supplies === 'object';
+/** Shape check for a version 2 document. */
 export function validate(doc: Record<string, unknown>): string[] {
   const p: string[] = [];
-  const world = doc.world as SaveV1['world'] | undefined, camp = doc.camp as SaveV1['camp'] | undefined, st = doc.settings as SaveV1['settings'] | undefined;
-  if (doc.version !== 1) p.push('version is not 1');
-  if (!world || !Array.isArray(world.discovered) || !Array.isArray(world.openedLinks) || !Array.isArray(world.defeatedBosses) || typeof world.keysBanked !== 'number') p.push('world memory is malformed');
+  const world = doc.world as Save['world'] | undefined, camp = doc.camp as Save['camp'] | undefined, st = doc.settings as Save['settings'] | undefined;
+  if (doc.version !== 2) p.push('version is not 2');
+  if (!world || !Array.isArray(world.discovered) || !Array.isArray(world.openedLinks) || !Array.isArray(world.defeatedBosses) || !Array.isArray(world.claims)) p.push('world memory is malformed');
   if (!camp || !isBank(camp.bank) || typeof camp.expeditions !== 'number' || typeof camp.deaths !== 'number') p.push('camp is malformed');
   else if (camp.cache !== null && (typeof camp.cache.room !== 'string' || !isBank(camp.cache.contents))) p.push('the cache is malformed');
   if (!st || typeof st.music !== 'number' || typeof st.effects !== 'number' || typeof st.reducedFx !== 'boolean') p.push('settings are malformed');
@@ -64,17 +73,20 @@ export function validate(doc: Record<string, unknown>): string[] {
 }
 
 /** Rules that must hold in every save, whatever wrote it. Returns what is broken. */
-export function validateInvariants(save: SaveV1): string[] {
+export function validateInvariants(save: Save): string[] {
   const p: string[] = [], banks: [string, Bank][] = [['bank', save.camp.bank]];
   if (save.camp.cache) banks.push(['cache', save.camp.cache.contents]);
   for (const [name, b] of banks) {
     if (b.gold < 0 || b.mastery < 0 || !Number.isFinite(b.gold)) p.push(`${name} has negative or invalid gold or mastery`);
+    for (const [k, n] of [['keys', b.keys], ['prepared keys', b.prepared]] as const) if (n < 0 || !Number.isInteger(n)) p.push(`${name} has an invalid count of ${k}`);
     for (const [k, n] of Object.entries(b.supplies)) if (n < 0 || !Number.isInteger(n)) p.push(`${name} has an invalid count of ${k}`);
   }
   for (const [name, b] of banks) if (b.gear.some(g => STARTER_KIT.includes(g))) p.push(`${name} holds starter kit, which is never loot`);
   if (save.camp.cache && Object.values(save.camp.cache.contents).every(v => (typeof v === 'number' ? v === 0 : Array.isArray(v) ? v.length === 0 : Object.values(v).every(n => n === 0)))) p.push('an empty cache is a meaningless marker');
   if (save.camp.deaths > save.camp.expeditions) p.push('more deaths than expeditions');
-  if (save.world.keysBanked < 0 || !Number.isInteger(save.world.keysBanked)) p.push('banked keys must be a whole number of at least 0');
+  if (save.camp.bank.prepared !== 0) p.push('the camp bank cannot hold prepared keys: they are issued to an expedition');
+  if (new Set(save.world.openedLinks).size !== save.world.openedLinks.length) p.push('a link is opened twice');
+  if (new Set(save.world.claims).size !== save.world.claims.length) p.push('a discovery is claimed twice');
   if (new Set(save.world.discovered).size !== save.world.discovered.length) p.push('a room is discovered twice');
   return p;
 }
@@ -101,18 +113,18 @@ export class LocalStore implements SaveStore {
 }
 
 /** Load from a store; a missing or damaged save gives a fresh one and says why, and never overwrites the damaged text. */
-export function load(store: SaveStore, build = 'dev'): { save: SaveV1; note: string | null } {
+export function load(store: SaveStore, build = 'dev'): { save: Save; note: string | null } {
   const text = store.read();
   if (text === null) return { save: defaultSave(build), note: null };
   const r = parse(text);
   return r.ok ? { save: r.save, note: r.migratedFrom === null ? null : `Updated an older save (version ${r.migratedFrom}).` } : { save: defaultSave(build), note: r.error };
 }
-export function persist(store: SaveStore, save: SaveV1): void {
+export function persist(store: SaveStore, save: Save): void {
   const bad = validateInvariants(save);
   if (bad.length) throw new Error(`refusing to save a broken state: ${bad.join('; ')}`);
   store.write(serialize(save));
 }
-export const exportSave = (save: SaveV1): string => serialize(save);
+export const exportSave = (save: Save): string => serialize(save);
 /** Import never writes partial state: it validates the whole text, then writes once. */
 export function importSave(store: SaveStore, text: string): { ok: true } | { ok: false; error: string } {
   const r = parse(text);

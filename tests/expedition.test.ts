@@ -1,4 +1,5 @@
 import { test } from 'node:test';
+import { emptyCarried } from '../src/expedition/loot';
 import assert from 'node:assert/strict';
 import { loadSim } from '../src/combat/loadSimNode';
 import { WorldGraph } from '../src/world/worldGraph';
@@ -169,7 +170,7 @@ test('an objective that cannot be reached is skipped with its reason and the pla
 test('with no permitted way home the expedition reports a blocked extraction and does not cross the avoided room', () => {
   const ex = new Expedition(plan({ objectives: [obj('O3')], avoid: ['O1'] }), graph, OLD_ROAD);
   ex.order({ type: 'retreat' });
-  const ctx: ArrivalCtx = { room: 'O2', entry: 'to-O1', tick: 500, hp: 80, hpMax: 90, pos: { x: 0, y: 0 }, leg: 2, dead: new Map(), results: [] };
+  const ctx: ArrivalCtx = { room: 'O2', entry: 'to-O1', tick: 500, hp: 80, hpMax: 90, pos: { x: 0, y: 0 }, carried: emptyCarried(), leg: 2, dead: new Map(), results: [] };
   const d = ex.arrive(ctx);
   assert.ok('halt' in d && /Extraction blocked by your exclusion/.test(d.halt));
   assert.equal(ex.mode, 'blocked');

@@ -4,7 +4,8 @@ import { defaultPlan } from '../../src/expedition/plan';
 import { runExpedition, type ExpeditionConfig } from '../../src/expedition/run';
 
 const sim = loadSim();
-const open = async (page: Page, query = '') => { await page.goto(`/?scene=expedition${query}`); await page.waitForFunction(() => window.__EXPEDITION_READY__); };
+// The planner starts in fog (only the map in the save). Most specs use the Old Road shortcut map so presets have somewhere to go; the fog specs say known=save.
+const open = async (page: Page, query = '') => { await page.goto(`/?scene=expedition${query.includes('known=') ? '' : '&known=oldroad'}${query}`); await page.waitForFunction(() => window.__EXPEDITION_READY__); };
 const noSideScroll = (page: Page) => page.evaluate(() => { const x = document.getElementById('xp')!; return x.scrollWidth <= x.clientWidth + 1; });
 
 for (const viewport of [{ width: 1280, height: 720 }, { width: 390, height: 844 }, { width: 844, height: 390 }]) {
@@ -57,7 +58,10 @@ test('browser and Node agree on expeditions across plans and seeds', async ({ pa
     cases.push({ seed, level: 80, focus: 'balanced', known: ['C0', 'O1', 'O2', 'O3', 'KT'], plan: { ...defaultPlan(), retreatHpPct: 95, doctrine: 'pressing', objectives: [obj('O3'), obj('KT')] } });
   }
   cases.push({ seed: 7, level: 80, focus: 'balanced', hpOverride: 5000, known: ['C0', 'O1', 'O2', 'O3', 'KT', 'T1', 'T2', 'K3', 'K2', 'S1', 'S2', 'K1'], plan: { ...defaultPlan(), avoid: ['T1'], returnRoute: 'shortest', objectives: [obj('K2')] } });
-  cases.push({ seed: 4, level: 80, focus: 'balanced', hpOverride: 5000, known: ['C0', 'O1', 'O2', 'O3', 'KT'], cache: { room: 'O1', x: -100, y: 0, contents: { gold: 50, supplies: { ration: 1 }, gear: [], mastery: 3 } }, plan: { ...defaultPlan(), objectives: [obj('O1', 'recover'), obj('O3')] } });
+  cases.push({ seed: 4, level: 80, focus: 'balanced', hpOverride: 5000, known: ['C0', 'O1', 'O2', 'O3', 'KT'], cache: { room: 'O1', x: -100, y: 0, contents: { gold: 50, supplies: { ration: 1 }, gear: [], mastery: 3, keys: 0, prepared: 0 } }, plan: { ...defaultPlan(), objectives: [obj('O1', 'recover'), obj('O3')] } });
+  const everything = ['C0', 'O1', 'O2', 'O3', 'KT', 'T1', 'T2', 'T3', 'MB', 'S1', 'S2', 'S3', 'K1', 'K2', 'K3', 'B1', 'SB'];
+  cases.push({ seed: 6, level: 80, focus: 'balanced', hpOverride: 5000, known: everything, issueKeys: 1, plan: { ...defaultPlan(), retreatHpPct: 0, objectives: [{ id: 'g', kind: 'open', room: 'T2', to: 'MB' }, { id: 't', kind: 'reach', room: 'T3' }] } });
+  cases.push({ seed: 8, level: 80, focus: 'balanced', hpOverride: 5000, known: everything, plan: { ...defaultPlan(), retreatHpPct: 0, returnRoute: 'shortest', objectives: [{ id: 's', kind: 'reach', room: 'S3' }, { id: 'o', kind: 'open', room: 'S3', to: 'C0' }, { id: 'x', kind: 'explore', room: 'K1' }] } });
   const inPage = await page.evaluate(cs => cs.map(c => window.__EXPEDITION_RUN__(c)), cases);
   inPage.forEach((r, i) => expect(r, `case ${i}`).toEqual(runExpedition(sim, cases[i]).chronicle));
 });
@@ -117,7 +121,7 @@ test('a returning expedition banks its loot once, and the camp shows it next tim
 });
 
 test('a fall leaves one cache, the camp warns about it, and a recover objective brings it home', async ({ page }) => {
-  await open(page, `&seed=1&hp=45&known=oldroad${SAVE}`);
+  await open(page, `&seed=1&hp=45${SAVE}`);
   await page.locator('[data-preset=cross]').click();
   await page.locator('#retreat').fill('0');
   await page.locator('#launch').click();
@@ -141,4 +145,51 @@ test('the save can be exported and imported, and a damaged save is refused', asy
   await page.locator('#import-go').click();
   await expect(page.locator('.warn').first()).toBeVisible();
   expect((await page.evaluate(() => window.__EXPEDITION_SAVE__())).camp.expeditions).toBe(0);
+});
+
+test('a new game starts in fog: only the Outer Road can be chosen, and walking it opens up the map', async ({ page }) => {
+  await open(page, `&known=save&seed=1&hp=5000${SAVE}`);
+  await page.locator('#add-objective').click();
+  expect(await page.locator('[data-obj-room="0"] option').allTextContents()).toEqual(['Outer Road (unexplored)']);
+  await page.locator('[data-preset=first]').click();
+  await expect(page.locator('#preflight')).toHaveAttribute('data-status', 'frontier');
+  await page.locator('#launch').click();
+  if (await page.locator('#skip').isEnabled()) await page.locator('#skip').click();
+  await expect(page.locator('#outcome')).toHaveAttribute('data-outcome', 'extracted');
+  await expect(page.locator('#feed li[data-kind=discovery]').first()).toContainText('Outer Road');
+  await page.locator('#again').click();
+  await page.locator('#add-objective').click();
+  const options = await page.locator('[data-obj-room="0"] option').allTextContents();
+  expect(options.some(o => o.includes('Crossroads'))).toBe(true);
+  expect(options.some(o => o.includes('Tower'))).toBe(false);
+  const save = await page.evaluate(() => window.__EXPEDITION_SAVE__());
+  expect(save.world.discovered).toEqual(['C0', 'O1']);
+});
+
+test('a banked key opens a gate only when issued; the gate then stays open and costs nothing again', async ({ page }) => {
+  await open(page, `&known=all&seed=1&hp=5000${SAVE}`);
+  await page.evaluate(() => {
+    const s = window.__EXPEDITION_SAVE__();
+    s.camp.bank.keys = 1;
+    window.__EXPEDITION_SET_SAVE__!(s);
+  });
+  await expect(page.locator('#keys-line')).toContainText('Gate Keys banked: 1');
+  await expect(page.locator('#gates-seen')).toContainText('Tower Barracks to Bell Warden: sealed');
+  await page.locator('#add-objective').click();
+  await page.locator('[data-obj-kind="0"]').selectOption('open');
+  await page.locator('[data-obj-gate="0"]').selectOption('T2>MB');
+  await expect(page.locator('#preflight')).toHaveAttribute('data-status', 'blocked');
+  await expect(page.locator('.obj .why').first()).toContainText('banked Gate Key issued at camp');
+  await page.locator('[data-issue="1"]').click();
+  await expect(page.locator('#preflight')).toHaveAttribute('data-status', 'confirmed');
+  await page.locator('#launch').click();
+  if (await page.locator('#skip').isEnabled()) await page.locator('#skip').click();
+  await expect(page.locator('#outcome')).toHaveAttribute('data-outcome', 'extracted');
+  await expect(page.locator('#feed')).toContainText('Spent 1 Gate Key');
+  await expect(page.locator('#settle-lines')).toContainText('Opened for good: Tower Barracks and Bell Warden');
+  const save = await page.evaluate(() => window.__EXPEDITION_SAVE__());
+  expect(save.world.openedLinks).toEqual(['MB~T2']); expect(save.camp.bank.keys).toBe(0);
+  await page.locator('#again').click();
+  await expect(page.locator('#keys-line')).toContainText('Opened gates and shortcuts: 1');
+  expect(await noSideScroll(page)).toBe(true);
 });

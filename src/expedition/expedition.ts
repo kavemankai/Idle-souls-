@@ -3,6 +3,9 @@ import type { RetreatAnswer } from '../world/roomRunner';
 import type { WorldGraph } from '../world/worldGraph';
 import type { Cache } from '../save/saveTypes';
 import { describeBank, type Gain } from './loot';
+import { WorldGraph as WG } from '../world/worldGraph';
+import { GATE_NEED, needText, stagingPoint, type GateInfo } from '../world/gates';
+import { ROOMS } from '../world/roomRegistry';
 import { CAMP, MAX_OBJECTIVES, frontierRooms, name, styleOf, type ExpeditionPlan, type Objective, type ObjectiveStatus } from './plan';
 import { planRooms, type RoutePlan, type RouteStyle } from './planner';
 
@@ -39,7 +42,8 @@ export class Expedition implements Navigator {
   private lastRoute: string[] = [];
   private readonly avoid: Set<string>;
   private nextId = 100;
-  constructor(readonly plan: ExpeditionPlan, private readonly graph: WorldGraph, known: Iterable<string>, private readonly cache: Cache | null = null) {
+  constructor(readonly plan: ExpeditionPlan, private readonly graph: WorldGraph, known: Iterable<string>, private readonly cache: Cache | null = null, openLinks: Iterable<string> = []) {
+    this.openLinks = new Set(openLinks);
     this.known = new Set(known);
     this.avoid = new Set(plan.avoid);
     if (plan.objectives.length > MAX_OBJECTIVES) throw new Error(`at most ${MAX_OBJECTIVES} objectives`);
@@ -51,7 +55,7 @@ export class Expedition implements Navigator {
   order(o: Order): string | null {
     if (o.type === 'redirect') {
       if (this.avoid.has(o.room)) return `${name(this.graph, o.room)} is on the avoid list.`;
-      if (!this.known.has(o.room) && !frontierRooms(this.graph, this.known).includes(o.room)) return `${name(this.graph, o.room)} is not on the map yet.`;
+      if (!this.known.has(o.room) && !frontierRooms(this.graph, this.known, this.openLinks).includes(o.room)) return `${name(this.graph, o.room)} is not on the map yet.`;
       if (this.objectives.filter(x => x.status === 'queued' || x.status === 'active').length >= MAX_OBJECTIVES) return `At most ${MAX_OBJECTIVES} objectives.`;
     }
     this.pending.push(o);
@@ -66,7 +70,8 @@ export class Expedition implements Navigator {
    * Called every tick inside a room. A manual Retreat order or the health threshold turns the walk into a retreat at once, even mid-fight
    * (the combat layer disengages; this layer only supplies the way out). Redirects wait for the next doorway.
    */
-  live(ctx: LiveCtx): { exit: string } | { end: true } | null {
+  live(ctx: LiveCtx): { exit: string } | { end: true } | { again: true } | null {
+    if (this.rearrive) { this.rearrive = false; return { again: true }; }
     if (this.mode !== 'outbound' || this.retreatTried) return null;
     const manual = this.pending.some(o => o.type === 'retreat');
     const low = this.plan.retreatHpPct > 0 && pct(ctx.hp, ctx.hpMax) < this.plan.retreatHpPct;
@@ -83,7 +88,7 @@ export class Expedition implements Navigator {
     const why = why0(manual, ctx, this.plan);
     if (!route) {
       this.retreatTried = true;
-      const open = planRooms({ graph: this.graph, known: this.known, from: ctx.room, to: CAMP, avoid: new Set(), style: 'shortest' });
+      const open = planRooms({ open: this.openLinks, graph: this.graph, known: this.known, from: ctx.room, to: CAMP, avoid: new Set(), style: 'shortest' });
       this.say(ctx.tick, 'retreat', ctx.room, `RETREAT BLOCKED: ${open ? 'every known way home crosses an avoided room' : 'no known open route home'}. ${why[0]} The adventurer carries on and does not cross the avoided room.`, 'Avoid is absolute (L13), even in a retreat. No teleport.');
       return null;
     }
@@ -102,14 +107,33 @@ export class Expedition implements Navigator {
       this.say(ctx.tick, 'retreat', ctx.room, `Disengage: ${r.pursuers} enem${r.pursuers === 1 ? 'y' : 'ies'} here, nearest ${r.nearest} units, ${r.withinReach} within reach, stamina ${r.stamina}%, health ${r.health}%${r.acting ? ', mid-action' : ''}. Stops attacking, guards while walking out by the ${door} door.`, 'Phase 1 of a retreat: break contact. Enemies stay in their room.');
     } else this.say(ctx.tick, 'retreat', ctx.room, `Withdraw: heads for the ${door} door, then ${list(route.rooms)}.`, 'Phase 2 of a retreat: leave by the permitted way home.');
   }
+  /** Asked when the adventurer stands at a sealed gate: only the gate the current objective names, and only here, never by chance. */
+  wantsInteraction(g: GateInfo): boolean {
+    const o = this.active();
+    return !!o && o.kind === 'open' && o.status === 'active' && o.room === g.from && o.to === g.to;
+  }
+  gateWorked(g: GateInfo, ok: boolean, ctx: LiveCtx) {
+    const a = name(this.graph, g.from), b = name(this.graph, g.to);
+    if (ok) {
+      this.openLinks.add(g.key);
+      this.rearrive = true;   // the way out may have changed: decide again from here
+      this.say(ctx.tick, 'loot', g.from, g.need === 'key' ? `Spent 1 Gate Key: the way from ${a} to ${b} is open for good. No fight has started.` : `Worked the shortcut from ${a} to ${b}: it is open for good.`, g.need === 'key' ? 'A deliberate, permanent unlock (L16, L19). It persists even if the adventurer falls.' : 'A shortcut activated by hand; it stays open.');
+    } else this.say(ctx.tick, 'skip', g.from, `Could not open the way from ${a} to ${b}: no eligible key is carried.`, 'Only a key banked at camp and issued for this expedition can open a gate (L19).');
+  }
   private retreatTried = false;
   private cacheRecovered = false;
+  /** Gates and shortcuts open for good: from the save, plus any opened on this expedition. */
+  readonly openLinks: Set<string>;
+  private interactTries = 0;
+  private rearrive = false;
+  private exploring: { id: string; left: number } | null = null;
   private cacheTries = 0;
   /** Heard from the world runner: something was gained. Everything gained is carried and at risk until camp. */
   looted(g: Gain, ctx: LiveCtx) {
     if (g.source === 'cache') this.cacheRecovered = true;
     const text = g.source === 'kill' ? `Defeated ${g.label.replace(' defeated', '')} in ${name(this.graph, g.room)}: ${describeBank(g.bundle)}.` : g.source === 'pickup' ? `Picked up ${g.label} in ${name(this.graph, g.room)}.` : `Recovered the cache in ${name(this.graph, g.room)}: ${describeBank(g.bundle)}.`;
-    this.say(ctx.tick, 'loot', g.room, `${text} Carried, at risk until camp.`, 'Loot is banked only by arriving at camp alive (doc 08).');
+    const fresh = g.bundle.keys > 0 ? ' A Gate Key found on the way cannot open a gate until it has been banked at camp.' : '';
+    this.say(ctx.tick, 'loot', g.room, `${text} Carried, at risk until camp.${fresh}`, 'Loot is banked only by arriving at camp alive (doc 08).');
   }
   private liveRoute: RoutePlan | null = null;
 
@@ -139,6 +163,41 @@ export class Expedition implements Navigator {
       const o = this.active();
       if (!o) { this.startReturn(ctx, 'Every objective is done or skipped.', 'Return to Camp ends every plan.'); return this.goHome(ctx); }
       if (o.status === 'queued') { this.set(o, 'active'); this.say(tick, 'objective', room, `Objective ${this.index(o)}: ${o.kind === 'survey' ? 'survey' : 'reach'} ${name(this.graph, o.room)}.`, 'Next in the plan order.'); }
+      if (o.kind === 'open') {
+        const link = WG.linkKey(o.room, o.to!);
+        if (this.openLinks.has(link)) {
+          this.set(o, 'completed', 'Open for good.');
+          this.say(tick, 'objective', room, `Objective ${this.index(o)} done: the way from ${name(this.graph, o.room)} to ${name(this.graph, o.to!)} is open for good.`, 'The gate is open.');
+          continue;
+        }
+        if (o.room === room) {
+          const link2 = this.graph.neighbours(room).find(n => n.room === o.to);
+          const need = link2 ? GATE_NEED[link2.type] ?? 'special' : 'special';
+          const why = !link2 ? 'There is no door there.' : need === 'key' ? (ctx.carried.prepared < 1 ? (ctx.carried.keys > 0 ? 'The Gate Key found on this run cannot open a gate until it has been banked at camp.' : 'No Gate Key was issued from camp for this expedition.') : '')
+            : need === 'activation' ? '' : need === 'boss' ? 'It opens when the miniboss falls.' : 'It is an optional special-key door, not part of this slice.';
+          if (why || ++this.interactTries > 2) {
+            const reason = why || 'The gate could not be reached.';
+            this.set(o, 'skipped_blocked', reason);
+            this.say(tick, 'skip', room, `Objective ${this.index(o)} skipped, blocked: ${reason}`, 'L14: try legal alternatives, then skip and continue in order.');
+            continue;
+          }
+          this.say(tick, 'objective', room, `Walking to the gate to ${name(this.graph, o.to!)}: ${needText(need)}.`, 'Open objective: a deliberate, planned unlock.');
+          const back = ctx.entry ?? this.graph.neighbours(room)[0].door;
+          return { exit: back, cross: true, label: 'out', via: stagingPoint(ROOMS[room], o.to!) };
+        }
+      }
+      if (o.kind === 'explore' && !this.exploring && o.room === room) this.exploring = { id: o.id, left: Math.max(0, (o.depth ?? 3) - 1) };
+      if (o.kind === 'explore' && this.exploring && this.exploring.id === o.id) {
+        const next = this.graph.neighbours(room).find(n => !this.known.has(n.room) && (!this.graph.isGated(n.type) || this.openLinks.has(n.key)) && !this.avoid.has(n.room));
+        if (this.exploring.left > 0 && next) {
+          this.exploring.left--;
+          return this.head(ctx, next.room, styleOf(this.plan.exploration), `Exploring on from ${name(this.graph, room)}`);
+        }
+        this.exploring = null;
+        this.set(o, 'completed', 'Explored as far as it goes.');
+        this.say(tick, 'objective', room, `Objective ${this.index(o)} done: explored on from the edge of the map as far as the bounded search allows.`, 'Bounded exploration: a few rooms, then home (doc 05).');
+        continue;
+      }
       if (o.kind === 'recover' && this.cacheRecovered) {
         this.set(o, 'completed', 'Cache recovered; still at risk until camp.');
         this.say(tick, 'objective', room, `Objective ${this.index(o)} done: the recovery cache is in hand. It is not banked until camp.`, 'The cache was picked up.');
@@ -163,7 +222,7 @@ export class Expedition implements Navigator {
       }
       const route = this.route0(room, o.room, styleOf(this.plan.exploration));
       if (!route) {
-        const crossing = planRooms({ graph: this.graph, known: this.known, from: room, to: o.room, avoid: new Set(), style: 'shortest' });
+        const crossing = planRooms({ open: this.openLinks, graph: this.graph, known: this.known, from: room, to: o.room, avoid: new Set(), style: 'shortest' });
         const why = crossing ? `Every known way to ${name(this.graph, o.room)} crosses an avoided room.` : `No known open route to ${name(this.graph, o.room)} from ${name(this.graph, room)}.`;
         this.set(o, 'skipped_blocked', why);
         this.say(tick, 'skip', room, `Objective ${this.index(o)} skipped, blocked: ${why}`, 'L14: try legal alternatives, then skip and continue in order.');
@@ -177,7 +236,7 @@ export class Expedition implements Navigator {
 
   private index(o: ObjectiveState) { return this.objectives.indexOf(o) + 1; }
   private route0(from: string, to: string, style: RouteStyle, notFirst?: Set<string>) {
-    return planRooms({ graph: this.graph, known: this.known, from, to, avoid: this.avoid, style, notFirst });
+    return planRooms({ open: this.openLinks, graph: this.graph, known: this.known, from, to, avoid: this.avoid, style, notFirst });
   }
   private queueSweep(room: string, cameFrom: string | null) {
     const sides = this.graph.neighbours(room).filter(n => !this.graph.isGated(n.type) && !this.avoid.has(n.room) && !this.visited.has(n.room) && n.door !== cameFrom && n.room !== CAMP);
@@ -208,7 +267,7 @@ export class Expedition implements Navigator {
     const route = this.route0(ctx.room, CAMP, style);
     if (!route) {
       this.mode = 'blocked';
-      const open = planRooms({ graph: this.graph, known: this.known, from: ctx.room, to: CAMP, avoid: new Set(), style: 'shortest' });
+      const open = planRooms({ open: this.openLinks, graph: this.graph, known: this.known, from: ctx.room, to: CAMP, avoid: new Set(), style: 'shortest' });
       this.endReason = open ? `Extraction blocked by your exclusion: every known way home crosses an avoided room.` : 'Extraction blocked: no known open route home.';
       this.say(ctx.tick, 'end', ctx.room, this.endReason, 'Avoid is absolute (L13), even on the way home. No teleport.');
       return { halt: this.endReason };

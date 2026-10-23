@@ -1,13 +1,16 @@
 import type { SimDoctrine } from '../combat/simApi';
 import type { WorldGraph } from '../world/worldGraph';
 import type { Cache } from '../save/saveTypes';
+import { gates } from '../world/gates';
+import { WorldGraph as WG } from '../world/worldGraph';
 import { planRooms, type RoutePlan, type RouteStyle } from './planner';
 
 export type Exploration = 'safe' | 'thorough' | 'direct';
 export type ReturnRoute = 'safest' | 'shortest';
 /** Reach walks to a room. Survey walks into it; a Thorough survey also looks into the rooms beside it. Recover walks to the recovery cache and picks it up (it is still at risk until camp). Other kinds (gather, open, challenge) need systems that come later. */
-export type ObjectiveKind = 'reach' | 'survey' | 'recover';
-export interface Objective { id: string; kind: ObjectiveKind; room: string }
+export type ObjectiveKind = 'reach' | 'survey' | 'recover' | 'explore' | 'open';
+/** `room` is where the adventurer goes. For `open` it is the room beside the gate and `to` is the room beyond; for `explore` it is the frontier room to start from and `depth` is how many new rooms to enter in a chain (default 3). */
+export interface Objective { id: string; kind: ObjectiveKind; room: string; to?: string; depth?: number }
 export type ObjectiveStatus = 'queued' | 'active' | 'completed' | 'skipped_blocked' | 'cancelled' | 'suspended';
 export interface ExpeditionPlan {
   /** Ordered. Return to Camp is always appended and is not listed here. */
@@ -25,9 +28,9 @@ export const CAMP = 'C0';
 export const defaultPlan = (): ExpeditionPlan => ({ objectives: [], avoid: [], exploration: 'safe', doctrine: 'measured', retreatHpPct: 40, returnRoute: 'safest' });
 
 /** Rooms the player has seen. A room next to a seen room by an ordinary link is a frontier room: known to exist, not yet entered. */
-export function frontierRooms(graph: WorldGraph, known: ReadonlySet<string>): string[] {
+export function frontierRooms(graph: WorldGraph, known: ReadonlySet<string>, open: ReadonlySet<string> = new Set()): string[] {
   const out = new Set<string>();
-  for (const r of known) for (const n of graph.neighbours(r)) if (!known.has(n.room) && !graph.isGated(n.type)) out.add(n.room);
+  for (const r of known) for (const n of graph.neighbours(r)) if (!known.has(n.room) && (!graph.isGated(n.type) || open.has(n.key))) out.add(n.room);
   return [...out].sort();
 }
 /** Style of route an exploration preference asks for. Safe and Thorough avoid dangerous rooms when a safer way exists; Direct takes the shortest. */
@@ -44,7 +47,7 @@ export interface Preflight {
 const RANK: Record<PreflightStatus, number> = { confirmed: 0, frontier: 1, blocked: 2, conflicted: 3 };
 
 /** What the plan screen shows before launch. Only known geography is used; nothing is routed through fog and no enemy position is read. */
-export function preflight(plan: ExpeditionPlan, graph: WorldGraph, known: ReadonlySet<string>, start = CAMP, cache: Cache | null = null): Preflight {
+export function preflight(plan: ExpeditionPlan, graph: WorldGraph, known: ReadonlySet<string>, start = CAMP, cache: Cache | null = null, open: ReadonlySet<string> = new Set(), preparedKeys = 0): Preflight {
   const avoid = new Set(plan.avoid), style = styleOf(plan.exploration);
   const messages: string[] = [];
   const objectives: ObjectivePreflight[] = [];
@@ -57,19 +60,27 @@ export function preflight(plan: ExpeditionPlan, graph: WorldGraph, known: Readon
     else if (o.kind === 'recover' && (!cache || cache.room !== o.room)) { status = 'blocked'; reason = `There is no recovery cache in ${name(graph, o.room)}.`; }
     else if (avoid.has(o.room)) { status = 'conflicted'; reason = `${name(graph, o.room)} is on the avoid list.`; }
     else {
-      route = planRooms({ graph, known, from, to: o.room, avoid, style });
+      route = planRooms({ graph, known, from, to: o.room, avoid, style, open });
       if (route) { status = route.frontier ? 'frontier' : 'confirmed'; reason = route.frontier ? `Known route ends at the edge of the map; ${name(graph, o.room)} is unexplored.` : `Known route, ${route.rooms.length - 1} room${route.rooms.length === 2 ? '' : 's'}.`; }
       else {
-        const open = planRooms({ graph, known, from, to: o.room, avoid: new Set(), style });
-        status = open ? 'conflicted' : 'blocked';
-        reason = open ? `Every known way to ${name(graph, o.room)} crosses an avoided room.` : `No known open route to ${name(graph, o.room)}.`;
+        const wide = planRooms({ graph, known, from, to: o.room, avoid: new Set(), style, open });
+        status = wide ? 'conflicted' : 'blocked';
+        reason = wide ? `Every known way to ${name(graph, o.room)} crosses an avoided room.` : `No known open route to ${name(graph, o.room)}.`;
       }
+    }
+    if (o.kind === 'open' && status !== 'blocked' && status !== 'conflicted') {
+      const g = o.to ? gates(graph, known, open).find(x => x.key === WG.linkKey(o.room, o.to!)) : undefined;
+      if (!g || g.state === 'unseen') { status = 'blocked'; reason = 'No such gate has been seen.'; }
+      else if (g.state === 'open') reason = 'Already open; nothing to do.';
+      else if (g.need === 'key' && preparedKeys < 1) { status = 'blocked'; reason = 'Needs a previously banked Gate Key issued at camp. A key found on the way cannot open a gate (it must be banked first).'; }
+      else if (g.need === 'boss' || g.need === 'special') { status = 'blocked'; reason = g.need === 'boss' ? 'Opens when the miniboss falls.' : 'An optional special-key door, not part of this slice.'; }
+      else reason = g.need === 'key' ? 'Spends 1 Gate Key. The unlock is permanent and starts no fight.' : 'Worked by hand; no key.';
     }
     objectives.push({ id: o.id, room: o.room, status, route, reason });
     if (route) from = o.room;
   }
   const homeFrom = [...objectives].reverse().find(o => o.route)?.room ?? start;
-  const homeRoute = homeFrom === start ? null : planRooms({ graph, known, from: homeFrom, to: start, avoid, style: plan.returnRoute === 'shortest' ? 'shortest' : 'safe' });
+  const homeRoute = homeFrom === start ? null : planRooms({ graph, known, from: homeFrom, to: start, avoid, style: plan.returnRoute === 'shortest' ? 'shortest' : 'safe', open });
   const home = homeFrom === start ? { route: null, reason: 'Already at camp.' } : homeRoute ? { route: homeRoute, reason: `Known way home, ${homeRoute.rooms.length - 1} rooms.` } : { route: null, reason: 'No permitted route home is known.' };
   let status: PreflightStatus = 'confirmed';
   for (const o of objectives) if (RANK[o.status] > RANK[status]) status = o.status;

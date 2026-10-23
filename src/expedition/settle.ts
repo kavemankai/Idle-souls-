@@ -1,4 +1,4 @@
-import type { Bank, Cache, SaveV1 } from '../save/saveTypes';
+import type { Bank, Cache, Save } from '../save/saveTypes';
 import { validateInvariants as checkSave } from '../save/save';
 import type { Chronicle } from './chronicle';
 import { addBanks, cloneBank, describeBank, isEmptyBank } from './loot';
@@ -8,7 +8,7 @@ export interface Settlement {
   applied: boolean;
   /** Why nothing was applied, when `applied` is false. */
   refused?: string;
-  save: SaveV1;
+  save: Save;
   banked: Bank;
   /** Left in a new cache where the adventurer fell. */
   cached: Cache | null;
@@ -16,7 +16,7 @@ export interface Settlement {
   lost: Bank;
   lines: string[];
 }
-const none = (): Bank => ({ gold: 0, supplies: {}, gear: [], mastery: 0 });
+const none = (): Bank => ({ gold: 0, supplies: {}, gear: [], mastery: 0, keys: 0, prepared: 0 });
 
 /**
  * The only place an expedition's outcome becomes a save (doc 08). Camp is the only banking destination:
@@ -27,22 +27,29 @@ const none = (): Bank => ({ gold: 0, supplies: {}, gear: [], mastery: 0 });
  * Map memory, defeated bosses and the counters change whatever the outcome. `startedAt` must equal the save's expedition count, so the same
  * expedition can never be settled twice.
  */
-export function settle(save: SaveV1, c: Chronicle, startedAt: number): Settlement {
+export function settle(save: Save, c: Chronicle, startedAt: number): Settlement {
   const refuse = (why: string): Settlement => ({ applied: false, refused: why, save, banked: none(), cached: null, lost: none(), lines: [why] });
   if (save.camp.expeditions !== startedAt) return refuse('This expedition was already settled, or the save has moved on.');
   if (c.outcome === 'blocked' || c.outcome === 'stopped') return refuse('The expedition is not over: extraction is blocked, so nothing is banked and nothing is lost.');
-  const next: SaveV1 = JSON.parse(JSON.stringify(save));
+  if (c.loot.issued > save.camp.bank.keys) return refuse('More Gate Keys were issued than the camp holds.');
+  const next: Save = JSON.parse(JSON.stringify(save));
   const visited = new Set(c.route);
   next.world.discovered = [...new Set([...save.world.discovered, ...visited, ...c.discovered])];
   next.world.defeatedBosses = [...new Set([...save.world.defeatedBosses, ...c.bossesDefeated])];
+  // Gates opened and one-time discoveries claimed are permanent whatever happened next. Issued keys leave the bank at launch; spent ones are gone.
+  next.world.openedLinks = [...new Set([...save.world.openedLinks, ...c.loot.opened])];
+  next.world.claims = [...new Set([...save.world.claims, ...c.loot.claimed])];
+  next.camp.bank.keys = save.camp.bank.keys - c.loot.issued;
   next.camp.expeditions = save.camp.expeditions + 1;
   const carried = cloneBank(c.loot.carried), lines: string[] = [];
   let banked = none(), cached: Cache | null = null, lost = none();
   const recovered = c.loot.cacheRecovered;
   if (c.outcome === 'extracted') {
-    next.camp.bank = addBanks(save.camp.bank, carried); banked = carried;
+    // Everything carried is banked, and a key banked is a key banked: fresh and unspent issued keys both join the stock.
+    banked = { ...carried, keys: carried.keys + carried.prepared, prepared: 0 };
+    next.camp.bank = addBanks(next.camp.bank, banked);
     if (recovered) next.camp.cache = null;
-    lines.push(`Banked: ${describeBank(carried)}.`);
+    lines.push(`Banked: ${describeBank(banked)}.`);
     if (recovered) lines.push('The recovery cache is secured and gone.');
     else if (save.camp.cache) lines.push(`The recovery cache in ${save.camp.cache.room} is still waiting.`);
   } else {
