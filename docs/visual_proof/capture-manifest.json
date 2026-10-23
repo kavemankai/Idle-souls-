@@ -1,0 +1,1163 @@
+{
+  "capturedAt": "2026-10-23T03:49:03.277Z",
+  "captureTool": "Chromium / Playwright, real Phaser runtime, CSS grayscale for recognition shot",
+  "checkoutSHA": "1980f22fa9b8065063e2e0bc81e947081f73a848",
+  "base": "http://127.0.0.1:4173",
+  "shots": [
+    {
+      "file": "screenshots/S01-old-road.png",
+      "viewport": [
+        1280,
+        720
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?composition=traversal&action=walk&facing=E&t=.95",
+      "grayscale": false,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 1.1818181818181819,
+        "viewport": [
+          0,
+          65,
+          1280,
+          605
+        ]
+      },
+      "state": {
+        "source": "visual-only",
+        "hero": {
+          "id": "hero",
+          "kind": "adventurer",
+          "x": -105,
+          "y": 35,
+          "facing": "E",
+          "action": "walk",
+          "phase": "active",
+          "progress": 0.3958333333333333,
+          "visible": true
+        },
+        "zoom": 1.1818181818181819,
+        "build": "1980f22",
+        "viewport": [
+          1280,
+          720
+        ],
+        "missing": [
+          false,
+          false,
+          false
+        ]
+      },
+      "errors": []
+    },
+    {
+      "file": "screenshots/S02-mireling-coil.png",
+      "viewport": [
+        1280,
+        720
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?composition=mireling&action=leap&t=.35",
+      "grayscale": false,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 1.1818181818181819,
+        "viewport": [
+          0,
+          65,
+          1280,
+          605
+        ]
+      },
+      "state": {
+        "source": "visual-only",
+        "hero": {
+          "id": "hero",
+          "kind": "adventurer",
+          "x": -105,
+          "y": 35,
+          "facing": "NE",
+          "action": "idle",
+          "phase": "windup",
+          "progress": 0.14583333333333334,
+          "visible": true
+        },
+        "zoom": 1.1818181818181819,
+        "build": "1980f22",
+        "viewport": [
+          1280,
+          720
+        ],
+        "missing": [
+          false,
+          false,
+          false
+        ]
+      },
+      "errors": []
+    },
+    {
+      "file": "screenshots/S02-mireling-leap.png",
+      "viewport": [
+        1280,
+        720
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?composition=mireling&action=leap&t=.95",
+      "grayscale": false,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 1.1818181818181819,
+        "viewport": [
+          0,
+          65,
+          1280,
+          605
+        ]
+      },
+      "state": {
+        "source": "visual-only",
+        "hero": {
+          "id": "hero",
+          "kind": "adventurer",
+          "x": -105,
+          "y": 35,
+          "facing": "NE",
+          "action": "idle",
+          "phase": "active",
+          "progress": 0.3958333333333333,
+          "visible": true
+        },
+        "zoom": 1.1818181818181819,
+        "build": "1980f22",
+        "viewport": [
+          1280,
+          720
+        ],
+        "missing": [
+          false,
+          false,
+          false
+        ]
+      },
+      "errors": []
+    },
+    {
+      "file": "screenshots/S03-sentry-guard.png",
+      "viewport": [
+        1280,
+        720
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?composition=sentry&action=guard&t=.95",
+      "grayscale": false,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 1.1818181818181819,
+        "viewport": [
+          0,
+          65,
+          1280,
+          605
+        ]
+      },
+      "state": {
+        "source": "visual-only",
+        "hero": {
+          "id": "hero",
+          "kind": "adventurer",
+          "x": -105,
+          "y": 35,
+          "facing": "NE",
+          "action": "guard",
+          "phase": "active",
+          "progress": 0.3958333333333333,
+          "visible": true
+        },
+        "zoom": 1.1818181818181819,
+        "build": "1980f22",
+        "viewport": [
+          1280,
+          720
+        ],
+        "missing": [
+          false,
+          false,
+          false
+        ]
+      },
+      "errors": []
+    },
+    {
+      "file": "screenshots/S04-light-windup.png",
+      "viewport": [
+        1280,
+        720
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?composition=sentry&action=light&facing=NE&t=.35",
+      "grayscale": false,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 1.1818181818181819,
+        "viewport": [
+          0,
+          65,
+          1280,
+          605
+        ]
+      },
+      "state": {
+        "source": "visual-only",
+        "hero": {
+          "id": "hero",
+          "kind": "adventurer",
+          "x": -105,
+          "y": 35,
+          "facing": "NE",
+          "action": "light",
+          "phase": "windup",
+          "progress": 0.14583333333333334,
+          "visible": true
+        },
+        "zoom": 1.1818181818181819,
+        "build": "1980f22",
+        "viewport": [
+          1280,
+          720
+        ],
+        "missing": [
+          false,
+          false,
+          false
+        ]
+      },
+      "errors": []
+    },
+    {
+      "file": "screenshots/S04-light-active.png",
+      "viewport": [
+        1280,
+        720
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?composition=sentry&action=light&facing=NE&t=.95",
+      "grayscale": false,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 1.1818181818181819,
+        "viewport": [
+          0,
+          65,
+          1280,
+          605
+        ]
+      },
+      "state": {
+        "source": "visual-only",
+        "hero": {
+          "id": "hero",
+          "kind": "adventurer",
+          "x": -105,
+          "y": 35,
+          "facing": "NE",
+          "action": "light",
+          "phase": "active",
+          "progress": 0.3958333333333333,
+          "visible": true
+        },
+        "zoom": 1.1818181818181819,
+        "build": "1980f22",
+        "viewport": [
+          1280,
+          720
+        ],
+        "missing": [
+          false,
+          false,
+          false
+        ]
+      },
+      "errors": []
+    },
+    {
+      "file": "screenshots/S04-light-recovery.png",
+      "viewport": [
+        1280,
+        720
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?composition=sentry&action=light&facing=NE&t=1.95",
+      "grayscale": false,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 1.1818181818181819,
+        "viewport": [
+          0,
+          65,
+          1280,
+          605
+        ]
+      },
+      "state": {
+        "source": "visual-only",
+        "hero": {
+          "id": "hero",
+          "kind": "adventurer",
+          "x": -105,
+          "y": 35,
+          "facing": "NE",
+          "action": "light",
+          "phase": "recovery",
+          "progress": 0.8125,
+          "visible": true
+        },
+        "zoom": 1.1818181818181819,
+        "build": "1980f22",
+        "viewport": [
+          1280,
+          720
+        ],
+        "missing": [
+          false,
+          false,
+          false
+        ]
+      },
+      "errors": []
+    },
+    {
+      "file": "screenshots/S04-heavy-windup.png",
+      "viewport": [
+        1280,
+        720
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?composition=sentry&action=heavy&facing=S&t=.35",
+      "grayscale": false,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 1.1818181818181819,
+        "viewport": [
+          0,
+          65,
+          1280,
+          605
+        ]
+      },
+      "state": {
+        "source": "visual-only",
+        "hero": {
+          "id": "hero",
+          "kind": "adventurer",
+          "x": -105,
+          "y": 35,
+          "facing": "S",
+          "action": "heavy",
+          "phase": "windup",
+          "progress": 0.14583333333333334,
+          "visible": true
+        },
+        "zoom": 1.1818181818181819,
+        "build": "1980f22",
+        "viewport": [
+          1280,
+          720
+        ],
+        "missing": [
+          false,
+          false,
+          false
+        ]
+      },
+      "errors": []
+    },
+    {
+      "file": "screenshots/S04-heavy-active.png",
+      "viewport": [
+        1280,
+        720
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?composition=sentry&action=heavy&facing=S&t=.95",
+      "grayscale": false,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 1.1818181818181819,
+        "viewport": [
+          0,
+          65,
+          1280,
+          605
+        ]
+      },
+      "state": {
+        "source": "visual-only",
+        "hero": {
+          "id": "hero",
+          "kind": "adventurer",
+          "x": -105,
+          "y": 35,
+          "facing": "S",
+          "action": "heavy",
+          "phase": "active",
+          "progress": 0.3958333333333333,
+          "visible": true
+        },
+        "zoom": 1.1818181818181819,
+        "build": "1980f22",
+        "viewport": [
+          1280,
+          720
+        ],
+        "missing": [
+          false,
+          false,
+          false
+        ]
+      },
+      "errors": []
+    },
+    {
+      "file": "screenshots/S04-heavy-recovery.png",
+      "viewport": [
+        1280,
+        720
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?composition=sentry&action=heavy&facing=S&t=1.95",
+      "grayscale": false,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 1.1818181818181819,
+        "viewport": [
+          0,
+          65,
+          1280,
+          605
+        ]
+      },
+      "state": {
+        "source": "visual-only",
+        "hero": {
+          "id": "hero",
+          "kind": "adventurer",
+          "x": -105,
+          "y": 35,
+          "facing": "S",
+          "action": "heavy",
+          "phase": "recovery",
+          "progress": 0.8125,
+          "visible": true
+        },
+        "zoom": 1.1818181818181819,
+        "build": "1980f22",
+        "viewport": [
+          1280,
+          720
+        ],
+        "missing": [
+          false,
+          false,
+          false
+        ]
+      },
+      "errors": []
+    },
+    {
+      "file": "screenshots/S04-sentry-bash.png",
+      "viewport": [
+        1280,
+        720
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?composition=sentry&action=heavy&t=.95",
+      "grayscale": false,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 1.1818181818181819,
+        "viewport": [
+          0,
+          65,
+          1280,
+          605
+        ]
+      },
+      "state": {
+        "source": "visual-only",
+        "hero": {
+          "id": "hero",
+          "kind": "adventurer",
+          "x": -105,
+          "y": 35,
+          "facing": "NE",
+          "action": "heavy",
+          "phase": "active",
+          "progress": 0.3958333333333333,
+          "visible": true
+        },
+        "zoom": 1.1818181818181819,
+        "build": "1980f22",
+        "viewport": [
+          1280,
+          720
+        ],
+        "missing": [
+          false,
+          false,
+          false
+        ]
+      },
+      "errors": []
+    },
+    {
+      "file": "screenshots/S05-protanopia.png",
+      "viewport": [
+        1280,
+        720
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?composition=mixed&action=heavy&t=.95",
+      "grayscale": false,
+      "colourVisionSimulation": "protanopia",
+      "camera": {
+        "zoom": 1.1818181818181819,
+        "viewport": [
+          0,
+          65,
+          1280,
+          605
+        ]
+      },
+      "state": {
+        "source": "visual-only",
+        "hero": {
+          "id": "hero",
+          "kind": "adventurer",
+          "x": -105,
+          "y": 35,
+          "facing": "NE",
+          "action": "heavy",
+          "phase": "active",
+          "progress": 0.3958333333333333,
+          "visible": true
+        },
+        "zoom": 1.1818181818181819,
+        "build": "1980f22",
+        "viewport": [
+          1280,
+          720
+        ],
+        "missing": [
+          false,
+          false,
+          false
+        ]
+      },
+      "errors": []
+    },
+    {
+      "file": "screenshots/S05-deuteranopia.png",
+      "viewport": [
+        1280,
+        720
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?composition=mixed&action=heavy&t=.95",
+      "grayscale": false,
+      "colourVisionSimulation": "deuteranopia",
+      "camera": {
+        "zoom": 1.1818181818181819,
+        "viewport": [
+          0,
+          65,
+          1280,
+          605
+        ]
+      },
+      "state": {
+        "source": "visual-only",
+        "hero": {
+          "id": "hero",
+          "kind": "adventurer",
+          "x": -105,
+          "y": 35,
+          "facing": "NE",
+          "action": "heavy",
+          "phase": "active",
+          "progress": 0.3958333333333333,
+          "visible": true
+        },
+        "zoom": 1.1818181818181819,
+        "build": "1980f22",
+        "viewport": [
+          1280,
+          720
+        ],
+        "missing": [
+          false,
+          false,
+          false
+        ]
+      },
+      "errors": []
+    },
+    {
+      "file": "screenshots/S05-mixed.png",
+      "viewport": [
+        1280,
+        720
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?composition=mixed&action=sequence&t=5.8",
+      "grayscale": false,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 1.1818181818181819,
+        "viewport": [
+          0,
+          65,
+          1280,
+          605
+        ]
+      },
+      "state": {
+        "source": "visual-only",
+        "hero": {
+          "id": "hero",
+          "kind": "adventurer",
+          "x": -105,
+          "y": 35,
+          "facing": "NE",
+          "action": "guard",
+          "phase": "active",
+          "progress": 0.4166666666666667,
+          "visible": true
+        },
+        "zoom": 1.1818181818181819,
+        "build": "1980f22",
+        "viewport": [
+          1280,
+          720
+        ],
+        "missing": [
+          false,
+          false,
+          false
+        ]
+      },
+      "errors": []
+    },
+    {
+      "file": "screenshots/S06-portrait.png",
+      "viewport": [
+        390,
+        844
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?t=5.8",
+      "grayscale": false,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 1.18,
+        "viewport": [
+          0,
+          85,
+          390,
+          524
+        ]
+      },
+      "state": {
+        "source": "visual-only",
+        "hero": {
+          "id": "hero",
+          "kind": "adventurer",
+          "x": -105,
+          "y": 35,
+          "facing": "NE",
+          "action": "guard",
+          "phase": "active",
+          "progress": 0.4166666666666667,
+          "visible": true
+        },
+        "zoom": 1.18,
+        "build": "1980f22",
+        "viewport": [
+          390,
+          844
+        ],
+        "missing": [
+          false,
+          false,
+          false
+        ]
+      },
+      "errors": []
+    },
+    {
+      "file": "screenshots/S06-landscape.png",
+      "viewport": [
+        844,
+        390
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?t=5.8",
+      "grayscale": false,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 1.08,
+        "viewport": [
+          0,
+          57,
+          844,
+          300
+        ]
+      },
+      "state": {
+        "source": "visual-only",
+        "hero": {
+          "id": "hero",
+          "kind": "adventurer",
+          "x": -105,
+          "y": 35,
+          "facing": "NE",
+          "action": "guard",
+          "phase": "active",
+          "progress": 0.4166666666666667,
+          "visible": true
+        },
+        "zoom": 1.08,
+        "build": "1980f22",
+        "viewport": [
+          844,
+          390
+        ],
+        "missing": [
+          false,
+          false,
+          false
+        ]
+      },
+      "errors": []
+    },
+    {
+      "file": "screenshots/S07-pivots-proxies.png",
+      "viewport": [
+        1280,
+        720
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?debug&action=guard&t=.95",
+      "grayscale": false,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 1.1818181818181819,
+        "viewport": [
+          0,
+          65,
+          1280,
+          605
+        ]
+      },
+      "state": {
+        "source": "visual-only",
+        "hero": {
+          "id": "hero",
+          "kind": "adventurer",
+          "x": -105,
+          "y": 35,
+          "facing": "NE",
+          "action": "guard",
+          "phase": "active",
+          "progress": 0.3958333333333333,
+          "visible": true
+        },
+        "zoom": 1.1818181818181819,
+        "build": "1980f22",
+        "viewport": [
+          1280,
+          720
+        ],
+        "missing": [
+          false,
+          false,
+          false
+        ]
+      },
+      "errors": []
+    },
+    {
+      "file": "screenshots/S08-compass.png",
+      "viewport": [
+        1280,
+        720
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?scene=calibration&t=.95",
+      "grayscale": false,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 1.1136363636363635,
+        "viewport": [
+          0,
+          65,
+          1280,
+          605
+        ]
+      },
+      "state": null,
+      "errors": []
+    },
+    {
+      "file": "screenshots/S09-recognition-grayscale.png",
+      "viewport": [
+        1280,
+        720
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?scene=silhouette&t=.95",
+      "grayscale": true,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 1.1136363636363635,
+        "viewport": [
+          0,
+          65,
+          1280,
+          605
+        ]
+      },
+      "state": null,
+      "errors": []
+    },
+    {
+      "file": "screenshots/S10-dark-floor.png",
+      "viewport": [
+        1280,
+        720
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?floor=dark&action=guard&t=.95",
+      "grayscale": false,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 1.1818181818181819,
+        "viewport": [
+          0,
+          65,
+          1280,
+          605
+        ]
+      },
+      "state": {
+        "source": "visual-only",
+        "hero": {
+          "id": "hero",
+          "kind": "adventurer",
+          "x": -105,
+          "y": 35,
+          "facing": "NE",
+          "action": "guard",
+          "phase": "active",
+          "progress": 0.3958333333333333,
+          "visible": true
+        },
+        "zoom": 1.1818181818181819,
+        "build": "1980f22",
+        "viewport": [
+          1280,
+          720
+        ],
+        "missing": [
+          false,
+          false,
+          false
+        ]
+      },
+      "errors": []
+    },
+    {
+      "file": "screenshots/S11-1920-desktop.png",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?t=5.8",
+      "grayscale": false,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 2,
+        "viewport": [
+          0,
+          65,
+          1920,
+          965
+        ]
+      },
+      "state": {
+        "source": "visual-only",
+        "hero": {
+          "id": "hero",
+          "kind": "adventurer",
+          "x": -105,
+          "y": 35,
+          "facing": "NE",
+          "action": "guard",
+          "phase": "active",
+          "progress": 0.4166666666666667,
+          "visible": true
+        },
+        "zoom": 2,
+        "build": "1980f22",
+        "viewport": [
+          1920,
+          1080
+        ],
+        "missing": [
+          false,
+          false,
+          false
+        ]
+      },
+      "errors": []
+    },
+    {
+      "file": "screenshots/S12-light-directions.png",
+      "viewport": [
+        1280,
+        720
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?scene=attacks&actor=adventurer&clip=light",
+      "grayscale": false,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 1.1136363636363635,
+        "viewport": [
+          0,
+          65,
+          1280,
+          605
+        ]
+      },
+      "state": null,
+      "errors": []
+    },
+    {
+      "file": "screenshots/S12-heavy-directions.png",
+      "viewport": [
+        1280,
+        720
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?scene=attacks&actor=adventurer&clip=heavy",
+      "grayscale": false,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 1.1136363636363635,
+        "viewport": [
+          0,
+          65,
+          1280,
+          605
+        ]
+      },
+      "state": null,
+      "errors": []
+    },
+    {
+      "file": "screenshots/S12-bash-directions.png",
+      "viewport": [
+        1280,
+        720
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?scene=attacks&actor=sentry&clip=bash",
+      "grayscale": false,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 1.1136363636363635,
+        "viewport": [
+          0,
+          65,
+          1280,
+          605
+        ]
+      },
+      "state": null,
+      "errors": []
+    },
+    {
+      "file": "screenshots/S12-leap-directions.png",
+      "viewport": [
+        1280,
+        720
+      ],
+      "deviceScaleFactor": 1,
+      "url": "?scene=attacks&actor=mireling&clip=leap",
+      "grayscale": false,
+      "colourVisionSimulation": null,
+      "camera": {
+        "zoom": 1.1136363636363635,
+        "viewport": [
+          0,
+          65,
+          1280,
+          605
+        ]
+      },
+      "state": null,
+      "errors": []
+    }
+  ],
+  "cloudPerformance": {
+    "renderer": "headless Chromium ANGLE SwiftShader in cloud container",
+    "physicalPhone": "NOT TESTED",
+    "samples": 119,
+    "medianFrameMs": 116.60000000000036,
+    "p95FrameMs": 250,
+    "resources": [
+      {
+        "name": "127.0.0.1:4173/assets/index-Cy7tVYVA.js",
+        "transferSize": 361942,
+        "decodedBodySize": 1383348
+      },
+      {
+        "name": "127.0.0.1:4173/assets/index-DOfHjhEB.css",
+        "transferSize": 2081,
+        "decodedBodySize": 5454
+      },
+      {
+        "name": "environments/runtime/earth.png",
+        "transferSize": 17930,
+        "decodedBodySize": 17630
+      },
+      {
+        "name": "environments/runtime/road-underpaint.png",
+        "transferSize": 17018,
+        "decodedBodySize": 16718
+      },
+      {
+        "name": "environments/runtime/moss.png",
+        "transferSize": 6769,
+        "decodedBodySize": 6469
+      },
+      {
+        "name": "environments/runtime/rubble.png",
+        "transferSize": 7808,
+        "decodedBodySize": 7508
+      },
+      {
+        "name": "environments/runtime/wall.png",
+        "transferSize": 10533,
+        "decodedBodySize": 10233
+      },
+      {
+        "name": "environments/runtime/pillar.png",
+        "transferSize": 15142,
+        "decodedBodySize": 14842
+      },
+      {
+        "name": "environments/runtime/marker.png",
+        "transferSize": 7373,
+        "decodedBodySize": 7073
+      },
+      {
+        "name": "environments/runtime/warm-light.png",
+        "transferSize": 53156,
+        "decodedBodySize": 52856
+      },
+      {
+        "name": "environments/runtime/paving-0.png",
+        "transferSize": 6510,
+        "decodedBodySize": 6210
+      },
+      {
+        "name": "environments/runtime/paving-1.png",
+        "transferSize": 5831,
+        "decodedBodySize": 5531
+      },
+      {
+        "name": "environments/runtime/paving-2.png",
+        "transferSize": 6498,
+        "decodedBodySize": 6198
+      },
+      {
+        "name": "environments/runtime/paving-3.png",
+        "transferSize": 6387,
+        "decodedBodySize": 6087
+      },
+      {
+        "name": "environments/runtime/paving-4.png",
+        "transferSize": 6482,
+        "decodedBodySize": 6182
+      },
+      {
+        "name": "environments/runtime/paving-5.png",
+        "transferSize": 5806,
+        "decodedBodySize": 5506
+      },
+      {
+        "name": "characters/runtime/adventurer.png",
+        "transferSize": 581575,
+        "decodedBodySize": 581275
+      },
+      {
+        "name": "characters/runtime/adventurer.json",
+        "transferSize": 2243,
+        "decodedBodySize": 23329
+      },
+      {
+        "name": "characters/runtime/sentry.png",
+        "transferSize": 421151,
+        "decodedBodySize": 420851
+      },
+      {
+        "name": "characters/runtime/sentry.json",
+        "transferSize": 1906,
+        "decodedBodySize": 18996
+      },
+      {
+        "name": "characters/runtime/mireling.png",
+        "transferSize": 512332,
+        "decodedBodySize": 512032
+      },
+      {
+        "name": "characters/runtime/mireling.json",
+        "transferSize": 1431,
+        "decodedBodySize": 13050
+      },
+      {
+        "name": "characters/runtime/mannequin.png",
+        "transferSize": 300836,
+        "decodedBodySize": 300536
+      },
+      {
+        "name": "characters/runtime/mannequin.json",
+        "transferSize": 1435,
+        "decodedBodySize": 13141
+      },
+      {
+        "name": "vfx/runtime/slash.png",
+        "transferSize": 4051,
+        "decodedBodySize": 3751
+      },
+      {
+        "name": "vfx/runtime/heavy.png",
+        "transferSize": 7993,
+        "decodedBodySize": 7693
+      },
+      {
+        "name": "vfx/runtime/impact.png",
+        "transferSize": 4129,
+        "decodedBodySize": 3829
+      },
+      {
+        "name": "vfx/runtime/landing.png",
+        "transferSize": 4238,
+        "decodedBodySize": 3938
+      }
+    ]
+  }
+}

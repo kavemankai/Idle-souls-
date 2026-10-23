@@ -1,0 +1,49 @@
+asset_id,artifact_status,source_or_notes,acceptance_status
+ROAD_GROUND_BASE,PROOF AVAILABLE,"assets/environments/source; runtime modular PNGs; variants are trial subsets, collision unverified",NOT TESTED
+ROAD_GROUND_PAVING,PROOF AVAILABLE,"assets/environments/source; runtime modular PNGs; variants are trial subsets, collision unverified",NOT TESTED
+ROAD_GROUND_TRANSITION,PROOF AVAILABLE,"assets/environments/source; runtime modular PNGs; variants are trial subsets, collision unverified",NOT TESTED
+ROAD_GROUND_CRACK,PROOF AVAILABLE,"assets/environments/source; runtime modular PNGs; variants are trial subsets, collision unverified",NOT TESTED
+ROAD_GROUND_WEEDS,PROOF AVAILABLE,"assets/environments/source; runtime modular PNGs; variants are trial subsets, collision unverified",NOT TESTED
+ROAD_WALL_SOLID,PROOF AVAILABLE,"assets/environments/source; runtime modular PNGs; variants are trial subsets, collision unverified",NOT TESTED
+ROAD_WALL_CUTAWAY,NOT IMPLEMENTED,Deferred beyond this compact visual proof,BLOCKED
+ROAD_DOOR_CAMP,PROOF AVAILABLE,"assets/environments/source; runtime modular PNGs; variants are trial subsets, collision unverified",NOT TESTED
+ROAD_DOOR_CROSSROADS,PROOF AVAILABLE,"assets/environments/source; runtime modular PNGs; variants are trial subsets, collision unverified",NOT TESTED
+ROAD_PROP_PILLAR,PROOF AVAILABLE,"assets/environments/source; runtime modular PNGs; variants are trial subsets, collision unverified",NOT TESTED
+ROAD_PROP_MARKER,PROOF AVAILABLE,"assets/environments/source; runtime modular PNGs; variants are trial subsets, collision unverified",NOT TESTED
+ROAD_PROP_RUBBLE,PROOF AVAILABLE,"assets/environments/source; runtime modular PNGs; variants are trial subsets, collision unverified",NOT TESTED
+ROAD_LIGHT_WARM,PROOF AVAILABLE,"assets/environments/source; runtime modular PNGs; variants are trial subsets, collision unverified",NOT TESTED
+ROAD_SHADOW_CONTACT,PROOF AVAILABLE,"assets/environments/source; runtime modular PNGs; variants are trial subsets, collision unverified",NOT TESTED
+ROAD_FOG_BOUNDARY,NOT IMPLEMENTED,Deferred beyond this compact visual proof,BLOCKED
+GLOBAL_CHAR_ADVENTURER_IDLE,PROOF AVAILABLE,assets/characters/source/*.blend and runtime atlas metadata; pose counts/directions in atlas-report.json,NOT TESTED
+GLOBAL_CHAR_ADVENTURER_MOVE,PROOF AVAILABLE,assets/characters/source/*.blend and runtime atlas metadata; pose counts/directions in atlas-report.json,NOT TESTED
+GLOBAL_CHAR_ADVENTURER_GUARD,PROOF AVAILABLE,assets/characters/source/*.blend and runtime atlas metadata; pose counts/directions in atlas-report.json,NOT TESTED
+GLOBAL_CHAR_ADVENTURER_LIGHT,PROOF AVAILABLE,assets/characters/source/*.blend and runtime atlas metadata; pose counts/directions in atlas-report.json,NOT TESTED
+GLOBAL_CHAR_ADVENTURER_HEAVY,PROOF AVAILABLE,assets/characters/source/*.blend and runtime atlas metadata; pose counts/directions in atlas-report.json,NOT TESTED
+GLOBAL_CHAR_ADVENTURER_DODGE,PROOF AVAILABLE,assets/characters/source/*.blend and runtime atlas metadata; pose counts/directions in atlas-report.json,NOT TESTED
+GLOBAL_CHAR_ADVENTURER_HIT,PARTIAL PROOF,One reaction pose at five headings; no full hit/death clip,NOT TESTED
+GLOBAL_CHAR_ADVENTURER_RETREAT,NOT IMPLEMENTED,Deferred beyond this compact visual proof,BLOCKED
+GLOBAL_CHAR_ADVENTURER_DEATH,NOT IMPLEMENTED,Deferred beyond this compact visual proof,BLOCKED
+ROAD_CHAR_SENTRY_IDLE,PROOF AVAILABLE,assets/characters/source/*.blend and runtime atlas metadata; pose counts/directions in atlas-report.json,NOT TESTED
+ROAD_CHAR_SENTRY_MOVE,PROOF AVAILABLE,assets/characters/source/*.blend and runtime atlas metadata; pose counts/directions in atlas-report.json,NOT TESTED
+ROAD_CHAR_SENTRY_SLASH,PROOF AVAILABLE,assets/characters/source/*.blend and runtime atlas metadata; pose counts/directions in atlas-report.json,NOT TESTED
+ROAD_CHAR_SENTRY_GUARD,PROOF AVAILABLE,assets/characters/source/*.blend and runtime atlas metadata; pose counts/directions in atlas-report.json,NOT TESTED
+ROAD_CHAR_SENTRY_HIT,NOT IMPLEMENTED,Deferred beyond this compact visual proof,BLOCKED
+ROAD_CHAR_SENTRY_DEATH,NOT IMPLEMENTED,Deferred beyond this compact visual proof,BLOCKED
+ROAD_CHAR_MIRELING_IDLE,PROOF AVAILABLE,assets/characters/source/*.blend and runtime atlas metadata; pose counts/directions in atlas-report.json,NOT TESTED
+ROAD_CHAR_MIRELING_COIL,PROOF AVAILABLE,assets/characters/source/*.blend and runtime atlas metadata; pose counts/directions in atlas-report.json,NOT TESTED
+ROAD_CHAR_MIRELING_LEAP,PROOF AVAILABLE,assets/characters/source/*.blend and runtime atlas metadata; pose counts/directions in atlas-report.json,NOT TESTED
+ROAD_CHAR_MIRELING_HIT,NOT IMPLEMENTED,Deferred beyond this compact visual proof,BLOCKED
+GLOBAL_FX_SLASH,PROOF AVAILABLE,assets/vfx/source SVGs; fixture-only arc/wedge/spark; no authoritative contact claims,NOT TESTED
+GLOBAL_FX_HEAVY_WARN,PROOF AVAILABLE,assets/vfx/source SVGs; fixture-only arc/wedge/spark; no authoritative contact claims,NOT TESTED
+GLOBAL_FX_BLOCK,PROOF AVAILABLE,assets/vfx/source SVGs; fixture-only arc/wedge/spark; no authoritative contact claims,NOT TESTED
+GLOBAL_FX_DODGE,NOT IMPLEMENTED,Deferred beyond this compact visual proof,BLOCKED
+GLOBAL_FX_STAGGER,NOT IMPLEMENTED,Deferred beyond this compact visual proof,BLOCKED
+GLOBAL_FX_HIT,PROOF AVAILABLE,assets/vfx/source SVGs; fixture-only arc/wedge/spark; no authoritative contact claims,NOT TESTED
+GLOBAL_FX_RETREAT,NOT IMPLEMENTED,Deferred beyond this compact visual proof,BLOCKED
+GLOBAL_FX_AVOID,NOT IMPLEMENTED,Deferred beyond this compact visual proof,BLOCKED
+GLOBAL_UI_PLAYER_STATUS,NOT IMPLEMENTED,Artist workbench replaces gameplay HUD for visual-only proof; no fabricated HP/stamina/banking/AI status,BLOCKED
+GLOBAL_UI_OBJECTIVE,NOT IMPLEMENTED,Artist workbench replaces gameplay HUD for visual-only proof; no fabricated HP/stamina/banking/AI status,BLOCKED
+GLOBAL_UI_TARGET,NOT IMPLEMENTED,Artist workbench replaces gameplay HUD for visual-only proof; no fabricated HP/stamina/banking/AI status,BLOCKED
+GLOBAL_UI_RETREAT,NOT IMPLEMENTED,Artist workbench replaces gameplay HUD for visual-only proof; no fabricated HP/stamina/banking/AI status,BLOCKED
+GLOBAL_UI_NOTICE,NOT IMPLEMENTED,Artist workbench replaces gameplay HUD for visual-only proof; no fabricated HP/stamina/banking/AI status,BLOCKED
+GLOBAL_UI_PALETTE,NOT IMPLEMENTED,Artist workbench replaces gameplay HUD for visual-only proof; no fabricated HP/stamina/banking/AI status,BLOCKED

@@ -1,0 +1,31 @@
+test_id,status,evidence,notes
+R01,NOT TESTED,screenshots/S09-recognition-grayscale.png,No three unfamiliar viewers tested.
+R02,NOT TESTED,screenshots/S06-portrait.png,Actual scale capture exists; unfamiliar-viewer recognition pending.
+R03,NOT TESTED,screenshots/S06-landscape.png,Capture exists; small-creature recognition on device pending.
+R04,NOT TESTED,screenshots/S01-old-road.png,West/east openings and cover composed; comprehension review pending.
+R05,BLOCKED,screenshots/S07-pivots-proxies.png,Collision/LOS/projectile implementation absent; outlines are proposed proxies.
+R06,BLOCKED,screenshots/S04-light-active.png,Only exhibition timing; authoritative move geometry/events absent.
+R07,BLOCKED,screenshots/S02-mireling-leap.png,Coil/leap visual proof exists; authoritative timing/landing absent.
+R08,BLOCKED,DELIVERY.md,No combat AI/doctrine adapter connected.
+R09,BLOCKED,DELIVERY.md,No selected authoritative source or seeded baseline.
+R10,NOT TESTED,screenshots/S05-deuteranopia.png,Grayscale and two CVD simulations captured; external accessibility review pending.
+R11,BLOCKED,screenshots/S06-landscape.png,All workbench controls pass >=44px. Strategic Retreat requires combat/world ownership; no fake retreat control.
+R12,PASS,capture-manifest.json,Hero guard silhouette approximately 48px portrait and 44px landscape at captured pose; measured alpha bounds independent of collider.
+R13,BLOCKED,tests/browser/preview.spec.ts,Hidden fixture actors remove sprite/shadow/FX. No authoritative visibility/fog system exists.
+R14,BLOCKED,DELIVERY.md,Strategic route map not part of visual P0; no fictitious forcefield.
+R15,NOT TESTED,capture-manifest.json,Cloud software renderer measurements only; physical lower-end Android untested.
+R16,PASS,source-validation.json,Four retained Blender rigs; editable SVG masters; decoded-pixel reproduction and atlas reconstruction passed.
+R17,NOT TESTED,DELIVERY.md,Six-scene evidence exists; creator rubric/approval not scored by proxy.
+R18,BLOCKED,DELIVERY.md,Earlier geometric RUN/Phaser prototype not in repository; no fabricated before image.
+H01,PASS,source-validation.json,All four fixed orthographic cameras measure 75 degrees; scale5.4 and common pivot.
+H02,PASS,adventurer-compass.png,Eight root yaw samples under stationary camera; left shield/right sword retained; no texture reflection. Human silhouette signoff pending.
+H03,PASS,atlas-validation.json,"335 source trims reconstruct stable (96,96) canvas pivot; world transform independent of weapon bounds."
+H04,BLOCKED,DELIVERY.md,Art phase selection is isolated; authoritative combat ticks absent.
+H05,NOT TESTED,screenshots/S09-recognition-grayscale.png,Unlabelled bright/dark grayscale capture ready; three-viewer test pending.
+H06,PASS,../../assets/characters/runtime/atlas-report.json,335 frames; 4 atlases; 12 MiB decoded RGBA; physical device budget untested.
+H07,BLOCKED,DELIVERY.md,No authoritative seeded combat baseline.
+H08,BLOCKED,screenshots/S07-pivots-proxies.png,Only spatial proxy annotations; no collision/occlusion/LOS integration.
+H09,NOT TESTED,screenshots/S05-protanopia.png,Shape-based heavy/strike/landing cues and CVD captures available; clinical/user review pending.
+H10,PASS,../../assets/PROVENANCE.md,"Editable sources, source hashes and exact regeneration evidence retained."
+H11,NOT TESTED,capture-manifest.json,Desktop cloud sample logged; actual lower-end device untested.
+H12,NOT TESTED,DELIVERY.md,"S01-S06 captures available, review not approved."
