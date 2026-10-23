@@ -4,8 +4,8 @@
   "action": "guard",
   "facing": "NE",
   "sourceFrame": 2,
-  "decodedRGBA_SHA256": "acea1fc42d951e87e3d89a8df6074f492a140c60673f2c074ea374c59e475b3e",
-  "regeneratedRGBA_SHA256": "acea1fc42d951e87e3d89a8df6074f492a140c60673f2c074ea374c59e475b3e",
+  "decodedRGBA_SHA256": "2d43cac0db5649f37feedd44a95bd5a93deca8e49a2e1fd82506d83ee79aef95",
+  "regeneratedRGBA_SHA256": "2d43cac0db5649f37feedd44a95bd5a93deca8e49a2e1fd82506d83ee79aef95",
   "method": "Exact decoded pixel equality from retained .blend; PNG container metadata may differ",
   "blender": "4.3.2",
   "command": "python tools/blender/reproduce.py"

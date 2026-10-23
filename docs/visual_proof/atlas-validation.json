@@ -1,7 +1,7 @@
 [
   {
     "actor": "adventurer",
-    "frames": 113,
+    "frames": 128,
     "pixelExactTrimReconstruction": "PASS",
     "stableGroundPivot": "PASS",
     "sourceCanvasClipping": "PASS"
@@ -22,7 +22,7 @@
   },
   {
     "actor": "sentry",
-    "frames": 94,
+    "frames": 112,
     "pixelExactTrimReconstruction": "PASS",
     "stableGroundPivot": "PASS",
     "sourceCanvasClipping": "PASS"
