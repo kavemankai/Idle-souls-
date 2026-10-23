@@ -4,16 +4,16 @@
   "fought": true,
   "fights": 1,
   "enemiesDefeated": 1,
-  "ticks": 705,
-  "fightTicks": 455,
+  "ticks": 751,
+  "fightTicks": 542,
   "hpLeft": 72,
   "hpMax": 90,
   "finalPos": {
-   "x": 240.3,
-   "y": 0.2
+   "x": 241.4,
+   "y": -0.1
   },
   "detectedAtTick": 74,
-  "digest": "8146a30b"
+  "digest": "ac4d3de4"
  },
  "mireling/measured/2": {
   "outcome": "completed",
@@ -500,32 +500,32 @@
   "fought": true,
   "fights": 1,
   "enemiesDefeated": 1,
-  "ticks": 444,
+  "ticks": 520,
   "fightTicks": 297,
   "hpLeft": 36,
   "hpMax": 90,
   "finalPos": {
-   "x": 240.4,
-   "y": 0.9
+   "x": 240.7,
+   "y": -0.2
   },
   "detectedAtTick": 77,
-  "digest": "a67d5bc9"
+  "digest": "a19d87c1"
  },
  "sentry/pressing/3": {
   "outcome": "completed",
   "fought": true,
   "fights": 1,
   "enemiesDefeated": 1,
-  "ticks": 525,
+  "ticks": 655,
   "fightTicks": 389,
   "hpLeft": 5,
   "hpMax": 90,
   "finalPos": {
-   "x": 240.7,
-   "y": 2.9
+   "x": 241,
+   "y": -0.1
   },
   "detectedAtTick": 77,
-  "digest": "e71c03e2"
+  "digest": "af834d4a"
  },
  "sentry/pressing/4": {
   "outcome": "completed",
@@ -804,16 +804,16 @@
   "fought": true,
   "fights": 1,
   "enemiesDefeated": 2,
-  "ticks": 998,
+  "ticks": 994,
   "fightTicks": 792,
   "hpLeft": 48,
   "hpMax": 90,
   "finalPos": {
-   "x": 240.2,
-   "y": 0.2
+   "x": 240.4,
+   "y": -0.3
   },
   "detectedAtTick": 74,
-  "digest": "f4901f05"
+  "digest": "32591365"
  },
  "mireling2/pressing/4": {
   "outcome": "defeated",

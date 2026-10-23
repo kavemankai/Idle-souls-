@@ -1,3 +1,4 @@
+import { portableMath as M } from '../combat/portableMath';
 import type { PreparedRoom, SimApi, SimDoctrine, SimFight, SimFighter } from '../combat/simApi';
 import { simRoom, spawnAngle, type Door, type EnemySpec, type RoomManifest } from './o1Room';
 import { planRoute, type Point } from './o1Route';
@@ -116,8 +117,8 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
     let budget = this.speed;
     this.hero.moving = false;
     while (budget > 1e-9 && this.route.length) {
-      const next = this.route[0], dx = next.x - this.hero.x, dy = next.y - this.hero.y, d = Math.hypot(dx, dy);
-      if (d > 1e-9) this.hero.face = Math.atan2(dy, dx);
+      const next = this.route[0], dx = next.x - this.hero.x, dy = next.y - this.hero.y, d = M.hypot(dx, dy);
+      if (d > 1e-9) this.hero.face = M.atan2(dy, dx);
       this.hero.moving = true;
       if (d <= budget) { this.hero.x = next.x; this.hero.y = next.y; this.route.shift(); budget -= d; }
       else { this.hero.x += dx / d * budget; this.hero.y += dy / d * budget; budget = 0; }
@@ -131,7 +132,7 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
   private startFight(seer: number) {
     const s = this.foes[seer], reach = this.room.detection.alertRadius;
     // The seer and every unengaged living ally within the alert radius of it.
-    const idx = this.foes.map((f, i) => i).filter(i => this.foes[i].alive && !this.foes[i].engaged && (i === seer || Math.hypot(this.foes[i].x - s.x, this.foes[i].y - s.y) <= reach));
+    const idx = this.foes.map((f, i) => i).filter(i => this.foes[i].alive && !this.foes[i].engaged && (i === seer || M.hypot(this.foes[i].x - s.x, this.foes[i].y - s.y) <= reach));
     const encounter = ENCOUNTER_FOR[idx.map(i => this.foes[i].arch).join(',')];
     if (!encounter) throw new Error(`no simulator encounter for ${idx.map(i => this.foes[i].arch).join(',')}`);
     idx.forEach(i => { this.foes[i].engaged = true; });

@@ -36,3 +36,8 @@ Combat integration V5 was BLOCKED at eaf4475 (no combat source in the repository
 - The save is one versioned JSON text with a checksum, validated before use and before writing, held in browser storage with an in-memory fallback, with export and import for backup. It has no UI yet. It carries placeholders for map memory, banked goods, one cache slot and settings; doc 08's banking rules are checked by `validateInvariants`.
 - CI (`.github/workflows/ci.yml`) runs lint, typecheck, world check, unit tests, `regress.js`, `legacy-check.js` and the build on every pull request, and the browser specs in a second job. Not yet observed running on GitHub.
 
+2026-10-23, portable math. Chrome 156 returns different last bits than Node 22/24 and Chromium 141 for `Math.sin/cos/atan2/exp/log`, and the sim is chaotic, so the browser and Node disagreed on seeded O1 runs (the failing `browser` CI job). The sim and the world code that feeds it now use `combat/portable-math.js` (fdlibm algorithms on exact IEEE operations only, under 1 ulp from native), pasted into both sims and `src/combat/portableMath.ts` by `combat/tools/sync-portable-math.js`.
+- Intended result change: per-seed outcomes shift, so `legacy-golden.json` (19 of 78 cells changed) and `tests/golden/o1-runs.json` were re-recorded. Distributions did not move: focus-spread at L80, 3 encounters x 3 doctrines x 300 seeds, every cell within 1 point of before, mean range 7.7 to 7.6. `regress.js` still prints `different 0`.
+- Evidence: the 36-run O1 matrix gives the same digest on Node 22, Node 24, Chromium 141 and Chrome 156.
+- Cost: about 11% more sim time (175 to 195 ms per 150 fights).
+- Not covered: presentation-only trig in the adapter and scene, which cannot change sim state.
