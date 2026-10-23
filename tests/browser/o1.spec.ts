@@ -59,6 +59,11 @@ test('browser and Node agree on the walking expedition from camp to the Broken C
   const cases: WorldRunConfig[] = [];
   for (const doctrine of ['measured', 'pressing'] as const) for (const seed of [1, 2, 3]) cases.push({ seed, level: 80, focus: 'balanced', doctrine, from: 'C0', to: 'O3' });
   cases.push({ seed: 5, level: 80, focus: 'balanced', doctrine: 'measured', from: 'C0', to: 'O3', encounters: { O1: 'mireling2', O2: 'mireling', O3: 'sentry' }, hpOverride: 5000 });
+  // The M6 roster: ranged enemies, hazards, an elite and pairs, browser against Node.
+  for (const doctrine of ['measured', 'guarded'] as const) {
+    cases.push({ seed: 6, level: 80, focus: 'balanced', doctrine, from: 'C0', to: 'T2', encounters: { T1: 'harrier', T2: 'harrierSentry' }, hpOverride: 20000 });
+    cases.push({ seed: 6, level: 80, focus: 'balanced', doctrine, from: 'C0', to: 'S2', encounters: { S1: 'spitter', S2: 'brute' }, hpOverride: 20000 });
+  }
   const inPage = await page.evaluate(cs => cs.map(c => window.__WORLD_RUN__(c)), cases);
   inPage.forEach((r, i) => expect(r, JSON.stringify(cases[i])).toEqual(runWorld(sim, cases[i])));
 });

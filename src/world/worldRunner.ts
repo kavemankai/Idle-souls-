@@ -68,6 +68,8 @@ export interface WorldResult {
   loot: { carried: Bank; gains: Gain[]; cache: Cache | null; recovered: Cache | null; deathSpot: DeathSpot | null; issued: number; spent: number; opened: string[]; claimed: string[] };
   /** Per room, which of its enemies are dead at the end. */
   dead: Record<string, boolean[]>;
+  /** Miniboss and boss ids killed during the walk (permanent whatever happens next), sorted and without repeats. */
+  bossesDefeated: string[];
 }
 
 /** Room-local position to world position. Every manifest is centred on its schedule centre. */
@@ -301,6 +303,7 @@ export class WorldRunner {
       hpLeft: Math.round(this.hp), hpMax: this.hpMax, finalPos: { x: Math.round(this.pos.x * 10) / 10, y: Math.round(this.pos.y * 10) / 10 }, digest: this.digest,
       maxWalkStep: Math.round(this.maxWalkStep * 1000) / 1000, maxFightStep: Math.round(this.maxFightStep * 1000) / 1000,
       dead: Object.fromEntries(this.dead),
+      bossesDefeated: [...new Set(this.results.flatMap(l => l.result.bossesDefeated ?? []))].sort(),
       loot: { carried: this.ledger.carried, gains: this.ledger.gains, cache: this.ledger.cache, recovered: this.ledger.recovered, deathSpot: this.deathSpot, issued: this.ledger.issued, spent: this.ledger.spent, opened: [...this.ledger.opened].sort(), claimed: [...this.ledger.claimed].sort() },
     };
   }
