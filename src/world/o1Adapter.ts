@@ -2,6 +2,8 @@ import type { Action, ActorKind, ActorView, Phase, PresentationAdapter, Presenta
 import type { SimFight, SimFighter } from '../combat/simApi';
 import { facingFromVector } from '../presentation/directions';
 import type { O1Controller } from './o1Controller';
+import { buildView, combatView } from './o1Combat';
+import type { BuildView } from '../contracts/presentation';
 
 const MOVE_ACTION: Record<string, Action> = {
   light: 'light', dodgeAtk: 'light', riposte: 'light', heavy: 'heavy', dodge: 'dodge', parry: 'guard', sguard: 'guard',
@@ -32,6 +34,7 @@ export function poseOf(f: SimFighter, S: SimFight): View {
 }
 
 export class O1PresentationAdapter implements PresentationAdapter {
+  private build?: BuildView;
   constructor(private readonly c: O1Controller) {}
   read(): PresentationSnapshot {
     const c = this.c, S = c.fight;
@@ -48,6 +51,7 @@ export class O1PresentationAdapter implements PresentationAdapter {
       hero = { id: 'hero', kind: 'adventurer', x: c.hero.x, y: c.hero.y, facing: facing(c.hero.face), action: walking ? 'walk' : 'idle', phase: 'active', progress: walking ? (c.tick % 18) / 18 : 0, visible: true };
       enemy = { id: 'enemy', kind, x: c.enemy.x, y: c.enemy.y, facing: facing(c.enemy.face), action: 'idle', phase: 'active', progress: 0, visible: c.enemy.alive };
     }
-    return { source: 'authoritative', tick: c.tick, actors: [hero, enemy] };
+    this.build ??= buildView(c.sim, c.stats, c.cfg.focus, c.cfg.doctrine);
+    return { source: 'authoritative', tick: c.tick, actors: [hero, enemy], build: this.build, combat: S ? combatView(c.sim, S) : undefined };
   }
 }

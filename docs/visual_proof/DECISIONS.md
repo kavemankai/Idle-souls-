@@ -23,3 +23,6 @@ Combat integration V5 was BLOCKED at eaf4475 (no combat source in the repository
 - Hand-off: at detection the simulator receives the adventurer's current position and heading and the enemy's spawn. After a win travel resumes from the simulator's position. Death and the 150 s fight limit stop travel (`defeated`, `unresolved`).
 - Perception: the adventurer AI still knows where enemies are through the pillar (handicapped-god model). Solids block movement, hits and projectiles, not the AI's knowledge. Revisit if O1 runs show it matters.
 - Not claimed: no human review, no device or touch testing, no combat QA sign-off. Evidence images are software-rendered cloud captures in `docs/o1_slice/`.
+
+2026-10-23, O1 combat detail. The O1 page now shows the simulator's full readout (bars, mind, totals, damage causes, build, log) and in-world cues. The data crosses an additive optional `combat`/`build` field on `PresentationSnapshot`; rendering never reads the simulator directly and never computes damage, arcs or timing. Cues are programmatic placeholders and can be switched off. The enemy guard half-arc (1.3 rad) mirrors the literal in `checkHit`; if the simulator changes it, `o1Combat.ts` must follow.
+

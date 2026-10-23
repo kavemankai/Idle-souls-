@@ -15,5 +15,40 @@ input:focus-visible{outline:2px solid #ddd0a7;outline-offset:3px}
 #log{list-style:none;margin:2px 0 0;padding:0;font-size:10px;color:#abb9a3;line-height:1.35;min-height:54px}
 #log li{margin:0 0 2px}
 #clips{font-size:9px;color:#9daa97;margin:4px 0 0}
-@media(max-width:600px){.o1-bench{left:12px;right:12px;width:auto;bottom:35px}#log{min-height:0;max-height:40px;overflow:hidden}.scene-title{display:none}}
-@media(max-height:500px){.o1-bench{width:380px;padding:6px 10px}.o1-grid{grid-template-columns:1fr 1fr 1fr;gap:4px}.o1-grid label{gap:2px;font-size:9px}.o1-grid select,.o1-grid input,#dispatch,#speed,.o1-bench .toggles button{min-height:44px}#dispatch{grid-column:auto;align-self:end;font-size:11px;padding:0 4px}#log,#clips,.o1-bench .toggles a{display:none}#status,#result{font-size:9px;min-height:11px;margin:2px 0}}
+[hidden]{display:none!important}
+.o1-cam{position:absolute;display:flex;gap:4px;pointer-events:auto}
+.o1-cam button{min-width:44px;padding:0 10px;background:#14241fe6;font-size:15px}
+.o1-cam #camAction{font-size:11px;letter-spacing:.3px}
+.o1-cam button[aria-pressed=true]{border-color:var(--brass);color:#f1d49a;background:#2b3c30}
+.o1-tabs{display:flex;gap:4px;margin-bottom:6px}
+.o1-tabs button{flex:1;min-width:0;font-size:11px;padding:0 2px}
+.o1-tabs button[aria-selected=true]{border-color:var(--brass);color:#f1d49a;background:#2b3c30}
+.zoomed .scene-title{display:none}
+.o1-pane{max-height:min(54vh,400px);overflow:auto;overscroll-behavior:contain;padding-right:2px}
+.o1-pane h4{font:11px Arial,sans-serif;letter-spacing:1.2px;text-transform:uppercase;color:var(--brass);margin:8px 0 4px}
+.o1-pane .muted{font-size:11px;margin:4px 0}
+.gauge{position:relative;height:16px;margin:3px 0;background:#0f1b18;border:1px solid #a7b4952e;border-radius:2px;overflow:hidden}
+.gauge i{position:absolute;inset:0 auto 0 0;display:block}
+.gauge.hp i{background:#a8412f}.gauge.st i{background:#b98a32}.gauge.po i{background:#7e877c}
+.gauge span{position:relative;font-size:10px;line-height:14px;padding-left:5px;color:#f1eddc}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0}
+.chip{font-size:9px;font-weight:normal;letter-spacing:.3px;padding:2px 6px;border:1px solid #bdac733c;border-radius:9px;color:#e5d6a8}
+.o1-pane dl{margin:0;font-size:11px;line-height:1.35}
+.o1-pane dt{color:#b8c1ad;font-size:10px;margin-top:5px}
+.o1-pane dt b{color:#f1d49a;margin-left:4px}
+.o1-pane dd{margin:0;color:var(--linen)}
+.o1-pane dd.warn{color:#e8a98d}
+.totals{width:100%;border-collapse:collapse;font-size:11px}
+.totals th{text-align:left;font-weight:normal;color:#b8c1ad;padding:2px 0}
+.totals td{text-align:right;color:#f1d49a}
+.causes{list-style:none;margin:0;padding:0;font-size:11px}
+.causes li{position:relative;display:flex;justify-content:space-between;gap:8px;padding:3px 5px;margin:2px 0;overflow:hidden}
+.causes li i{position:absolute;inset:0 auto 0 0;background:#a8412f55;z-index:0}
+.causes li span,.causes li b{position:relative;z-index:1;font-weight:normal}
+.causes small{color:#b8c1ad;margin-left:4px}
+.fightlog{margin:0;padding:0;list-style:none;font-size:11px;line-height:1.35}
+.fightlog li{padding:2px 0;border-bottom:1px solid #a7b49514;color:var(--linen)}
+.fightlog li.good{color:#a7d9a3}.fightlog li.bad{color:#e8a98d}.fightlog li.end{color:#f1d49a}
+.fightlog time{color:#9daa97;margin-right:5px;font-variant-numeric:tabular-nums}
+@media(max-width:600px){.o1-pane{max-height:30vh}.o1-bench{left:12px;right:12px;width:auto;bottom:35px}#log{min-height:0;max-height:40px;overflow:hidden}.scene-title{display:none}}
+@media(max-height:500px){.o1-bench{width:380px;padding:6px 10px}.o1-grid{grid-template-columns:1fr 1fr 1fr;gap:4px}.o1-grid label{gap:2px;font-size:9px}.o1-grid select,.o1-grid input,#dispatch,#speed,.o1-bench .toggles button{min-height:44px}#dispatch{grid-column:auto;align-self:end;font-size:11px;padding:0 4px}#log,#clips,.o1-bench .toggles a{display:none}.o1-pane{max-height:calc(100vh - 57px - 37px - 37px - 44px - 52px)}.o1-tabs{margin-bottom:3px}#status,#result{font-size:9px;min-height:11px;margin:2px 0}}
