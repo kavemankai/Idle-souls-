@@ -4,14 +4,15 @@ import type { Cache } from '../save/saveTypes';
 import type { UpgradeId } from '../progression/experience';
 import { gates } from '../world/gates';
 import { WorldGraph as WG } from '../world/worldGraph';
+import { bossAt, type RematchVariant } from '../world/bosses';
 import { planRooms, type RoutePlan, type RouteStyle } from './planner';
 
 export type Exploration = 'safe' | 'thorough' | 'direct';
 export type ReturnRoute = 'safest' | 'shortest';
-/** Reach walks to a room. Survey walks into it; a Thorough survey also looks into the rooms beside it. Recover walks to the recovery cache and picks it up (it is still at risk until camp). Other kinds (gather, open, challenge) need systems that come later. */
-export type ObjectiveKind = 'reach' | 'survey' | 'recover' | 'explore' | 'open';
+/** Reach walks to a room. Survey walks into it; a Thorough survey also looks into the rooms beside it. Recover walks to the recovery cache and picks it up (it is still at risk until camp). Open works a sealed gate. Challenge walks into a boss arena and fights its boss for the first clear. Rematch does the same for a boss that is already cleared, on a temporary instance. */
+export type ObjectiveKind = 'reach' | 'survey' | 'recover' | 'explore' | 'open' | 'challenge' | 'rematch';
 /** `room` is where the adventurer goes. For `open` it is the room beside the gate and `to` is the room beyond; for `explore` it is the frontier room to start from and `depth` is how many new rooms to enter in a chain (default 3). */
-export interface Objective { id: string; kind: ObjectiveKind; room: string; to?: string; depth?: number }
+export interface Objective { id: string; kind: ObjectiveKind; room: string; to?: string; depth?: number; /** Rematch only. */ variant?: RematchVariant }
 export type ObjectiveStatus = 'queued' | 'active' | 'completed' | 'skipped_blocked' | 'cancelled' | 'suspended';
 export interface ExpeditionPlan {
   /** Ordered. Return to Camp is always appended and is not listed here. */
@@ -54,11 +55,14 @@ export interface Preflight {
 const RANK: Record<PreflightStatus, number> = { confirmed: 0, frontier: 1, blocked: 2, conflicted: 3 };
 
 /** What the plan screen shows before launch. Only known geography is used; nothing is routed through fog and no enemy position is read. */
-export function preflight(plan: ExpeditionPlan, graph: WorldGraph, known: ReadonlySet<string>, start = CAMP, cache: Cache | null = null, open: ReadonlySet<string> = new Set(), preparedKeys = 0): Preflight {
+export function preflight(plan: ExpeditionPlan, graph: WorldGraph, known: ReadonlySet<string>, start = CAMP, cache: Cache | null = null, open: ReadonlySet<string> = new Set(), preparedKeys = 0, defeatedBosses: ReadonlySet<string> = new Set()): Preflight {
   const avoid = new Set(plan.avoid), style = styleOf(plan.exploration);
   const messages: string[] = [];
   const objectives: ObjectivePreflight[] = [];
   let from = start;
+  /** Gates earlier Open objectives will open if they work; a later route may count on them. */
+  const planned = new Set(open);
+  let keysLeft = preparedKeys;
   if (plan.objectives.length > MAX_OBJECTIVES) messages.push(`At most ${MAX_OBJECTIVES} objectives.`);
   if (avoid.has(start)) messages.push('Camp cannot be avoided.');
   for (const o of plan.objectives) {
@@ -67,10 +71,10 @@ export function preflight(plan: ExpeditionPlan, graph: WorldGraph, known: Readon
     else if (o.kind === 'recover' && (!cache || cache.room !== o.room)) { status = 'blocked'; reason = `There is no recovery cache in ${name(graph, o.room)}.`; }
     else if (avoid.has(o.room)) { status = 'conflicted'; reason = `${name(graph, o.room)} is on the avoid list.`; }
     else {
-      route = planRooms({ graph, known, from, to: o.room, avoid, style, open });
+      route = planRooms({ graph, known, from, to: o.room, avoid, style, open: planned });
       if (route) { status = route.frontier ? 'frontier' : 'confirmed'; reason = route.frontier ? `Known route ends at the edge of the map; ${name(graph, o.room)} is unexplored.` : `Known route, ${route.rooms.length - 1} room${route.rooms.length === 2 ? '' : 's'}.`; }
       else {
-        const wide = planRooms({ graph, known, from, to: o.room, avoid: new Set(), style, open });
+        const wide = planRooms({ graph, known, from, to: o.room, avoid: new Set(), style, open: planned });
         status = wide ? 'conflicted' : 'blocked';
         reason = wide ? `Every known way to ${name(graph, o.room)} crosses an avoided room.` : `No known open route to ${name(graph, o.room)}.`;
       }
@@ -79,9 +83,26 @@ export function preflight(plan: ExpeditionPlan, graph: WorldGraph, known: Readon
       const g = o.to ? gates(graph, known, open).find(x => x.key === WG.linkKey(o.room, o.to!)) : undefined;
       if (!g || g.state === 'unseen') { status = 'blocked'; reason = 'No such gate has been seen.'; }
       else if (g.state === 'open') reason = 'Already open; nothing to do.';
-      else if (g.need === 'key' && preparedKeys < 1) { status = 'blocked'; reason = 'Needs a previously banked Gate Key issued at camp. A key found on the way cannot open a gate (it must be banked first).'; }
+      else if (g.need === 'key' && keysLeft < 1) { status = 'blocked'; reason = 'Needs a previously banked Gate Key issued at camp. A key found on the way cannot open a gate (it must be banked first).'; }
       else if (g.need === 'boss' || g.need === 'special') { status = 'blocked'; reason = g.need === 'boss' ? 'Opens when the miniboss falls.' : 'An optional special-key door, not part of this slice.'; }
-      else reason = g.need === 'key' ? 'Spends 1 Gate Key. The unlock is permanent and starts no fight.' : 'Worked by hand; no key.';
+      else { reason = g.need === 'key' ? 'Spends 1 Gate Key. The unlock is permanent and starts no fight.' : 'Worked by hand; no key.'; if (g.need === 'key') keysLeft--; planned.add(g.key); }
+    }
+    if ((o.kind === 'reach' || o.kind === 'survey') && status !== 'blocked' && status !== 'conflicted') {
+      const b = bossAt(o.room);
+      if (b && !defeatedBosses.has(b.id)) { status = 'blocked'; reason = `${b.name} guards ${name(graph, o.room)}. Nobody walks in by accident: use a Challenge objective.`; }
+    }
+    if ((o.kind === 'challenge' || o.kind === 'rematch') && status !== 'conflicted') {
+      const b = bossAt(o.room), cleared = !!b && defeatedBosses.has(b.id);
+      if (!b) { status = 'blocked'; reason = `${name(graph, o.room)} holds no boss.`; }
+      else if (o.kind === 'challenge' && cleared) { status = 'blocked'; reason = `${b.name} is already defeated for good. A first-time challenge is not counted as done; choose Rematch to fight again.`; }
+      else if (o.kind === 'rematch' && !cleared) { status = 'blocked'; reason = `${b.name} has not been defeated yet. A rematch is only open after the first clear.`; }
+      else if (!planned.has(b.gate) && !open.has(b.gate)) { status = 'blocked'; reason = `The gate to ${name(graph, o.room)} is sealed. Add an Open objective for it first.`; }
+      else {
+        const gateText = open.has(b.gate) ? 'The gate is open.' : 'The gate opens earlier in this plan (it needs a banked Gate Key).';
+        reason = o.kind === 'challenge'
+          ? `${gateText} Fights ${b.name} alone; the only way out is the door you came in by${b.tier === 'miniboss' ? ', and its win opens the shortcut to the Crypt' : ''}. A kill banks nothing until camp. Not yet defeated.`
+          : `${gateText} Opt-in rematch (${o.variant === 'limited-healing' ? 'limited healing: no rations' : 'standard'}) against a temporary ${b.name}. No key, the first clear is untouched, rewards are a quarter of the gold and mastery and no gear.`;
+      }
     }
     objectives.push({ id: o.id, room: o.room, status, route, reason });
     if (route) from = o.room;

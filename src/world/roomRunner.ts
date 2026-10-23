@@ -215,6 +215,11 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
         this.fightIdx.forEach(fi => { const f = this.foes[fi]; if (f.alive) { const sp = this.specs[fi]; f.x = sp.x; f.y = sp.y; f.face = spawnAngle(sp); f.engaged = false; } });
         this.state = 'completed';
         this.note(`Broke contact with ${Math.round(S.p.hp)} of ${this.hpMax} health at the ${this.exit.side} door. Survivors return to their posts.`);
+      } else if (S.winner === 'adventurer' && S.p.hp <= 0) {
+        // The last enemy and the adventurer fell on the same tick. The simulator checks the kill first; the world keeps the kill (the enemies stay dead,
+        // a boss stays defeated and pays) and the adventurer is dead all the same.
+        this.hero.x = S.p.x; this.hero.y = S.p.y; this.hero.face = S.p.face;
+        this.state = 'defeated'; this.note('The adventurer fell on the tick the last enemy did. The kill stands.');
       } else if (S.winner === 'adventurer') {
         this.hero.x = S.p.x; this.hero.y = S.p.y; this.hero.face = S.p.face;
         this.state = 'travelling';

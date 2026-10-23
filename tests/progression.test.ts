@@ -82,7 +82,7 @@ test('Ledger: kit rations are drunk first, then found ones, and neither is loot'
 test('without progression nothing changes: no progress block and fixed level', () => {
   const c = run(planOf([obj('O1', 'survey')]), 3, { progression: undefined });
   assert.equal(c.progress, null);
-  assert.equal(c.version, 4);
+  assert.equal(c.version, 5);
 });
 
 test('a run with progression carries a progress block and is deterministic', () => {

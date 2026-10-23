@@ -10,17 +10,31 @@ import { simLevel } from '../progression/levelTable';
 import type { Door, RoomManifest } from './roomTypes';
 import type { Point } from './o1Route';
 import { WorldGraph } from './worldGraph';
+import { BOSSES } from './bosses';
 
 /** Encounters that stand in the Old Road rooms for a plain expedition. Camp has none. */
 export const OLD_ROAD_ENCOUNTERS: Readonly<Record<string, string>> = { O1: 'mireling', O2: 'sentry', O3: 'mireling2', KT: 'mireling2' };
+/**
+ * Encounters that stand in every authored room for an expedition: the first encounter of ENCOUNTER_CONTRACT.json's roomPlan that the room's manifest
+ * authors. T3 lists none in its manifest, so it is empty. The Old Road rooms keep their M1 choices, so their results do not change. MB and B1 hold the
+ * Warden and the Castellan; the world runner leaves a defeated boss out and fights it alone (SOLO) only after a challenge or rematch brings the adventurer in.
+ */
+export const DEFAULT_ENCOUNTERS: Readonly<Record<string, string>> = {
+  ...OLD_ROAD_ENCOUNTERS,
+  T1: 'harrier', T2: 'harrierSentry', MB: 'warden', S1: 'spitter', S2: 'brute', S3: 'spitterGrunt', K1: 'sentrySpitter', K2: 'duelist', K3: 'duelist', B1: 'castellan',
+};
 export interface WorldRunConfig {
   seed: number; level: number; focus: string; doctrine: SimDoctrine;
   /** Start and turn-around rooms. The route between them is the graph's shortest path over ordinary links. Ignored when a navigator is given. */
   from?: string; to?: string;
   /** Decides, on every arrival, which door to leave by. Without one the walk is the fixed there-and-back of `from` and `to`. */
   navigator?: Navigator;
-  /** Room to encounter id, for the rooms that have enemies. Defaults to OLD_ROAD_ENCOUNTERS; a missing room is empty. */
+  /** Room to encounter id, for the rooms that have enemies. Defaults to DEFAULT_ENCOUNTERS; a missing room is empty. */
   encounters?: Readonly<Record<string, string>>;
+  /** Bosses already defeated for good (ids). Their arenas stand empty unless the room is in `rematchRooms`. */
+  defeatedBosses?: readonly string[];
+  /** Arenas that hold a temporary boss instance this expedition (a rematch). Only meaningful for a boss that is already defeated. */
+  rematchRooms?: readonly string[];
   /** Door of the turn-around room that marks the frontier of the known world. Defaults to its first door that is not on the way in. */
   turnDoor?: string;
   /** The recovery cache waiting at the start of this expedition, if any. */
@@ -68,6 +82,10 @@ export interface Navigator {
   sanctuaryUsed?(info: { kind: 'upgrade'; upgrade: UpgradeId; name: string; visit: number } | { kind: 'rest'; healed: number; visit: number }, ctx: LiveCtx): void;
   /** The result of working a gate: opened for good, or refused (no eligible key). */
   gateWorked?(gate: GateInfo, ok: boolean, ctx: LiveCtx): void;
+  /** A boss or miniboss came into a fight (first time this expedition). */
+  bossEngaged?(info: { boss: string; room: string; rematch: boolean }, ctx: LiveCtx): void;
+  /** A boss or miniboss fell. `first` is true for the first clear ever; `opened` is the link the first clear opened, if any. */
+  bossDefeated?(info: { boss: string; room: string; first: boolean; opened: string | null }, ctx: LiveCtx): void;
   /** Called when a stretch ends, win or lose, before the next arrival. */
   legEnded?(result: LegResult, ctx: ArrivalCtx): void;
 }
@@ -85,6 +103,8 @@ export interface WorldResult {
   dead: Record<string, boolean[]>;
   /** Miniboss and boss ids killed during the walk (permanent whatever happens next), sorted and without repeats. */
   bossesDefeated: string[];
+  /** Present only when a boss fight happened: who was engaged, who fell for the first time, who fell again as a rematch. */
+  bosses?: { engaged: string[]; firstClears: string[]; rematches: string[] };
 }
 
 /** Room-local position to world position. Every manifest is centred on its schedule centre. */
@@ -136,6 +156,8 @@ export class WorldRunner {
   deathSpot: DeathSpot | null = null;
   notes: string[] = [];
   private legIdx = -1;
+  private readonly bossSeen = new Set<string>();
+  private readonly bossEngaged = new Set<string>();
   private decision: NavDecision | null = null;
   private entry: string | null = null;
   private passage: { to: Point; room: string; entry: string } | null = null;
@@ -157,7 +179,7 @@ export class WorldRunner {
     this.refreshStats();
     this.carry = { st: this.derived.maxSt, poise: this.derived.poise };
     this.hpMax = cfg.hpOverride ?? this.derived.hp; this.hp = this.hpMax;
-    this.ledger = new Ledger(cfg.cache ?? null, cfg.issuedKeys ?? 0, new Set(cfg.claims ?? []), new Set(cfg.openLinks ?? []));
+    this.ledger = new Ledger(cfg.cache ?? null, cfg.issuedKeys ?? 0, new Set(cfg.claims ?? []), new Set(cfg.openLinks ?? []), new Set(cfg.defeatedBosses ?? []));
     this.ledger.kitRations = cfg.kitRations ?? 0;
     this.room = this.nav.start;
     this.pos = toWorld(this.manifests[this.nav.start], { x: 0, y: 0 });
@@ -202,7 +224,10 @@ export class WorldRunner {
     const goal = 'goal' in dec ? dec.goal : undefined;
     const exitDoor = 'exit' in dec ? m.doors.find(d => d.id === dec.exit) : m.doors.find(d => d.id !== entry);
     if (!exitDoor) throw new Error(`${room} has no door ${'exit' in dec ? dec.exit : ''}`);
-    const encounter = this.cfg.encounters?.[room] ?? (this.cfg.encounters ? undefined : OLD_ROAD_ENCOUNTERS[room]);
+    let encounter = this.cfg.encounters?.[room] ?? (this.cfg.encounters ? undefined : DEFAULT_ENCOUNTERS[room]);
+    // A defeated boss stays absent; a rematch puts a temporary instance in the arena. The instance dies and stays dead for this expedition only.
+    const arch = encounter ? m.encounters[encounter]?.enemies[0]?.arch : undefined;
+    if (encounter && arch && BOSSES[arch] && (this.cfg.defeatedBosses ?? []).includes(arch) && !(this.cfg.rematchRooms ?? []).includes(room)) encounter = undefined;
     this.runner = new RoomRunner(this.sim, {
       seed: this.cfg.seed, level: this.levelNow, focus: this.cfg.focus, doctrine: this.cfg.doctrine,
       statBonus: this.progress?.statBonus(),
@@ -241,7 +266,25 @@ export class WorldRunner {
   /** Pay kills, take pickups and the cache within reach. Kills pay once per enemy; nothing is taken while the simulator owns the adventurer. */
   private collect(r: RoomRunner, fighting: boolean) {
     const ctx = () => this.liveCtx(r);
-    r.foes.forEach((f, i) => { if (f.engaged && !f.alive) { const g = this.ledger.kill(f.arch, this.room, i); if (g) { this.progress?.kill(f.arch, this.tick); this.nav.looted?.(g, ctx()); } } });
+    r.foes.forEach((f, i) => {
+      const boss = BOSSES[f.arch];
+      if (boss && f.engaged && !this.bossSeen.has(`${this.room}/${i}`)) {
+        this.bossSeen.add(`${this.room}/${i}`); this.bossEngaged.add(f.arch);
+        this.nav.bossEngaged?.({ boss: f.arch, room: this.room, rematch: (this.cfg.defeatedBosses ?? []).includes(f.arch) }, ctx());
+      }
+    });
+    r.foes.forEach((f, i) => { if (f.engaged && !f.alive) { const g = this.ledger.kill(f.arch, this.room, i);
+      if (g) {
+        this.progress?.kill(f.arch, this.tick); this.nav.looted?.(g, ctx());
+        const boss = BOSSES[f.arch];
+        if (boss) {
+          // The first clear is permanent the tick the boss falls, even if the adventurer falls on the same tick: the link opens now, settle writes it whatever the outcome.
+          const first = this.ledger.firstClears.has(f.arch);
+          const opened = first && boss.opens && this.ledger.activate(boss.opens) ? boss.opens : null;
+          this.nav.bossDefeated?.({ boss: f.arch, room: this.room, first, opened }, ctx());
+        }
+      }
+    } });
     if (fighting || r.state === 'fighting') return;
     const m = this.manifest(this.room), p = r.hero;
     this.sanctuaryStep(r, m);
@@ -348,6 +391,8 @@ export class WorldRunner {
     }
     // Walk the passage from where the adventurer stands to the paired door of the next room.
     const here = this.manifest(room), door = here.doors.find(d => d.id === exit.exit)!;
+    const sealed = this.graph.neighbours(room).find(n => n.room === door.to && this.graph.isGated(n.type) && !this.ledger.isOpen(n.key));
+    if (sealed) { this.state = 'unresolved'; this.haltReason = `The way from ${room} to ${door.to} is sealed.`; this.note(this.haltReason); this.runner = null; return; }
     const there = this.manifest(door.to), arrival = there.doors.find((d: Door) => d.id === `to-${room}`)!;
     this.passage = { to: toWorld(there, arrival.center), room: door.to, entry: arrival.id };
     this.face = r.hero.face;
@@ -384,6 +429,7 @@ export class WorldRunner {
       ...(this.progress ? { progress: { startLevel: this.progress.startLevel, level: this.progress.level, xp: this.progress.xp, levels: this.progress.events.map(e => ({ tick: e.tick, level: e.level, cause: e.cause })), rationsUsed: this.ledger.rationsUsed, rationsLeft: this.ledger.rations, sanctuary: { visits: this.progress.sanctuary.visits, rested: this.progress.sanctuary.rested, upgrade: this.progress.sanctuary.upgrade } } } : {}),
       dead: Object.fromEntries(this.dead),
       bossesDefeated: [...new Set(this.results.flatMap(l => l.result.bossesDefeated ?? []))].sort(),
+      ...(this.bossEngaged.size ? { bosses: { engaged: [...this.bossEngaged].sort(), firstClears: [...this.ledger.firstClears].sort(), rematches: [...this.ledger.rematches].sort() } } : {}),
       loot: { carried: this.ledger.carried, gains: this.ledger.gains, cache: this.ledger.cache, recovered: this.ledger.recovered, deathSpot: this.deathSpot, issued: this.ledger.issued, spent: this.ledger.spent, opened: [...this.ledger.opened].sort(), claimed: [...this.ledger.claimed].sort() },
     };
   }

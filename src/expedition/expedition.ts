@@ -7,12 +7,15 @@ import { describeBank, type Gain } from './loot';
 import { WorldGraph as WG } from '../world/worldGraph';
 import { GATE_NEED, needText, stagingPoint, type GateInfo } from '../world/gates';
 import { ROOMS } from '../world/roomRegistry';
+import { bossAt, BOSSES } from '../world/bosses';
 import { CAMP, MAX_OBJECTIVES, frontierRooms, name, styleOf, type ExpeditionPlan, type Objective, type ObjectiveStatus } from './plan';
 import { planRooms, type RoutePlan, type RouteStyle } from './planner';
 
-export type IntentKind = 'launch' | 'route' | 'objective' | 'discovery' | 'sweep' | 'fight' | 'retreat' | 'redirect' | 'skip' | 'order' | 'loot' | 'level' | 'ration' | 'sanctuary' | 'end';
+export type IntentKind = 'launch' | 'route' | 'objective' | 'discovery' | 'sweep' | 'fight' | 'retreat' | 'redirect' | 'skip' | 'order' | 'loot' | 'level' | 'ration' | 'sanctuary' | 'boss' | 'end';
 /** One line of the intent feed: what the adventurer is doing and why. `cause` is the rule or order behind it. */
 export interface Intent { tick: number; kind: IntentKind; room: string; text: string; cause: string }
+/** A fact worth keeping in the Chronicle on its own line: a gate opened, a boss engaged, a boss defeated. Banking is added when the Chronicle is built. */
+export interface ChronicleEvent { tick: number; kind: 'gate_opened' | 'boss_engaged' | 'boss_defeated' | 'boss_reset'; room: string; text: string }
 export type Mode = 'outbound' | 'returning' | 'blocked' | 'home';
 export interface ObjectiveState extends Objective { status: ObjectiveStatus; note: string }
 export type Order = { type: 'retreat' } | { type: 'redirect'; room: string };
@@ -38,12 +41,18 @@ export class Expedition implements Navigator {
   route: RoutePlan | null = null;
   endReason: string | null = null;
   readonly visited = new Set<string>();
+  /** Bosses already defeated for good, and bosses that fell during this expedition. */
+  readonly defeated: Set<string>;
+  readonly felled = new Set<string>();
+  readonly events: ChronicleEvent[] = [];
+  private bossTries = 0;
   private pending: Order[] = [];
   private sub: { room: string; why: string; back: boolean }[] = [];
   private lastRoute: string[] = [];
   private readonly avoid: Set<string>;
   private nextId = 100;
-  constructor(readonly plan: ExpeditionPlan, private readonly graph: WorldGraph, known: Iterable<string>, private readonly cache: Cache | null = null, openLinks: Iterable<string> = [], private readonly progress: Progress | null = null) {
+  constructor(readonly plan: ExpeditionPlan, private readonly graph: WorldGraph, known: Iterable<string>, private readonly cache: Cache | null = null, openLinks: Iterable<string> = [], private readonly progress: Progress | null = null, defeatedBosses: Iterable<string> = []) {
+    this.defeated = new Set(defeatedBosses);
     this.openLinks = new Set(openLinks);
     this.known = new Set(known);
     this.avoid = new Set(plan.avoid);
@@ -134,6 +143,7 @@ export class Expedition implements Navigator {
     const a = name(this.graph, g.from), b = name(this.graph, g.to);
     if (ok) {
       this.openLinks.add(g.key);
+      this.events.push({ tick: ctx.tick, kind: 'gate_opened', room: g.from, text: `The way from ${a} to ${b} opened for good.` });
       this.rearrive = true;   // the way out may have changed: decide again from here
       this.say(ctx.tick, 'loot', g.from, g.need === 'key' ? `Spent 1 Gate Key: the way from ${a} to ${b} is open for good. No fight has started.` : `Worked the shortcut from ${a} to ${b}: it is open for good.`, g.need === 'key' ? 'A deliberate, permanent unlock (L16, L19). It persists even if the adventurer falls.' : 'A shortcut activated by hand; it stays open.');
     } else this.say(ctx.tick, 'skip', g.from, `Could not open the way from ${a} to ${b}: no eligible key is carried.`, 'Only a key banked at camp and issued for this expedition can open a gate (L19).');
@@ -157,6 +167,7 @@ export class Expedition implements Navigator {
 
   legEnded(lr: LegResult, ctx: ArrivalCtx) {
     const r = lr.result;
+    if (r.escaped && this.bossLive(lr.room)) { this.events.push({ tick: ctx.tick, kind: 'boss_reset', room: lr.room, text: `Left ${bossAt(lr.room)!.name} unfinished; it resets.` }); this.say(ctx.tick, 'boss', lr.room, `Left ${bossAt(lr.room)!.name} alive. The fight is abandoned and the boss resets to full health. Nothing is lost and no key returns.`, 'An unfinished boss fight does not persist.'); }
     if (r.escaped) this.say(ctx.tick, 'fight', lr.room, `Broke contact in ${name(this.graph, lr.room)} with health ${r.hpLeft} of ${r.hpMax}; surviving enemies return to their posts.`, 'No lingering alert: enemies reset when the adventurer leaves (doc 07).');
     if (r.fights > 0 && !r.escaped) this.say(ctx.tick, 'fight', lr.room, `${r.outcome === 'defeated' ? 'Lost' : 'Won'} ${r.fights} fight${r.fights === 1 ? '' : 's'} in ${name(this.graph, lr.room)}, ${r.enemiesDefeated} enemies down; health ${r.hpLeft} of ${r.hpMax}.`, 'The simulator ran the fight; the expedition layer only reads the outcome.');
     if (r.outcome === 'defeated') { this.mode = 'blocked'; this.endReason = `Fell in ${name(this.graph, lr.room)}.`; }
@@ -183,7 +194,7 @@ export class Expedition implements Navigator {
     for (let guard = 0; guard <= this.objectives.length; guard++) {
       const o = this.active();
       if (!o) { this.startReturn(ctx, 'Every objective is done or skipped.', 'Return to Camp ends every plan.'); return this.goHome(ctx); }
-      if (o.status === 'queued') { this.set(o, 'active'); this.say(tick, 'objective', room, `Objective ${this.index(o)}: ${o.kind === 'survey' ? 'survey' : 'reach'} ${name(this.graph, o.room)}.`, 'Next in the plan order.'); }
+      if (o.status === 'queued') { this.set(o, 'active'); this.say(tick, 'objective', room, `Objective ${this.index(o)}: ${o.kind === 'survey' ? 'survey' : o.kind === 'challenge' ? 'challenge the boss of' : o.kind === 'rematch' ? 'rematch the boss of' : 'reach'} ${name(this.graph, o.room)}.`, 'Next in the plan order.'); }
       if (o.kind === 'open') {
         const link = WG.linkKey(o.room, o.to!);
         if (this.openLinks.has(link)) {
@@ -207,9 +218,31 @@ export class Expedition implements Navigator {
           return { exit: back, cross: true, label: 'out', via: stagingPoint(ROOMS[room], o.to!) };
         }
       }
+      if ((o.kind === 'reach' || o.kind === 'survey') && this.bossLive(o.room) && (o.room === room || this.route0(room, o.room, styleOf(this.plan.exploration)))) {
+        this.set(o, 'skipped_blocked', 'A boss guards that room. Use a Challenge objective.');
+        this.say(tick, 'skip', room, `Objective ${this.index(o)} skipped, blocked: ${name(this.graph, o.room)} holds a boss and nobody walks in by accident.`, 'Commitment (doc 21): a boss is engaged only by a deliberate objective.');
+        continue;
+      }
+      if (o.kind === 'challenge' || o.kind === 'rematch') {
+        const b = bossAt(o.room);
+        const refuse = !b ? 'There is no boss there.' : o.kind === 'challenge' && this.defeated.has(b.id) ? `${b.name} is already defeated for good. A first-time challenge is not counted as done; a Rematch must be chosen.`
+          : o.kind === 'rematch' && !this.defeated.has(b.id) ? `${b.name} has not been defeated yet; a rematch opens after the first clear.` : '';
+        if (refuse) { this.set(o, 'skipped_blocked', refuse); this.say(tick, 'skip', room, `Objective ${this.index(o)} skipped, blocked: ${refuse}`, 'L14: skip and continue in order. Nothing is counted as done silently.'); continue; }
+        if (this.felled.has(b!.id)) { this.set(o, 'completed', 'Defeated.'); continue; }
+        if (o.room === room) {
+          if (++this.bossTries > 2) {
+            this.set(o, 'skipped_blocked', `${b!.name} did not engage.`);
+            this.say(tick, 'skip', room, `Objective ${this.index(o)} skipped, blocked: ${b!.name} did not engage.`, 'L14: try legal alternatives, then skip and continue in order.');
+            continue;
+          }
+          const spec = ROOMS[room].encounters[Object.keys(ROOMS[room].encounters).find(k => ROOMS[room].encounters[k].enemies[0].arch === b!.id)!].enemies[0];
+          this.say(tick, 'objective', room, `Walking toward ${b!.name} to ${o.kind === 'rematch' ? 'take the rematch' : 'challenge it'}.`, `${o.kind === 'rematch' ? 'Rematch' : 'Challenge'} objective: a deliberate fight, alone, the entry door the only way out.`);
+          return { exit: ctx.entry ?? this.graph.neighbours(room)[0].door, cross: true, label: 'out', via: { x: spec.x - 110, y: spec.y } };
+        }
+      }
       if (o.kind === 'explore' && !this.exploring && o.room === room) this.exploring = { id: o.id, left: Math.max(0, (o.depth ?? 3) - 1) };
       if (o.kind === 'explore' && this.exploring && this.exploring.id === o.id) {
-        const next = this.graph.neighbours(room).find(n => !this.known.has(n.room) && (!this.graph.isGated(n.type) || this.openLinks.has(n.key)) && !this.avoid.has(n.room));
+        const next = this.graph.neighbours(room).find(n => !this.known.has(n.room) && (!this.graph.isGated(n.type) || this.openLinks.has(n.key)) && !this.avoid.has(n.room) && !this.barred(n.room));
         if (this.exploring.left > 0 && next) {
           this.exploring.left--;
           return this.head(ctx, next.room, styleOf(this.plan.exploration), `Exploring on from ${name(this.graph, room)}`);
@@ -244,7 +277,8 @@ export class Expedition implements Navigator {
       const route = this.route0(room, o.room, styleOf(this.plan.exploration));
       if (!route) {
         const crossing = planRooms({ open: this.openLinks, graph: this.graph, known: this.known, from: room, to: o.room, avoid: new Set(), style: 'shortest' });
-        const why = crossing ? `Every known way to ${name(this.graph, o.room)} crosses an avoided room.` : `No known open route to ${name(this.graph, o.room)} from ${name(this.graph, room)}.`;
+        const sealedBoss = (o.kind === 'challenge' || o.kind === 'rematch') && bossAt(o.room) && !this.openLinks.has(bossAt(o.room)!.gate);
+        const why = sealedBoss ? `The gate to ${name(this.graph, o.room)} is sealed and nothing opened it.` : crossing ? `Every known way to ${name(this.graph, o.room)} crosses an avoided room.` : `No known open route to ${name(this.graph, o.room)} from ${name(this.graph, room)}.`;
         this.set(o, 'skipped_blocked', why);
         this.say(tick, 'skip', room, `Objective ${this.index(o)} skipped, blocked: ${why}`, 'L14: try legal alternatives, then skip and continue in order.');
         continue;
@@ -256,11 +290,46 @@ export class Expedition implements Navigator {
   }
 
   private index(o: ObjectiveState) { return this.objectives.indexOf(o) + 1; }
+  /** A boss stands in `room` right now: it has not been defeated, or a rematch put a temporary one there, and it has not fallen on this expedition. */
+  private bossLive(room: string): boolean {
+    const b = bossAt(room);
+    if (!b || this.felled.has(b.id)) return false;
+    return !this.defeated.has(b.id) || this.objectives.some(o => o.kind === 'rematch' && o.room === room);
+  }
+  /** Nobody walks into a living boss's arena by chance: only the challenge or rematch objective that is being worked now may. */
+  private barred(room: string): boolean {
+    if (!this.bossLive(room)) return false;
+    const o = this.active();
+    return !(o && (o.kind === 'challenge' || o.kind === 'rematch') && o.room === room);
+  }
+  private avoidFor(from: string, to: string): Set<string> {
+    const out = new Set(this.avoid);
+    for (const r of this.graph.rooms.keys()) if (r !== from && r !== to && this.barred(r)) out.add(r);
+    return out;
+  }
   private route0(from: string, to: string, style: RouteStyle, notFirst?: Set<string>) {
-    return planRooms({ open: this.openLinks, graph: this.graph, known: this.known, from, to, avoid: this.avoid, style, notFirst });
+    return planRooms({ open: this.openLinks, graph: this.graph, known: this.known, from, to, avoid: this.avoidFor(from, to), style, notFirst });
+  }
+  /** Heard from the world runner: a boss came into a fight. */
+  bossEngaged(info: { boss: string; room: string; rematch: boolean }, ctx: LiveCtx) {
+    const b = BOSSES[info.boss];
+    this.events.push({ tick: ctx.tick, kind: 'boss_engaged', room: info.room, text: `${b.name} engaged${info.rematch ? ' (rematch)' : ''}.` });
+    this.say(ctx.tick, 'boss', info.room, `${b.name} sees the adventurer. The fight is to the finish or the door; the only way out is the way in.`, info.rematch ? 'Rematch objective: opted in.' : 'Challenge objective: a deliberate commitment (doc 21).');
+  }
+  /** Heard from the world runner: a boss fell. The clear is permanent the moment it happens. */
+  bossDefeated(info: { boss: string; room: string; first: boolean; opened: string | null }, ctx: LiveCtx) {
+    const b = BOSSES[info.boss];
+    this.felled.add(info.boss);
+    if (info.opened) this.openLinks.add(info.opened);
+    this.events.push({ tick: ctx.tick, kind: 'boss_defeated', room: info.room, text: `${b.name} defeated${info.first ? ' for the first time' : ' (rematch)'}.` });
+    this.say(ctx.tick, 'boss', info.room, info.first
+      ? `${b.name} is down for good.${info.opened ? ` The way from ${name(this.graph, b.room)} to ${name(this.graph, info.opened.split('~').find(x => x !== b.room)!)} is open for good.` : ''}${b.campaign ? ' The campaign route is unlocked.' : ''} The rewards are carried and at risk until camp.`
+      : `${b.name}'s temporary double is down. The first clear is unchanged. Limited rewards are carried, at risk until camp.`, info.first ? 'First clear: permanent whatever happens next (doc 11).' : 'Rematch: no key, no new world change.');
+    for (const o of this.objectives) if ((o.kind === 'challenge' || o.kind === 'rematch') && o.room === info.room && (o.status === 'active' || o.status === 'queued')) this.set(o, 'completed', info.first ? 'Defeated for the first time.' : 'Rematch won.');
+    this.rearrive = true;
   }
   private queueSweep(room: string, cameFrom: string | null) {
-    const sides = this.graph.neighbours(room).filter(n => !this.graph.isGated(n.type) && !this.avoid.has(n.room) && !this.visited.has(n.room) && n.door !== cameFrom && n.room !== CAMP);
+    const sides = this.graph.neighbours(room).filter(n => !this.graph.isGated(n.type) && !this.avoid.has(n.room) && !this.barred(n.room) && !this.visited.has(n.room) && n.door !== cameFrom && n.room !== CAMP);
     for (const n of sides) { this.sub.push({ room: n.room, why: `Thorough survey looks into ${name(this.graph, n.room)}.`, back: false }, { room, why: `Thorough survey returns to ${name(this.graph, room)}.`, back: true }); }
   }
   private applyOrders(ctx: ArrivalCtx) {

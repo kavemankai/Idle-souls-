@@ -1,6 +1,7 @@
 import { STARTER_KIT, type Bank, type Cache } from '../save/saveTypes';
 export { STARTER_KIT };
 import type { Pickup } from '../world/roomTypes';
+import { BOSSES, REMATCH_GOLD_SHARE } from '../world/bosses';
 
 /**
  * What the adventurer carries is a Bank-shaped bundle (gold, supplies, found gear, recoverable mastery). It is at risk until camp: banking and the death
@@ -63,9 +64,12 @@ export class Ledger {
   kitRations = 0;
   /** Rations drunk this expedition, from the kit or from loot. */
   rationsUsed = 0;
+  /** Bosses killed for the first time this expedition, and bosses killed again as a rematch. */
+  readonly firstClears = new Set<string>();
+  readonly rematches = new Set<string>();
   private readonly taken = new Set<string>();
   private readonly paid = new Set<string>();
-  constructor(cache: Cache | null = null, issued = 0, private readonly priorClaims: ReadonlySet<string> = new Set(), private readonly priorOpen: ReadonlySet<string> = new Set()) {
+  constructor(cache: Cache | null = null, issued = 0, private readonly priorClaims: ReadonlySet<string> = new Set(), private readonly priorOpen: ReadonlySet<string> = new Set(), private readonly priorBosses: ReadonlySet<string> = new Set()) {
     this.cache = cache ? { ...cache, contents: cloneBank(cache.contents) } : null;
     this.issued = issued;
     this.carried = { ...emptyCarried(), prepared: issued };
@@ -78,6 +82,16 @@ export class Ledger {
     const table = KILL_LOOT[arch];
     if (this.paid.has(key) || !table) return null;
     this.paid.add(key);
+    const boss = BOSSES[arch];
+    if (boss && this.priorBosses.has(arch)) {
+      // A rematch pays a share of the gold and mastery and no gear; it never touches the first clear.
+      this.rematches.add(arch);
+      return this.add({ source: 'kill', room, label: `${arch} defeated (rematch)`, bundle: { ...emptyCarried(), gold: Math.floor(table.gold * REMATCH_GOLD_SHARE), mastery: Math.floor(table.mastery * REMATCH_GOLD_SHARE) } });
+    }
+    if (boss) {
+      this.firstClears.add(arch);
+      return this.add({ source: 'kill', room, label: `${arch} defeated`, bundle: { ...emptyCarried(), gold: table.gold, mastery: table.mastery, gear: [boss.gear] } });
+    }
     return this.add({ source: 'kill', room, label: `${arch} defeated`, bundle: { ...emptyCarried(), gold: table.gold, mastery: table.mastery } });
   }
   pickup(room: string, p: Pickup): Gain | null {

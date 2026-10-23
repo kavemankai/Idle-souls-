@@ -6,6 +6,7 @@ import { toWorld } from '../world/worldRunner';
 import { DANGER } from '../expedition/planner';
 import { gates, needText } from '../world/gates';
 import { CAMP, MAX_OBJECTIVES, defaultPlan, frontierRooms, name, preflight, type Exploration, type ExpeditionPlan, type Objective, type ObjectiveKind, type ReturnRoute } from '../expedition/plan';
+import { BOSSES, type RematchVariant } from '../world/bosses';
 import { finishChronicle, runExpedition, startExpedition, type ExpeditionConfig, type ExpeditionRun } from '../expedition/run';
 import type { Chronicle } from '../expedition/chronicle';
 import { describeBank } from '../expedition/loot';
@@ -77,7 +78,7 @@ export function mountExpedition(root: HTMLElement) {
   // Temporary levels are on unless ?progress=0 (fixed level, kept for tests and comparisons).
   const progressOn = params.get('progress') !== '0';
   let startLevel = Math.max(1, Math.min(MAX_DESIGN_LEVEL, Math.round(Number(params.get('startlevel')) || 1)));
-  const cfg = (): ExpeditionConfig => ({ seed, level, focus, progression: progressOn ? { startLevel } : undefined, plan: { ...plan, objectives: objectives.map(o => ({ ...o })), avoid: plan.avoid.slice() }, known: [...known()], hpOverride, cache: save.camp.cache, issueKeys: Math.min(issue, 2, save.camp.bank.keys), claims: save.world.claims, openLinks: save.world.openedLinks });
+  const cfg = (): ExpeditionConfig => ({ seed, level, focus, progression: progressOn ? { startLevel } : undefined, plan: { ...plan, objectives: objectives.map(o => ({ ...o })), avoid: plan.avoid.slice() }, known: [...known()], hpOverride, cache: save.camp.cache, issueKeys: Math.min(issue, 2, save.camp.bank.keys), claims: save.world.claims, openLinks: save.world.openedLinks, defeatedBosses: save.world.defeatedBosses });
 
   const screen = h('div', { class: 'xp', id: 'xp' });
   root.append(screen);
@@ -95,19 +96,20 @@ export function mountExpedition(root: HTMLElement) {
     plan.objectives = objectives;
     const openSet = new Set(save.world.openedLinks);
     const issued = Math.min(issue, 2, save.camp.bank.keys);
-    const pf = preflight(plan, graph, k, CAMP, save.camp.cache, openSet, issued);
+    const pf = preflight(plan, graph, k, CAMP, save.camp.cache, openSet, issued, new Set(save.world.defeatedBosses));
     const sealed = gates(graph, k, openSet).filter(g => g.state === 'sealed' && k.has(g.from));
     const seg = <T extends string>(label: string, id: string, opts: [T, string][], cur: T, set: (v: T) => void) =>
       h('fieldset', { class: 'seg' }, h('legend', {}, label), ...opts.map(([v, t]) => h('button', { type: 'button', 'aria-pressed': String(v === cur), 'data-seg': `${id}-${v}`, onclick: () => { set(v); renderPlan(); } }, t)));
     const objRows = objectives.map((o, i) => h('li', { class: `obj ${pf.objectives[i]?.status ?? ''}` },
       h('span', { class: 'n' }, String(i + 1)),
-      h('select', { 'aria-label': `Objective ${i + 1} action`, 'data-obj-kind': String(i), onchange: (e) => { o.kind = (e.target as HTMLSelectElement).value as ObjectiveKind; if (o.kind === 'recover' && save.camp.cache) o.room = save.camp.cache.room; if (o.kind === 'open' && sealed[0]) { o.room = sealed[0].from; o.to = sealed[0].to; } else delete o.to; renderPlan(); } },
-        ...((['reach', 'survey', 'explore', ...(sealed.length ? ['open'] : []), ...(save.camp.cache ? ['recover'] : [])]) as ObjectiveKind[]).map(v => { const op = h('option', { value: v }, cap(v)); if (o.kind === v) op.selected = true; return op; })),
+      h('select', { 'aria-label': `Objective ${i + 1} action`, 'data-obj-kind': String(i), onchange: (e) => { o.kind = (e.target as HTMLSelectElement).value as ObjectiveKind; if (o.kind === 'recover' && save.camp.cache) o.room = save.camp.cache.room; if (o.kind === 'open' && sealed[0]) { o.room = sealed[0].from; o.to = sealed[0].to; } else delete o.to; if (o.kind === 'challenge' || o.kind === 'rematch') { const b = Object.values(BOSSES).find(x => save.world.defeatedBosses.includes(x.id) === (o.kind === 'rematch')); if (b && choices.includes(b.room)) o.room = b.room; if (o.kind === 'rematch') o.variant ??= 'standard'; else delete o.variant; } renderPlan(); } },
+        ...((['reach', 'survey', 'explore', ...(sealed.length ? ['open'] : []), ...(save.camp.cache ? ['recover'] : []), 'challenge', ...(save.world.defeatedBosses.length ? ['rematch'] : [])]) as ObjectiveKind[]).map(v => { const op = h('option', { value: v }, cap(v)); if (o.kind === v) op.selected = true; return op; })),
       o.kind === 'open'
         ? h('select', { 'aria-label': `Objective ${i + 1} gate`, 'data-obj-gate': String(i), onchange: (e) => { const [a, b] = (e.target as HTMLSelectElement).value.split('>'); o.room = a; o.to = b; renderPlan(); } },
           ...sealed.map(g => { const op = h('option', { value: `${g.from}>${g.to}` }, `${name(graph, g.from)} to ${name(graph, g.to)}`); if (o.room === g.from && o.to === g.to) op.selected = true; return op; }))
         : h('select', { 'aria-label': `Objective ${i + 1} place`, 'data-obj-room': String(i), disabled: o.kind === 'recover', onchange: (e) => { o.room = (e.target as HTMLSelectElement).value; renderPlan(); } },
         ...choices.map(r => { const op = h('option', { value: r }, `${name(graph, r)}${k.has(r) ? '' : ' (unexplored)'}`); if (o.room === r) op.selected = true; return op; })),
+      o.kind === 'rematch' ? h('select', { 'aria-label': `Objective ${i + 1} rematch variant`, 'data-obj-variant': String(i), onchange: (e) => { o.variant = (e.target as HTMLSelectElement).value as RematchVariant; renderPlan(); } }, ...([['standard', 'Standard'], ['limited-healing', 'Limited healing (no rations)']] as [RematchVariant, string][]).map(([v, t]) => { const op = h('option', { value: v }, t); if ((o.variant ?? 'standard') === v) op.selected = true; return op; })) : null,
       h('span', { class: 'row-btns' },
         h('button', { type: 'button', 'aria-label': 'Move up', disabled: i === 0, onclick: () => { [objectives[i - 1], objectives[i]] = [objectives[i], objectives[i - 1]]; renderPlan(); } }, '↑'),
         h('button', { type: 'button', 'aria-label': 'Move down', disabled: i === objectives.length - 1, onclick: () => { [objectives[i + 1], objectives[i]] = [objectives[i], objectives[i + 1]]; renderPlan(); } }, '↓'),
@@ -310,6 +312,7 @@ export function mountExpedition(root: HTMLElement) {
         h('dt', {}, 'Run id'), h('dd', {}, `seed ${c.seed} · ${c.digest}`)),
       h('h2', {}, 'What happened to the loot'),
       h('ul', { id: 'settle-lines' }, ...settlement!.lines.map(l => h('li', {}, l)), ...(settlement!.applied ? c.loot.opened.map(k => { const l = graph.links.find(x => WorldGraph.linkKey(x.from, x.to) === k); return h('li', {}, `Opened for good: ${l ? `${name(graph, l.from)} and ${name(graph, l.to)}` : k}.`); }) : [])),
+      h('ul', { id: 'chronicle-events', hidden: !c.events.length }, ...c.events.map(e => h('li', { 'data-event': e.kind }, e.text))),
       h('a', { class: 'btn', id: 'download', href: `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(c, null, 1))}`, download: `chronicle-seed${c.seed}.json` }, 'Download Chronicle (JSON)'),
       h('button', { type: 'button', id: 'again', onclick: renderPlan }, 'Plan another'));
   }

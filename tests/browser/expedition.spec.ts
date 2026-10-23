@@ -229,3 +229,63 @@ test('progress=0 hides the progression controls and keeps the fixed level field'
   await expect(page.locator('#sanctuary-rule')).toHaveCount(0);
   await expect(page.locator('#level')).toHaveCount(1);
 });
+
+// M8: bosses, first clears and rematches.
+test('browser and Node agree on boss expeditions: first clears, a rematch, the Castellan and an abandoned fight', async ({ page }) => {
+  await open(page);
+  const all = ['C0', 'O1', 'O2', 'O3', 'KT', 'T1', 'T2', 'T3', 'S1', 'S2', 'S3', 'K1', 'K2', 'K3', 'SB'];
+  const base = { level: 80, focus: 'balanced', known: all };
+  const warden = [{ id: 'g', kind: 'open' as const, room: 'T2', to: 'MB' }, { id: 'c', kind: 'challenge' as const, room: 'MB' }];
+  const cases: ExpeditionConfig[] = [
+    { ...base, seed: 1, hpOverride: 5000, issueKeys: 1, plan: { ...defaultPlan(), retreatHpPct: 0, objectives: warden } },
+    { ...base, seed: 3, hpOverride: 5000, known: [...all, 'MB'], openLinks: ['MB~T2', 'K2~MB'], defeatedBosses: ['warden'], plan: { ...defaultPlan(), objectives: [{ id: 'r', kind: 'rematch', room: 'MB' }] } },
+    { ...base, seed: 4, hpOverride: 5000, known: [...all, 'MB'], openLinks: ['MB~T2', 'K2~MB'], defeatedBosses: ['warden'], progression: { startLevel: 9 }, plan: { ...defaultPlan(), objectives: [{ id: 'r', kind: 'rematch', room: 'MB', variant: 'limited-healing' }] } },
+    { ...base, seed: 5, hpOverride: 5000, issueKeys: 1, plan: { ...defaultPlan(), retreatHpPct: 0, objectives: [{ id: 'g', kind: 'open', room: 'K2', to: 'B1' }, { id: 'c', kind: 'challenge', room: 'B1' }] } },
+    { ...base, seed: 2, issueKeys: 1, progression: { startLevel: 9 }, plan: { ...defaultPlan(), objectives: warden } },
+    { ...base, seed: 1, issueKeys: 1, progression: { startLevel: 9 }, plan: { ...defaultPlan(), retreatHpPct: 0, objectives: warden } },
+  ];
+  const inPage = await page.evaluate(cs => cs.map(c => window.__EXPEDITION_RUN__(c)), cases);
+  inPage.forEach((r, i) => expect(r, `case ${i}`).toEqual(runExpedition(sim, cases[i]).chronicle));
+  expect(inPage[0].bossesDefeated).toEqual(['warden']);
+  expect(inPage[3].bossesDefeated).toEqual(['castellan']);
+  expect(inPage[1].bosses?.rematches[0].won).toBe(true);
+  expect(inPage[4].events.some(e => e.kind === 'boss_reset')).toBe(true);
+});
+
+test('a boss is challenged on purpose, cleared once, persisted, and then offered as an opt-in rematch', async ({ page }) => {
+  await open(page, `&known=all&seed=1&hp=5000${SAVE}`);
+  await page.evaluate(() => { const s = window.__EXPEDITION_SAVE__(); s.camp.bank.keys = 1; window.__EXPEDITION_SET_SAVE__!(s); });
+  await expect(page.locator('[data-obj-kind] option[value=rematch]')).toHaveCount(0);
+  await page.locator('[data-issue="1"]').click();
+  await page.locator('#add-objective').click();
+  await page.locator('[data-obj-kind="0"]').selectOption('open');
+  await page.locator('[data-obj-gate="0"]').selectOption('T2>MB');
+  await page.locator('#add-objective').click();
+  await page.locator('[data-obj-kind="1"]').selectOption('challenge');
+  await expect(page.locator('.obj .why').nth(1)).toContainText('Not yet defeated');
+  await expect(page.locator('#preflight')).toHaveAttribute('data-status', 'frontier');
+  await page.locator('#retreat').fill('0');
+  await page.locator('#launch').click();
+  await finish(page);
+  await expect(page.locator('#outcome')).toHaveAttribute('data-outcome', 'extracted');
+  await expect(page.locator('#chronicle-events li')).toHaveText([/opened for good/, /engaged/, /defeated for the first time/, /Banked at camp/]);
+  await expect(page.locator('#settle-lines')).toContainText('defeated for good');
+  const save = await page.evaluate(() => window.__EXPEDITION_SAVE__());
+  expect(save.world.defeatedBosses).toEqual(['warden']);
+  expect([...save.world.openedLinks].sort()).toEqual(['K2~MB', 'MB~T2']);
+  expect(save.camp.bank.gear).toContain('warden-bell-clapper');
+  await page.locator('#again').click();
+  await page.locator('[data-remove="1"]').click();   // the plan is kept between expeditions: clear the spent objectives
+  await page.locator('[data-remove="0"]').click();
+  await page.locator('#add-objective').click();
+  await page.locator('[data-obj-kind="0"]').selectOption('rematch');
+  await expect(page.locator('[data-obj-variant="0"]')).toBeVisible();
+  await expect(page.locator('.obj .why').first()).toContainText('quarter');
+  await page.locator('[data-obj-variant="0"]').selectOption('limited-healing');
+  await expect(page.locator('#preflight')).toHaveAttribute('data-status', 'confirmed');
+  await page.locator('[data-obj-kind="0"]').selectOption('challenge');
+  await page.locator('[data-obj-room="0"]').selectOption('MB');
+  await expect(page.locator('.obj .why').first()).toContainText('already defeated');
+  await expect(page.locator('#launch')).toBeDisabled();
+  expect(await noSideScroll(page)).toBe(true);
+});
