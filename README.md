@@ -2,7 +2,7 @@
 
 **Design library version:** v0.17 (Workshop 24, 2026-10-23).
 
-This repository contains the modular game-design, combat interface and art-production specifications. It does **not** include an executable game or a verified combat implementation. The core protagonist AI and combat bench are tracked separately by the implementation workstream.
+This repository contains the modular game-design, combat interface and art-production specifications, plus the combat simulation in `combat/`. There is no full game yet. The combat code (deterministic sim, adventurer AI, enemy AI, balance runner and bench page) is the source of truth for combat numbers and overrides the design library where they disagree. Read `combat/CLAUDE.md` and `combat/CLAUDE_CODE_COMBAT_HANDOFF.md` before changing it.
 
 Latest creator-lock: **L24** — eight-direction character locomotion and guard sprites; selective per-move directional animation coverage for attacks. Also preserve hybrid Blender-to-2D pipeline L22, fixed 75° orthographic camera L23 and all game/economy locks L01–L21.
 
