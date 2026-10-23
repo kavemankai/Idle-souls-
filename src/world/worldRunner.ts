@@ -1,7 +1,7 @@
 import { portableMath as M } from '../combat/portableMath';
-import type { SimApi, SimDoctrine } from '../combat/simApi';
+import type { SimApi, SimCarry, SimDerived, SimDoctrine } from '../combat/simApi';
 import { ROOMS } from './roomRegistry';
-import { RoomRunner, type RoomResult } from './roomRunner';
+import { RoomRunner, type RetreatAnswer, type RoomResult } from './roomRunner';
 import type { Door, RoomManifest } from './roomTypes';
 import type { Point } from './o1Route';
 import { WorldGraph } from './worldGraph';
@@ -31,9 +31,15 @@ export interface ArrivalCtx {
 }
 /** `exit` is a door of the current room. `cross` false means: walk to the door, then ask again from inside the same room (a turn-around). */
 export type NavDecision = { exit: string; cross: boolean; label?: string; via?: Point } | { goal: Point; label?: string } | { halt: string };
+/** What a navigator sees every tick while the adventurer is in a room and not walking a passage. */
+export interface LiveCtx { room: string; entry: string | null; tick: number; hp: number; hpMax: number; fighting: boolean; pos: Point }
 export interface Navigator {
   start: string;
   arrive(ctx: ArrivalCtx): NavDecision;
+  /** Asked every tick inside a room. Returning an exit door changes the way out now (a retreat); in a fight the adventurer disengages first. */
+  live?(ctx: LiveCtx): { exit: string } | { end: true } | null;
+  /** The room runner's answer to a `live` request: accepted (with what a retreat in a fight faces) or refused. */
+  liveAnswer?(answer: RetreatAnswer, ctx: LiveCtx): void;
   /** Called when a stretch ends, win or lose, before the next arrival. */
   legEnded?(result: LegResult, ctx: ArrivalCtx): void;
 }
@@ -100,6 +106,9 @@ export class WorldRunner {
   private face = 0;
   private hash = 2166136261;
   private readonly speed: number;
+  private readonly derived: SimDerived;
+  /** Stamina and poise, carried from room to room and recovered while walking. */
+  carry: SimCarry;
   readonly graph: WorldGraph;
   constructor(readonly sim: SimApi, readonly cfg: WorldRunConfig, graph = new WorldGraph(), private readonly manifests: Readonly<Record<string, RoomManifest>> = ROOMS) {
     this.graph = graph;
@@ -107,6 +116,8 @@ export class WorldRunner {
     this.nav = cfg.navigator ?? new WalkNavigator(graph, manifests, cfg.from!, cfg.to!, cfg.turnDoor);
     const derived = sim.derive(sim.allocate(cfg.level, cfg.focus, cfg.seed), false);
     this.speed = sim.ARCH.adventurer.speed * derived.moveMult;
+    this.derived = derived;
+    this.carry = { st: derived.maxSt, poise: derived.poise };
     this.hpMax = cfg.hpOverride ?? derived.hp; this.hp = this.hpMax;
     this.room = this.nav.start;
     this.pos = toWorld(this.manifests[this.nav.start], { x: 0, y: 0 });
@@ -141,7 +152,7 @@ export class WorldRunner {
       seed: this.cfg.seed, level: this.cfg.level, focus: this.cfg.focus, doctrine: this.cfg.doctrine,
       encounter, room: m,
       entryDoor: entry ?? undefined, exitDoor: exitDoor.id, start: at, startFace: face,
-      startHp: this.hp, hpOverride: this.hpMax, defeated: this.dead.get(room), seedOffset: this.legIdx * 100003 + 100003, maxFightTicks: this.cfg.maxFightTicks,
+      startHp: this.hp, hpOverride: this.hpMax, carry: this.carry, defeated: this.dead.get(room), seedOffset: this.legIdx * 100003 + 100003, maxFightTicks: this.cfg.maxFightTicks,
       goal, via: 'exit' in dec ? dec.via : undefined,
     });
     this.runner.dispatch();
@@ -155,18 +166,34 @@ export class WorldRunner {
     if (this.passage) this.walkPassage();
     else {
       const r = this.runner!;
+      this.askLive(r);
       const ticksBefore = r.fightTicks;
       r.step();
       fighting = r.fightTicks > ticksBefore;   // this tick belonged to the simulator, which owns the adventurer's motion
       // While the simulator owns the fight the adventurer's place is the fighter's, not the walker's.
       this.pos = toWorld(this.manifest(this.room), fighting && r.fight && r.state !== 'travelling' ? r.fight.p : r.hero);
-      this.hp = r.hp;
+      this.hp = r.hp; this.carry = r.carry;
       if (r.terminal) this.endLeg(r);
     }
     const d = M.hypot(this.pos.x - before.x, this.pos.y - before.y);
     if (fighting) this.maxFightStep = Math.max(this.maxFightStep, d); else this.maxWalkStep = Math.max(this.maxWalkStep, d);
     this.tick++;
     this.mix();
+  }
+  /** Let the navigator change the way out mid-room (a retreat order or a survival trigger). */
+  private askLive(r: RoomRunner) {
+    if (!this.nav.live || (r.state !== 'fighting' && r.state !== 'travelling')) return;
+    const ctx: LiveCtx = { room: this.room, entry: this.entry, tick: this.tick, hp: r.hp, hpMax: this.hpMax, fighting: r.state === 'fighting', pos: r.state === 'fighting' && r.fight ? { x: r.fight.p.x, y: r.fight.p.y } : { x: r.hero.x, y: r.hero.y } };
+    const act = this.nav.live(ctx);
+    if (!act) return;
+    if ('end' in act) {   // a retreat ordered while still at camp: the walk ends here
+      r.finishHere();
+      this.decision = { goal: { x: 0, y: 0 }, label: 'back' };
+      return;
+    }
+    const answer = r.retreat(act.exit);
+    if (answer.ok) this.decision = { exit: act.exit, cross: true, label: 'back' };
+    this.nav.liveAnswer?.(answer, ctx);
   }
   private endLeg(r: RoomRunner) {
     const dec = this.decision!, room = this.room;
@@ -195,6 +222,7 @@ export class WorldRunner {
   private walkPassage() {
     const p = this.passage!, dx = p.to.x - this.pos.x, dy = p.to.y - this.pos.y, d = M.hypot(dx, dy);
     if (d > 1e-9) this.face = M.atan2(dy, dx);
+    this.carry = this.sim.rest(this.carry, this.derived, 1);
     if (d <= this.speed) {
       this.pos = { x: p.to.x, y: p.to.y };
       const there = this.manifest(p.room);

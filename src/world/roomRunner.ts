@@ -1,5 +1,5 @@
 import { portableMath as M } from '../combat/portableMath';
-import type { PreparedRoom, SimApi, SimDoctrine, SimFight, SimFighter } from '../combat/simApi';
+import type { PreparedRoom, RetreatReport, SimApi, SimCarry, SimDerived, SimDoctrine, SimFight, SimFighter } from '../combat/simApi';
 import { simRoom, spawnAngle, type Door, type EnemySpec, type RoomManifest } from './o1Room';
 import { planRoute, type Point } from './o1Route';
 import { sees } from './o1Sight';
@@ -15,6 +15,8 @@ export interface RoomRunnerConfig {
   /** Everything below is for tests; a real run uses the manifest. */
   start?: Point; maxFightTicks?: number; hpOverride?: number;
   /** Expedition carry-over: health on entry, enemies already killed on an earlier visit (by index), and an offset that keeps fight seeds distinct per visit. */
+  /** Stamina and poise on entry; defaults to full. */
+  carry?: SimCarry;
   startFace?: number; startHp?: number; defeated?: readonly boolean[]; seedOffset?: number;
   /** End the run on reaching this point instead of crossing the exit door. */
   goal?: Point;
@@ -28,7 +30,11 @@ export interface RoomRunnerConfig {
 export interface RoomResult {
   outcome: 'completed' | 'defeated' | 'unresolved'; fought: boolean; fights: number; enemiesDefeated: number; ticks: number; fightTicks: number;
   hpLeft: number; hpMax: number; finalPos: Point; detectedAtTick: number | null; digest: string;
+  /** Present and true only when the adventurer broke contact and left a fight alive by retreating. */
+  escaped?: boolean;
 }
+/** Answer to a retreat order: refused with a reason, or accepted with what the retreat faces (a report only exists mid-fight). */
+export type RetreatAnswer = { ok: true; report: RetreatReport | null } | { ok: false; reason: string };
 /** One enemy standing in the room. `engaged` means the simulator owns it right now (or did, and it is down). */
 export interface Foe { arch: string; x: number; y: number; face: number; alive: boolean; engaged: boolean }
 const TERMINAL: RoomState[] = ['completed', 'defeated', 'unresolved'];
@@ -64,11 +70,18 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
   private viaPending: boolean;
   protected readonly room: RoomManifest;
   readonly entry: Door;
-  readonly exit: Door;
+  exit: Door;
+  /** Stamina and poise now; rest recovers them while walking and the simulator spends them in fights. */
+  carry: SimCarry;
+  /** True from a retreat order until the fight ends. */
+  retreating = false;
+  escaped = false;
+  private readonly derived: SimDerived;
+  private readonly specs: EnemySpec[];
   private readonly prepared: PreparedRoom;
   readonly stats: Record<string, number>;
   readonly speed: number;
-  private readonly goal: Point;
+  private goal: Point;
   private hash = 2166136261;
   constructor(readonly sim: SimApi, readonly cfg: C) {
     this.room = cfg.room;
@@ -79,6 +92,8 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
     this.prepared = sim.room.prepare(simRoom(this.room));
     this.stats = sim.allocate(cfg.level, cfg.focus, cfg.seed);
     const derived = sim.derive(this.stats, false);
+    this.derived = derived;
+    this.carry = cfg.carry ?? { st: derived.maxSt, poise: derived.poise };
     this.speed = sim.ARCH.adventurer.speed * derived.moveMult;
     this.hpMax = cfg.hpOverride ?? derived.hp; this.hp = Math.min(this.hpMax, cfg.startHp ?? this.hpMax);
     const start = cfg.start ?? this.entry.center;
@@ -87,6 +102,7 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
     if (cfg.encounter && !known) throw new Error(`${this.room.id} has no encounter ${cfg.encounter}`);
     const base = known ? known.enemies : [];
     const specs: EnemySpec[] = cfg.enemies ?? (cfg.enemy ? [{ arch: cfg.enemy.arch ?? base[0].arch, ...cfg.enemy }] : base);
+    this.specs = specs;
     // An enemy killed on an earlier visit stays dead and takes no part in this one.
     this.foes = specs.map((s, i) => { const dead = cfg.defeated?.[i] === true; return { arch: s.arch, x: s.x, y: s.y, face: spawnAngle(s), alive: !dead, engaged: dead }; });
     this.viaPending = cfg.via !== undefined;
@@ -124,6 +140,7 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
     this.route = first.concat(second);
   }
   private travel() {
+    this.carry = this.sim.rest(this.carry, this.derived, 1);
     const det = this.room.detection;
     const seer = this.foes.findIndex(f => f.alive && !f.engaged && sees(this.sim, this.prepared, f, this.hero, { range: det.range, arcDegrees: det.arcDegrees }));
     if (seer >= 0) { this.startFight(seer); return; }
@@ -157,7 +174,7 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
     this.fightIdx = idx;
     this.fight = this.sim.createFight({
       seed: this.cfg.seed + (this.cfg.seedOffset ?? 0) + (this.fights - 1) * 1009, stats: this.stats, god: false, doctrine: this.cfg.doctrine, encounter,
-      room: simRoom(this.room), hpOverride: this.hpMax,
+      room: simRoom(this.room), hpOverride: this.hpMax, carry: this.carry,
       spawns: { adventurer: { x: this.hero.x, y: this.hero.y, face: this.hero.face }, enemies: idx.map(i => ({ x: this.foes[i].x, y: this.foes[i].y, face: this.foes[i].face })) },
     });
     this.fight.p.hp = this.hp;   // health carries over between fights; the simulator has no other carry-over
@@ -167,9 +184,18 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
     this.sim.step(S);
     this.fightTicks++;
     this.hp = Math.max(0, S.p.hp);
+    if (this.retreating && !S.over && crossed(this.exit, S.p)) this.sim.leave(S);
     this.fightIdx.forEach((fi, k) => { const e = S.enemies[k], f = this.foes[fi]; f.x = e.x; f.y = e.y; f.face = e.face; f.alive = !e.dead; });
     if (S.over) {
-      if (S.winner === 'adventurer') {
+      this.carry = { st: S.p.st, poise: S.p.poise };
+      this.retreating = false;
+      if (S.winner === 'escaped') {
+        // Broke contact: the fight is over, survivors go back to their posts (doc 07: no lingering alert), the dead stay dead.
+        this.hero.x = S.p.x; this.hero.y = S.p.y; this.hero.face = S.p.face; this.escaped = true;
+        this.fightIdx.forEach(fi => { const f = this.foes[fi]; if (f.alive) { const sp = this.specs[fi]; f.x = sp.x; f.y = sp.y; f.face = spawnAngle(sp); f.engaged = false; } });
+        this.state = 'completed';
+        this.note(`Broke contact with ${Math.round(S.p.hp)} of ${this.hpMax} health at the ${this.exit.side} door. Survivors return to their posts.`);
+      } else if (S.winner === 'adventurer') {
         this.hero.x = S.p.x; this.hero.y = S.p.y; this.hero.face = S.p.face;
         this.state = 'travelling';
         this.note(`Fight won with ${Math.round(S.p.hp)} of ${this.hpMax} health. Travel resumes.`);
@@ -180,6 +206,31 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
       this.state = 'unresolved'; this.note('The fight timed out.');
     }
   }
+  /**
+   * Change the way out: the adventurer heads for `doorId` from where it stands. In a fight this is a retreat (the simulator disengages along the
+   * route); while walking it just re-plans. Refused when no route exists. It never picks an attack, block or dodge.
+   */
+  retreat(doorId: string): RetreatAnswer {
+    const door = this.room.doors.find(d => d.id === doorId);
+    if (!door) return { ok: false, reason: `${this.room.id} has no door ${doorId}.` };
+    if (this.terminal || this.state === 'ready') return { ok: false, reason: 'Not under way.' };
+    const out = OUT[door.side], goal = { x: door.center.x + out[0] * 2, y: door.center.y + out[1] * 2 };
+    const from = this.state === 'fighting' && this.fight ? { x: this.fight.p.x, y: this.fight.p.y } : this.hero;
+    const route = planRoute(this.sim, this.prepared, this.room.bounds, from, goal);
+    if (!route) return { ok: false, reason: `No route to the ${door.side} door from here.` };
+    this.exit = door; this.goal = goal; this.viaPending = false;
+    if (this.state === 'fighting' && this.fight) {
+      const report = this.sim.order(this.fight, { type: 'disengage', path: [from, ...route] });
+      this.retreating = true;
+      this.note(`Retreat ordered toward the ${door.side} door.`);
+      return { ok: true, report };
+    }
+    this.route = route;
+    this.note(`Heading for the ${door.side} door instead.`);
+    return { ok: true, report: null };
+  }
+  /** End the leg where the adventurer stands (a retreat ordered at camp). */
+  finishHere() { this.state = 'completed'; this.hero.moving = false; this.note('Ended in place.'); }
   private note(text: string) { this.notes.push(`${this.tick}: ${text}`); }
   /** Rolling hash of rounded per-tick state, so two runs can be compared without storing them. */
   private mix() {
@@ -195,6 +246,7 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
       fought: this.fought, fights: this.fights, enemiesDefeated: this.foes.filter((f, i) => f.engaged && !f.alive && this.cfg.defeated?.[i] !== true).length, ticks: this.tick, fightTicks: this.fightTicks,
       hpLeft: Math.round(this.hp), hpMax: this.hpMax,
       finalPos: { x: Math.round(this.hero.x * 10) / 10, y: Math.round(this.hero.y * 10) / 10 }, detectedAtTick: this.detectedAtTick, digest: this.digest,
+      ...(this.escaped ? { escaped: true } : {}),
     };
   }
 }

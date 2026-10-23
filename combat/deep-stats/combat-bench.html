@@ -564,6 +564,8 @@ const M = (function () {
     S.p.hp = S.p.maxHp = cfg.hpOverride || S.d.hp;
     S.p.st = S.p.maxSt = S.d.maxSt;
     S.p.poise = S.p.maxPoise = S.d.poise;
+    // Expedition carry-over: stamina and poise from the previous fight, recovered by `rest` while walking. Absent for every legacy fight.
+    if (cfg.carry) { S.p.st = Math.min(S.p.maxSt, cfg.carry.st); S.p.poise = Math.min(S.p.maxPoise, cfg.carry.poise); }
     const n = enc.enemies.length;
     const counts = {};
     enc.enemies.forEach(a => counts[a] = (counts[a] || 0) + 1);
@@ -1139,6 +1141,49 @@ const M = (function () {
     return softmaxPick(opts, d.temp, S.rngA);
   }
 
+  // ---- Retreat (additive; only runs after SIM.order(S, { type: 'disengage' })) ----
+  const WAYPOINT_REACH = 4;
+  function retreatStep(S, underAttack) {
+    const p = S.p, D = S.disengage;
+    while (D.i < D.path.length - 1 && M.hypot(D.path[D.i].x - p.x, D.path[D.i].y - p.y) <= WAYPOINT_REACH) D.i++;
+    const w = D.path[D.i];
+    if (!underAttack) p.blocking = false;
+    S.ai.intent = 'Retreat';
+    S.ai.readout = `Withdrawing: breaking contact, ${Math.round(M.hypot(w.x - p.x, w.y - p.y))} units to the next waypoint.`;
+    const ang = M.atan2(w.y - p.y, w.x - p.x);
+    turnToward(p, ang, p.turn);
+    moveToward(S, ang, 1);
+  }
+  /** Orders from outside the fight. `disengage` takes a walkable path (the navigator's) and stops all optional aggression from the next decision on. */
+  function order(S, o) {
+    if (S.over) return null;
+    if (o.type === 'disengage') {
+      if (!o.path || !o.path.length) return null;
+      S.disengage = { path: o.path.map(q => ({ x: q.x, y: q.y })), i: 0, since: S.tick };
+      ev(S, `Retreat ordered at ${fmt(S.tick)}: the adventurer stops attacking and breaks contact.`, 'order');
+      return retreatReport(S);
+    }
+    return null;
+  }
+  /** What a retreat faces right now: facts the adventurer can see, not odds. */
+  function retreatReport(S) {
+    const p = S.p, live = S.enemies.filter(e => !e.dead);
+    const near = live.map(e => M.hypot(e.x - p.x, e.y - p.y)).sort((a, b) => a - b);
+    return {
+      pursuers: live.length, nearest: near.length ? Math.round(near[0]) : null, withinReach: live.filter((e, i) => near[i] <= ARCH[e.arch].threatReach + 40).length,
+      stamina: Math.round(p.st / p.maxSt * 100), health: Math.round(p.hp / p.maxHp * 100),
+      fasterThanAll: live.every(e => e.speed < p.speed * S.d.moveMult), acting: !!p.act, staggered: p.stagger > 0,
+    };
+  }
+  /** The adventurer has left the room: the fight ends without a winner, and survivors reset to their posts (the caller moves them). */
+  function leave(S) {
+    if (S.over) return;
+    S.over = true; S.winner = 'escaped';
+    ev(S, `The adventurer breaks contact at ${fmt(S.tick)}.`, 'end');
+  }
+  /** Stamina and poise recovered over `ticks` of walking (no fight), the same rates the simulator uses when idle. */
+  function rest(c, d, ticks) { return { st: Math.min(d.maxSt, c.st + d.regen * ticks), poise: Math.min(d.poise, c.poise + 0.15 * ticks) }; }
+
   function pickTarget(S) {
     const ai = S.ai, p = S.p, d = S.d;
     const opts = [];
@@ -1244,6 +1289,9 @@ const M = (function () {
       if (arrowGuard) { ai.intent = 'Block'; return; }
       if (guardIdle) { if (!p.blocking) { p.blocking = true; p.blockStart = S.tick; } } else p.blocking = false;
     }
+
+    // Retreat order from the expedition layer: no optional aggression. Defence above still answers every attack; otherwise walk the path it supplied.
+    if (S.disengage) { retreatStep(S, !!top); return; }
 
     // 2. Offense against the current target.
     const old = tgt.hist[Math.max(0, S.tick - d.delay - 3)];
@@ -1478,7 +1526,7 @@ const M = (function () {
     for (const e of S.enemies) e.hist.push({ x: e.x, y: e.y, face: e.face, inst: !e.dead && e.act && e.act.kind === 'attack' ? e.actInst : 0, id: e.act ? e.act.id : null, t: e.actT, stag: e.stagger > 0, dead: e.dead });
     perceive(S);
     if (p.stagger > 0) { p.mvx = p.mvy = 0; p.blocking = false; }
-    else if (p.act && p.act.id === 'light' && tryChain(S)) { /* chained into another light */ }
+    else if (p.act && p.act.id === 'light' && !S.disengage && tryChain(S)) { /* chained into another light */ }
     else if (!p.act) decide(S);
     else { p.mvx = p.mvy = 0; }
     for (const e of S.enemies) {
@@ -1502,7 +1550,7 @@ const M = (function () {
 
   function runFight(cfg) { const S = createFight(cfg); while (!S.over) step(S); return S; }
 
-  return { HZ, ARENA_R, MOVES, ARCH, ENCOUNTERS, DOCTRINES, STATS, CAUSES, derive, playerLevel, pointsSpent, POINTS_PER_LEVEL, playerHp, allocate, setPhys, PROFILES, FAMILIES, BASE, MAX_LEVEL, fromSix, isMind, playerMoves, createFight, step, runFight, fmt, room: { prepare: prepareRoom, nearest: nearestSolid, losClear: (R, x0, y0, x1, y1) => losClear({ room: R }, x0, y0, x1, y1) } };
+  return { HZ, ARENA_R, MOVES, ARCH, ENCOUNTERS, DOCTRINES, STATS, CAUSES, derive, playerLevel, pointsSpent, POINTS_PER_LEVEL, playerHp, allocate, setPhys, PROFILES, FAMILIES, BASE, MAX_LEVEL, fromSix, isMind, playerMoves, createFight, step, runFight, order, retreatReport, leave, rest, fmt, room: { prepare: prepareRoom, nearest: nearestSolid, losClear: (R, x0, y0, x1, y1) => losClear({ room: R }, x0, y0, x1, y1) } };
 })();
 if (typeof module !== 'undefined') module.exports = SIM;
 
