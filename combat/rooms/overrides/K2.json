@@ -1,0 +1,52 @@
+{
+  "name": "Ossuary",
+  "note": "One hard fight before the main boss. The Duelist needs room to sidestep, so the bone piles sit at the edges. The east door is the key-sealed way to the boss. Trial settings; positions and detection values are not design locks. No environment art yet. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "authored",
+  "entryDoor": "to-K1",
+  "exitDoor": "to-B1",
+  "solids": {
+    "rects": [],
+    "circles": [
+      {
+        "id": "ossuary-a",
+        "x": -160,
+        "y": 125,
+        "r": 32
+      },
+      {
+        "id": "ossuary-b",
+        "x": 170,
+        "y": 130,
+        "r": 30
+      }
+    ]
+  },
+  "encounters": {
+    "duelist": {
+      "name": "Crypt Duelist",
+      "enemies": [
+        {
+          "arch": "duelist",
+          "x": 60,
+          "y": 70,
+          "facing": "NW"
+        }
+      ]
+    }
+  },
+  "pickups": [
+    {
+      "id": "k2-ration",
+      "kind": "supplies",
+      "item": "ration",
+      "qty": 1,
+      "x": -210,
+      "y": -90
+    }
+  ],
+  "detection": {
+    "range": 160,
+    "arcDegrees": 120,
+    "alertRadius": 120
+  }
+}

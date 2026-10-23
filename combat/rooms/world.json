@@ -101,7 +101,7 @@
       "difficulty": "MID",
       "candidateEncounter": "Harrier solo / Sentry",
       "purpose": "Cover tutorial",
-      "status": "generated"
+      "status": "authored"
     },
     {
       "id": "T2",
@@ -118,7 +118,7 @@
       "difficulty": "MID",
       "candidateEncounter": "Sentry + Harrier (telegraphed)",
       "purpose": "Approach both miniboss and crypt gallery",
-      "status": "generated"
+      "status": "authored"
     },
     {
       "id": "T3",
@@ -152,7 +152,7 @@
       "difficulty": "MINIBOSS",
       "candidateEncounter": "Bell Warden",
       "purpose": "Universal key gate; permanent shortcut on first clear",
-      "status": "generated"
+      "status": "authored"
     },
     {
       "id": "S1",
@@ -169,7 +169,7 @@
       "difficulty": "MID",
       "candidateEncounter": "Silt Spitter solo",
       "purpose": "Hazard warning and open escape route",
-      "status": "generated"
+      "status": "authored"
     },
     {
       "id": "S2",
@@ -186,7 +186,7 @@
       "difficulty": "HIGH",
       "candidateEncounter": "Mudjaw Brute solo",
       "purpose": "Sanctuary nearby; optional dangerous route",
-      "status": "generated"
+      "status": "authored"
     },
     {
       "id": "S3",
@@ -203,7 +203,7 @@
       "difficulty": "MID",
       "candidateEncounter": "Spitter / Grunt escort",
       "purpose": "Opens persistent sluice shortcut back to camp",
-      "status": "generated"
+      "status": "authored"
     },
     {
       "id": "K1",
@@ -220,7 +220,7 @@
       "difficulty": "HIGH",
       "candidateEncounter": "Sentry + Spitter staged",
       "purpose": "Threat warning, not unavoidable overlap",
-      "status": "generated"
+      "status": "authored"
     },
     {
       "id": "K2",
@@ -237,7 +237,7 @@
       "difficulty": "HIGH",
       "candidateEncounter": "Crypt Duelist solo",
       "purpose": "One hard encounter before main boss",
-      "status": "generated"
+      "status": "authored"
     },
     {
       "id": "K3",
@@ -254,7 +254,7 @@
       "difficulty": "HIGH",
       "candidateEncounter": "Duelist / Harrier + Sentry",
       "purpose": "Long upper approach; alternative route",
-      "status": "generated"
+      "status": "authored"
     },
     {
       "id": "B1",
@@ -271,7 +271,7 @@
       "difficulty": "BOSS",
       "candidateEncounter": "Siltbound Castellan",
       "purpose": "Universal key gate; permanent campaign route unlock",
-      "status": "generated"
+      "status": "authored"
     },
     {
       "id": "SB",
@@ -288,7 +288,7 @@
       "difficulty": "SECRET",
       "candidateEncounter": "Unmoored Surveyor",
       "purpose": "Optional special-key concept only; no mandatory route",
-      "status": "generated"
+      "status": "authored"
     }
   ],
   "links": [

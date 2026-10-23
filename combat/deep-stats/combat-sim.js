@@ -176,6 +176,32 @@ const M = (function () {
     leap: { id: 'leap', name: 'leaping lunge', tell: 'leap', kind: 'attack', windup: 16, active: 7, recovery: 24, dmg: 13, poise: 14, range: 30, arc: 0.7, lunge: 72, track: 7, noParry: true },
     chop: { id: 'chop', name: 'chop', tell: 'chop', kind: 'attack', windup: 15, active: 4, recovery: 18, dmg: 12, poise: 12, range: 48, arc: 0.9, lunge: 10, track: 6 },
     shot: { id: 'shot', name: 'arrow', tell: 'shot', kind: 'ranged', windup: 24, active: 1, recovery: 20, dmg: 9, speed: 6.5, range: 250, track: 4 },
+    // ---- Roster (M6). Numbers are TRIAL: scaled from docs 25 and 27 by the same ~1.15 the existing roster sits above them, then calibrated (docs/slice/M6.md).
+    // Tower Harrier: a long aimed shot and a faster, weaker one. Both are stopped by cover.
+    aimed: { id: 'aimed', name: 'aimed shot', tell: 'aimed', kind: 'ranged', windup: 31, active: 1, recovery: 22, dmg: 18, speed: 7.2, range: 300, track: 6 },
+    quick: { id: 'quick', name: 'quick shot', tell: 'quick', kind: 'ranged', windup: 14, active: 1, recovery: 16, dmg: 9, speed: 6.4, range: 230, track: 3 },
+    // Silt Spitter: a bolt, and a spit that leaves a marked patch of ground (a hazard, not an attack: it is read from the floor).
+    bolt: { id: 'bolt', name: 'silt bolt', tell: 'bolt', kind: 'ranged', windup: 24, active: 1, recovery: 18, dmg: 19, speed: 5.2, range: 260, track: 5 },
+    spit: { id: 'spit', name: 'hazard spit', tell: 'spit', kind: 'spit', windup: 22, active: 1, recovery: 22, track: 6, r: 92, warn: 24, life: 100, every: 9, hdmg: 5, hstam: 5 },
+    // Mudjaw Brute: slow wide swing (stamina), a slam that crushes a held guard, and a committed charge that stuns it if it hits a wall.
+    wide: { id: 'wide', name: 'wide swing', tell: 'wide', kind: 'attack', windup: 22, active: 5, recovery: 32, dmg: 28, poise: 40, blockCost: 44, range: 80, arc: 1.4, lunge: 14, track: 8, lookalike: 'slam', deceive: 0.3 },
+    slam: { id: 'slam', name: 'crushing slam', tell: 'slam', kind: 'attack', windup: 30, active: 5, recovery: 44, dmg: 40, poise: 60, range: 82, arc: 0.5, lunge: 20, track: 9, guardBreak: 2.4, noParry: true, lookalike: 'wide', deceive: 0.3 },
+    charge: { id: 'charge', name: 'short charge', tell: 'charge', kind: 'attack', windup: 22, active: 13, recovery: 34, dmg: 30, poise: 40, range: 34, arc: 0.55, lunge: 135, track: 3, charge: true, noParry: true },
+    // Crypt Duelist: a two-hit combination with a true pause, a lunging thrust, and a sidestep that ends in a counter.
+    dcut1: { id: 'dcut1', name: 'first cut', tell: 'dcut', kind: 'attack', windup: 9, active: 3, recovery: 9, dmg: 14, poise: 14, range: 56, arc: 0.9, lunge: 12, track: 3 },
+    dcut2: { id: 'dcut2', name: 'second cut', tell: 'dcut', kind: 'attack', windup: 10, active: 3, recovery: 16, dmg: 16, poise: 14, range: 58, arc: 0.9, lunge: 14, track: 3 },
+    thrust: { id: 'thrust', name: 'lunging thrust', tell: 'thrust', kind: 'attack', windup: 15, active: 6, recovery: 26, dmg: 18, poise: 20, range: 44, arc: 0.4, lunge: 90, track: 5 },
+    dcounter: { id: 'dcounter', name: 'counter', tell: 'dcounter', kind: 'attack', windup: 8, active: 3, recovery: 18, dmg: 15, poise: 16, range: 60, arc: 1.0, lunge: 14, track: 2 },
+    // Bell Warden: mace sweep, a single clear guard-breaker, and the bell: a radial pulse (arc over a half turn) read from the floor rings. Stamina pressure, little health.
+    wsweep: { id: 'wsweep', name: 'mace sweep', tell: 'wsweep', kind: 'attack', windup: 26, active: 5, recovery: 30, dmg: 26, poise: 40, range: 86, arc: 1.3, lunge: 14, track: 8, lookalike: 'gatebreaker', deceive: 0.25 },
+    gatebreaker: { id: 'gatebreaker', name: 'gatebreaker', tell: 'gatebreaker', kind: 'attack', windup: 38, active: 5, recovery: 44, dmg: 38, poise: 60, range: 84, arc: 0.5, lunge: 20, track: 10, guardBreak: 2.5, noParry: true, lookalike: 'wsweep', deceive: 0.25 },
+    toll: { id: 'toll', name: 'bell toll', tell: 'toll', kind: 'attack', windup: 32, active: 6, recovery: 50, dmg: 7, poise: 20, stamDmg: 34, blockCost: 30, range: 125, arc: 3.2, lunge: 0, track: 0, noParry: true },
+    toll2: { id: 'toll2', name: 'second toll', tell: 'toll', kind: 'attack', windup: 32, active: 6, recovery: 50, dmg: 7, poise: 20, stamDmg: 34, blockCost: 30, range: 160, arc: 3.2, lunge: 0, track: 0, noParry: true },
+    // Siltbound Castellan: halberd arc, a floor-marked guard-crushing slam, a silt wave along a lane, and the flood channels (hazards on marked lanes).
+    carc: { id: 'carc', name: 'castellan arc', tell: 'carc', kind: 'attack', windup: 30, active: 6, recovery: 36, dmg: 27, poise: 50, range: 96, arc: 1.4, lunge: 18, track: 9, lookalike: 'cslam', deceive: 0.2 },
+    cslam: { id: 'cslam', name: 'weirbreaker slam', tell: 'cslam', kind: 'attack', windup: 40, active: 5, recovery: 52, dmg: 40, poise: 70, range: 90, arc: 0.5, lunge: 22, track: 12, guardBreak: 2.4, noParry: true, lookalike: 'carc', deceive: 0.2 },
+    cwave: { id: 'cwave', name: 'silt wave', tell: 'cwave', kind: 'ranged', windup: 36, active: 1, recovery: 40, dmg: 17, speed: 5.4, range: 330, track: 6, hitR: 14 },
+    flood: { id: 'flood', name: 'flood channel', tell: 'flood', kind: 'flood', windup: 18, active: 1, recovery: 40, warn: 40, life: 60, gap: 18, every: 10, hdmg: 6, hstam: 6, halfW: 40 },
     overhead: { id: 'overhead', name: 'overhead smash', tell: 'overhead', kind: 'attack', windup: 26, active: 4, recovery: 38, dmg: 38, poise: 60, range: 80, arc: 0.45, lunge: 22, track: 7, guardBreak: 2.4, hyper: true, noParry: true, lookalike: 'swing', deceive: 0.3 },
   };
 
@@ -186,6 +212,12 @@ const M = (function () {
     mireling: { name: 'Mireling', r: 9, flinch: 'heavy', evasive: true, hp: 42, st: 999, poise: 36, speed: 3.0, turn: 0.3, aggro: [10, 24], threatReach: 61, moves: ['bite', 'leap'] },
     grunt: { name: 'Grunt', r: 10, fodder: true, flinch: 'any', hp: 22, st: 999, poise: 10, speed: 2.1, turn: 0.15, aggro: [16, 40], threatReach: 73, moves: ['chop'] },
     archer: { name: 'Archer', r: 9, fodder: true, flinch: 'any', ranged: true, hp: 14, st: 999, poise: 8, speed: 2.0, turn: 0.2, aggro: [40, 70], threatReach: 0, moves: ['shot'] },
+    harrier: { name: 'Tower Harrier', r: 11, flinch: 'heavy', ranged: true, groupSlow: 2.4, hp: 72, st: 999, poise: 40, speed: 2.6, turn: 0.22, aggro: [9, 22], threatReach: 0, moves: ['aimed', 'quick'] },
+    spitter: { name: 'Silt Spitter', r: 9, flinch: 'any', ranged: true, groupSlow: 2.4, hp: 78, st: 999, poise: 30, speed: 2.3, turn: 0.18, aggro: [8, 20], threatReach: 0, moves: ['bolt', 'spit'] },
+    brute: { name: 'Mudjaw Brute', r: 18, hp: 185, st: 999, poise: 95, speed: 1.75, turn: 0.1, aggro: [14, 32], threatReach: 104, moves: ['wide', 'slam', 'charge'] },
+    duelist: { name: 'Crypt Duelist', r: 11, flinch: 'heavy', hp: 105, st: 999, poise: 55, speed: 3.2, turn: 0.3, aggro: [14, 32], threatReach: 84, moves: ['dcut1', 'dcut2', 'thrust', 'dcounter'] },
+    warden: { name: 'The Bell Warden', r: 21, hp: 340, st: 999, poise: 400, speed: 1.8, turn: 0.1, aggro: [22, 40], threatReach: 112, boss: 'miniboss', moves: ['wsweep', 'gatebreaker', 'toll', 'toll2'] },
+    castellan: { name: 'Siltbound Castellan', r: 25, hp: 560, st: 999, poise: 900, speed: 1.55, turn: 0.08, aggro: [24, 44], threatReach: 120, boss: 'boss', moves: ['carc', 'cslam', 'cwave', 'flood'] },
     breaker: { name: 'Breaker', r: 18, hp: 170, st: 999, poise: 80, speed: 1.45, turn: 0.09, aggro: [18, 40], threatReach: 101, moves: ['swing', 'delayed', 'overhead'] },
   };
 
@@ -198,6 +230,19 @@ const M = (function () {
     gruntsArcher: { name: 'Two Grunts and an Archer', group: 'mob', enemies: ['grunt', 'grunt', 'archer'] },
     archers: { name: 'A Grunt and two Archers', group: 'mob', enemies: ['grunt', 'archer', 'archer'] },
     mob: { name: 'Four Grunts and an Archer', group: 'mob', enemies: ['grunt', 'grunt', 'grunt', 'grunt', 'archer'] },
+    // The slice's roster. These ids are the contract in combat/rooms/ENCOUNTER_CONTRACT.json; a test keeps the two equal.
+    harrier: { name: 'Tower Harrier', group: 'regular', enemies: ['harrier'] },
+    harrierSentry: { name: 'Harrier and Sentry', group: 'regular', enemies: ['harrier', 'sentry'] },
+    harrierMireling: { name: 'Harrier and Mireling', group: 'regular', enemies: ['harrier', 'mireling'] },
+    spitter: { name: 'Silt Spitter', group: 'regular', enemies: ['spitter'] },
+    // Not in the contract: the grunt of a spitterGrunt room when only it sees the adventurer.
+    gruntAlone: { name: 'Lone Grunt', group: 'regular', enemies: ['grunt'] },
+    spitterGrunt: { name: 'Spitter and Grunt', group: 'regular', enemies: ['spitter', 'grunt'] },
+    sentrySpitter: { name: 'Sentry and Spitter', group: 'regular', enemies: ['sentry', 'spitter'] },
+    brute: { name: 'Mudjaw Brute', group: 'elite', enemies: ['brute'] },
+    duelist: { name: 'Crypt Duelist', group: 'elite', enemies: ['duelist'] },
+    warden: { name: 'The Bell Warden', group: 'miniboss', enemies: ['warden'] },
+    castellan: { name: 'Siltbound Castellan', group: 'boss', enemies: ['castellan'] },
     breaker: { name: 'Breaker', group: 'elite', enemies: ['breaker'] },
     stalker: { name: 'Stalker', group: 'elite', enemies: ['stalker'] },
     stalker2: { name: 'Two Stalkers', group: 'elite', enemies: ['stalker', 'stalker'] },
@@ -378,7 +423,7 @@ const M = (function () {
       rngE: mulberry32((cfg.seed * 40503) ^ 0xBEEF),
       d: derive(cfg.stats, cfg.god),
       ai: { lastHit: 0, snaps: [], beliefs: [], plans: {}, target: 0, thinkT: 0, chase: null, recoverT: 0, noiseT: 0, spacingNoise: 0, strafe: 1, strafeT: 60, readout: '', truth: '', intent: '', windowInst: 0 },
-      stats: { guardBreaksDealt: 0, counteredHits: 0, parries: 0, dodgeCounters: 0, dmgBy: { late: 0, misread: 0, committed: 0, stamina: 0, dodge: 0, short: 0, iframes: 0, parry: 0, gamble: 0, surrounded: 0, hesitated: 0, guardbreak: 0 }, dealt: 0, taken: 0, dodges: 0, blocks: 0, perfects: 0, punishes: 0 },
+      stats: { guardBreaksDealt: 0, counteredHits: 0, parries: 0, dodgeCounters: 0, dmgBy: { late: 0, misread: 0, committed: 0, stamina: 0, dodge: 0, short: 0, iframes: 0, parry: 0, gamble: 0, surrounded: 0, hesitated: 0, guardbreak: 0, hazard: 0 }, dealt: 0, taken: 0, dodges: 0, blocks: 0, perfects: 0, punishes: 0 },
     };
     const sa = (cfg.spawns && cfg.spawns.adventurer) || { x: -110, y: 0, face: 0 };   // cfg.spawns overrides the default positions
     S.p = makeFighter('adventurer', sa.x, sa.y, sa.face || 0);
@@ -438,6 +483,7 @@ const M = (function () {
     parry: ['Mistimed the parry', 'guardSkill'],
     gamble: ['Gambled on a parry', 'composure'],
     hesitated: ['Hesitated', 'composure'],
+    hazard: ['Stood in the hazard', 'positioning'],
     guardbreak: ['Guard broken', 'guardStrength'],
   };
   function causeText(S, c, extra) {
@@ -563,12 +609,21 @@ const M = (function () {
     if (f !== S.p) {
       const A = ARCH[f.arch];
       f.ai.cool = A.aggro[0] + Math.floor(S.rngE() * (A.aggro[1] - A.aggro[0]));
+      // A marksman or spitter fighting beside an ally re-seats after every shot instead of shooting flat out: groups pressure through position, not volume.
+      if (A.ranged && !A.fodder && S.enemies.some(o => o !== f && !o.dead)) f.ai.cool = Math.round(f.ai.cool * (A.groupSlow || 1));
       if (f.arch === 'stalker') {
         const dist = M.hypot(S.p.x - f.x, S.p.y - f.y);
         if (!f.ai.chained && dist < 75 && S.rngE() < 0.45) { f.ai.chained = true; startAct(S, f, 'slash'); return; }
         f.ai.chained = false; f.ai.mode = 'retreat'; f.ai.modeT = 16;
       } else if (f.arch === 'mireling') { f.ai.mode = 'retreat'; f.ai.modeT = 20; }
       else if (f.arch === 'sentry' && S.enemies.includes(f) && f.ai.lastAct === 'sguard') f.ai.cool = 6; // ready to swing as the guard drops
+      else if (f.arch === 'harrier') { f.ai.mode = S.rngE() < 0.55 ? 'reposition' : 'circle'; f.ai.repoT = 0; }
+      else if (f.arch === 'duelist') {
+        // First cut, a true pause, then the second; after a full combination it backs out.
+        if (f.ai.lastAct === 'dcut1' && !f.ai.chained && M.hypot(S.p.x - f.x, S.p.y - f.y) < 90) { f.ai.chained = true; f.ai.followAt = S.tick + 9; f.ai.cool = 4; }
+        else { f.ai.chained = false; f.ai.followAt = 0; if (f.ai.mode !== 'sidestep') { f.ai.mode = 'retreat'; f.ai.modeT = 14; } }
+      }
+      else if (f.arch === 'warden' && f.ai.phase2 && f.ai.lastAct === 'toll') f.ai.followAt = S.tick + 16; // the second ring follows after a clear gap
     } else { S.ai.thinkT = 0; f.punish = false; }
   }
 
@@ -606,10 +661,23 @@ const M = (function () {
       if (f.actT >= m.active + m.recovery) { f.act = null; onActEnd(S, f); }
       return;
     }
+    if (m.kind === 'spit') {
+      // The patch lands where the target stood when it stopped tracking; the floor is marked before it bites.
+      if (f.actT < m.windup - m.track) { f.spitX = tgt.x; f.spitY = tgt.y; turnToward(f, M.atan2(tgt.y - f.y, tgt.x - f.x), f.turn); }
+      if (f.actT === m.windup + 1) addHazard(S, { shape: 'circle', x: f.spitX, y: f.spitY, r: m.r, t0: S.tick, warn: m.warn, life: m.life, every: m.every, dmg: m.hdmg, stam: m.hstam, name: m.name, owner: f });
+      if (f.actT >= m.windup + m.active + m.recovery) { f.act = null; onActEnd(S, f); }
+      return;
+    }
+    if (m.kind === 'flood') {
+      // The Castellan plants its halberd and the marked lanes begin to glow. One lane in phase 1, two one after the other in phase 2; never all three.
+      if (f.actT === 1) floodLanes(S, f, m);
+      if (f.actT >= m.windup + m.active + m.recovery) { f.act = null; onActEnd(S, f); }
+      return;
+    }
     if (m.kind === 'ranged') {
       if (f.actT < m.windup - m.track) turnToward(f, M.atan2(tgt.y - f.y, tgt.x - f.x), f.turn * (f === S.p ? S.d.trackMult : 1));
       if (f.actT === m.windup + 1) {
-        S.projectiles.push({ inst: ++S.inst, owner: f, name: m.name, dmg: m.dmg, x: f.x + M.cos(f.face) * (f.r + 4), y: f.y + M.sin(f.face) * (f.r + 4), vx: M.cos(f.face) * m.speed, vy: M.sin(f.face) * m.speed, born: S.tick, evaded: false });
+        S.projectiles.push({ inst: ++S.inst, owner: f, name: m.name, dmg: m.dmg, x: f.x + M.cos(f.face) * (f.r + 4), y: f.y + M.sin(f.face) * (f.r + 4), vx: M.cos(f.face) * m.speed, vy: M.sin(f.face) * m.speed, born: S.tick, evaded: false, hitR: m.hitR });
       }
       if (f.actT >= m.windup + m.active + m.recovery) { f.act = null; onActEnd(S, f); }
       return;
@@ -618,7 +686,14 @@ const M = (function () {
       if (f.actT < m.windup - m.track) turnToward(f, M.atan2(tgt.y - f.y, tgt.x - f.x), f.turn * (f === S.p ? S.d.trackMult : 1));
     } else if (f.actT <= m.windup + m.active) {
       const v = m.lunge / m.active;
+      const bx = f.x, by = f.y;
       place(S, f, M.cos(f.face) * v, M.sin(f.face) * v);
+      // A committed charge that meets a wall or a pillar stops dead and the charger is stunned: the punish window the design promises.
+      if (m.charge && !isP && M.hypot(f.x - bx, f.y - by) < v * 0.45) {
+        f.act = null; f.stagger = 46; f.flash = 8; f.ai.cool = 60; f.ai.mode = 'circle';
+        ev(S, `${f.name} crashes into the wall and is stunned.`, 'good');
+        return;
+      }
       if (isP) { for (const e of S.enemies) if (!e.dead && !f.hitSet.has(e.idx)) checkHit(S, f, e, m); }
       else if (!f.actHit) checkHit(S, f, S.p, m);
       if (!f.act) return;
@@ -712,6 +787,66 @@ const M = (function () {
       if (d < min) { const push = (min - d) / 2; a.x -= dx / d * push; a.y -= dy / d * push; b.x += dx / d * push; b.y += dy / d * push; confine(S, a); confine(S, b); }
     }
   }
+  // ---- Hazards (M6): marked patches and lanes on the floor. They are read from the floor, so they are visible from `t0`; they bite only after `warn` ticks, for `life` ticks,
+  // every `every` ticks, in health and stamina, and a dodge's i-frames pass through them. Nothing here exists unless an enemy creates one.
+  function addHazard(S, h) {
+    (S.hazards = S.hazards || []).push(Object.assign({ hits: 0 }, h));
+    ev(S, `${h.owner.name} marks the floor (${h.name}).`, 'neutral');
+  }
+  function inHazard(h, x, y, pad) {
+    if (h.shape === 'circle') return M.hypot(x - h.x, y - h.y) <= h.r + pad;
+    return x >= h.x0 - pad && x <= h.x1 + pad && y >= h.y0 - pad && y <= h.y1 + pad;
+  }
+  function updateHazards(S) {
+    const hs = S.hazards;
+    if (!hs || !hs.length) return;
+    const p = S.p;
+    S.hazards = hs.filter(h => S.tick < h.t0 + h.warn + h.life);
+    for (const h of S.hazards) {
+      const live = S.tick >= h.t0 + h.warn && (S.tick - (h.t0 + h.warn)) % h.every === 0;
+      if (!live || p.iframe || !inHazard(h, p.x, p.y, 0)) continue;
+      p.hp -= h.dmg; p.flash = 8; p.st = Math.max(0, p.st - h.stam); p.stDelay = 18;
+      S.stats.dmgBy.hazard += h.dmg; S.stats.taken += h.dmg; h.hits++;
+      if (h.hits === 1) ev(S, `Caught in ${h.owner.name}’s ${h.name} for ${h.dmg} and more each moment it stays. ${causeText(S, 'hazard')}`, 'bad');
+    }
+  }
+  /** The way out of a hazard it can see (after its reaction delay), or null when it is clear. Stays out of marked ground before it turns live. */
+  function hazardEscape(S) {
+    const hs = S.hazards, p = S.p, d = S.d;
+    if (!hs || !hs.length) return null;
+    for (const h of hs) {
+      if (S.tick < h.t0 + d.delay || !inHazard(h, p.x, p.y, 6)) continue;
+      let best = null;
+      const cands = h.shape === 'circle'
+        ? [M.atan2(p.y - h.y, p.x - h.x)].concat(S.room ? [1.2, -1.2, 2.4, -2.4].map(o => M.atan2(p.y - h.y, p.x - h.x) + o) : [])
+        : [[-1, 0], [1, 0], [0, -1], [0, 1]].map(([ux, uy]) => M.atan2(uy, ux));
+      for (const a of cands) {
+        const ux = M.cos(a), uy = M.sin(a);
+        let t = 0;
+        while (t < 400 && inHazard(h, p.x + ux * t, p.y + uy * t, 14)) t += 6;
+        const ex = p.x + ux * t, ey = p.y + uy * t;
+        const blocked = S.room ? (nearestSolid(S.room, ex, ey).d < p.r + 4 || !losClear(S, p.x, p.y, ex, ey)) : M.hypot(ex, ey) > ARENA_R - p.r - 4;
+        const cost = t + (blocked ? 1000 : 0);
+        if (!best || cost < best.cost) best = { a, cost };
+      }
+      if (best) return best.a;
+    }
+    return null;
+  }
+  function arenaBounds(S) { return S.room && S.room.bounds ? S.room.bounds : [-ARENA_R, -ARENA_R, ARENA_R, ARENA_R]; }
+  /** The Castellan's flood lanes: three horizontal channels across the arena; a fixed cadence picks them, never the one the target stands in. */
+  const LANE_ORDER = [0, 2, 1, 2, 0, 1];
+  function floodLanes(S, f, m) {
+    const [x0, y0, x1, y1] = arenaBounds(S), cy = (y0 + y1) / 2, h = (y1 - y0) / 4;
+    const n = f.ai.floods = (f.ai.floods || 0) + 1;
+    const picks = [LANE_ORDER[(n - 1) % LANE_ORDER.length]];
+    if (f.ai.phase2) picks.push(LANE_ORDER[n % LANE_ORDER.length] === picks[0] ? (picks[0] + 1) % 3 : LANE_ORDER[n % LANE_ORDER.length]);
+    picks.forEach((k, i) => {
+      const y = cy + (k - 1) * h;
+      addHazard(S, { shape: 'rect', x0, x1, y0: y - m.halfW, y1: y + m.halfW, t0: S.tick + i * (m.warn + m.life + m.gap), warn: m.warn, life: m.life, every: m.every, dmg: m.hdmg, stam: m.hstam, name: m.name, owner: f, lane: k });
+    });
+  }
+
   function updateProjectiles(S) {
     const p = S.p, keep = [];
     for (const pr of S.projectiles) {
@@ -719,7 +854,7 @@ const M = (function () {
       pr.x += pr.vx; pr.y += pr.vy;
       if (S.room ? (nearestSolid(S.room, pr.x, pr.y).d < 0 || !losClear(S, px0, py0, pr.x, pr.y)) : M.hypot(pr.x, pr.y) > ARENA_R + 10) continue;
       if (S.tick - pr.born > 90) continue;
-      if (M.hypot(pr.x - p.x, pr.y - p.y) > p.r + 3) { keep.push(pr); continue; }
+      if (M.hypot(pr.x - p.x, pr.y - p.y) > p.r + (pr.hitR || 3)) { keep.push(pr); continue; }
       if (p.iframe) { if (!pr.evaded) { pr.evaded = true; S.stats.dodges++; ev(S, `Rolled through ${pr.owner.name}’s ${pr.name}.`, 'good'); } keep.push(pr); continue; }
       const from = M.atan2(-pr.vy, -pr.vx), outsideGuard = Math.abs(angDiff(from, p.face)) >= S.d.guardArc;
       const plan = S.ai.plans[pr.inst];
@@ -955,6 +1090,8 @@ const M = (function () {
       }
       // Fodder: a hit that kills or interrupts is nearly always worth it.
       if (ARCH[e.arch].fodder && ctx.window == null && !ctx.threat) { s += 0.35; if (ctx.tHp <= m.dmg) s += 0.25; if (ARCH[e.arch].ranged) s += 0.2; }
+      // A marksman leaves no window the fighter can read, so a patient fighter would wait for ever; the longer it has gone without landing a hit the less it can afford to.
+      if (ARCH[e.arch].ranged && !ARCH[e.arch].fodder && ctx.window == null && !ctx.threat) s += 0.5 * (1 - patience);
       if (id === 'dodgeAtk') s += 0.2;   // fast, and the enemy is usually still recovering
       if (p.st - m.stam < d.reserve) s -= 0.6;
       opts.push({ id, s, now });
@@ -1112,6 +1249,12 @@ const M = (function () {
       if (guardIdle) { if (!p.blocking) { p.blocking = true; p.blockStart = S.tick; } } else p.blocking = false;
     }
 
+    // Marked ground: step out of a hazard it can see, ahead of everything but a defence already under way.
+    if (S.hazards && S.hazards.length) {
+      const esc = hazardEscape(S);
+      if (esc !== null) { p.blocking = false; moveToward(S, esc, 1); ai.intent = 'Leave the marked ground'; ai.readout = 'Steps off the marked floor.'; return; }
+    }
+
     // Retreat order from the expedition layer: no optional aggression. Defence above still answers every attack; otherwise walk the path it supplied.
     if (S.disengage) { retreatStep(S, !!top); return; }
 
@@ -1217,6 +1360,20 @@ const M = (function () {
   }
 
   // ---------- Enemy AI (hand-authored, fixed skill) ----------
+  /** A nearby spot with a clear line to the target and room to stand, so a marksman can reposition instead of shooting a wall. Null when none (or no room). */
+  function findLane(S, e) {
+    if (!S.room) return null;
+    const p = S.p;
+    let best = null;
+    for (const rad of [50, 90, 130]) for (let k = 0; k < 16; k++) {
+      const a = k * 0.39269908169872414, x = e.x + M.cos(a) * rad, y = e.y + M.sin(a) * rad;
+      if (nearestSolid(S.room, x, y).d < e.r + 6 || !losClear(S, x, y, p.x, p.y)) continue;
+      const d = M.hypot(x - p.x, y - p.y);
+      if (d < 110 || d > 260) continue;
+      if (!best || rad < best.rad) best = { x, y, rad };
+    }
+    return best;
+  }
   function enemyThink(S, e) {
     const p = S.p, ai = e.ai, r = S.rngE;
     const dx = p.x - e.x, dy = p.y - e.y, dist = M.hypot(dx, dy), ang = M.atan2(dy, dx);
@@ -1302,6 +1459,84 @@ const M = (function () {
       else if (dist > 210) { vx = M.cos(ang); vy = M.sin(ang); }
       else { vx = -M.sin(ang) * ai.dir * 0.4; vy = M.cos(ang) * ai.dir * 0.4; if (r() < 0.01) ai.dir *= -1; }
       if (ai.cool <= 0 && dist <= MOVES.shot.range && facing && canAttack) { startAct(S, e, 'shot'); e.mvx = e.mvy = 0; return; }
+    } else if (e.arch === 'harrier') {
+      // Marksman: keeps a firing lane, never shoots through cover, walks to a lane when it has none, and backs off when closed on.
+      const los = losClear(S, e.x, e.y, p.x, p.y);
+      if (!los || ai.mode === 'reposition') {
+        if (!ai.repo || S.tick >= (ai.repoT || 0)) { ai.repo = findLane(S, e); ai.repoT = S.tick + 24; }
+        const tx = ai.repo ? ai.repo.x : p.x, ty = ai.repo ? ai.repo.y : p.y, ta = M.atan2(ty - e.y, tx - e.x);
+        vx = M.cos(ta); vy = M.sin(ta);
+        if (ai.mode === 'reposition' && (!ai.repo || M.hypot(tx - e.x, ty - e.y) < 8 || S.tick - ai.repoT > 40)) ai.mode = 'circle';
+      } else if (dist < 120) { vx = -M.cos(ang) - M.sin(ang) * ai.dir * 0.4; vy = -M.sin(ang) + M.cos(ang) * ai.dir * 0.4; }
+      else if (dist > 240) { vx = M.cos(ang); vy = M.sin(ang); }
+      else { vx = -M.sin(ang) * ai.dir * 0.35; vy = M.cos(ang) * ai.dir * 0.35; if (r() < 0.01) ai.dir *= -1; }
+      if (los && ai.cool <= 0 && facing && canAttack && dist <= MOVES.aimed.range) { startAct(S, e, dist > 175 || r() < 0.5 ? 'aimed' : 'quick'); e.mvx = e.mvy = 0; return; }
+    } else if (e.arch === 'spitter') {
+      // Slow ranged area denial: backs away when approached (slow enough to be cornered), spits a marked patch at most one at a time, bolts otherwise.
+      const los = losClear(S, e.x, e.y, p.x, p.y);
+      if (!los) { if (!ai.repo || S.tick >= (ai.repoT || 0)) { ai.repo = findLane(S, e); ai.repoT = S.tick + 24; } const tx = ai.repo ? ai.repo.x : p.x, ty = ai.repo ? ai.repo.y : p.y, ta = M.atan2(ty - e.y, tx - e.x); vx = M.cos(ta); vy = M.sin(ta); }
+      else if (dist < 120) { vx = -M.cos(ang) - M.sin(ang) * ai.dir * 0.3; vy = -M.sin(ang) + M.cos(ang) * ai.dir * 0.3; }
+      else if (dist > 230) { vx = M.cos(ang); vy = M.sin(ang); }
+      else { vx = -M.sin(ang) * ai.dir * 0.3; vy = M.cos(ang) * ai.dir * 0.3; if (r() < 0.01) ai.dir *= -1; }
+      if (los && ai.cool <= 0 && facing && canAttack && dist <= MOVES.bolt.range) {
+        const live = S.hazards && S.hazards.some(h => h.owner === e && S.tick < h.t0 + h.warn + h.life);
+        const withAlly = S.enemies.some(o => o !== e && !o.dead);
+        startAct(S, e, !live && r() < (withAlly ? 0.2 : 0.5) ? 'spit' : 'bolt'); e.mvx = e.mvy = 0; return;
+      }
+    } else if (e.arch === 'brute') {
+      // Heavy: walks in, then a slow wide swing, a slam, or from mid range a short committed charge it cannot steer.
+      if (dist > 90) { vx = M.cos(ang); vy = M.sin(ang); }
+      if (ai.cool <= 0 && facing && canAttack) {
+        const x = r();
+        if (dist >= 125 && dist <= 250 && x < 0.55) { startAct(S, e, 'charge'); e.mvx = e.mvy = 0; return; }
+        if (dist <= 96) { startAct(S, e, x < 0.5 ? 'wide' : 'slam'); e.mvx = e.mvy = 0; return; }
+      }
+    } else if (e.arch === 'duelist') {
+      const pWind = p.act && p.act.kind === 'attack' && p.actT <= p.act.windup;
+      if (ai.followAt && S.tick >= ai.followAt) { ai.followAt = 0; if (dist < 90 && !e.act) { startAct(S, e, 'dcut2'); e.mvx = e.mvy = 0; return; } ai.chained = false; }
+      if (ai.mode === 'sidestep') {
+        // A short step to the side to open the target's flank, then one counter. Limited by a cooldown, never a teleport.
+        vx = -M.sin(ang) * ai.dir * 1.6; vy = M.cos(ang) * ai.dir * 1.6;
+        if (--ai.modeT <= 0) { ai.mode = 'circle'; if (dist < 92 && canAttack) { ai.sideCool = S.tick + 150; startAct(S, e, 'dcounter'); e.mvx = e.mvy = 0; return; } }
+      } else if (pWind && dist < 95 && S.tick >= (ai.sideCool || 0) && ai.mode !== 'retreat' && r() < 0.3) { ai.mode = 'sidestep'; ai.modeT = 9; ai.dir = r() < 0.5 ? 1 : -1; }
+      else if (ai.mode === 'retreat') { vx = -M.cos(ang) - M.sin(ang) * ai.dir * 0.5; vy = -M.sin(ang) + M.cos(ang) * ai.dir * 0.5; if (--ai.modeT <= 0) ai.mode = 'circle'; }
+      else if (ai.mode === 'close') {
+        vx = M.cos(ang); vy = M.sin(ang);
+        if (dist < 58 && facing && canAttack) { startAct(S, e, 'dcut1'); ai.mode = 'circle'; e.mvx = e.mvy = 0; return; }
+      } else {
+        const rad = clamp((dist - 82) / 25, -1, 1);
+        vx = M.cos(ang) * rad - M.sin(ang) * ai.dir * 0.8; vy = M.sin(ang) * rad + M.cos(ang) * ai.dir * 0.8;
+        if (r() < 0.012) ai.dir *= -1;
+        if (ai.cool <= 0 && facing && canAttack) {
+          if (dist < 60) { startAct(S, e, r() < 0.65 ? 'dcut1' : 'thrust'); e.mvx = e.mvy = 0; return; }
+          if (dist < 125 && r() < 0.5) { startAct(S, e, 'thrust'); e.mvx = e.mvy = 0; return; }
+          ai.mode = 'close';
+        }
+      }
+    } else if (e.arch === 'warden') {
+      // The Bell Warden: sweeps and guard-breakers, and every third major action the bell. Below half health a second ring follows the first after a clear gap.
+      if (!ai.phase2 && e.hp <= e.maxHp * 0.5) { ai.phase2 = true; e.act = null; e.stagger = 28; ai.cool = 30; ev(S, `${e.name} staggers: its bell is cracked and will ring twice.`, 'bad'); return; }
+      if (ai.followAt && S.tick >= ai.followAt) { ai.followAt = 0; startAct(S, e, 'toll2'); e.mvx = e.mvy = 0; return; }
+      if (dist > 92) { vx = M.cos(ang); vy = M.sin(ang); }
+      if (ai.cool <= 0 && canAttack && !e.act) {
+        ai.n = ai.n || 0;
+        if (ai.n >= 3 && dist <= 170) { ai.n = 0; startAct(S, e, 'toll'); e.mvx = e.mvy = 0; return; }
+        if (facing && dist <= 98) { ai.n++; startAct(S, e, r() < 0.6 ? 'wsweep' : 'gatebreaker'); e.mvx = e.mvy = 0; return; }
+      }
+    } else if (e.arch === 'castellan') {
+      // The Siltbound Castellan: slow, with committed bursts. Flood lanes on a fixed cadence (every fourth action, every third below 45% health), never aimed at the escape.
+      if (!ai.phase2 && e.hp <= e.maxHp * 0.45) { ai.phase2 = true; e.act = null; e.stagger = 44; ai.cool = 50; ev(S, `${e.name} staggers: the drainage wheel groans and a second channel will open.`, 'bad'); return; }
+      const floodLive = S.hazards && S.hazards.some(h => h.owner === e && S.tick < h.t0 + h.warn + h.life);
+      if (dist > 105) { const sp = dist > 190 && S.tick % 70 < 18 ? 1.7 : 1; vx = M.cos(ang) * sp; vy = M.sin(ang) * sp; }
+      if (ai.cool <= 0 && canAttack && !e.act) {
+        const every = ai.phase2 ? 3 : 4;
+        if (ai.n >= every && !floodLive) { ai.n = 0; startAct(S, e, 'flood'); e.mvx = e.mvy = 0; return; }
+        if (facing) {
+          const x = r();
+          if (dist <= 106) { ai.n = (ai.n || 0) + 1; startAct(S, e, x < 0.55 ? 'carc' : 'cslam'); e.mvx = e.mvy = 0; return; }
+          if (dist >= 150 && dist <= MOVES.cwave.range && x < 0.5) { ai.n = (ai.n || 0) + 1; startAct(S, e, 'cwave'); e.mvx = e.mvy = 0; return; }
+        }
+      }
     } else {
       if (dist > 86) { vx = M.cos(ang); vy = M.sin(ang); }
       if (ai.cool <= 0 && dist <= 92 && facing && canAttack) {
@@ -1358,6 +1593,7 @@ const M = (function () {
     advance(S, p);
     for (const e of S.enemies) advance(S, e);
     updateProjectiles(S);
+    updateHazards(S);
     moveF(S, p); S.enemies.forEach(e => moveF(S, e)); separate(S);
     regen(p, S.d);
     p.poise = Math.min(p.maxPoise, p.poise + 0.15);

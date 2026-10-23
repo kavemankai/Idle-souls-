@@ -1,0 +1,63 @@
+{
+  "name": "Broken Pump",
+  "note": "Dangerous optional route. The Brute charges at the adventurer; the pump housing and the fallen pipe are what the charge can hit. Trial settings; positions and detection values are not design locks. No environment art yet. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "authored",
+  "entryDoor": "to-S1",
+  "exitDoor": "to-K1",
+  "solids": {
+    "rects": [
+      [
+        -210,
+        120,
+        -130,
+        190
+      ]
+    ],
+    "circles": [
+      {
+        "id": "pump",
+        "x": -30,
+        "y": -130,
+        "r": 40
+      },
+      {
+        "id": "pipe-end",
+        "x": 170,
+        "y": 110,
+        "r": 30
+      }
+    ]
+  },
+  "encounters": {
+    "brute": {
+      "name": "Mudjaw Brute",
+      "enemies": [
+        {
+          "arch": "brute",
+          "x": 150,
+          "y": -60,
+          "facing": "W"
+        }
+      ]
+    }
+  },
+  "pickups": [
+    {
+      "id": "s2-gauntlet",
+      "kind": "gear",
+      "item": "silt-stained-gauntlet",
+      "qty": 1,
+      "x": -170,
+      "y": 60
+    }
+  ],
+  "detection": {
+    "range": 160,
+    "arcDegrees": 120,
+    "alertRadius": 120
+  },
+  "sanctuary": {
+    "x": 140,
+    "y": -150
+  }
+}

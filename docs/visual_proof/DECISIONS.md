@@ -98,3 +98,14 @@ Combat integration V5 was BLOCKED at eaf4475 (no combat source in the repository
 - Not built: the miniboss and its shortcut, the main boss gate in play, a mid-run save, the special key. The screen draws sealed gates as red dashed lines with a lock mark and open ones as green lines.
 - Not claimed: no human, device or combat QA.
 
+
+2026-10-23, M5 to M10 (progression, roster, world content, bosses, experience, calibration, acceptance). All values are trial settings. Full worker notes: `docs/slice/M5.md`, `M6.md`, `M6-balance.md`, `M7.md`, `M8.md`, `M9.md`, `CALIBRATION.md`, `CALIBRATION_NUMBERS.md`.
+- Progression (`src/progression/`): design levels 1 to 9 map to simulator point totals through an editable table (`levelTable.ts`), calibrated against the whole roster. Levels are temporary per expedition. Rations and one sanctuary choice exist; the sanctuary banks nothing.
+- Roster: harrier, spitter, brute, duelist, warden and castellan, plus pair encounters, listed in `combat/rooms/ENCOUNTER_CONTRACT.json`. No elite pairs. The simulator changes are additive and `regress.js` and `legacy-check.js` print `different 0`.
+- Rooms: all 17 have authored geometry and encounters (placeholders, not art-reviewed).
+- Bosses: arena-bound, reset on retreat, the first clear persists, rematch is opt-in and never reverts the clear.
+- UI (M9): Chronicle with route, decisions and cause of death, map screen, onboarding, accessibility settings, audio cues for new events, performance budget in `docs/slice/M9.md`.
+- Acceptance (M10): `tests/acceptance.test.ts` runs doc 15 steps 1 to 8 headless on the real stack (11 checks), including save, reload and the stop conditions that can be measured without testers.
+- Findings, stated plainly and not tuned: the roster is far stronger than the doc 27 band, so the calibrated table needs simulator levels 133 to 160 for design levels 4 to 9. Design levels 4 and 6 miss their targets (the Sentry+Spitter room K1 wins about 10% against a target of 50). Retreat is nearly free. With the default 40% retreat threshold bosses are rarely met (Warden reached by 3% to 20% of expeditions, Castellan by 0% to 2%). Quickstep is a dead upgrade and Riposte dominates. Rations are weak. The sanctuary is rarely reached.
+- Left in place on purpose: the feed line "Banking comes with M3" is stale text pinned by the expedition golden and `tests/m9ui.test.ts`.
+- Not claimed: art for the new enemies, real-device checks, screen reader use, audio audition, the tester comprehension protocol, and any human or combat QA.

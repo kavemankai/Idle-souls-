@@ -5,7 +5,7 @@ import { runExpedition, type ExpeditionConfig } from '../../src/expedition/run';
 
 const sim = loadSim();
 // The planner starts in fog (only the map in the save). Most specs use the Old Road shortcut map so presets have somewhere to go; the fog specs say known=save.
-const open = async (page: Page, query = '') => { await page.goto(`/?scene=expedition${query.includes('known=') ? '' : '&known=oldroad'}${query}`); await page.waitForFunction(() => window.__EXPEDITION_READY__); };
+const open = async (page: Page, query = '') => { await page.goto(`/?scene=expedition${query.includes('known=') ? '' : '&known=oldroad'}${query.includes('progress=') ? '' : '&progress=0'}${query}`); await page.waitForFunction(() => window.__EXPEDITION_READY__); };
 const noSideScroll = (page: Page) => page.evaluate(() => { const x = document.getElementById('xp')!; return x.scrollWidth <= x.clientWidth + 1; });
 
 for (const viewport of [{ width: 1280, height: 720 }, { width: 390, height: 844 }, { width: 844, height: 390 }]) {
@@ -62,6 +62,9 @@ test('browser and Node agree on expeditions across plans and seeds', async ({ pa
   const everything = ['C0', 'O1', 'O2', 'O3', 'KT', 'T1', 'T2', 'T3', 'MB', 'S1', 'S2', 'S3', 'K1', 'K2', 'K3', 'B1', 'SB'];
   cases.push({ seed: 6, level: 80, focus: 'balanced', hpOverride: 5000, known: everything, issueKeys: 1, plan: { ...defaultPlan(), retreatHpPct: 0, objectives: [{ id: 'g', kind: 'open', room: 'T2', to: 'MB' }, { id: 't', kind: 'reach', room: 'T3' }] } });
   cases.push({ seed: 8, level: 80, focus: 'balanced', hpOverride: 5000, known: everything, plan: { ...defaultPlan(), retreatHpPct: 0, returnRoute: 'shortest', objectives: [{ id: 's', kind: 'reach', room: 'S3' }, { id: 'o', kind: 'open', room: 'S3', to: 'C0' }, { id: 'x', kind: 'explore', room: 'K1' }] } });
+  const deepPlan = { ...defaultPlan(), doctrine: 'guarded' as const, retreatHpPct: 60, drinkBelowPct: 70, healingReserve: 1, sanctuaryChoice: 'riposte' as const, objectives: [obj('O3'), obj('S2')] };
+  for (const seed of [1, 2, 3, 4, 5, 6]) cases.push({ seed, level: 80, focus: 'balanced', known: ['C0', 'O1', 'O2', 'O3', 'KT', 'S1', 'S2'], progression: { startLevel: 4, kitRations: 2 }, plan: deepPlan });
+  cases.push({ seed: 2, level: 80, focus: 'balanced', known: ['C0', 'O1', 'O2', 'O3', 'KT'], progression: { startLevel: 1 }, plan: { ...defaultPlan(), objectives: [obj('O1', 'survey')] } });
   const inPage = await page.evaluate(cs => cs.map(c => window.__EXPEDITION_RUN__(c)), cases);
   inPage.forEach((r, i) => expect(r, `case ${i}`).toEqual(runExpedition(sim, cases[i]).chronicle));
 });
@@ -191,5 +194,98 @@ test('a banked key opens a gate only when issued; the gate then stays open and c
   expect(save.world.openedLinks).toEqual(['MB~T2']); expect(save.camp.bank.keys).toBe(0);
   await page.locator('#again').click();
   await expect(page.locator('#keys-line')).toContainText('Opened gates and shortcuts: 1');
+  expect(await noSideScroll(page)).toBe(true);
+});
+
+// M5: temporary levels, rations and the sanctuary.
+for (const viewport of [{ width: 1280, height: 720 }, { width: 390, height: 844 }, { width: 844, height: 390 }]) {
+  test(`progression controls, level line and Chronicle progress at ${viewport.width}x${viewport.height}`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await open(page, '&progress=1&seed=3&startlevel=2');
+    await expect(page.locator('#drink')).toBeVisible();
+    await expect(page.locator('#reserve')).toBeVisible();
+    await expect(page.locator('#ration-rule')).toContainText('never banked');
+    await expect(page.locator('#sanctuary-rule')).toContainText('No banking here');
+    await page.locator('[data-seg=upgrade-riposte]').click();
+    await expect(page.locator('#sanctuary-rule')).toContainText('guards');
+    await page.locator('#reserve').selectOption('1');
+    expect(await noSideScroll(page)).toBe(true);
+    await page.locator('[data-preset=careful]').click();
+    await page.locator('#launch').click();
+    await expect(page.locator('#level-line')).toContainText('Levels and upgrades end with the expedition');
+    await expect(page.locator('#sanctuary-line')).toContainText(/no banking here/i);
+    expect(await noSideScroll(page)).toBe(true);
+    await page.locator('#skip').click();
+    await expect(page.locator('#progress-line')).toContainText('only banked loot stays');
+    expect(await noSideScroll(page)).toBe(true);
+    const save = await page.evaluate(() => window.__EXPEDITION_SAVE__());
+    expect(JSON.stringify(save)).not.toMatch(/"(xp|experience|sanctuary|upgrade)"/);
+  });
+}
+
+test('progress=0 hides the progression controls and keeps the fixed level field', async ({ page }) => {
+  await open(page, '&seed=3');
+  await expect(page.locator('#drink')).toHaveCount(0);
+  await expect(page.locator('#sanctuary-rule')).toHaveCount(0);
+  await expect(page.locator('#level')).toHaveCount(1);
+});
+
+// M8: bosses, first clears and rematches.
+test('browser and Node agree on boss expeditions: first clears, a rematch, the Castellan and an abandoned fight', async ({ page }) => {
+  await open(page);
+  const all = ['C0', 'O1', 'O2', 'O3', 'KT', 'T1', 'T2', 'T3', 'S1', 'S2', 'S3', 'K1', 'K2', 'K3', 'SB'];
+  const base = { level: 80, focus: 'balanced', known: all };
+  const warden = [{ id: 'g', kind: 'open' as const, room: 'T2', to: 'MB' }, { id: 'c', kind: 'challenge' as const, room: 'MB' }];
+  const cases: ExpeditionConfig[] = [
+    { ...base, seed: 1, hpOverride: 5000, issueKeys: 1, plan: { ...defaultPlan(), retreatHpPct: 0, objectives: warden } },
+    { ...base, seed: 3, hpOverride: 5000, known: [...all, 'MB'], openLinks: ['MB~T2', 'K2~MB'], defeatedBosses: ['warden'], plan: { ...defaultPlan(), objectives: [{ id: 'r', kind: 'rematch', room: 'MB' }] } },
+    { ...base, seed: 4, hpOverride: 5000, known: [...all, 'MB'], openLinks: ['MB~T2', 'K2~MB'], defeatedBosses: ['warden'], progression: { startLevel: 9 }, plan: { ...defaultPlan(), objectives: [{ id: 'r', kind: 'rematch', room: 'MB', variant: 'limited-healing' }] } },
+    { ...base, seed: 5, hpOverride: 5000, issueKeys: 1, plan: { ...defaultPlan(), retreatHpPct: 0, objectives: [{ id: 'g', kind: 'open', room: 'K2', to: 'B1' }, { id: 'c', kind: 'challenge', room: 'B1' }] } },
+    { ...base, seed: 4, issueKeys: 1, progression: { startLevel: 9 }, plan: { ...defaultPlan(), objectives: warden } },
+    { ...base, seed: 1, issueKeys: 1, progression: { startLevel: 9 }, plan: { ...defaultPlan(), retreatHpPct: 0, objectives: warden } },
+  ];
+  const inPage = await page.evaluate(cs => cs.map(c => window.__EXPEDITION_RUN__(c)), cases);
+  inPage.forEach((r, i) => expect(r, `case ${i}`).toEqual(runExpedition(sim, cases[i]).chronicle));
+  expect(inPage[0].bossesDefeated).toEqual(['warden']);
+  expect(inPage[3].bossesDefeated).toEqual(['castellan']);
+  expect(inPage[1].bosses?.rematches[0].won).toBe(true);
+  expect(inPage[4].events.some(e => e.kind === 'boss_reset')).toBe(true);
+});
+
+test('a boss is challenged on purpose, cleared once, persisted, and then offered as an opt-in rematch', async ({ page }) => {
+  await open(page, `&known=all&seed=1&hp=5000${SAVE}`);
+  await page.evaluate(() => { const s = window.__EXPEDITION_SAVE__(); s.camp.bank.keys = 1; window.__EXPEDITION_SET_SAVE__!(s); });
+  await expect(page.locator('[data-obj-kind] option[value=rematch]')).toHaveCount(0);
+  await page.locator('[data-issue="1"]').click();
+  await page.locator('#add-objective').click();
+  await page.locator('[data-obj-kind="0"]').selectOption('open');
+  await page.locator('[data-obj-gate="0"]').selectOption('T2>MB');
+  await page.locator('#add-objective').click();
+  await page.locator('[data-obj-kind="1"]').selectOption('challenge');
+  await expect(page.locator('.obj .why').nth(1)).toContainText('Not yet defeated');
+  await expect(page.locator('#preflight')).toHaveAttribute('data-status', 'frontier');
+  await page.locator('#retreat').fill('0');
+  await page.locator('#launch').click();
+  await finish(page);
+  await expect(page.locator('#outcome')).toHaveAttribute('data-outcome', 'extracted');
+  await expect(page.locator('#chronicle-events li')).toHaveText([/opened for good/, /engaged/, /defeated for the first time/, /Banked at camp/]);
+  await expect(page.locator('#settle-lines')).toContainText('defeated for good');
+  const save = await page.evaluate(() => window.__EXPEDITION_SAVE__());
+  expect(save.world.defeatedBosses).toEqual(['warden']);
+  expect([...save.world.openedLinks].sort()).toEqual(['K2~MB', 'MB~T2']);
+  expect(save.camp.bank.gear).toContain('warden-bell-clapper');
+  await page.locator('#again').click();
+  await page.locator('[data-remove="1"]').click();   // the plan is kept between expeditions: clear the spent objectives
+  await page.locator('[data-remove="0"]').click();
+  await page.locator('#add-objective').click();
+  await page.locator('[data-obj-kind="0"]').selectOption('rematch');
+  await expect(page.locator('[data-obj-variant="0"]')).toBeVisible();
+  await expect(page.locator('.obj .why').first()).toContainText('quarter');
+  await page.locator('[data-obj-variant="0"]').selectOption('limited-healing');
+  await expect(page.locator('#preflight')).toHaveAttribute('data-status', 'confirmed');
+  await page.locator('[data-obj-kind="0"]').selectOption('challenge');
+  await page.locator('[data-obj-room="0"]').selectOption('MB');
+  await expect(page.locator('.obj .why').first()).toContainText('already defeated');
+  await expect(page.locator('#launch')).toBeDisabled();
   expect(await noSideScroll(page)).toBe(true);
 });

@@ -1,8 +1,8 @@
 {
   "id": "K1",
   "name": "Crypt Threshold",
-  "note": "Generated placeholder geometry from the room schedule and connections. Valid walls and doors, not tuned and not art-reviewed. Local frame: centre (0,0), x east, y south, simulation units.",
-  "status": "generated",
+  "note": "Threat warning, not a trap: the Sentry stands where it is seen from the door, the Spitter is staged further in and far from the exit. Trial settings; positions and detection values are not design locks. No environment art yet. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "authored",
   "plan": {
     "center": {
       "x": 3360,
@@ -27,7 +27,26 @@
       [280, -250, 340, -87],
       [280, 87, 340, 250]
     ],
-    "circles": []
+    "circles": [
+      {
+        "id": "column-a",
+        "x": 60,
+        "y": -115,
+        "r": 30
+      },
+      {
+        "id": "column-b",
+        "x": 60,
+        "y": 115,
+        "r": 30
+      },
+      {
+        "id": "column-c",
+        "x": -130,
+        "y": -120,
+        "r": 24
+      }
+    ]
   },
   "doors": [
     {
@@ -63,10 +82,38 @@
       "y": [-87, 87]
     }
   ],
-  "encounters": {},
+  "entryDoor": "to-S2",
+  "exitDoor": "to-K2",
+  "encounters": {
+    "sentrySpitter": {
+      "name": "Sentry and Spitter",
+      "enemies": [
+        {
+          "arch": "sentry",
+          "x": 110,
+          "y": -170,
+          "facing": "SW"
+        },
+        {
+          "arch": "spitter",
+          "x": 190,
+          "y": 150,
+          "facing": "NW"
+        }
+      ]
+    }
+  },
   "detection": {
-    "range": 160,
-    "arcDegrees": 120,
-    "alertRadius": 120
+    "range": 220,
+    "arcDegrees": 140,
+    "alertRadius": 140
+  },
+  "entry": {
+    "x": -280,
+    "y": 0
+  },
+  "threshold": {
+    "x": 280,
+    "y": [-87, 87]
   }
 }

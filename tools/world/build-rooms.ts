@@ -95,7 +95,7 @@ export function buildWorld(): { rooms: Record<string, RoomManifest>; world: Worl
       doors,
       openings: doors.map(d => d.side === 'west' || d.side === 'east' ? { side: d.side, y: d.span } : { side: d.side, x: d.span }),
       ...(entryDoor ? { entryDoor } : {}), ...(exitDoor ? { exitDoor } : {}),
-      encounters: ov.encounters ?? {}, ...(ov.pickups ? { pickups: ov.pickups } : {}), detection: ov.detection ?? DETECTION,
+      encounters: ov.encounters ?? {}, ...(ov.pickups ? { pickups: ov.pickups } : {}), ...(ov.sanctuary ? { sanctuary: ov.sanctuary } : {}), detection: ov.detection ?? DETECTION,
     };
     const entry = entryDoor && doors.find(d => d.id === entryDoor), exit = exitDoor && doors.find(d => d.id === exitDoor);
     if (entry) m.entry = { x: entry.center.x, y: entry.center.y };
@@ -119,7 +119,7 @@ if (process.argv[1]?.endsWith('build-rooms.ts')) {
   if (write) { for (const [p, t] of Object.entries(want)) writeFileSync(p, t); console.log(`wrote ${Object.keys(want).length} files`); }
   if (check) {
     const bad = Object.entries(want).filter(([p, t]) => !existsSync(p) || readFileSync(p, 'utf8') !== t).map(([p]) => p);
-    const stray = readdirSync(ROOMS_DIR).filter(f => f.endsWith('.json') && !Object.keys(want).some(p => p.endsWith(`/${f}`)));
+    const stray = readdirSync(ROOMS_DIR).filter(f => f.endsWith('.json') && f !== 'ENCOUNTER_CONTRACT.json' && !Object.keys(want).some(p => p.endsWith(`/${f}`)));
     if (bad.length || stray.length) { console.error(`out of date: ${[...bad, ...stray.map(s => `${s} (not generated)`)].join(', ')}\nrun npm run world:build`); process.exit(1); }
     console.log(`world files are current (${Object.keys(want).length} files)`);
   }

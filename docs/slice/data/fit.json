@@ -1,0 +1,399 @@
+{
+ "table": [
+  1,
+  27,
+  39,
+  133,
+  135,
+  140,
+  143,
+  156,
+  160
+ ],
+ "checked": [
+  {
+   "row": {
+    "room": "O1",
+    "design": 1,
+    "encounter": "mireling",
+    "target": 0.875,
+    "basis": "Mireling alone, band 80 to 95%"
+   },
+   "sim": 1,
+   "win": {
+    "guarded": {
+     "balanced": 0.99,
+     "survivor": 0.99
+    },
+    "measured": {
+     "balanced": 0.9566666666666667,
+     "survivor": 0.9566666666666667
+    },
+    "pressing": {
+     "balanced": 0.8633333333333333,
+     "survivor": 0.8633333333333333
+    }
+   }
+  },
+  {
+   "row": {
+    "room": "O2",
+    "design": 2,
+    "encounter": "sentry",
+    "target": 0.75,
+    "basis": "Sentry alone, band 65 to 85%"
+   },
+   "sim": 27,
+   "win": {
+    "guarded": {
+     "balanced": 0.81,
+     "survivor": 0.8566666666666667
+    },
+    "measured": {
+     "balanced": 0.7366666666666667,
+     "survivor": 0.78
+    },
+    "pressing": {
+     "balanced": 0.72,
+     "survivor": 0.8033333333333333
+    }
+   }
+  },
+  {
+   "row": {
+    "room": "O3",
+    "design": 2,
+    "encounter": "mireling2",
+    "target": 0.45,
+    "basis": "doc 25: two at once is dangerous on the Old Road"
+   },
+   "sim": 27,
+   "win": {
+    "guarded": {
+     "balanced": 0.73,
+     "survivor": 0.77
+    },
+    "measured": {
+     "balanced": 0.47333333333333333,
+     "survivor": 0.5033333333333333
+    },
+    "pressing": {
+     "balanced": 0.39,
+     "survivor": 0.43666666666666665
+    }
+   }
+  },
+  {
+   "row": {
+    "room": "KT",
+    "design": 2,
+    "encounter": "mireling2",
+    "target": 0.45,
+    "basis": "the Watchpost garrison stands in for the staged waves"
+   },
+   "sim": 27,
+   "win": {
+    "guarded": {
+     "balanced": 0.73,
+     "survivor": 0.77
+    },
+    "measured": {
+     "balanced": 0.47333333333333333,
+     "survivor": 0.5033333333333333
+    },
+    "pressing": {
+     "balanced": 0.39,
+     "survivor": 0.43666666666666665
+    }
+   }
+  },
+  {
+   "row": {
+    "room": "T1",
+    "design": 3,
+    "encounter": "harrier",
+    "target": 0.825,
+    "basis": "Harrier alone, band 75 to 90%"
+   },
+   "sim": 39,
+   "win": {
+    "guarded": {
+     "balanced": 0.7066666666666667,
+     "survivor": 0.7566666666666667
+    },
+    "measured": {
+     "balanced": 0.84,
+     "survivor": 0.85
+    },
+    "pressing": {
+     "balanced": 0.5066666666666667,
+     "survivor": 0.5866666666666667
+    }
+   }
+  },
+  {
+   "row": {
+    "room": "T2",
+    "design": 4,
+    "encounter": "harrierSentry",
+    "target": 0.5,
+    "basis": "doc 25: a ranged and guard pair forces a route or retreat decision"
+   },
+   "sim": 133,
+   "win": {
+    "guarded": {
+     "balanced": 0.56,
+     "survivor": 0.6133333333333333
+    },
+    "measured": {
+     "balanced": 0.44666666666666666,
+     "survivor": 0.44
+    },
+    "pressing": {
+     "balanced": 0.26666666666666666,
+     "survivor": 0.18666666666666668
+    }
+   }
+  },
+  {
+   "row": {
+    "room": "T3",
+    "design": 4,
+    "encounter": "harrierMireling",
+    "target": 0.5,
+    "basis": "optional pair, treated like T2"
+   },
+   "sim": 133,
+   "win": {
+    "guarded": {
+     "balanced": 0.7333333333333333,
+     "survivor": 0.72
+    },
+    "measured": {
+     "balanced": 0.6466666666666666,
+     "survivor": 0.6966666666666667
+    },
+    "pressing": {
+     "balanced": 0.5033333333333333,
+     "survivor": 0.5
+    }
+   }
+  },
+  {
+   "row": {
+    "room": "S1",
+    "design": 4,
+    "encounter": "spitter",
+    "target": 0.775,
+    "basis": "Spitter alone, band 70 to 85%"
+   },
+   "sim": 133,
+   "win": {
+    "guarded": {
+     "balanced": 0.9566666666666667,
+     "survivor": 0.8833333333333333
+    },
+    "measured": {
+     "balanced": 0.9166666666666666,
+     "survivor": 0.9433333333333334
+    },
+    "pressing": {
+     "balanced": 0.8533333333333334,
+     "survivor": 0.8933333333333333
+    }
+   }
+  },
+  {
+   "row": {
+    "room": "S2",
+    "design": 5,
+    "encounter": "brute",
+    "target": 0.725,
+    "basis": "Brute alone, band 60 to 85%"
+   },
+   "sim": 135,
+   "win": {
+    "guarded": {
+     "balanced": 0.8866666666666667,
+     "survivor": 0.9466666666666667
+    },
+    "measured": {
+     "balanced": 0.67,
+     "survivor": 0.7633333333333333
+    },
+    "pressing": {
+     "balanced": 0.36,
+     "survivor": 0.33666666666666667
+    }
+   }
+  },
+  {
+   "row": {
+    "room": "S3",
+    "design": 5,
+    "encounter": "spitterGrunt",
+    "target": 0.6,
+    "basis": "weak escort, easier than a regular pair"
+   },
+   "sim": 135,
+   "win": {
+    "guarded": {
+     "balanced": 0.73,
+     "survivor": 0.7266666666666667
+    },
+    "measured": {
+     "balanced": 0.71,
+     "survivor": 0.75
+    },
+    "pressing": {
+     "balanced": 0.6833333333333333,
+     "survivor": 0.7033333333333334
+    }
+   }
+  },
+  {
+   "row": {
+    "room": "MB",
+    "design": 6,
+    "encounter": "warden",
+    "target": 0.475,
+    "basis": "Warden, band 35 to 60%"
+   },
+   "sim": 140,
+   "win": {
+    "guarded": {
+     "balanced": 0.8233333333333334,
+     "survivor": 0.9733333333333334
+    },
+    "measured": {
+     "balanced": 0.54,
+     "survivor": 0.8733333333333333
+    },
+    "pressing": {
+     "balanced": 0.3466666666666667,
+     "survivor": 0.6066666666666667
+    }
+   }
+  },
+  {
+   "row": {
+    "room": "K1",
+    "design": 6,
+    "encounter": "sentrySpitter",
+    "target": 0.5,
+    "basis": "staged pair, doc 15"
+   },
+   "sim": 140,
+   "win": {
+    "guarded": {
+     "balanced": 0.13666666666666666,
+     "survivor": 0.19
+    },
+    "measured": {
+     "balanced": 0.1,
+     "survivor": 0.18666666666666668
+    },
+    "pressing": {
+     "balanced": 0.07,
+     "survivor": 0.07666666666666666
+    }
+   }
+  },
+  {
+   "row": {
+    "room": "K2",
+    "design": 7,
+    "encounter": "duelist",
+    "target": 0.675,
+    "basis": "Duelist alone, band 55 to 80%"
+   },
+   "sim": 143,
+   "win": {
+    "guarded": {
+     "balanced": 0.9066666666666666,
+     "survivor": 0.9566666666666667
+    },
+    "measured": {
+     "balanced": 0.6966666666666667,
+     "survivor": 0.6966666666666667
+    },
+    "pressing": {
+     "balanced": 0.5833333333333334,
+     "survivor": 0.6966666666666667
+    }
+   }
+  },
+  {
+   "row": {
+    "room": "K3",
+    "design": 7,
+    "encounter": "duelist",
+    "target": 0.675,
+    "basis": "Duelist alone, band 55 to 80%"
+   },
+   "sim": 143,
+   "win": {
+    "guarded": {
+     "balanced": 0.9066666666666666,
+     "survivor": 0.9566666666666667
+    },
+    "measured": {
+     "balanced": 0.6966666666666667,
+     "survivor": 0.6966666666666667
+    },
+    "pressing": {
+     "balanced": 0.5833333333333334,
+     "survivor": 0.6966666666666667
+    }
+   }
+  },
+  {
+   "row": {
+    "room": "B1",
+    "design": 8,
+    "encounter": "castellan",
+    "target": 0.35,
+    "basis": "Castellan, first attempt, low end of the 30 to 55% band"
+   },
+   "sim": 156,
+   "win": {
+    "guarded": {
+     "balanced": 0.42333333333333334,
+     "survivor": 0.5233333333333333
+    },
+    "measured": {
+     "balanced": 0.32666666666666666,
+     "survivor": 0.5766666666666667
+    },
+    "pressing": {
+     "balanced": 0.24333333333333335,
+     "survivor": 0.18333333333333332
+    }
+   }
+  },
+  {
+   "row": {
+    "room": "B1",
+    "design": 9,
+    "encounter": "castellan",
+    "target": 0.5,
+    "basis": "Castellan, prepared, upper half of the band"
+   },
+   "sim": 160,
+   "win": {
+    "guarded": {
+     "balanced": 0.42,
+     "survivor": 0.54
+    },
+    "measured": {
+     "balanced": 0.38333333333333336,
+     "survivor": 0.6
+    },
+    "pressing": {
+     "balanced": 0.22333333333333333,
+     "survivor": 0.16
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,48 @@
+{
+  "name": "Bell Warden",
+  "note": "Miniboss arena. One enemy, arena-bound. The west door is the way in; the south door stays shut until the first clear opens the shortcut to the Ossuary. Trial settings; positions and detection values are not design locks. No environment art yet. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "authored",
+  "entryDoor": "to-T2",
+  "exitDoor": "to-K2",
+  "solids": {
+    "rects": [],
+    "circles": [
+      {
+        "id": "bell-post-n-w",
+        "x": -160,
+        "y": -190,
+        "r": 30
+      },
+      {
+        "id": "bell-post-n-e",
+        "x": 160,
+        "y": -190,
+        "r": 30
+      },
+      {
+        "id": "bell-post-s-e",
+        "x": 170,
+        "y": 120,
+        "r": 30
+      }
+    ]
+  },
+  "encounters": {
+    "warden": {
+      "name": "Bell Warden",
+      "enemies": [
+        {
+          "arch": "warden",
+          "x": 190,
+          "y": -40,
+          "facing": "W"
+        }
+      ]
+    }
+  },
+  "detection": {
+    "range": 160,
+    "arcDegrees": 120,
+    "alertRadius": 120
+  }
+}

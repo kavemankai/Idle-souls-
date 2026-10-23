@@ -1,6 +1,7 @@
 import type { Bank, Cache, Save } from '../save/saveTypes';
 import { validateInvariants as checkSave } from '../save/save';
 import type { Chronicle } from './chronicle';
+import { BOSSES } from '../world/bosses';
 import { addBanks, cloneBank, describeBank, isEmptyBank } from './loot';
 
 /** What happened to everything the adventurer carried, in words a player can read. Every line is true of the new save. */
@@ -42,6 +43,11 @@ export function settle(save: Save, c: Chronicle, startedAt: number): Settlement 
   next.camp.bank.keys = save.camp.bank.keys - c.loot.issued;
   next.camp.expeditions = save.camp.expeditions + 1;
   const carried = cloneBank(c.loot.carried), lines: string[] = [];
+  // A first clear is permanent in every outcome, exactly once: bosses already in the save are not recorded or announced again.
+  for (const b of c.bossesDefeated) if (!save.world.defeatedBosses.includes(b)) {
+    const info = BOSSES[b];
+    lines.push(`${info?.name ?? b} is defeated for good.${info?.opens ? ` The way ${info.opens.replace('~', ' to ')} is open for good.` : ''}${info?.campaign ? ' The campaign route is unlocked.' : ''}`);
+  }
   let banked = none(), cached: Cache | null = null, lost = none();
   const recovered = c.loot.cacheRecovered;
   if (c.outcome === 'extracted') {

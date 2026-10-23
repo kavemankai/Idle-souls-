@@ -1,8 +1,8 @@
 {
   "id": "T1",
   "name": "Tower Yard",
-  "note": "Generated placeholder geometry from the room schedule and connections. Valid walls and doors, not tuned and not art-reviewed. Local frame: centre (0,0), x east, y south, simulation units.",
-  "status": "generated",
+  "note": "Cover tutorial: low walls and a crate break the Harrier's line of sight; the Sentry guards the west side. Trial settings; positions and detection values are not design locks. No environment art yet. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "authored",
   "plan": {
     "center": {
       "x": 2030,
@@ -25,9 +25,18 @@
       [87, 220, 320, 280],
       [-320, -220, -260, 220],
       [260, -220, 320, -87],
-      [260, 87, 320, 220]
+      [260, 87, 320, 220],
+      [60, -140, 100, -50],
+      [-210, 60, -140, 100]
     ],
-    "circles": []
+    "circles": [
+      {
+        "id": "crate",
+        "x": -120,
+        "y": -40,
+        "r": 28
+      }
+    ]
   },
   "doors": [
     {
@@ -63,10 +72,43 @@
       "x": [-87, 87]
     }
   ],
-  "encounters": {},
+  "entryDoor": "to-O2",
+  "exitDoor": "to-T2",
+  "encounters": {
+    "harrier": {
+      "name": "Tower Harrier",
+      "enemies": [
+        {
+          "arch": "harrier",
+          "x": 170,
+          "y": -150,
+          "facing": "SW"
+        }
+      ]
+    },
+    "sentry": {
+      "name": "Ashen Sentry",
+      "enemies": [
+        {
+          "arch": "sentry",
+          "x": -150,
+          "y": -110,
+          "facing": "SE"
+        }
+      ]
+    }
+  },
   "detection": {
-    "range": 160,
-    "arcDegrees": 120,
-    "alertRadius": 120
+    "range": 220,
+    "arcDegrees": 140,
+    "alertRadius": 140
+  },
+  "entry": {
+    "x": 0,
+    "y": 220
+  },
+  "threshold": {
+    "x": 260,
+    "y": [-87, 87]
   }
 }

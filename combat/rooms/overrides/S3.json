@@ -1,0 +1,59 @@
+{
+  "name": "Low Gallery",
+  "note": "Escort pair beside the sluice. The sluice wheel stands at the west door; working it opens the way back to camp for good. Trial settings; positions and detection values are not design locks. No environment art yet. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "authored",
+  "entryDoor": "to-S2",
+  "exitDoor": "to-C0",
+  "solids": {
+    "rects": [
+      [
+        90,
+        -90,
+        130,
+        -30
+      ]
+    ],
+    "circles": [
+      {
+        "id": "pillar",
+        "x": 70,
+        "y": 60,
+        "r": 28
+      }
+    ]
+  },
+  "encounters": {
+    "spitterGrunt": {
+      "name": "Spitter and Grunt",
+      "enemies": [
+        {
+          "arch": "spitter",
+          "x": 190,
+          "y": -100,
+          "facing": "SW"
+        },
+        {
+          "arch": "grunt",
+          "x": 140,
+          "y": 90,
+          "facing": "NW"
+        }
+      ]
+    }
+  },
+  "pickups": [
+    {
+      "id": "s3-bandage",
+      "kind": "supplies",
+      "item": "bandage",
+      "qty": 1,
+      "x": -170,
+      "y": 70
+    }
+  ],
+  "detection": {
+    "range": 220,
+    "arcDegrees": 140,
+    "alertRadius": 140
+  }
+}

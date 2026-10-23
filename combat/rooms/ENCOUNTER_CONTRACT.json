@@ -1,0 +1,24 @@
+{
+  "note": "Encounter ids used by room manifests, and the enemy archetypes each one stands for, in order. The simulator (M6) implements every id here as an entry of SIM.ENCOUNTERS; room authoring (M7) names only these ids. Regular-tier pairs only: no elite pairs (decided). Elites, the miniboss and the boss fight alone.",
+  "encounters": {
+    "mireling": ["mireling"],
+    "sentry": ["sentry"],
+    "mireling2": ["mireling", "mireling"],
+    "sentryMireling": ["sentry", "mireling"],
+    "harrier": ["harrier"],
+    "harrierSentry": ["harrier", "sentry"],
+    "harrierMireling": ["harrier", "mireling"],
+    "spitter": ["spitter"],
+    "spitterGrunt": ["spitter", "grunt"],
+    "sentrySpitter": ["sentry", "spitter"],
+    "brute": ["brute"],
+    "duelist": ["duelist"],
+    "warden": ["warden"],
+    "castellan": ["castellan"]
+  },
+  "roomPlan": {
+    "T1": ["harrier", "sentry"], "T2": ["harrierSentry"], "T3": ["harrierMireling"], "MB": ["warden"],
+    "S1": ["spitter"], "S2": ["brute"], "S3": ["spitterGrunt"],
+    "K1": ["sentrySpitter"], "K2": ["duelist"], "K3": ["duelist", "harrierSentry"], "B1": ["castellan"]
+  }
+}

@@ -1,8 +1,8 @@
 {
   "id": "B1",
   "name": "Siltbound Castellan",
-  "note": "Generated placeholder geometry from the room schedule and connections. Valid walls and doors, not tuned and not art-reviewed. Local frame: centre (0,0), x east, y south, simulation units.",
-  "status": "generated",
+  "note": "Main boss arena. One enemy, arena-bound. The west door is the only way in or out. The four columns give the boss's lanes somewhere to be read around. Trial settings; positions and detection values are not design locks. No environment art yet. Local frame: centre (0,0), x east, y south, simulation units.",
+  "status": "authored",
   "plan": {
     "center": {
       "x": 4720,
@@ -26,7 +26,32 @@
       [-430, 87, -370, 350],
       [370, -350, 430, 350]
     ],
-    "circles": []
+    "circles": [
+      {
+        "id": "column-nw",
+        "x": -190,
+        "y": -190,
+        "r": 34
+      },
+      {
+        "id": "column-ne",
+        "x": 190,
+        "y": -190,
+        "r": 34
+      },
+      {
+        "id": "column-sw",
+        "x": -190,
+        "y": 190,
+        "r": 34
+      },
+      {
+        "id": "column-se",
+        "x": 190,
+        "y": 190,
+        "r": 34
+      }
+    ]
   },
   "doors": [
     {
@@ -47,10 +72,32 @@
       "y": [-87, 87]
     }
   ],
-  "encounters": {},
+  "entryDoor": "to-K2",
+  "exitDoor": "to-K2",
+  "encounters": {
+    "castellan": {
+      "name": "Siltbound Castellan",
+      "enemies": [
+        {
+          "arch": "castellan",
+          "x": 230,
+          "y": 0,
+          "facing": "W"
+        }
+      ]
+    }
+  },
   "detection": {
     "range": 160,
     "arcDegrees": 120,
     "alertRadius": 120
+  },
+  "entry": {
+    "x": -370,
+    "y": 0
+  },
+  "threshold": {
+    "x": -370,
+    "y": [-87, 87]
   }
 }

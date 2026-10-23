@@ -1,6 +1,7 @@
 import { STARTER_KIT, type Bank, type Cache } from '../save/saveTypes';
 export { STARTER_KIT };
 import type { Pickup } from '../world/roomTypes';
+import { BOSSES, REMATCH_GOLD_SHARE } from '../world/bosses';
 
 /**
  * What the adventurer carries is a Bank-shaped bundle (gold, supplies, found gear, recoverable mastery). It is at risk until camp: banking and the death
@@ -8,7 +9,12 @@ import type { Pickup } from '../world/roomTypes';
  */
 export type Carried = Bank;
 /** Trial amounts per enemy type, awarded once per enemy per expedition. Not tuned. */
-export const KILL_LOOT: Readonly<Record<string, { gold: number; mastery: number }>> = { mireling: { gold: 6, mastery: 2 }, sentry: { gold: 15, mastery: 5 } };
+export const KILL_LOOT: Readonly<Record<string, { gold: number; mastery: number }>> = {
+  mireling: { gold: 6, mastery: 2 }, sentry: { gold: 15, mastery: 5 },
+  harrier: { gold: 14, mastery: 4 }, spitter: { gold: 14, mastery: 4 }, grunt: { gold: 8, mastery: 3 },
+  brute: { gold: 30, mastery: 10 }, duelist: { gold: 30, mastery: 10 },
+  warden: { gold: 80, mastery: 25 }, castellan: { gold: 150, mastery: 50 },
+};
 /** How close the adventurer must pass to take a pickup or the cache. */
 export const PICKUP_REACH = 45;
 
@@ -54,9 +60,16 @@ export class Ledger {
   readonly claimed = new Set<string>();
   /** Gate Keys issued from camp at launch. */
   readonly issued: number;
+  /** Rations from the starter kit: drunk first, never banked and never put in a cache (they are not loot). */
+  kitRations = 0;
+  /** Rations drunk this expedition, from the kit or from loot. */
+  rationsUsed = 0;
+  /** Bosses killed for the first time this expedition, and bosses killed again as a rematch. */
+  readonly firstClears = new Set<string>();
+  readonly rematches = new Set<string>();
   private readonly taken = new Set<string>();
   private readonly paid = new Set<string>();
-  constructor(cache: Cache | null = null, issued = 0, private readonly priorClaims: ReadonlySet<string> = new Set(), private readonly priorOpen: ReadonlySet<string> = new Set()) {
+  constructor(cache: Cache | null = null, issued = 0, private readonly priorClaims: ReadonlySet<string> = new Set(), private readonly priorOpen: ReadonlySet<string> = new Set(), private readonly priorBosses: ReadonlySet<string> = new Set()) {
     this.cache = cache ? { ...cache, contents: cloneBank(cache.contents) } : null;
     this.issued = issued;
     this.carried = { ...emptyCarried(), prepared: issued };
@@ -69,6 +82,16 @@ export class Ledger {
     const table = KILL_LOOT[arch];
     if (this.paid.has(key) || !table) return null;
     this.paid.add(key);
+    const boss = BOSSES[arch];
+    if (boss && this.priorBosses.has(arch)) {
+      // A rematch pays a share of the gold and mastery and no gear; it never touches the first clear.
+      this.rematches.add(arch);
+      return this.add({ source: 'kill', room, label: `${arch} defeated (rematch)`, bundle: { ...emptyCarried(), gold: Math.floor(table.gold * REMATCH_GOLD_SHARE), mastery: Math.floor(table.mastery * REMATCH_GOLD_SHARE) } });
+    }
+    if (boss) {
+      this.firstClears.add(arch);
+      return this.add({ source: 'kill', room, label: `${arch} defeated`, bundle: { ...emptyCarried(), gold: table.gold, mastery: table.mastery, gear: [boss.gear] } });
+    }
     return this.add({ source: 'kill', room, label: `${arch} defeated`, bundle: { ...emptyCarried(), gold: table.gold, mastery: table.mastery } });
   }
   pickup(room: string, p: Pickup): Gain | null {
@@ -87,6 +110,16 @@ export class Ledger {
     if (!c) return null;
     this.cache = null; this.recovered = c;
     return this.add({ source: 'cache', room: c.room, label: 'recovery cache', bundle: cloneBank(c.contents) });
+  }
+  get rations(): number { return this.kitRations + (this.carried.supplies.ration ?? 0); }
+  /** Drink one ration: the kit's first, then a found one. Returns where it came from, or null when none is left. */
+  useRation(): 'kit' | 'found' | null {
+    if (this.kitRations > 0) { this.kitRations--; this.rationsUsed++; return 'kit'; }
+    const n = this.carried.supplies.ration ?? 0;
+    if (n < 1) return null;
+    this.carried = { ...this.carried, supplies: { ...this.carried.supplies, ration: n - 1 } };
+    this.rationsUsed++;
+    return 'found';
   }
   /** Spend one prepared (eligible) key to open a sealed gate for good. Fresh keys cannot do this (L19). Returns false and changes nothing when no eligible key is carried. */
   spendKey(link: string): boolean {
