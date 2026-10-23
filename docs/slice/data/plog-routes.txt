@@ -1,0 +1,26 @@
+route Old Road (O3, KT) cautious 1
+route Old Road (O3, KT) pressing 1
+route Watchtower (T1, T2) cautious 1
+route Watchtower (T1, T2) cautious 3
+route Watchtower (T1, T2) pressing 1
+route Watchtower (T1, T2) pressing 3
+route Sunken Passage (S1, S2, sanctuary) cautious 1
+route Sunken Passage (S1, S2, sanctuary) cautious 4
+route Sunken Passage (S1, S2, sanctuary) pressing 1
+route Sunken Passage (S1, S2, sanctuary) pressing 4
+route Crypt by the south (S3 sluice side, K1, K2) cautious 1
+route Crypt by the south (S3 sluice side, K1, K2) cautious 5
+route Crypt by the south (S3 sluice side, K1, K2) pressing 1
+route Crypt by the south (S3 sluice side, K1, K2) pressing 5
+route Crypt by the north (T2, K3, K2) cautious 1
+route Crypt by the north (T2, K3, K2) cautious 5
+route Crypt by the north (T2, K3, K2) pressing 1
+route Crypt by the north (T2, K3, K2) pressing 5
+route Bell Warden (gate already open) cautious 1
+route Bell Warden (gate already open) cautious 5
+route Bell Warden (gate already open) pressing 1
+route Bell Warden (gate already open) pressing 5
+route Castellan (both gates already open) cautious 1
+route Castellan (both gates already open) cautious 7
+route Castellan (both gates already open) pressing 1
+route Castellan (both gates already open) pressing 7

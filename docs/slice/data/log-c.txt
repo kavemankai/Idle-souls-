@@ -1,0 +1,4 @@
+done spitterGrunt
+done sentrySpitter
+done brute
+done duelist

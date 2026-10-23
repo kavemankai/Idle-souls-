@@ -1,0 +1,4 @@
+done harrier
+done harrierSentry
+done harrierMireling
+done spitter

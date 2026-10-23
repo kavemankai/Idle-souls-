@@ -1,0 +1,12 @@
+farm safe loop: survey the Outer Road cautious
+farm safe loop: survey the Outer Road pressing
+farm safe loop: reach the Crossroads cautious
+farm safe loop: reach the Crossroads pressing
+farm Old Road loop: O3 and the Key Trial cautious
+farm Old Road loop: O3 and the Key Trial pressing
+farm Watchtower: T1, T2 cautious
+farm Watchtower: T1, T2 pressing
+farm Sunken Passage: S1, S2 cautious
+farm Sunken Passage: S1, S2 pressing
+farm Crypt (north): T2, K3, K2 cautious
+farm Crypt (north): T2, K3, K2 pressing
