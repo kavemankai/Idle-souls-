@@ -50,6 +50,24 @@ test('O1 wave 1 has genuine eight-heading clips and never borrows a quadrant', (
     }
   }
 });
+test('O1 wave 2 stagger and Mireling bite have genuine eight-heading frames', () => {
+  const cases: Array<{ kind: ActorView['kind']; action: ActorView['action']; phases: ActorView['phase'][] }> = [
+    { kind: 'sentry', action: 'reaction', phases: ['active'] },
+    { kind: 'mireling', action: 'reaction', phases: ['active'] },
+    { kind: 'mireling', action: 'light', phases: ['windup', 'active', 'recovery'] },
+  ];
+  for (const { kind, action, phases } of cases) {
+    const frames = atlas(kind).frames;
+    for (const facing of FACINGS) {
+      for (const [i, phase] of phases.entries()) {
+        const actor: ActorView = { id: 'proof', kind, x: 0, y: 0, visible: true, facing, action, phase, progress: .5 };
+        const selection = chooseFrame(actor, name => Boolean(frames[name]));
+        assert.equal(selection.frame, `${kind}__${action}__${facing}__${String(i).padStart(2, '0')}`);
+        assert.equal(selection.missing, false);
+      }
+    }
+  }
+});
 test('visual fixture cannot mutate simulation and never produces combat outcomes', () => {
   const fixture=new VisualSequence();const before=fixture.read();fixture.update(100,1,0);const after=fixture.read(true);
   assert.equal(after.source,'visual-only');assert.equal(after.actors[0].action,'walk');

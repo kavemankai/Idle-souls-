@@ -124,12 +124,12 @@
     },
     {
       "actor": "mireling",
-      "frames": 64,
+      "frames": 96,
       "width": 1024,
-      "height": 512,
-      "rgbaBytes": 2097152,
-      "pngBytes": 512037,
-      "sha256": "51c5992b23a120c0c0f08ff956374eabf5f68126869bc8a8d17a43a2d05952cb",
+      "height": 1024,
+      "rgbaBytes": 4194304,
+      "pngBytes": 766200,
+      "sha256": "266c7c1c3ca14f0dc55975138e8d253810336548a9e2eca63b4cd0f2697cbdf2",
       "directions": {
         "idle": [
           "E",
@@ -142,6 +142,26 @@
           "W"
         ],
         "leap": [
+          "E",
+          "N",
+          "NE",
+          "NW",
+          "S",
+          "SE",
+          "SW",
+          "W"
+        ],
+        "light": [
+          "E",
+          "N",
+          "NE",
+          "NW",
+          "S",
+          "SE",
+          "SW",
+          "W"
+        ],
+        "reaction": [
           "E",
           "N",
           "NE",
@@ -165,12 +185,12 @@
     },
     {
       "actor": "sentry",
-      "frames": 112,
+      "frames": 120,
       "width": 1024,
       "height": 1024,
       "rgbaBytes": 4194304,
-      "pngBytes": 505071,
-      "sha256": "5c8d5d80cd701d6df71baa4282052964c0ce51d0686fe3517de189220a4b0fd4",
+      "pngBytes": 547394,
+      "sha256": "fae98238d927c6a2bd9b1ba68f54116749efd64a94d3391239db680bfb35cfb5",
       "directions": {
         "bash": [
           "E",
@@ -212,6 +232,16 @@
           "SW",
           "W"
         ],
+        "reaction": [
+          "E",
+          "N",
+          "NE",
+          "NW",
+          "S",
+          "SE",
+          "SW",
+          "W"
+        ],
         "walk": [
           "E",
           "N",
@@ -225,8 +255,8 @@
       }
     }
   ],
-  "totalRGBABytes": 12582912,
-  "totalPNGBytes": 1985298,
+  "totalRGBABytes": 14680064,
+  "totalPNGBytes": 2281784,
   "padding": 3,
   "edgeExtrusion": 2,
   "physicalPhonePerformance": "NOT TESTED"

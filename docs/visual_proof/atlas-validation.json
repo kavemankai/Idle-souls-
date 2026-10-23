@@ -15,14 +15,14 @@
   },
   {
     "actor": "mireling",
-    "frames": 64,
+    "frames": 96,
     "pixelExactTrimReconstruction": "PASS",
     "stableGroundPivot": "PASS",
     "sourceCanvasClipping": "PASS"
   },
   {
     "actor": "sentry",
-    "frames": 112,
+    "frames": 120,
     "pixelExactTrimReconstruction": "PASS",
     "stableGroundPivot": "PASS",
     "sourceCanvasClipping": "PASS"
