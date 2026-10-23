@@ -51,6 +51,7 @@ export class O1Scene extends Phaser.Scene {
   private reduced = false;
   private clips = new Set<string>();
   private defence = { blocks: 0, parries: 0, perfects: 0 };
+  private defenceFight = 0;
   private shieldCue: 'block' | 'parry' | 'perfect' | null = null;
   private shieldCueMs = 0;
   private readonly audio = new O1Audio();
