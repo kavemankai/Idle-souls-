@@ -30,6 +30,8 @@ jobs:
           npm run typecheck
           npm test
           npm run build
+          npx playwright install --with-deps chromium
+          npm run test:browser
       - name: Keep editable and rendered art together
         shell: bash
         run: |
