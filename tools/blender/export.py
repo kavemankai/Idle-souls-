@@ -168,8 +168,8 @@ for kind in KINDS:
     clips={'idle':(FACINGS,1),'walk':(FACINGS,4)}
     if not creature:clips['guard']=(FACINGS,3)
     if kind=='adventurer':clips.update({'light':(FACINGS,3),'heavy':(FACINGS,3),'dodge':(FACINGS,1),'reaction':(FACINGS,1)})
-    if kind=='sentry':clips.update({'light':(FACINGS,3),'bash':(FACINGS,3)})
-    if creature:clips['leap']=(FACINGS,3)
+    if kind=='sentry':clips.update({'light':(FACINGS,3),'bash':(FACINGS,3),'reaction':(FACINGS,1)})
+    if creature:clips.update({'leap':(FACINGS,3),'light':(FACINGS,3),'reaction':(FACINGS,1)})
     rig.animation_data_create()
     for action,(facings,count) in ([] if '--from-blend' in ARGS else clips.items()):
         act=bpy.data.actions.new(f'{kind}__{action}');rig.animation_data.action=act

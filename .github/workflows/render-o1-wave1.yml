@@ -1,8 +1,8 @@
-name: Render O1 eight-direction sprite wave 1
+name: Render O1 directional sprite waves 1 and 2
 
 on:
   push:
-    branches: [art/o1-attack-facings-wave1]
+    branches: [art/o1-attack-facings-wave1, art/o1-reactions-bite-wave2]
   workflow_dispatch:
 
 permissions:
@@ -42,6 +42,9 @@ jobs:
         run: |
           npm ci
           python -m pip install -r tools/requirements.txt
+          if test -f tools/blender/add_o1_actions.py; then
+            blender -b -t 4 --python tools/blender/add_o1_actions.py
+          fi
           npm run assets:characters
           npm run assets:atlas
           npm run assets:validate
@@ -69,10 +72,10 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/characters/runtime docs/visual_proof/atlas-validation.json docs/visual_proof/source-validation.json docs/visual_proof/reproducibility.json docs/visual_proof/adventurer-compass.png docs/visual_proof/sentry-compass.png docs/visual_proof/mireling-compass.png docs/visual_proof/mannequin-compass.png
+          git add assets/characters/runtime assets/characters/source/sentry.blend assets/characters/source/mireling.blend docs/visual_proof/atlas-validation.json docs/visual_proof/source-validation.json docs/visual_proof/reproducibility.json docs/visual_proof/adventurer-compass.png docs/visual_proof/sentry-compass.png docs/visual_proof/mireling-compass.png docs/visual_proof/mannequin-compass.png
           if git diff --cached --quiet; then
             echo "No changed render artifacts: previous generated assets match."
             exit 0
           fi
-          git commit -m "art(o1): render wave 1 eight-heading sprite atlases"
+          git commit -m "art(o1): render directional sprite atlases from retained rigs"
           git push origin "HEAD:${GITHUB_REF_NAME}"
