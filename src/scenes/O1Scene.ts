@@ -68,8 +68,8 @@ export class O1Scene extends Phaser.Scene {
   }
   private drawEndpoint() {
     const x = O1.threshold.x, [y0, y1] = O1.threshold.y;
-    this.add.rectangle(x, (y0 + y1) / 2, 3, y1 - y0, 0xe3c27a, .85).setDepth(940);
-    for (let y = y0; y < y1; y += 22) this.add.rectangle(x + 9, y + 6, 8, 2, 0xe3c27a, .5).setDepth(940);
+    // Thin in-world slice-end marker, not a gate or an extraction affordance.
+    this.add.image(x, (y0 + y1) / 2, 'endpoint-threshold').setDisplaySize(22, y1 - y0).setDepth(940).setAlpha(.9);
     this.add.text(x - 6, y0 - 4, 'SLICE ENDPOINT', { fontFamily: 'Arial', fontSize: '10px', color: '#f1d49a', backgroundColor: '#172b25dd', padding: { x: 4, y: 3 } }).setOrigin(1, 1).setDepth(960);
     this.add.text(x - 6, y1 + 4, 'O2 is not built', { fontFamily: 'Arial', fontSize: '9px', color: '#c7c7ab', backgroundColor: '#172b25bb', padding: { x: 4, y: 2 } }).setOrigin(1, 0).setDepth(960);
     this.add.text(-294, 105, '← CAMPWARD', { fontFamily: 'Georgia', fontSize: '10px', color: '#c7c7ab', letterSpacing: 2 }).setOrigin(.5).setAlpha(.68).setDepth(950);
