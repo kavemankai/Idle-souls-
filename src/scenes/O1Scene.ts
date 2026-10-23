@@ -7,6 +7,9 @@ import type { SimApi, SimDoctrine } from '../combat/simApi';
 import { O1Controller, runO1, type O1Config, type O1Opponent, type O1Result } from '../world/o1Controller';
 import { O1PresentationAdapter } from '../world/o1Adapter';
 import { O1 } from '../world/o1Room';
+import { combatPane, totalsPane, buildPane, logPane } from './o1Panels';
+import { drawCues } from './o1Cues';
+import type { PresentationSnapshot } from '../contracts/presentation';
 declare const __BUILD_SHA__: string;
 const TICK_MS = 1000 / 30;
 const FOCUSES = ['balanced', 'duelist', 'bulwark', 'skirmisher', 'survivor'];
@@ -23,6 +26,13 @@ export class O1Scene extends Phaser.Scene {
   private hero!: ActorRenderer;
   private enemies!: Record<O1Opponent, ActorRenderer>;
   private overlay!: Phaser.GameObjects.Graphics;
+  private cues!: Phaser.GameObjects.Graphics;
+  private intent!: Phaser.GameObjects.Text;
+  private showCues = true;
+  private showGhosts = false;
+  private tab = 'run';
+  private paneKey = '';
+  private hold = false;
   private acc = 0;
   private speed = 1;
   private debug = false;
@@ -38,8 +48,11 @@ export class O1Scene extends Phaser.Scene {
     this.enemies = { mireling: new ActorRenderer(this, 'mireling'), sentry: new ActorRenderer(this, 'sentry') };
     this.drawEndpoint();
     this.overlay = this.add.graphics().setDepth(999);
+    this.cues = this.add.graphics().setDepth(998);
+    this.intent = this.add.text(0, 0, '', { fontFamily: 'Arial', fontSize: '10px', color: '#f1e8cf', backgroundColor: '#172b25cc', padding: { x: 3, y: 2 } }).setOrigin(.5, 0).setDepth(1001).setVisible(false);
     const params = new URLSearchParams(location.search);
-    this.debug = params.has('debug'); this.reduced = params.has('reduced');
+    this.debug = params.has('debug'); this.reduced = params.has('reduced'); this.hold = params.has('hold'); this.showCues = !params.has('nocues'); this.showGhosts = params.has('ghosts');
+    if (['run', 'combat', 'totals', 'build', 'log'].includes(params.get('tab') ?? '')) this.tab = params.get('tab')!;
     this.speed = Math.max(1, Math.min(16, Number(params.get('speed')) || 1));
     this.makeHUD(params);
     this.reset();
@@ -80,15 +93,18 @@ export class O1Scene extends Phaser.Scene {
     const opts = (list: readonly string[], cur: string) => list.map(v => `<option value="${v}"${v === cur ? ' selected' : ''}>${v[0].toUpperCase()}${v.slice(1)}</option>`).join('');
     hud.innerHTML = `<header><div class="brand"><span class="sigil">♜</span><div><span class="eyebrow">O1 SLICE · 01</span><h1>Idle Souls</h1></div></div><div class="location"><span class="tiny-line"></span><span>OLD ROAD</span><span class="muted">/</span><span class="muted">Outer Road</span></div><span class="study-badge"><i></i> SIMULATOR-OWNED</span></header>
     <section class="scene-title"><p class="eyebrow">O1 &nbsp; / &nbsp; AUTONOMOUS TRAVERSAL · TRIAL SETTINGS</p><h2>West to east, on its own.</h2><p>The adventurer walks, the simulator fights.</p></section>
-    <section class="workbench o1-bench" aria-label="Dispatch controls"><div class="bench-heading"><span class="eyebrow">DISPATCH</span></div>
-    <div class="o1-grid"><label>Seed<input id="seed" type="number" min="1" step="1" value="${Math.max(1, Math.round(Number(params.get('seed')) || 1))}"></label>
+    <section class="workbench o1-bench" aria-label="Dispatch controls"><div class="o1-tabs" role="tablist" aria-label="Panels">${['run', 'combat', 'totals', 'build', 'log'].map(t => `<button role="tab" id="tab-${t}" data-tab="${t}" aria-selected="${t === this.tab}">${t[0].toUpperCase()}${t.slice(1)}</button>`).join('')}</div>
+    <div class="o1-pane" id="pane-run" role="tabpanel"><div class="o1-grid"><label>Seed<input id="seed" type="number" min="1" step="1" value="${Math.max(1, Math.round(Number(params.get('seed')) || 1))}"></label>
     <label>Opponent<select id="opponent">${opts(['mireling', 'sentry'], pick('opponent', ['mireling', 'sentry'], 'mireling'))}</select></label>
     <label>Level<input id="level" type="number" min="1" max="${this.sim.MAX_LEVEL}" step="1" value="${Math.max(1, Math.min(this.sim.MAX_LEVEL, Math.round(Number(params.get('level')) || 80)))}"></label>
     <label>Focus<select id="focus">${opts(FOCUSES, pick('focus', FOCUSES, 'balanced'))}</select></label>
     <label>Doctrine<select id="doctrine">${opts(DOCTRINES, pick('doctrine', DOCTRINES, 'measured'))}</select></label>
     <button id="dispatch" class="primary">Dispatch to O2</button></div>
-    <p id="status" aria-live="polite"></p><p id="result" aria-live="polite"></p><ul id="log" aria-label="Combat log"></ul><p id="clips"></p>
-    <div class="toggles"><button id="proxy" aria-pressed="${this.debug}">Solids &amp; route</button><button id="reduced" aria-pressed="${this.reduced}">Reduced FX</button><button id="speed" aria-pressed="${this.speed > 1}" aria-label="Playback speed">Speed x${this.speed > 1 ? this.speed : 4}</button><a href="?">Visual study ↗</a></div></section>
+    <ul id="log" aria-label="Run notes"></ul><p id="clips"></p>
+    <div class="toggles"><button id="proxy" aria-pressed="${this.debug}">Solids &amp; route</button><button id="reduced" aria-pressed="${this.reduced}">Reduced FX</button><button id="speed" aria-pressed="${this.speed > 1}" aria-label="Playback speed">Speed x${this.speed > 1 ? this.speed : 4}</button><a href="?">Visual study ↗</a></div></div>
+    <div class="o1-pane" id="pane-combat" role="tabpanel" hidden><div class="toggles"><button id="cues" aria-pressed="${this.showCues}">Combat cues</button><button id="ghosts" aria-pressed="${this.showGhosts}">Reaction lag</button></div><div id="body-combat"></div></div>
+    <div class="o1-pane" id="pane-totals" role="tabpanel" hidden></div><div class="o1-pane" id="pane-build" role="tabpanel" hidden></div><div class="o1-pane" id="pane-log" role="tabpanel" hidden></div>
+    <p id="status" aria-live="polite"></p><p id="result" aria-live="polite"></p></section>
     <footer><span>Slice endpoint is the east threshold · no rewards, retreat or O2</span><span id="build">${__BUILD_SHA__} · PHASER ${Phaser.VERSION}</span></footer>`;
     document.body.append(hud);
     const q = <T extends HTMLElement>(id: string) => hud.querySelector<T>(`#${id}`)!;
@@ -96,7 +112,33 @@ export class O1Scene extends Phaser.Scene {
     q('dispatch').addEventListener('click', () => { if (this.controller.state !== 'ready') this.reset(); this.controller.dispatch(); this.syncHud(); });
     q('speed').addEventListener('click', e => { this.speed = this.speed > 1 ? 1 : 4; (e.currentTarget as HTMLElement).setAttribute('aria-pressed', String(this.speed > 1)); (e.currentTarget as HTMLElement).textContent = `Speed x${this.speed > 1 ? this.speed : 4}`; });
     q('proxy').addEventListener('click', e => { this.debug = !this.debug; (e.currentTarget as HTMLElement).setAttribute('aria-pressed', String(this.debug)); });
+    this.setTab(this.tab);
+    hud.querySelectorAll<HTMLButtonElement>('[data-tab]').forEach(b => b.addEventListener('click', () => this.setTab(b.dataset.tab!)));
+    q('cues').addEventListener('click', e => { this.showCues = !this.showCues; (e.currentTarget as HTMLElement).setAttribute('aria-pressed', String(this.showCues)); });
+    q('ghosts').addEventListener('click', e => { this.showGhosts = !this.showGhosts; (e.currentTarget as HTMLElement).setAttribute('aria-pressed', String(this.showGhosts)); });
     q('reduced').addEventListener('click', e => { this.reduced = !this.reduced; (e.currentTarget as HTMLElement).setAttribute('aria-pressed', String(this.reduced)); });
+  }
+  private setTab(tab: string) {
+    this.tab = tab; this.paneKey = '';
+    for (const t of ['run', 'combat', 'totals', 'build', 'log']) {
+      this.hud.querySelector<HTMLElement>(`#pane-${t}`)!.hidden = t !== tab;
+      this.hud.querySelector(`#tab-${t}`)!.setAttribute('aria-selected', String(t === tab));
+    }
+  }
+  /** Rebuild the open tab only when the tick (or tab) changed; the other tabs are not touched. */
+  private renderPane(snap: PresentationSnapshot) {
+    const key = `${this.tab}:${snap.tick}:${this.controller.state}`;
+    if (key === this.paneKey || this.tab === 'run') return;
+    this.paneKey = key;
+    const v = snap.combat;
+    if (this.tab === 'combat') this.hud.querySelector('#body-combat')!.innerHTML = combatPane(v);
+    else if (this.tab === 'totals') this.hud.querySelector('#pane-totals')!.innerHTML = totalsPane(v);
+    else if (this.tab === 'build') { const el = this.hud.querySelector('#pane-build')!; if (!el.innerHTML) el.innerHTML = buildPane(snap.build); }
+    else if (this.tab === 'log') {
+      const el = this.hud.querySelector<HTMLElement>('#pane-log')!, atEnd = el.scrollTop + el.clientHeight >= el.scrollHeight - 8;
+      el.innerHTML = logPane(v);
+      if (atEnd) el.scrollTop = el.scrollHeight;
+    }
   }
   private layout() {
     const w = this.scale.width, h = this.scale.height;
@@ -113,7 +155,7 @@ export class O1Scene extends Phaser.Scene {
   }
   update(_time: number, delta: number) {
     const c = this.controller;
-    if (c.state !== 'ready' && !c.terminal) {
+    if (c.state !== 'ready' && !c.terminal && !this.hold) {
       this.acc += Math.min(delta, 100) * this.speed;
       while (this.acc >= TICK_MS && !c.terminal) { c.step(); this.acc -= TICK_MS; }
     }
@@ -126,6 +168,12 @@ export class O1Scene extends Phaser.Scene {
       if (mine) results.push(r);
     }
     [hero, enemy].forEach((a, i) => { if (results[i].missing && a.visible) this.clips.add(`${a.kind} ${a.action} ${a.facing}`); });
+    const cueOn = this.showCues && !this.reduced && !!snapshot.combat;
+    if (cueOn) drawCues(this.cues, snapshot.combat!, { ghosts: this.showGhosts }); else this.cues.clear();
+    const hv = snapshot.combat?.combatants[0], intent = snapshot.combat?.mind.intent;
+    this.intent.setVisible(cueOn && !!intent && !!hv).setText(intent ?? '');
+    if (hv) this.intent.setPosition(hv.x, hv.y + hv.radius + 8);
+    this.renderPane(snapshot);
     this.drawOverlay();
     this.syncHud();
     const hx = Math.round(c.hero.x * 10) / 10, hy = Math.round(c.hero.y * 10) / 10;

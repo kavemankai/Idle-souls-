@@ -1,7 +1,7 @@
 {
- "capturedAt": "2026-10-23T06:32:47.379Z",
+ "capturedAt": "2026-10-23T07:21:13.160Z",
  "tool": "Chromium / Playwright against the built preview, real Phaser runtime and the real simulator",
- "checkoutSHA": "a1b45c563aae8b083c6a7d3a16d8e1cf22e85d6a",
+ "checkoutSHA": "0f7ffed1d2a2f206d0d5e7809b4d2d055cee464f",
  "note": "Software-rendered cloud captures. No human review and no physical device or touch testing is claimed. State fields come from window.__O1_STATE__.",
  "captures": [
   {
@@ -27,7 +27,7 @@
     "digest": "811c9dc5",
     "missing": [],
     "speed": 1,
-    "build": "a1b45c5",
+    "build": "0f7ffed",
     "viewport": [
      1280,
      720
@@ -59,7 +59,7 @@
     "digest": "1d38465b",
     "missing": [],
     "speed": 1,
-    "build": "a1b45c5",
+    "build": "0f7ffed",
     "viewport": [
      1280,
      720
@@ -91,7 +91,7 @@
     "digest": "e5a5006b",
     "missing": [],
     "speed": 1,
-    "build": "a1b45c5",
+    "build": "0f7ffed",
     "viewport": [
      1280,
      720
@@ -125,7 +125,7 @@
      "sentry light W"
     ],
     "speed": 1,
-    "build": "a1b45c5",
+    "build": "0f7ffed",
     "viewport": [
      1280,
      720
@@ -157,7 +157,7 @@
     "digest": "23e59215",
     "missing": [],
     "speed": 1,
-    "build": "a1b45c5",
+    "build": "0f7ffed",
     "viewport": [
      1280,
      720
@@ -191,7 +191,139 @@
      "adventurer reaction W"
     ],
     "speed": 1,
-    "build": "a1b45c5",
+    "build": "0f7ffed",
+    "viewport": [
+     1280,
+     720
+    ],
+    "zoom": 1.176
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-desktop-combat-tab.png",
+   "viewport": [
+    1280,
+    720
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=sentry&ticks=175&tab=combat&hold&ghosts",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 175,
+    "fought": true,
+    "hp": 74,
+    "hpMax": 90,
+    "hero": {
+     "x": -65.8,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "788670eb",
+    "missing": [
+     "sentry light W"
+    ],
+    "speed": 1,
+    "build": "0f7ffed",
+    "viewport": [
+     1280,
+     720
+    ],
+    "zoom": 1.176
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-desktop-totals-tab.png",
+   "viewport": [
+    1280,
+    720
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=sentry&ticks=400&tab=totals&hold",
+   "state": {
+    "source": "authoritative",
+    "state": "travelling",
+    "tick": 400,
+    "fought": true,
+    "hp": 58,
+    "hpMax": 90,
+    "hero": {
+     "x": 162.3,
+     "y": 102
+    },
+    "enemyAlive": false,
+    "digest": "61ee37f0",
+    "missing": [],
+    "speed": 1,
+    "build": "0f7ffed",
+    "viewport": [
+     1280,
+     720
+    ],
+    "zoom": 1.176
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-desktop-build-tab.png",
+   "viewport": [
+    1280,
+    720
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=sentry&ticks=175&tab=build&hold",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 175,
+    "fought": true,
+    "hp": 74,
+    "hpMax": 90,
+    "hero": {
+     "x": -65.8,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "788670eb",
+    "missing": [
+     "sentry light W"
+    ],
+    "speed": 1,
+    "build": "0f7ffed",
+    "viewport": [
+     1280,
+     720
+    ],
+    "zoom": 1.176
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-desktop-log-tab.png",
+   "viewport": [
+    1280,
+    720
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=sentry&ticks=400&tab=log&hold",
+   "state": {
+    "source": "authoritative",
+    "state": "travelling",
+    "tick": 400,
+    "fought": true,
+    "hp": 58,
+    "hpMax": 90,
+    "hero": {
+     "x": 162.3,
+     "y": 102
+    },
+    "enemyAlive": false,
+    "digest": "61ee37f0",
+    "missing": [],
+    "speed": 1,
+    "build": "0f7ffed",
     "viewport": [
      1280,
      720
@@ -223,7 +355,7 @@
     "digest": "61f861ba",
     "missing": [],
     "speed": 1,
-    "build": "a1b45c5",
+    "build": "0f7ffed",
     "viewport": [
      1920,
      1080
@@ -255,7 +387,7 @@
     "digest": "811c9dc5",
     "missing": [],
     "speed": 1,
-    "build": "a1b45c5",
+    "build": "0f7ffed",
     "viewport": [
      390,
      844
@@ -275,19 +407,19 @@
    "state": {
     "source": "authoritative",
     "state": "travelling",
-    "tick": 44,
+    "tick": 45,
     "fought": false,
     "hp": 90,
     "hpMax": 90,
     "hero": {
-     "x": -140.4,
+     "x": -138.2,
      "y": 0
     },
     "enemyAlive": true,
-    "digest": "cddcd849",
+    "digest": "3d3d2ed5",
     "missing": [],
     "speed": 1,
-    "build": "a1b45c5",
+    "build": "0f7ffed",
     "viewport": [
      390,
      844
@@ -319,7 +451,7 @@
     "digest": "61f861ba",
     "missing": [],
     "speed": 1,
-    "build": "a1b45c5",
+    "build": "0f7ffed",
     "viewport": [
      390,
      844
@@ -339,7 +471,7 @@
    "state": {
     "source": "authoritative",
     "state": "fighting",
-    "tick": 175,
+    "tick": 173,
     "fought": true,
     "hp": 74,
     "hpMax": 90,
@@ -348,12 +480,12 @@
      "y": 0
     },
     "enemyAlive": true,
-    "digest": "788670eb",
+    "digest": "5e2bdb73",
     "missing": [
      "sentry light W"
     ],
     "speed": 1,
-    "build": "a1b45c5",
+    "build": "0f7ffed",
     "viewport": [
      390,
      844
@@ -385,7 +517,7 @@
     "digest": "23e59215",
     "missing": [],
     "speed": 1,
-    "build": "a1b45c5",
+    "build": "0f7ffed",
     "viewport": [
      390,
      844
@@ -419,7 +551,139 @@
      "adventurer reaction W"
     ],
     "speed": 1,
-    "build": "a1b45c5",
+    "build": "0f7ffed",
+    "viewport": [
+     390,
+     844
+    ],
+    "zoom": 0.609375
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-portrait-combat-tab.png",
+   "viewport": [
+    390,
+    844
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=sentry&ticks=175&tab=combat&hold&ghosts",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 175,
+    "fought": true,
+    "hp": 74,
+    "hpMax": 90,
+    "hero": {
+     "x": -65.8,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "788670eb",
+    "missing": [
+     "sentry light W"
+    ],
+    "speed": 1,
+    "build": "0f7ffed",
+    "viewport": [
+     390,
+     844
+    ],
+    "zoom": 0.609375
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-portrait-totals-tab.png",
+   "viewport": [
+    390,
+    844
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=sentry&ticks=400&tab=totals&hold",
+   "state": {
+    "source": "authoritative",
+    "state": "travelling",
+    "tick": 400,
+    "fought": true,
+    "hp": 58,
+    "hpMax": 90,
+    "hero": {
+     "x": 162.3,
+     "y": 102
+    },
+    "enemyAlive": false,
+    "digest": "61ee37f0",
+    "missing": [],
+    "speed": 1,
+    "build": "0f7ffed",
+    "viewport": [
+     390,
+     844
+    ],
+    "zoom": 0.609375
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-portrait-build-tab.png",
+   "viewport": [
+    390,
+    844
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=sentry&ticks=175&tab=build&hold",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 175,
+    "fought": true,
+    "hp": 74,
+    "hpMax": 90,
+    "hero": {
+     "x": -65.8,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "788670eb",
+    "missing": [
+     "sentry light W"
+    ],
+    "speed": 1,
+    "build": "0f7ffed",
+    "viewport": [
+     390,
+     844
+    ],
+    "zoom": 0.609375
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-portrait-log-tab.png",
+   "viewport": [
+    390,
+    844
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=sentry&ticks=400&tab=log&hold",
+   "state": {
+    "source": "authoritative",
+    "state": "travelling",
+    "tick": 400,
+    "fought": true,
+    "hp": 58,
+    "hpMax": 90,
+    "hero": {
+     "x": 162.3,
+     "y": 102
+    },
+    "enemyAlive": false,
+    "digest": "61ee37f0",
+    "missing": [],
+    "speed": 1,
+    "build": "0f7ffed",
     "viewport": [
      390,
      844
@@ -451,7 +715,7 @@
     "digest": "811c9dc5",
     "missing": [],
     "speed": 1,
-    "build": "a1b45c5",
+    "build": "0f7ffed",
     "viewport": [
      844,
      390
@@ -471,19 +735,19 @@
    "state": {
     "source": "authoritative",
     "state": "travelling",
-    "tick": 44,
+    "tick": 45,
     "fought": false,
     "hp": 90,
     "hpMax": 90,
     "hero": {
-     "x": -140.4,
+     "x": -138.2,
      "y": 0
     },
     "enemyAlive": true,
-    "digest": "cddcd849",
+    "digest": "3d3d2ed5",
     "missing": [],
     "speed": 1,
-    "build": "a1b45c5",
+    "build": "0f7ffed",
     "viewport": [
      844,
      390
@@ -503,7 +767,7 @@
    "state": {
     "source": "authoritative",
     "state": "fighting",
-    "tick": 194,
+    "tick": 193,
     "fought": true,
     "hp": 90,
     "hpMax": 90,
@@ -512,10 +776,10 @@
      "y": 0
     },
     "enemyAlive": true,
-    "digest": "61f861ba",
+    "digest": "e5a5006b",
     "missing": [],
     "speed": 1,
-    "build": "a1b45c5",
+    "build": "0f7ffed",
     "viewport": [
      844,
      390
@@ -535,7 +799,7 @@
    "state": {
     "source": "authoritative",
     "state": "fighting",
-    "tick": 175,
+    "tick": 174,
     "fought": true,
     "hp": 74,
     "hpMax": 90,
@@ -544,12 +808,12 @@
      "y": 0
     },
     "enemyAlive": true,
-    "digest": "788670eb",
+    "digest": "5bf66756",
     "missing": [
      "sentry light W"
     ],
     "speed": 1,
-    "build": "a1b45c5",
+    "build": "0f7ffed",
     "viewport": [
      844,
      390
@@ -581,7 +845,7 @@
     "digest": "23e59215",
     "missing": [],
     "speed": 1,
-    "build": "a1b45c5",
+    "build": "0f7ffed",
     "viewport": [
      844,
      390
@@ -615,7 +879,139 @@
      "adventurer reaction W"
     ],
     "speed": 1,
-    "build": "a1b45c5",
+    "build": "0f7ffed",
+    "viewport": [
+     844,
+     390
+    ],
+    "zoom": 0.606
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-landscape-combat-tab.png",
+   "viewport": [
+    844,
+    390
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=sentry&ticks=175&tab=combat&hold&ghosts",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 175,
+    "fought": true,
+    "hp": 74,
+    "hpMax": 90,
+    "hero": {
+     "x": -65.8,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "788670eb",
+    "missing": [
+     "sentry light W"
+    ],
+    "speed": 1,
+    "build": "0f7ffed",
+    "viewport": [
+     844,
+     390
+    ],
+    "zoom": 0.606
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-landscape-totals-tab.png",
+   "viewport": [
+    844,
+    390
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=sentry&ticks=400&tab=totals&hold",
+   "state": {
+    "source": "authoritative",
+    "state": "travelling",
+    "tick": 400,
+    "fought": true,
+    "hp": 58,
+    "hpMax": 90,
+    "hero": {
+     "x": 162.3,
+     "y": 102
+    },
+    "enemyAlive": false,
+    "digest": "61ee37f0",
+    "missing": [],
+    "speed": 1,
+    "build": "0f7ffed",
+    "viewport": [
+     844,
+     390
+    ],
+    "zoom": 0.606
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-landscape-build-tab.png",
+   "viewport": [
+    844,
+    390
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=sentry&ticks=175&tab=build&hold",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 175,
+    "fought": true,
+    "hp": 74,
+    "hpMax": 90,
+    "hero": {
+     "x": -65.8,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "788670eb",
+    "missing": [
+     "sentry light W"
+    ],
+    "speed": 1,
+    "build": "0f7ffed",
+    "viewport": [
+     844,
+     390
+    ],
+    "zoom": 0.606
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-landscape-log-tab.png",
+   "viewport": [
+    844,
+    390
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=sentry&ticks=400&tab=log&hold",
+   "state": {
+    "source": "authoritative",
+    "state": "travelling",
+    "tick": 400,
+    "fought": true,
+    "hp": 58,
+    "hpMax": 90,
+    "hero": {
+     "x": 162.3,
+     "y": 102
+    },
+    "enemyAlive": false,
+    "digest": "61ee37f0",
+    "missing": [],
+    "speed": 1,
+    "build": "0f7ffed",
     "viewport": [
      844,
      390

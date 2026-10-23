@@ -36,7 +36,7 @@ export class O1Controller {
   private route: Point[] = [];
   private readonly room: RoomManifest;
   private readonly prepared: PreparedRoom;
-  private readonly stats: Record<string, number>;
+  readonly stats: Record<string, number>;
   private readonly speed: number;
   private readonly goal: Point;
   private hash = 2166136261;

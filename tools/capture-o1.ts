@@ -13,6 +13,10 @@ const moments: [string, string][] = [
   ['sentry-fight', '?scene=o1&ticks=170&opponent=sentry'],
   ['completed', '?scene=o1&ticks=3000'],
   ['defeated', '?scene=o1&ticks=3000&opponent=sentry&level=1&seed=2'],
+  ['combat-tab', '?scene=o1&opponent=sentry&ticks=175&tab=combat&hold&ghosts'],
+  ['totals-tab', '?scene=o1&opponent=sentry&ticks=400&tab=totals&hold'],
+  ['build-tab', '?scene=o1&opponent=sentry&ticks=175&tab=build&hold'],
+  ['log-tab', '?scene=o1&opponent=sentry&ticks=400&tab=log&hold'],
 ];
 const browser = await chromium.launch(browserLaunchOptions);
 const records: unknown[] = [];

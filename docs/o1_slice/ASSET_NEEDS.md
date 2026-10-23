@@ -47,6 +47,8 @@ Present: slash, heavy, impact, landing.
 - Hit flash for the enemy and the adventurer. The simulator exposes a `flash` timer that the presentation does not use yet.
 - Enemy detection cue (a short "noticed you" mark) for the moment the controller hands over to the simulator. It must not show the cone as a gameplay hint unless that is decided.
 
+Combat cues (reach and arc wedge, guard arc, parry ring, invulnerable ring, stagger ring, hit flash, head bars, reaction-lag ghost, intent label) are drawn programmatically from the read-only combat view. They are placeholders. If any should become authored art, each needs a shape tied to the move's own range and arc, not a fixed sprite.
+
 ## 4. Interface
 
 - The HUD is DOM text and buttons. Needed: a health bar, an enemy health bar, a route and state strip (ready, travelling, fighting, completed, defeated, unresolved) and a result card, as drawn assets or an agreed CSS style.
