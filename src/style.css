@@ -52,3 +52,12 @@ input:focus-visible{outline:2px solid #ddd0a7;outline-offset:3px}
 .fightlog time{color:#9daa97;margin-right:5px;font-variant-numeric:tabular-nums}
 @media(max-width:600px){.o1-pane{max-height:30vh}.o1-bench{left:12px;right:12px;width:auto;bottom:35px}#log{min-height:0;max-height:40px;overflow:hidden}.scene-title{display:none}}
 @media(max-height:500px){.o1-bench{width:380px;padding:6px 10px}.o1-grid{grid-template-columns:1fr 1fr 1fr;gap:4px}.o1-grid label{gap:2px;font-size:9px}.o1-grid select,.o1-grid input,#dispatch,#speed,.o1-bench .toggles button{min-height:44px}#dispatch{grid-column:auto;align-self:end;font-size:11px;padding:0 4px}#log,#clips,.o1-bench .toggles a{display:none}.o1-pane{max-height:calc(100vh - 57px - 37px - 37px - 44px - 52px)}.o1-tabs{margin-bottom:3px}#status,#result{font-size:9px;min-height:11px;margin:2px 0}}
+
+/* Optional O1 sound controls; the run panel scrolls on small handsets. */
+.audio-controls{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;margin-top:10px;padding-top:10px;border-top:1px solid #a7b49526}
+.audio-controls>button{grid-column:1/-1;font-size:11px;letter-spacing:.4px}
+.audio-controls label{display:flex;flex-direction:column;gap:4px;font-size:10px;color:#b8c1ad;min-width:0}
+.audio-controls select{width:100%;font-size:11px;padding:0 6px}
+.audio-controls label:has(select){grid-column:1/-1}
+.audio-controls input[type=range]{width:100%;height:44px;min-height:44px;accent-color:#c8ac6e;cursor:pointer}
+@media(max-height:500px){.audio-controls{grid-template-columns:1fr 1fr 1fr;margin-top:5px;padding-top:5px;gap:5px}.audio-controls>button{grid-column:auto}.audio-controls label:has(select){grid-column:auto}.audio-controls label{font-size:9px}}

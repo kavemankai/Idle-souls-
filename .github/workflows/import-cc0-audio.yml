@@ -1,0 +1,61 @@
+name: Import complete CC0 music and SFX library
+on:
+  push:
+    branches: [feat/o1-full-cc0-audio]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  import-audio:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install encoder and import every CC0 source
+        run: |
+          if [ ! -f docs/audio/IMPORT_MANIFEST.json ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            sudo apt-get update -qq
+            sudo apt-get install -y --no-install-recommends ffmpeg
+            python tools/audio/import_cc0.py
+          else
+            echo "Existing verified source inventory present; preserving acquired audio."
+          fi
+          python tools/audio/curate_o1.py
+      - name: Lint, check catalogue and build runtime
+        run: |
+          npm ci
+          npm run lint
+          npm run typecheck
+          npm test
+          npm run build
+      - name: Browser audio playback smoke test
+        run: |
+          npx playwright install --with-deps chromium
+          npx playwright test tests/browser/audio.spec.ts
+      - name: Publish complete compressed audio for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: idle-souls-full-cc0-audio
+          path: |
+            public/audio/
+            docs/audio/IMPORT_MANIFEST.json
+          retention-days: 14
+      - name: Commit downloaded media into the review branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/audio docs/audio/IMPORT_MANIFEST.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "assets(audio): import 14 CC0 sources and O1 selected cues"
+          git push origin "HEAD:$GITHUB_REF_NAME"
