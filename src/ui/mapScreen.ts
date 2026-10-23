@@ -53,6 +53,8 @@ export class CampMap {
     };
     const draw = () => {
       this.geom = drawWorldMap(canvas, { graph: o.graph, known: o.known, open: o.open, visited: o.known, avoid: new Set(o.avoid), route: o.preview?.route ?? null, routeKind: o.preview?.kind, selected: this.selected, cache: o.cache });
+      // Where each room landed, in canvas pixels. Pointer tests read it; nothing in the page does.
+      canvas.dataset.rooms = JSON.stringify(this.geom.rooms.map(r => ({ id: r.id, x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.w), h: Math.round(r.h) })));
     };
     const refreshPanel = () => {
       const r = this.selected;

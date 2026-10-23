@@ -105,6 +105,7 @@ export function mountExpedition(root: HTMLElement) {
 
   const screen = h('div', { class: 'xp', id: 'xp' });
   applyPalette(screen);
+  root.setAttribute('aria-label', 'Expedition planner');   // the page's one main landmark (index.html) names this scene
   root.append(screen);
   function applyPrefs() {
     screen.classList.toggle('big', prefs.get().bigText);
@@ -143,7 +144,7 @@ export function mountExpedition(root: HTMLElement) {
     run = null; view = 'plan';
     window.__EXPEDITION_STATE__ = () => ({ view: 'plan' });
     screen.replaceChildren(toolbar());
-    const main = h('main', { id: 'main', tabindex: '-1' });
+    const main = h('div', { id: 'main', tabindex: '-1' });
     screen.append(main);
     const k = known(), frontier = frontierRooms(graph, k, new Set(save.world.openedLinks));
     const choices = [...[...k].filter(r => r !== CAMP), ...frontier].sort((a, b) => a.localeCompare(b));
@@ -275,7 +276,7 @@ export function mountExpedition(root: HTMLElement) {
       h('button', { type: 'button', id: 'xp-pause', 'aria-pressed': String(paused), onclick: () => { paused = !paused; syncCtl(); } }, 'Pause'),
       h('button', { type: 'button', id: 'skip', onclick: () => { while (!r.world.terminal && r.world.tick < 30 * 3000) r.world.step(); draw(); } }, 'Skip to end'),
       h('button', { type: 'button', id: 'retreat-now', class: 'danger', onclick: () => { toast = r.expedition.order({ type: 'retreat' }) ?? 'Retreat ordered. It starts now; in a fight the adventurer disengages first.'; draw(); } }, 'Retreat to camp'));
-    screen.append(h('main', { id: 'main', tabindex: '-1' },
+    screen.append(h('div', { id: 'main', tabindex: '-1' },
       h('div', { class: 'bar' }, h('div', {}, h('p', { class: 'eyebrow' }, 'EXPEDITION · TRIAL SETTINGS'), h('h1', {}, 'On the road')),
         h('button', { type: 'button', id: 'back-to-plan', onclick: renderPlan }, 'Back to plan')),
       h('div', { class: 'cols' },
@@ -350,7 +351,7 @@ export function mountExpedition(root: HTMLElement) {
     screen.replaceChildren(toolbar());
     const all = history.list();
     const e = entryOpen ? history.get(entryOpen) : undefined;
-    const main = h('main', { id: 'main', tabindex: '-1' });
+    const main = h('div', { id: 'main', tabindex: '-1' });
     screen.append(main);
     if (e) {
       main.append(h('div', { class: 'bar' }, h('div', {}, h('p', { class: 'eyebrow' }, 'PAST EXPEDITION'), h('h1', {}, 'Chronicle')),

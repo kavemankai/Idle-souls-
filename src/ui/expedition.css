@@ -89,3 +89,5 @@
 @media (min-width:900px){.xp .cols{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px}.xp .feed{max-height:520px}}
 @media (max-width:420px){.xp .grid3{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){.xp *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+/* src/style.css has a global #result rule for the O1 bench (11px, small); the Chronicle card must not inherit it. */
+.xp #result{font-size:1em;color:var(--c-text);margin:0;min-height:0}
