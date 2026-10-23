@@ -83,6 +83,8 @@ export interface WorldResult {
   progress?: { startLevel: number; level: number; xp: number; levels: { tick: number; level: number; cause: string }[]; rationsUsed: number; rationsLeft: number; sanctuary: { visits: number; rested: boolean; upgrade: UpgradeId | null } };
   /** Per room, which of its enemies are dead at the end. */
   dead: Record<string, boolean[]>;
+  /** Miniboss and boss ids killed during the walk (permanent whatever happens next), sorted and without repeats. */
+  bossesDefeated: string[];
 }
 
 /** Room-local position to world position. Every manifest is centred on its schedule centre. */
@@ -381,6 +383,7 @@ export class WorldRunner {
       maxWalkStep: Math.round(this.maxWalkStep * 1000) / 1000, maxFightStep: Math.round(this.maxFightStep * 1000) / 1000,
       ...(this.progress ? { progress: { startLevel: this.progress.startLevel, level: this.progress.level, xp: this.progress.xp, levels: this.progress.events.map(e => ({ tick: e.tick, level: e.level, cause: e.cause })), rationsUsed: this.ledger.rationsUsed, rationsLeft: this.ledger.rations, sanctuary: { visits: this.progress.sanctuary.visits, rested: this.progress.sanctuary.rested, upgrade: this.progress.sanctuary.upgrade } } } : {}),
       dead: Object.fromEntries(this.dead),
+      bossesDefeated: [...new Set(this.results.flatMap(l => l.result.bossesDefeated ?? []))].sort(),
       loot: { carried: this.ledger.carried, gains: this.ledger.gains, cache: this.ledger.cache, recovered: this.ledger.recovered, deathSpot: this.deathSpot, issued: this.ledger.issued, spent: this.ledger.spent, opened: [...this.ledger.opened].sort(), claimed: [...this.ledger.claimed].sort() },
     };
   }

@@ -3,6 +3,7 @@ import type { PreparedRoom, RetreatReport, SimApi, SimCarry, SimDerived, SimDoct
 import { simRoom, spawnAngle, type Door, type EnemySpec, type RoomManifest } from './o1Room';
 import { planRoute, type Point } from './o1Route';
 import { sees } from './o1Sight';
+import contract from '../../combat/rooms/ENCOUNTER_CONTRACT.json' with { type: 'json' };
 
 export type RoomState = 'ready' | 'travelling' | 'fighting' | 'completed' | 'defeated' | 'unresolved';
 export interface RoomRunnerConfig {
@@ -34,6 +35,8 @@ export interface RoomResult {
   hpLeft: number; hpMax: number; finalPos: Point; detectedAtTick: number | null; digest: string;
   /** Present and true only when the adventurer broke contact and left a fight alive by retreating. */
   escaped?: boolean;
+  /** Ids of the miniboss or boss killed in this room on this visit. Absent when none fell. */
+  bossesDefeated?: string[];
 }
 /** Answer to a retreat order: refused with a reason, or accepted with what the retreat faces (a report only exists mid-fight). */
 export type RetreatAnswer = { ok: true; report: RetreatReport | null } | { ok: false; reason: string };
@@ -42,8 +45,16 @@ export interface Foe { arch: string; x: number; y: number; face: number; alive: 
 const TERMINAL: RoomState[] = ['completed', 'defeated', 'unresolved'];
 const SIM_FIGHT_TICKS = 150 * 30;
 const STATE_CODE: Record<RoomState, number> = { ready: 0, travelling: 1, fighting: 2, completed: 3, defeated: 4, unresolved: 5 };
-/** The simulator fights named encounters; a subset of a room's enemies maps to the encounter with those archetypes in that order. */
-const ENCOUNTER_FOR: Record<string, string> = { mireling: 'mireling', sentry: 'sentry', 'mireling,mireling': 'mireling2', 'sentry,mireling': 'sentryMireling' };
+/** The simulator fights named encounters; a set of a room's enemies maps to the contract encounter with those archetypes in that order. */
+export const ENCOUNTER_FOR: Readonly<Record<string, string>> = {
+  ...Object.fromEntries(Object.entries(contract.encounters as Record<string, string[]>).map(([id, archs]) => [archs.join(','), id])),
+  /** Sim-only: the grunt of a spitterGrunt room when it alone sees the adventurer. */
+  grunt: 'gruntAlone',
+};
+/** Archetypes that fight alone: elites, the miniboss and the boss never join a group and no regular enemy joins them. */
+export const SOLO: ReadonlySet<string> = new Set(['brute', 'duelist', 'warden', 'castellan']);
+/** Archetypes whose death is a permanent world event, with the tier they stand for. */
+export const BOSS_TIER: Readonly<Record<string, 'miniboss' | 'boss'>> = { warden: 'miniboss', castellan: 'boss' };
 
 const OUT = { west: [-1, 0], east: [1, 0], north: [0, -1], south: [0, 1] } as const;
 /** True once a point is on or past the wall face that holds the door. */
@@ -169,8 +180,11 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
   private startFight(seer: number) {
     const s = this.foes[seer], reach = this.room.detection.alertRadius;
     // The seer and every unengaged living ally within the alert radius of it.
-    const idx = this.foes.map((f, i) => i).filter(i => this.foes[i].alive && !this.foes[i].engaged && (i === seer || M.hypot(this.foes[i].x - s.x, this.foes[i].y - s.y) <= reach));
-    const encounter = ENCOUNTER_FOR[idx.map(i => this.foes[i].arch).join(',')];
+    const solo = SOLO.has(s.arch);
+    let idx = this.foes.map((f, i) => i).filter(i => this.foes[i].alive && !this.foes[i].engaged && (i === seer || (!solo && !SOLO.has(this.foes[i].arch) && M.hypot(this.foes[i].x - s.x, this.foes[i].y - s.y) <= reach)));
+    let encounter = ENCOUNTER_FOR[idx.map(i => this.foes[i].arch).join(',')];
+    // A pair is listed one way round in the contract; the room may list it the other.
+    if (!encounter && idx.length === 2) { const flipped = [idx[1], idx[0]]; const e = ENCOUNTER_FOR[flipped.map(i => this.foes[i].arch).join(',')]; if (e) { idx = flipped; encounter = e; } }
     if (!encounter) throw new Error(`no simulator encounter for ${idx.map(i => this.foes[i].arch).join(',')}`);
     idx.forEach(i => { this.foes[i].engaged = true; });
     this.fought = true; this.fights++;
@@ -255,6 +269,10 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
     for (const v of parts) { this.hash = Math.imul(this.hash ^ (v & 0xffff), 16777619) >>> 0; this.hash = Math.imul(this.hash ^ (v >> 16 & 0xffff), 16777619) >>> 0; }
   }
   get digest() { return this.hash.toString(16).padStart(8, '0'); }
+  /** Boss and miniboss archetypes killed in this visit, sorted. An earlier visit's kill (`defeated`) is not counted again. */
+  private bosses(): string[] {
+    return this.foes.filter((f, i) => f.engaged && !f.alive && this.cfg.defeated?.[i] !== true && BOSS_TIER[f.arch]).map(f => f.arch).sort();
+  }
   result(): RoomResult {
     return {
       outcome: this.state === 'completed' || this.state === 'defeated' || this.state === 'unresolved' ? this.state : 'unresolved',
@@ -262,6 +280,7 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
       hpLeft: Math.round(this.hp), hpMax: this.hpMax,
       finalPos: { x: Math.round(this.hero.x * 10) / 10, y: Math.round(this.hero.y * 10) / 10 }, detectedAtTick: this.detectedAtTick, digest: this.digest,
       ...(this.escaped ? { escaped: true } : {}),
+      ...(this.bosses().length ? { bossesDefeated: this.bosses() } : {}),
     };
   }
 }

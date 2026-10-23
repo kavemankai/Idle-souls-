@@ -24,10 +24,14 @@ export interface SimStats {
   dealt: number; taken: number; blocks: number; perfects: number; parries: number; dodges: number; punishes: number;
   dodgeCounters: number; guardBreaksDealt: number; counteredHits: number; dmgBy: Record<string, number>;
 }
+/** A marked patch of floor (a spit, a flood lane). It is read from the floor, never perceived as an attack. */
+export interface SimHazard { shape: 'circle' | 'rect'; t0: number; warn: number; life: number; every: number; dmg: number; stam: number; name: string; hits: number }
 export interface SimEvent { tick: number; text: string; kind: string }
 export interface SimFight {
   tick: number; over: boolean; winner: 'adventurer' | 'enemy' | 'draw' | 'escaped' | null;
   p: SimFighter; enemies: SimFighter[]; events: SimEvent[]; d: SimDerived; ai: SimAi; stats: SimStats;
+  /** Marked ground, present once an enemy has marked any. */
+  hazards?: SimHazard[];
 }
 export interface SimSpawn { x: number; y: number; face: number }
 export interface SimFightConfig {
@@ -45,6 +49,7 @@ export interface SimApi {
   MAX_LEVEL: number;
   PROFILES: Record<string, unknown>;
   ARCH: Record<string, { speed: number; r: number }>;
+  ENCOUNTERS: Record<string, { name: string; group: string; enemies: string[] }>;
   allocate(level: number, focus: string, seed?: number): Record<string, number>;
   derive(stats: Record<string, number>, god: boolean): SimDerived;
   playerMoves(d: SimDerived): Record<string, SimMoveFull>;

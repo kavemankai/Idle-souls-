@@ -34,7 +34,7 @@ export interface Chronicle {
     /** Gates and shortcuts opened this expedition (permanent), and one-time discoveries claimed (permanent). */
     opened: string[]; claimed: string[];
   };
-  /** Bosses first defeated during the expedition. Permanent whatever happens next. Empty until bosses exist. */
+  /** Bosses first defeated during the expedition. Permanent whatever happens next.  */
   bossesDefeated: string[];
   /** Temporary progression for this expedition, or null when it ran at a fixed level. None of it is banked or kept after the expedition. */
   progress: NonNullable<WorldResult['progress']> | null;
@@ -52,6 +52,6 @@ export function buildChronicle(seed: number, ex: Expedition, result: WorldResult
     fights: result.legs.filter(l => l.result.fights > 0).map(l => ({ room: l.room, won: l.result.outcome !== 'defeated', enemiesDefeated: l.result.enemiesDefeated, hpLeft: l.result.hpLeft, hpMax: l.result.hpMax })),
     ticks: result.ticks, hpLeft: result.hpLeft, hpMax: result.hpMax, digest: result.digest, intent: ex.intent.slice(),
     loot: { carried: result.loot.carried, gains: result.loot.gains.map(g => ({ source: g.source, room: g.room, label: g.label, bundle: g.bundle })), startCache, cacheRecovered: result.loot.recovered !== null, deathSpot: result.loot.deathSpot, issued: result.loot.issued, spent: result.loot.spent, opened: result.loot.opened, claimed: result.loot.claimed },
-    bossesDefeated: [], progress: result.progress ?? null,
+    bossesDefeated: result.bossesDefeated, progress: result.progress ?? null,
   };
 }

@@ -8,7 +8,12 @@ import type { Pickup } from '../world/roomTypes';
  */
 export type Carried = Bank;
 /** Trial amounts per enemy type, awarded once per enemy per expedition. Not tuned. */
-export const KILL_LOOT: Readonly<Record<string, { gold: number; mastery: number }>> = { mireling: { gold: 6, mastery: 2 }, sentry: { gold: 15, mastery: 5 } };
+export const KILL_LOOT: Readonly<Record<string, { gold: number; mastery: number }>> = {
+  mireling: { gold: 6, mastery: 2 }, sentry: { gold: 15, mastery: 5 },
+  harrier: { gold: 14, mastery: 4 }, spitter: { gold: 14, mastery: 4 }, grunt: { gold: 8, mastery: 3 },
+  brute: { gold: 30, mastery: 10 }, duelist: { gold: 30, mastery: 10 },
+  warden: { gold: 80, mastery: 25 }, castellan: { gold: 150, mastery: 50 },
+};
 /** How close the adventurer must pass to take a pickup or the cache. */
 export const PICKUP_REACH = 45;
 
