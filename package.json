@@ -22,6 +22,7 @@
     "assets:reproduce": "python tools/blender/reproduce.py",
     "evidence:o1": "tsx tools/capture-o1.ts",
     "report:o1": "tsx tools/o1-report.ts",
+    "report:retreat": "tsx tools/retreat-report.ts",
     "world:build": "tsx tools/world/build-rooms.ts --write",
     "world:check": "tsx tools/world/build-rooms.ts --check"
   },

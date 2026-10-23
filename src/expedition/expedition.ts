@@ -1,4 +1,5 @@
-import type { ArrivalCtx, LegResult, NavDecision, Navigator } from '../world/worldRunner';
+import type { ArrivalCtx, LegResult, LiveCtx, NavDecision, Navigator } from '../world/worldRunner';
+import type { RetreatAnswer } from '../world/roomRunner';
 import type { WorldGraph } from '../world/worldGraph';
 import { CAMP, MAX_OBJECTIVES, frontierRooms, name, styleOf, type ExpeditionPlan, type Objective, type ObjectiveStatus } from './plan';
 import { planRooms, type RoutePlan, type RouteStyle } from './planner';
@@ -59,9 +60,53 @@ export class Expedition implements Navigator {
   private set(o: ObjectiveState, status: ObjectiveStatus, note = '') { o.status = status; o.note = note; }
   private active(): ObjectiveState | undefined { return this.objectives.find(o => o.status === 'active' || o.status === 'queued'); }
 
+  /**
+   * Called every tick inside a room. A manual Retreat order or the health threshold turns the walk into a retreat at once, even mid-fight
+   * (the combat layer disengages; this layer only supplies the way out). Redirects wait for the next doorway.
+   */
+  live(ctx: LiveCtx): { exit: string } | { end: true } | null {
+    if (this.mode !== 'outbound' || this.retreatTried) return null;
+    const manual = this.pending.some(o => o.type === 'retreat');
+    const low = this.plan.retreatHpPct > 0 && pct(ctx.hp, ctx.hpMax) < this.plan.retreatHpPct;
+    if (!manual && !low) return null;
+    this.pending = this.pending.filter(o => o.type !== 'retreat');
+    if (ctx.room === CAMP) {
+      this.startReturn(ctx, why0(manual, ctx, this.plan)[0], why0(manual, ctx, this.plan)[1]);
+      this.mode = 'home'; this.endReason = 'Retreat ordered at camp.';
+      this.say(ctx.tick, 'end', ctx.room, 'Already at camp: the expedition ends here. Nothing is banked twice.', 'Extraction completes once; being at camp already counts.');
+      return { end: true };
+    }
+    const style: RouteStyle = this.plan.returnRoute === 'shortest' ? 'shortest' : 'safe';
+    const route = this.route0(ctx.room, CAMP, style);
+    const why = why0(manual, ctx, this.plan);
+    if (!route) {
+      this.retreatTried = true;
+      const open = planRooms({ graph: this.graph, known: this.known, from: ctx.room, to: CAMP, avoid: new Set(), style: 'shortest' });
+      this.say(ctx.tick, 'retreat', ctx.room, `RETREAT BLOCKED: ${open ? 'every known way home crosses an avoided room' : 'no known open route home'}. ${why[0]} The adventurer carries on and does not cross the avoided room.`, 'Avoid is absolute (L13), even in a retreat. No teleport.');
+      return null;
+    }
+    this.startReturn(ctx, why[0], why[1]);
+    this.liveRoute = route;
+    return { exit: `to-${route.rooms[1]}` };
+  }
+  liveAnswer(answer: RetreatAnswer, ctx: LiveCtx) {
+    if (!this.liveRoute) return;
+    const route = this.liveRoute; this.liveRoute = null;
+    if (!answer.ok) { this.retreatTried = true; this.say(ctx.tick, 'retreat', ctx.room, `RETREAT BLOCKED: ${answer.reason} The adventurer carries on.`, 'No route out of this room from where it stands.'); return; }
+    this.route = route; this.target = CAMP;
+    const door = `to-${route.rooms[1]}`;
+    if (answer.report) {
+      const r = answer.report;
+      this.say(ctx.tick, 'retreat', ctx.room, `Disengage: ${r.pursuers} enem${r.pursuers === 1 ? 'y' : 'ies'} here, nearest ${r.nearest} units, ${r.withinReach} within reach, stamina ${r.stamina}%, health ${r.health}%${r.acting ? ', mid-action' : ''}. Stops attacking, guards while walking out by the ${door} door.`, 'Phase 1 of a retreat: break contact. Enemies stay in their room.');
+    } else this.say(ctx.tick, 'retreat', ctx.room, `Withdraw: heads for the ${door} door, then ${list(route.rooms)}.`, 'Phase 2 of a retreat: leave by the permitted way home.');
+  }
+  private retreatTried = false;
+  private liveRoute: RoutePlan | null = null;
+
   legEnded(lr: LegResult, ctx: ArrivalCtx) {
     const r = lr.result;
-    if (r.fights > 0) this.say(ctx.tick, 'fight', lr.room, `${r.outcome === 'defeated' ? 'Lost' : 'Won'} ${r.fights} fight${r.fights === 1 ? '' : 's'} in ${name(this.graph, lr.room)}, ${r.enemiesDefeated} enemies down; health ${r.hpLeft} of ${r.hpMax}.`, 'The simulator ran the fight; the expedition layer only reads the outcome.');
+    if (r.escaped) this.say(ctx.tick, 'fight', lr.room, `Broke contact in ${name(this.graph, lr.room)} with health ${r.hpLeft} of ${r.hpMax}; surviving enemies return to their posts.`, 'No lingering alert: enemies reset when the adventurer leaves (doc 07).');
+    if (r.fights > 0 && !r.escaped) this.say(ctx.tick, 'fight', lr.room, `${r.outcome === 'defeated' ? 'Lost' : 'Won'} ${r.fights} fight${r.fights === 1 ? '' : 's'} in ${name(this.graph, lr.room)}, ${r.enemiesDefeated} enemies down; health ${r.hpLeft} of ${r.hpMax}.`, 'The simulator ran the fight; the expedition layer only reads the outcome.');
     if (r.outcome === 'defeated') { this.mode = 'blocked'; this.endReason = `Fell in ${name(this.graph, lr.room)}.`; }
   }
 
@@ -127,7 +172,7 @@ export class Expedition implements Navigator {
       this.say(ctx.tick, 'redirect', ctx.room, `Redirect accepted at ${name(this.graph, ctx.room)}: reach ${name(this.graph, o.room)} first.`, 'Player order, applied at the first safe junction.');
     }
   }
-  private startReturn(ctx: ArrivalCtx, text: string, cause: string) {
+  private startReturn(ctx: { tick: number; room: string }, text: string, cause: string) {
     this.mode = 'returning'; this.sub = [];
     for (const o of this.objectives) if (o.status === 'active' || o.status === 'queued') this.set(o, 'suspended', text);
     this.say(ctx.tick, 'retreat', ctx.room, `Heading for camp. ${text}`, cause);
@@ -165,3 +210,4 @@ export class Expedition implements Navigator {
     return { exit, cross: true, label: this.mode === 'returning' ? 'back' : 'out', via: exit === ctx.entry ? { x: 0, y: 0 } : undefined };
   }
 }
+const why0 = (manual: boolean, ctx: LiveCtx, plan: ExpeditionPlan): [string, string] => manual ? ['Player ordered a retreat.', 'Manual retreat outranks every objective.'] : [`Health ${pct(ctx.hp, ctx.hpMax)}% is below the ${plan.retreatHpPct}% retreat setting.`, 'Survival policy'];

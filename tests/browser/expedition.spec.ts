@@ -72,15 +72,16 @@ test('avoiding the objective room is a conflict and launch stays off; removing t
   await expect(page.locator('#launch')).toBeEnabled();
 });
 
-test('a retreat order is queued, applied at the next doorway and logged as manual', async ({ page }) => {
+test('a retreat order starts at once, is logged as manual, and suspends the objectives', async ({ page }) => {
   await open(page, '&seed=3&hp=5000');
   await page.locator('[data-preset=careful]').click();
   await page.locator('#launch').click();
+  await expect.poll(async () => (await page.evaluate(() => window.__EXPEDITION_STATE__())).room, { timeout: 20000 }).toBe('O1');
   await page.locator('#retreat-now').click();
   await expect(page.locator('#xstatus')).toContainText('Retreat ordered');
-  await page.locator('#skip').click();
+  if (await page.locator('#skip').isEnabled()) await page.locator('#skip').click();
   await expect(page.locator('#outcome')).toHaveAttribute('data-outcome', 'extracted');
-  await expect(page.locator('#feed li[data-kind=retreat]')).toContainText('Player ordered a retreat');
+  await expect(page.locator('#feed li[data-kind=retreat]').first()).toContainText('Player ordered a retreat');
   await expect(page.locator('#objstat li.suspended').first()).toBeVisible();
 });
 

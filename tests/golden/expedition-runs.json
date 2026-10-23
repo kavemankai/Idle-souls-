@@ -2,8 +2,8 @@
  "directSurvey/1": {
   "version": 1,
   "seed": 1,
-  "outcome": "died",
-  "summary": "Fell in O3 after 3 fights; reached O3.",
+  "outcome": "extracted",
+  "summary": "Back at camp alive with 20 of 90 health after 2 fights.",
   "plan": {
    "objectives": [
     {
@@ -36,7 +36,7 @@
     "kind": "reach",
     "room": "O3",
     "status": "suspended",
-    "note": "Health 4% is below the 40% retreat setting."
+    "note": "Health 22% is below the 40% retreat setting."
    }
   ],
   "route": [
@@ -45,7 +45,8 @@
    "O2",
    "T1",
    "O2",
-   "O3"
+   "O1",
+   "C0"
   ],
   "discovered": [
    "T1"
@@ -61,22 +62,15 @@
    {
     "room": "O2",
     "won": true,
-    "enemiesDefeated": 1,
-    "hpLeft": 4,
-    "hpMax": 90
-   },
-   {
-    "room": "O3",
-    "won": false,
     "enemiesDefeated": 0,
-    "hpLeft": 0,
+    "hpLeft": 20,
     "hpMax": 90
    }
   ],
-  "ticks": 3416,
-  "hpLeft": 0,
+  "ticks": 3389,
+  "hpLeft": 20,
   "hpMax": 90,
-  "digest": "f349508a",
+  "digest": "f57edde8",
   "intent": [
    {
     "tick": 0,
@@ -149,40 +143,47 @@
     "cause": "Direct exploration: shortest walking distance."
    },
    {
-    "tick": 3187,
-    "kind": "fight",
-    "room": "O2",
-    "text": "Won 1 fight in Crossroads, 1 enemies down; health 4 of 90.",
-    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
-   },
-   {
-    "tick": 3247,
+    "tick": 2796,
     "kind": "retreat",
-    "room": "O3",
-    "text": "Heading for camp. Health 4% is below the 40% retreat setting.",
+    "room": "O2",
+    "text": "Heading for camp. Health 22% is below the 40% retreat setting.",
     "cause": "Survival policy"
    },
    {
-    "tick": 3247,
+    "tick": 2796,
+    "kind": "retreat",
+    "room": "O2",
+    "text": "Disengage: 1 enemy here, nearest 26 units, 1 within reach, stamina 24%, health 22%, mid-action. Stops attacking, guards while walking out by the to-O1 door.",
+    "cause": "Phase 1 of a retreat: break contact. Enemies stay in their room."
+   },
+   {
+    "tick": 2994,
+    "kind": "fight",
+    "room": "O2",
+    "text": "Broke contact in Crossroads with health 20 of 90; surviving enemies return to their posts.",
+    "cause": "No lingering alert: enemies reset when the adventurer leaves (doc 07)."
+   },
+   {
+    "tick": 3017,
     "kind": "route",
-    "room": "O3",
-    "text": "Way home: O3 > O2 > O1 > C0. No other permitted way.",
+    "room": "O1",
+    "text": "Way home: O1 > C0. No other permitted way.",
     "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
    },
    {
-    "tick": 3415,
-    "kind": "fight",
-    "room": "O3",
-    "text": "Lost 1 fight in Broken Causeway, 0 enemies down; health 0 of 90.",
-    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+    "tick": 3267,
+    "kind": "end",
+    "room": "C0",
+    "text": "Arrived at camp alive. Banking comes with M3.",
+    "cause": "Extraction means arriving at camp alive."
    }
   ]
  },
  "directSurvey/2": {
   "version": 1,
   "seed": 2,
-  "outcome": "died",
-  "summary": "Fell in O3 after 3 fights; reached O3.",
+  "outcome": "extracted",
+  "summary": "Back at camp alive with 34 of 90 health after 2 fights.",
   "plan": {
    "objectives": [
     {
@@ -215,7 +216,7 @@
     "kind": "reach",
     "room": "O3",
     "status": "suspended",
-    "note": "Health 14% is below the 40% retreat setting."
+    "note": "Health 38% is below the 40% retreat setting."
    }
   ],
   "route": [
@@ -224,7 +225,8 @@
    "O2",
    "T1",
    "O2",
-   "O3"
+   "O1",
+   "C0"
   ],
   "discovered": [
    "T1"
@@ -240,22 +242,15 @@
    {
     "room": "O2",
     "won": true,
-    "enemiesDefeated": 1,
-    "hpLeft": 13,
-    "hpMax": 90
-   },
-   {
-    "room": "O3",
-    "won": false,
     "enemiesDefeated": 0,
-    "hpLeft": 0,
+    "hpLeft": 34,
     "hpMax": 90
    }
   ],
-  "ticks": 2487,
-  "hpLeft": 0,
+  "ticks": 2414,
+  "hpLeft": 34,
   "hpMax": 90,
-  "digest": "d21d8832",
+  "digest": "0fd8b5d0",
   "intent": [
    {
     "tick": 0,
@@ -328,40 +323,47 @@
     "cause": "Direct exploration: shortest walking distance."
    },
    {
-    "tick": 2275,
-    "kind": "fight",
-    "room": "O2",
-    "text": "Won 1 fight in Crossroads, 1 enemies down; health 13 of 90.",
-    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
-   },
-   {
-    "tick": 2335,
+    "tick": 1867,
     "kind": "retreat",
-    "room": "O3",
-    "text": "Heading for camp. Health 14% is below the 40% retreat setting.",
+    "room": "O2",
+    "text": "Heading for camp. Health 38% is below the 40% retreat setting.",
     "cause": "Survival policy"
    },
    {
-    "tick": 2335,
+    "tick": 1867,
+    "kind": "retreat",
+    "room": "O2",
+    "text": "Disengage: 1 enemy here, nearest 26 units, 1 within reach, stamina 46%, health 38%, mid-action. Stops attacking, guards while walking out by the to-O1 door.",
+    "cause": "Phase 1 of a retreat: break contact. Enemies stay in their room."
+   },
+   {
+    "tick": 2019,
+    "kind": "fight",
+    "room": "O2",
+    "text": "Broke contact in Crossroads with health 34 of 90; surviving enemies return to their posts.",
+    "cause": "No lingering alert: enemies reset when the adventurer leaves (doc 07)."
+   },
+   {
+    "tick": 2042,
     "kind": "route",
-    "room": "O3",
-    "text": "Way home: O3 > O2 > O1 > C0. No other permitted way.",
+    "room": "O1",
+    "text": "Way home: O1 > C0. No other permitted way.",
     "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
    },
    {
-    "tick": 2486,
-    "kind": "fight",
-    "room": "O3",
-    "text": "Lost 1 fight in Broken Causeway, 0 enemies down; health 0 of 90.",
-    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+    "tick": 2292,
+    "kind": "end",
+    "room": "C0",
+    "text": "Arrived at camp alive. Banking comes with M3.",
+    "cause": "Extraction means arriving at camp alive."
    }
   ]
  },
  "directSurvey/3": {
   "version": 1,
   "seed": 3,
-  "outcome": "died",
-  "summary": "Fell in O3 after 3 fights; reached O3.",
+  "outcome": "extracted",
+  "summary": "Back at camp alive with 26 of 90 health after 2 fights.",
   "plan": {
    "objectives": [
     {
@@ -403,7 +405,8 @@
    "O2",
    "T1",
    "O2",
-   "O3"
+   "O1",
+   "C0"
   ],
   "discovered": [
    "T1"
@@ -422,19 +425,12 @@
     "enemiesDefeated": 1,
     "hpLeft": 26,
     "hpMax": 90
-   },
-   {
-    "room": "O3",
-    "won": false,
-    "enemiesDefeated": 0,
-    "hpLeft": 0,
-    "hpMax": 90
    }
   ],
-  "ticks": 2876,
-  "hpLeft": 0,
+  "ticks": 2862,
+  "hpLeft": 26,
   "hpMax": 90,
-  "digest": "30712ba8",
+  "digest": "ccc64cff",
   "intent": [
    {
     "tick": 0,
@@ -507,32 +503,39 @@
     "cause": "Direct exploration: shortest walking distance."
    },
    {
-    "tick": 2409,
+    "tick": 2253,
+    "kind": "retreat",
+    "room": "O2",
+    "text": "Heading for camp. Health 29% is below the 40% retreat setting.",
+    "cause": "Survival policy"
+   },
+   {
+    "tick": 2253,
+    "kind": "retreat",
+    "room": "O2",
+    "text": "Disengage: 1 enemy here, nearest 57 units, 1 within reach, stamina 8%, health 29%, mid-action. Stops attacking, guards while walking out by the to-O1 door.",
+    "cause": "Phase 1 of a retreat: break contact. Enemies stay in their room."
+   },
+   {
+    "tick": 2467,
     "kind": "fight",
     "room": "O2",
     "text": "Won 1 fight in Crossroads, 1 enemies down; health 26 of 90.",
     "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
    },
    {
-    "tick": 2469,
-    "kind": "retreat",
-    "room": "O3",
-    "text": "Heading for camp. Health 29% is below the 40% retreat setting.",
-    "cause": "Survival policy"
-   },
-   {
-    "tick": 2469,
+    "tick": 2490,
     "kind": "route",
-    "room": "O3",
-    "text": "Way home: O3 > O2 > O1 > C0. No other permitted way.",
+    "room": "O1",
+    "text": "Way home: O1 > C0. No other permitted way.",
     "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
    },
    {
-    "tick": 2875,
-    "kind": "fight",
-    "room": "O3",
-    "text": "Lost 1 fight in Broken Causeway, 0 enemies down; health 0 of 90.",
-    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+    "tick": 2740,
+    "kind": "end",
+    "room": "C0",
+    "text": "Arrived at camp alive. Banking comes with M3.",
+    "cause": "Extraction means arriving at camp alive."
    }
   ]
  },
@@ -1427,7 +1430,7 @@
   "version": 1,
   "seed": 1,
   "outcome": "extracted",
-  "summary": "Back at camp alive with 29 of 90 health after 2 fights.",
+  "summary": "Back at camp alive with 66 of 90 health after 1 fight.",
   "plan": {
    "objectives": [
     {
@@ -1453,20 +1456,18 @@
     "kind": "reach",
     "room": "O3",
     "status": "suspended",
-    "note": "Health 73% is below the 95% retreat setting."
+    "note": "Health 86% is below the 95% retreat setting."
    },
    {
     "id": "reach-KT",
     "kind": "reach",
     "room": "KT",
     "status": "suspended",
-    "note": "Health 73% is below the 95% retreat setting."
+    "note": "Health 86% is below the 95% retreat setting."
    }
   ],
   "route": [
    "C0",
-   "O1",
-   "O2",
    "O1",
    "C0"
   ],
@@ -1475,22 +1476,15 @@
    {
     "room": "O1",
     "won": true,
-    "enemiesDefeated": 1,
+    "enemiesDefeated": 0,
     "hpLeft": 66,
-    "hpMax": 90
-   },
-   {
-    "room": "O2",
-    "won": true,
-    "enemiesDefeated": 1,
-    "hpLeft": 29,
     "hpMax": 90
    }
   ],
-  "ticks": 1716,
-  "hpLeft": 29,
+  "ticks": 624,
+  "hpLeft": 66,
   "hpMax": 90,
-  "digest": "69d03fe4",
+  "digest": "ddf63adf",
   "intent": [
    {
     "tick": 0,
@@ -1514,35 +1508,28 @@
     "cause": "Safe exploration: cheapest by walking distance plus a danger charge per region label."
    },
    {
-    "tick": 745,
-    "kind": "fight",
-    "room": "O1",
-    "text": "Won 1 fight in Outer Road, 1 enemies down; health 66 of 90.",
-    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
-   },
-   {
-    "tick": 768,
+    "tick": 338,
     "kind": "retreat",
-    "room": "O2",
-    "text": "Heading for camp. Health 73% is below the 95% retreat setting.",
+    "room": "O1",
+    "text": "Heading for camp. Health 86% is below the 95% retreat setting.",
     "cause": "Survival policy"
    },
    {
-    "tick": 768,
-    "kind": "route",
-    "room": "O2",
-    "text": "Way home: O2 > O1 > C0. No other permitted way.",
-    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+    "tick": 338,
+    "kind": "retreat",
+    "room": "O1",
+    "text": "Disengage: 1 enemy here, nearest 33 units, 1 within reach, stamina 42%, health 86%, mid-action. Stops attacking, guards while walking out by the to-C0 door.",
+    "cause": "Phase 1 of a retreat: break contact. Enemies stay in their room."
    },
    {
-    "tick": 1321,
+    "tick": 464,
     "kind": "fight",
-    "room": "O2",
-    "text": "Won 1 fight in Crossroads, 1 enemies down; health 29 of 90.",
-    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+    "room": "O1",
+    "text": "Broke contact in Outer Road with health 66 of 90; surviving enemies return to their posts.",
+    "cause": "No lingering alert: enemies reset when the adventurer leaves (doc 07)."
    },
    {
-    "tick": 1594,
+    "tick": 502,
     "kind": "end",
     "room": "C0",
     "text": "Arrived at camp alive. Banking comes with M3.",
@@ -1553,244 +1540,8 @@
  "cautious/2": {
   "version": 1,
   "seed": 2,
-  "outcome": "died",
-  "summary": "Fell in O2 after 2 fights; reached O2.",
-  "plan": {
-   "objectives": [
-    {
-     "id": "reach-O3",
-     "kind": "reach",
-     "room": "O3"
-    },
-    {
-     "id": "reach-KT",
-     "kind": "reach",
-     "room": "KT"
-    }
-   ],
-   "avoid": [],
-   "exploration": "safe",
-   "doctrine": "pressing",
-   "retreatHpPct": 95,
-   "returnRoute": "safest"
-  },
-  "objectives": [
-   {
-    "id": "reach-O3",
-    "kind": "reach",
-    "room": "O3",
-    "status": "suspended",
-    "note": "Health 34% is below the 95% retreat setting."
-   },
-   {
-    "id": "reach-KT",
-    "kind": "reach",
-    "room": "KT",
-    "status": "suspended",
-    "note": "Health 34% is below the 95% retreat setting."
-   }
-  ],
-  "route": [
-   "C0",
-   "O1",
-   "O2"
-  ],
-  "discovered": [],
-  "fights": [
-   {
-    "room": "O1",
-    "won": true,
-    "enemiesDefeated": 1,
-    "hpLeft": 31,
-    "hpMax": 90
-   },
-   {
-    "room": "O2",
-    "won": false,
-    "enemiesDefeated": 0,
-    "hpLeft": 0,
-    "hpMax": 90
-   }
-  ],
-  "ticks": 1258,
-  "hpLeft": 0,
-  "hpMax": 90,
-  "digest": "ebc0c81f",
-  "intent": [
-   {
-    "tick": 0,
-    "kind": "launch",
-    "room": "C0",
-    "text": "Launched with 2 objectives: safe exploration, pressing doctrine, retreat below 95% health, safest way home.",
-    "cause": "Plan accepted at camp."
-   },
-   {
-    "tick": 0,
-    "kind": "objective",
-    "room": "C0",
-    "text": "Objective 1: reach Broken Causeway.",
-    "cause": "Next in the plan order."
-   },
-   {
-    "tick": 0,
-    "kind": "route",
-    "room": "C0",
-    "text": "Objective 1: C0 > O1 > O2 > O3. No other permitted way.",
-    "cause": "Safe exploration: cheapest by walking distance plus a danger charge per region label."
-   },
-   {
-    "tick": 887,
-    "kind": "fight",
-    "room": "O1",
-    "text": "Won 1 fight in Outer Road, 1 enemies down; health 31 of 90.",
-    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
-   },
-   {
-    "tick": 910,
-    "kind": "retreat",
-    "room": "O2",
-    "text": "Heading for camp. Health 34% is below the 95% retreat setting.",
-    "cause": "Survival policy"
-   },
-   {
-    "tick": 910,
-    "kind": "route",
-    "room": "O2",
-    "text": "Way home: O2 > O1 > C0. No other permitted way.",
-    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
-   },
-   {
-    "tick": 1257,
-    "kind": "fight",
-    "room": "O2",
-    "text": "Lost 1 fight in Crossroads, 0 enemies down; health 0 of 90.",
-    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
-   }
-  ]
- },
- "cautious/3": {
-  "version": 1,
-  "seed": 3,
-  "outcome": "died",
-  "summary": "Fell in O2 after 2 fights; reached O2.",
-  "plan": {
-   "objectives": [
-    {
-     "id": "reach-O3",
-     "kind": "reach",
-     "room": "O3"
-    },
-    {
-     "id": "reach-KT",
-     "kind": "reach",
-     "room": "KT"
-    }
-   ],
-   "avoid": [],
-   "exploration": "safe",
-   "doctrine": "pressing",
-   "retreatHpPct": 95,
-   "returnRoute": "safest"
-  },
-  "objectives": [
-   {
-    "id": "reach-O3",
-    "kind": "reach",
-    "room": "O3",
-    "status": "suspended",
-    "note": "Health 73% is below the 95% retreat setting."
-   },
-   {
-    "id": "reach-KT",
-    "kind": "reach",
-    "room": "KT",
-    "status": "suspended",
-    "note": "Health 73% is below the 95% retreat setting."
-   }
-  ],
-  "route": [
-   "C0",
-   "O1",
-   "O2"
-  ],
-  "discovered": [],
-  "fights": [
-   {
-    "room": "O1",
-    "won": true,
-    "enemiesDefeated": 1,
-    "hpLeft": 66,
-    "hpMax": 90
-   },
-   {
-    "room": "O2",
-    "won": false,
-    "enemiesDefeated": 0,
-    "hpLeft": 0,
-    "hpMax": 90
-   }
-  ],
-  "ticks": 1023,
-  "hpLeft": 0,
-  "hpMax": 90,
-  "digest": "210696a7",
-  "intent": [
-   {
-    "tick": 0,
-    "kind": "launch",
-    "room": "C0",
-    "text": "Launched with 2 objectives: safe exploration, pressing doctrine, retreat below 95% health, safest way home.",
-    "cause": "Plan accepted at camp."
-   },
-   {
-    "tick": 0,
-    "kind": "objective",
-    "room": "C0",
-    "text": "Objective 1: reach Broken Causeway.",
-    "cause": "Next in the plan order."
-   },
-   {
-    "tick": 0,
-    "kind": "route",
-    "room": "C0",
-    "text": "Objective 1: C0 > O1 > O2 > O3. No other permitted way.",
-    "cause": "Safe exploration: cheapest by walking distance plus a danger charge per region label."
-   },
-   {
-    "tick": 663,
-    "kind": "fight",
-    "room": "O1",
-    "text": "Won 1 fight in Outer Road, 1 enemies down; health 66 of 90.",
-    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
-   },
-   {
-    "tick": 686,
-    "kind": "retreat",
-    "room": "O2",
-    "text": "Heading for camp. Health 73% is below the 95% retreat setting.",
-    "cause": "Survival policy"
-   },
-   {
-    "tick": 686,
-    "kind": "route",
-    "room": "O2",
-    "text": "Way home: O2 > O1 > C0. No other permitted way.",
-    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
-   },
-   {
-    "tick": 1022,
-    "kind": "fight",
-    "room": "O2",
-    "text": "Lost 1 fight in Crossroads, 0 enemies down; health 0 of 90.",
-    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
-   }
-  ]
- },
- "cautious/4": {
-  "version": 1,
-  "seed": 4,
   "outcome": "extracted",
-  "summary": "Back at camp alive with 2 of 90 health after 2 fights.",
+  "summary": "Back at camp alive with 55 of 90 health after 1 fight.",
   "plan": {
    "objectives": [
     {
@@ -1816,20 +1567,18 @@
     "kind": "reach",
     "room": "O3",
     "status": "suspended",
-    "note": "Health 73% is below the 95% retreat setting."
+    "note": "Health 86% is below the 95% retreat setting."
    },
    {
     "id": "reach-KT",
     "kind": "reach",
     "room": "KT",
     "status": "suspended",
-    "note": "Health 73% is below the 95% retreat setting."
+    "note": "Health 86% is below the 95% retreat setting."
    }
   ],
   "route": [
    "C0",
-   "O1",
-   "O2",
    "O1",
    "C0"
   ],
@@ -1838,22 +1587,15 @@
    {
     "room": "O1",
     "won": true,
-    "enemiesDefeated": 1,
-    "hpLeft": 66,
-    "hpMax": 90
-   },
-   {
-    "room": "O2",
-    "won": true,
-    "enemiesDefeated": 1,
-    "hpLeft": 2,
+    "enemiesDefeated": 0,
+    "hpLeft": 55,
     "hpMax": 90
    }
   ],
-  "ticks": 1713,
-  "hpLeft": 2,
+  "ticks": 650,
+  "hpLeft": 55,
   "hpMax": 90,
-  "digest": "372392b1",
+  "digest": "bf92fde4",
   "intent": [
    {
     "tick": 0,
@@ -1877,35 +1619,250 @@
     "cause": "Safe exploration: cheapest by walking distance plus a danger charge per region label."
    },
    {
-    "tick": 739,
-    "kind": "fight",
-    "room": "O1",
-    "text": "Won 1 fight in Outer Road, 1 enemies down; health 66 of 90.",
-    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
-   },
-   {
-    "tick": 762,
+    "tick": 288,
     "kind": "retreat",
-    "room": "O2",
-    "text": "Heading for camp. Health 73% is below the 95% retreat setting.",
+    "room": "O1",
+    "text": "Heading for camp. Health 86% is below the 95% retreat setting.",
     "cause": "Survival policy"
    },
    {
-    "tick": 762,
-    "kind": "route",
-    "room": "O2",
-    "text": "Way home: O2 > O1 > C0. No other permitted way.",
-    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+    "tick": 288,
+    "kind": "retreat",
+    "room": "O1",
+    "text": "Disengage: 1 enemy here, nearest 35 units, 1 within reach, stamina 73%, health 86%, mid-action. Stops attacking, guards while walking out by the to-C0 door.",
+    "cause": "Phase 1 of a retreat: break contact. Enemies stay in their room."
    },
    {
-    "tick": 1318,
+    "tick": 490,
     "kind": "fight",
-    "room": "O2",
-    "text": "Won 1 fight in Crossroads, 1 enemies down; health 2 of 90.",
-    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+    "room": "O1",
+    "text": "Broke contact in Outer Road with health 55 of 90; surviving enemies return to their posts.",
+    "cause": "No lingering alert: enemies reset when the adventurer leaves (doc 07)."
    },
    {
-    "tick": 1591,
+    "tick": 528,
+    "kind": "end",
+    "room": "C0",
+    "text": "Arrived at camp alive. Banking comes with M3.",
+    "cause": "Extraction means arriving at camp alive."
+   }
+  ]
+ },
+ "cautious/3": {
+  "version": 1,
+  "seed": 3,
+  "outcome": "extracted",
+  "summary": "Back at camp alive with 46 of 90 health after 1 fight.",
+  "plan": {
+   "objectives": [
+    {
+     "id": "reach-O3",
+     "kind": "reach",
+     "room": "O3"
+    },
+    {
+     "id": "reach-KT",
+     "kind": "reach",
+     "room": "KT"
+    }
+   ],
+   "avoid": [],
+   "exploration": "safe",
+   "doctrine": "pressing",
+   "retreatHpPct": 95,
+   "returnRoute": "safest"
+  },
+  "objectives": [
+   {
+    "id": "reach-O3",
+    "kind": "reach",
+    "room": "O3",
+    "status": "suspended",
+    "note": "Health 88% is below the 95% retreat setting."
+   },
+   {
+    "id": "reach-KT",
+    "kind": "reach",
+    "room": "KT",
+    "status": "suspended",
+    "note": "Health 88% is below the 95% retreat setting."
+   }
+  ],
+  "route": [
+   "C0",
+   "O1",
+   "C0"
+  ],
+  "discovered": [],
+  "fights": [
+   {
+    "room": "O1",
+    "won": true,
+    "enemiesDefeated": 0,
+    "hpLeft": 46,
+    "hpMax": 90
+   }
+  ],
+  "ticks": 813,
+  "hpLeft": 46,
+  "hpMax": 90,
+  "digest": "376dedf6",
+  "intent": [
+   {
+    "tick": 0,
+    "kind": "launch",
+    "room": "C0",
+    "text": "Launched with 2 objectives: safe exploration, pressing doctrine, retreat below 95% health, safest way home.",
+    "cause": "Plan accepted at camp."
+   },
+   {
+    "tick": 0,
+    "kind": "objective",
+    "room": "C0",
+    "text": "Objective 1: reach Broken Causeway.",
+    "cause": "Next in the plan order."
+   },
+   {
+    "tick": 0,
+    "kind": "route",
+    "room": "C0",
+    "text": "Objective 1: C0 > O1 > O2 > O3. No other permitted way.",
+    "cause": "Safe exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 358,
+    "kind": "retreat",
+    "room": "O1",
+    "text": "Heading for camp. Health 88% is below the 95% retreat setting.",
+    "cause": "Survival policy"
+   },
+   {
+    "tick": 358,
+    "kind": "retreat",
+    "room": "O1",
+    "text": "Disengage: 1 enemy here, nearest 31 units, 1 within reach, stamina 75%, health 88%, mid-action. Stops attacking, guards while walking out by the to-C0 door.",
+    "cause": "Phase 1 of a retreat: break contact. Enemies stay in their room."
+   },
+   {
+    "tick": 653,
+    "kind": "fight",
+    "room": "O1",
+    "text": "Broke contact in Outer Road with health 46 of 90; surviving enemies return to their posts.",
+    "cause": "No lingering alert: enemies reset when the adventurer leaves (doc 07)."
+   },
+   {
+    "tick": 691,
+    "kind": "end",
+    "room": "C0",
+    "text": "Arrived at camp alive. Banking comes with M3.",
+    "cause": "Extraction means arriving at camp alive."
+   }
+  ]
+ },
+ "cautious/4": {
+  "version": 1,
+  "seed": 4,
+  "outcome": "extracted",
+  "summary": "Back at camp alive with 66 of 90 health after 1 fight.",
+  "plan": {
+   "objectives": [
+    {
+     "id": "reach-O3",
+     "kind": "reach",
+     "room": "O3"
+    },
+    {
+     "id": "reach-KT",
+     "kind": "reach",
+     "room": "KT"
+    }
+   ],
+   "avoid": [],
+   "exploration": "safe",
+   "doctrine": "pressing",
+   "retreatHpPct": 95,
+   "returnRoute": "safest"
+  },
+  "objectives": [
+   {
+    "id": "reach-O3",
+    "kind": "reach",
+    "room": "O3",
+    "status": "suspended",
+    "note": "Health 86% is below the 95% retreat setting."
+   },
+   {
+    "id": "reach-KT",
+    "kind": "reach",
+    "room": "KT",
+    "status": "suspended",
+    "note": "Health 86% is below the 95% retreat setting."
+   }
+  ],
+  "route": [
+   "C0",
+   "O1",
+   "C0"
+  ],
+  "discovered": [],
+  "fights": [
+   {
+    "room": "O1",
+    "won": true,
+    "enemiesDefeated": 0,
+    "hpLeft": 66,
+    "hpMax": 90
+   }
+  ],
+  "ticks": 881,
+  "hpLeft": 66,
+  "hpMax": 90,
+  "digest": "56b1a60f",
+  "intent": [
+   {
+    "tick": 0,
+    "kind": "launch",
+    "room": "C0",
+    "text": "Launched with 2 objectives: safe exploration, pressing doctrine, retreat below 95% health, safest way home.",
+    "cause": "Plan accepted at camp."
+   },
+   {
+    "tick": 0,
+    "kind": "objective",
+    "room": "C0",
+    "text": "Objective 1: reach Broken Causeway.",
+    "cause": "Next in the plan order."
+   },
+   {
+    "tick": 0,
+    "kind": "route",
+    "room": "C0",
+    "text": "Objective 1: C0 > O1 > O2 > O3. No other permitted way.",
+    "cause": "Safe exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 564,
+    "kind": "retreat",
+    "room": "O1",
+    "text": "Heading for camp. Health 86% is below the 95% retreat setting.",
+    "cause": "Survival policy"
+   },
+   {
+    "tick": 564,
+    "kind": "retreat",
+    "room": "O1",
+    "text": "Disengage: 1 enemy here, nearest 38 units, 1 within reach, stamina 30%, health 86%, mid-action. Stops attacking, guards while walking out by the to-C0 door.",
+    "cause": "Phase 1 of a retreat: break contact. Enemies stay in their room."
+   },
+   {
+    "tick": 722,
+    "kind": "fight",
+    "room": "O1",
+    "text": "Broke contact in Outer Road with health 66 of 90; surviving enemies return to their posts.",
+    "cause": "No lingering alert: enemies reset when the adventurer leaves (doc 07)."
+   },
+   {
+    "tick": 759,
     "kind": "end",
     "room": "C0",
     "text": "Arrived at camp alive. Banking comes with M3.",

@@ -101,7 +101,7 @@ export function mountExpedition(root: HTMLElement) {
         seg<SimDoctrine>('Combat doctrine', 'doctrine', [['guarded', 'Guarded'], ['measured', 'Measured'], ['pressing', 'Pressing']], plan.doctrine, v => { plan.doctrine = v; }),
         seg<ReturnRoute>('Way home', 'return', [['safest', 'Safest'], ['shortest', 'Shortest']], plan.returnRoute, v => { plan.returnRoute = v; }),
         h('label', { class: 'range' }, `Head home when health is below ${plan.retreatHpPct}%`, h('input', { type: 'range', id: 'retreat', min: '0', max: '90', step: '5', value: String(plan.retreatHpPct), oninput: (e) => { plan.retreatHpPct = Number((e.target as HTMLInputElement).value); (e.target as HTMLElement).parentElement!.firstChild!.textContent = `Head home when health is below ${plan.retreatHpPct}%`; } })),
-        h('p', { class: 'hint' }, 'Checked at each doorway. A fight already under way is not interrupted (that needs the disengage work in M3).')),
+        h('p', { class: 'hint' }, 'Checked all the time. In a fight the adventurer stops attacking and walks out by the nearest permitted way; enemies stay in their room, but they can still hit it on the way.')),
       h('section', { class: 'card' }, h('h2', {}, 'Avoid'),
         h('p', { class: 'hint' }, 'The adventurer will not enter these rooms for any reason, including the way home.'),
         h('div', { class: 'chips' }, ...avoidable.map(r => h('button', { type: 'button', 'data-avoid': r, 'aria-pressed': String(plan.avoid.includes(r)), onclick: () => { plan.avoid = plan.avoid.includes(r) ? plan.avoid.filter(x => x !== r) : [...plan.avoid, r]; renderPlan(); } }, name(graph, r))))),
@@ -152,13 +152,13 @@ export function mountExpedition(root: HTMLElement) {
       ...[1, 4, 16].map(s => h('button', { type: 'button', 'data-speed': String(s), 'aria-pressed': String(s === speed), onclick: () => { speed = s; syncCtl(); } }, `${s}x`)),
       h('button', { type: 'button', id: 'xp-pause', 'aria-pressed': String(paused), onclick: () => { paused = !paused; syncCtl(); } }, 'Pause'),
       h('button', { type: 'button', id: 'skip', onclick: () => { while (!r.world.terminal && r.world.tick < 30 * 3000) r.world.step(); draw(); } }, 'Skip to end'),
-      h('button', { type: 'button', id: 'retreat-now', class: 'danger', onclick: () => { toast = r.expedition.order({ type: 'retreat' }) ?? 'Retreat ordered. It takes effect at the next doorway.'; draw(); } }, 'Retreat to camp'));
+      h('button', { type: 'button', id: 'retreat-now', class: 'danger', onclick: () => { toast = r.expedition.order({ type: 'retreat' }) ?? 'Retreat ordered. It starts now; in a fight the adventurer disengages first.'; draw(); } }, 'Retreat to camp'));
     screen.append(
       h('div', { class: 'bar' }, h('div', {}, h('p', { class: 'eyebrow' }, 'EXPEDITION · TRIAL SETTINGS'), h('h1', {}, 'On the road')),
         h('button', { type: 'button', id: 'back-to-plan', onclick: renderPlan }, 'Back to plan')),
       h('div', { class: 'cols' },
         h('div', { class: 'left' }, h('section', { class: 'card mapcard' }, canvas, status, bar), ctl,
-          h('section', { class: 'card' }, h('h2', {}, 'Change course'), h('p', { class: 'hint' }, 'Orders wait for the next doorway.'),
+          h('section', { class: 'card' }, h('h2', {}, 'Change course'), h('p', { class: 'hint' }, 'A redirect waits for the next doorway. A retreat does not.'),
             h('div', { class: 'redirect' }, redirectSel, h('button', { type: 'button', id: 'redirect-go', onclick: () => { toast = r.expedition.order({ type: 'redirect', room: redirectSel.value }) ?? `Redirect to ${name(graph, redirectSel.value)} queued for the next doorway.`; draw(); } }, 'Go there first'))),
           h('section', { class: 'card' }, h('h2', {}, 'Objectives'), objList)),
         h('div', { class: 'right' }, h('section', { class: 'card' }, h('h2', {}, 'Intent feed'), feed), result)));

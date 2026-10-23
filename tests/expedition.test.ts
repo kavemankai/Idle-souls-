@@ -128,7 +128,7 @@ test('a health threshold sends the adventurer home at the next junction, and say
   assert.ok(!c.route.includes('KT'));
 });
 
-test('a retreat order applies at the next junction and outranks the objectives', () => {
+test('a retreat order takes effect at once, in the room, and outranks the objectives', () => {
   const p = plan({ objectives: [obj('O3')] });
   const run = startExpedition(sim, cfg(p));
   while (run.expedition.rooms.length < 2) run.world.step();   // standing in O1
@@ -137,7 +137,7 @@ test('a retreat order applies at the next junction and outranks the objectives',
   const { chronicle: c } = finishChronicle(cfg(p), run);
   assert.equal(c.outcome, 'extracted');
   assert.ok(c.intent.some(i => i.kind === 'retreat' && i.cause.startsWith('Manual retreat')));
-  assert.deepEqual(c.route, ['C0', 'O1', 'O2', 'O1', 'C0']);
+  assert.deepEqual(c.route, ['C0', 'O1', 'C0']);
   assert.equal(c.objectives[0].status, 'suspended');
 });
 

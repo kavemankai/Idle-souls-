@@ -26,14 +26,19 @@ export interface SimStats {
 }
 export interface SimEvent { tick: number; text: string; kind: string }
 export interface SimFight {
-  tick: number; over: boolean; winner: 'adventurer' | 'enemy' | 'draw' | null;
+  tick: number; over: boolean; winner: 'adventurer' | 'enemy' | 'draw' | 'escaped' | null;
   p: SimFighter; enemies: SimFighter[]; events: SimEvent[]; d: SimDerived; ai: SimAi; stats: SimStats;
 }
 export interface SimSpawn { x: number; y: number; face: number }
 export interface SimFightConfig {
   seed: number; stats: Record<string, number>; god: boolean; doctrine: SimDoctrine; encounter: string;
   room?: SimRoom; spawns?: { adventurer?: SimSpawn; enemies?: SimSpawn[] }; hpOverride?: number;
+  /** Stamina and poise the adventurer starts with, from the previous fight after resting. Omit for a fresh start. */
+  carry?: SimCarry;
 }
+export interface SimCarry { st: number; poise: number }
+/** What a retreat faces at the moment it is ordered. Facts only, no odds. */
+export interface RetreatReport { pursuers: number; nearest: number | null; withinReach: number; stamina: number; health: number; fasterThanAll: boolean; acting: boolean; staggered: boolean }
 export interface PreparedRoom { readonly __prepared: true }
 export interface SimApi {
   HZ: number;
@@ -51,6 +56,12 @@ export interface SimApi {
   DOCTRINES: Record<string, { name: string }>;
   createFight(cfg: SimFightConfig): SimFight;
   step(S: SimFight): void;
+  /** Retreat: the adventurer stops attacking and walks `path`. Returns what the retreat faces, or null when refused. */
+  order(S: SimFight, o: { type: 'disengage'; path: { x: number; y: number }[] }): RetreatReport | null;
+  retreatReport(S: SimFight): RetreatReport;
+  /** Ends the fight without a winner because the adventurer left the room. */
+  leave(S: SimFight): void;
+  rest(c: SimCarry, d: SimDerived, ticks: number): SimCarry;
   room: {
     prepare(room: SimRoom): PreparedRoom;
     nearest(room: PreparedRoom, x: number, y: number): { d: number; nx: number; ny: number };
