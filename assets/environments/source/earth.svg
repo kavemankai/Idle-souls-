@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="256" height="256" viewBox="0 0 256 256"><defs>
-<linearGradient id="stone" x2=".3" y2="1"><stop stop-color="#747d75"/><stop offset=".48" stop-color="#626e67"/><stop offset="1" stop-color="#475751"/></linearGradient>
+<linearGradient id="stone" x2=".3" y2="1"><stop stop-color="#737b73"/><stop offset=".48" stop-color="#626e67"/><stop offset="1" stop-color="#59655e"/></linearGradient>
 <linearGradient id="wall" x2=".2" y2="1"><stop stop-color="#879087"/><stop offset="1" stop-color="#515f59"/></linearGradient>
 <radialGradient id="soil"><stop stop-color="#4a4c3d"/><stop offset="1" stop-color="#252f2b"/></radialGradient>
 <radialGradient id="light"><stop stop-color="#dfab6b" stop-opacity=".23"/><stop offset="1" stop-color="#dfab6b" stop-opacity="0"/></radialGradient>
-</defs><g id="earth-base"><rect width="256" height="256" fill="url(#soil)"/></g><g id="broad-brushes" fill="none" stroke-linecap="round" opacity=".19"><path d="M12 49Q85 18 173 35M48 79Q153 51 243 91M-10 201Q80 155 180 182M64 244Q164 194 244 216" stroke="#7d765b" stroke-width="11"/><path d="M-5 124Q92 99 207 136M20 223Q118 193 260 242" stroke="#172a25" stroke-width="20"/></g></svg>
+</defs><g id="earth-base"><rect width="256" height="256" fill="url(#soil)"/></g><g id="broad-brushes" fill="none" stroke-linecap="round" opacity=".045"><path d="M12 49Q85 18 173 35M48 79Q153 51 243 91M-10 201Q80 155 180 182M64 244Q164 194 244 216" stroke="#7d765b" stroke-width="17"/><path d="M-5 124Q92 99 207 136M20 223Q118 193 260 242" stroke="#172a25" stroke-width="24"/></g></svg>

@@ -27,7 +27,7 @@ export class VisualSequence {
     return {
       source: 'visual-only', tick: Math.floor(this.time * 30),
       actors: [
-        actor('hero', 'adventurer', this.hero.x, this.hero.y, this.facing, action),
+        actor('hero', 'adventurer', this.hero.x, this.hero.y, this.facing, action === 'bash' || action === 'leap' ? 'idle' : action),
         actor('sentry', 'sentry', 90, -25, 'SW', this.action === 'sequence' ? (['guard', 'light', 'bash'][Math.floor(this.time / 2.4) % 3] as Action) : this.action === 'heavy' ? 'bash' : action === 'leap' ? 'idle' : action, this.composition === 'mixed' || this.composition === 'sentry'),
         actor('mireling', 'mireling', 65, 80, 'NW', this.action === 'sequence' || this.action === 'leap' ? 'leap' : action === 'walk' ? 'walk' : 'idle', this.composition === 'mixed' || this.composition === 'mireling'),
       ],

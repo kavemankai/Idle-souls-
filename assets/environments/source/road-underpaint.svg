@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="1024" height="768" viewBox="0 0 1024 768"><defs>
+<linearGradient id="stone" x2=".3" y2="1"><stop stop-color="#737b73"/><stop offset=".48" stop-color="#626e67"/><stop offset="1" stop-color="#59655e"/></linearGradient>
+<linearGradient id="wall" x2=".2" y2="1"><stop stop-color="#879087"/><stop offset="1" stop-color="#515f59"/></linearGradient>
+<radialGradient id="soil"><stop stop-color="#4a4c3d"/><stop offset="1" stop-color="#252f2b"/></radialGradient>
+<radialGradient id="light"><stop stop-color="#dfab6b" stop-opacity=".23"/><stop offset="1" stop-color="#dfab6b" stop-opacity="0"/></radialGradient>
+</defs><g id="broad-road-paint"><path d="M0 272L232 260 251 141 348 102 638 107 780 188 785 270 1024 268 1024 505 780 507 733 646 591 672 365 655 237 555 236 499 0 505Z" fill="#536056"/><path d="M0 297L248 288 264 155 352 117 640 121 766 194 770 290 1024 287 1024 482 763 488 721 632 591 655 367 638 252 548 251 481 0 480Z" fill="#59655b" opacity=".5"/></g></svg>

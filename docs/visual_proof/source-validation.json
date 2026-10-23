@@ -1,0 +1,80 @@
+[
+  {
+    "actor": "adventurer",
+    "cameraElevation": 74.99999987994416,
+    "cameraType": "ORTHO",
+    "orthoScale": 5.400000095367432,
+    "projectedGroundPivot": [
+      96.0,
+      95.99995422363281
+    ],
+    "bones": 10,
+    "meshes": 24,
+    "actions": [
+      "adventurer__dodge",
+      "adventurer__guard",
+      "adventurer__heavy",
+      "adventurer__idle",
+      "adventurer__light",
+      "adventurer__reaction",
+      "adventurer__walk"
+    ],
+    "status": "PASS"
+  },
+  {
+    "actor": "mannequin",
+    "cameraElevation": 74.99999987994416,
+    "cameraType": "ORTHO",
+    "orthoScale": 5.400000095367432,
+    "projectedGroundPivot": [
+      96.0,
+      95.99995422363281
+    ],
+    "bones": 10,
+    "meshes": 24,
+    "actions": [
+      "mannequin__guard",
+      "mannequin__idle",
+      "mannequin__walk"
+    ],
+    "status": "PASS"
+  },
+  {
+    "actor": "mireling",
+    "cameraElevation": 74.99999987994416,
+    "cameraType": "ORTHO",
+    "orthoScale": 5.400000095367432,
+    "projectedGroundPivot": [
+      96.0,
+      95.99995422363281
+    ],
+    "bones": 10,
+    "meshes": 20,
+    "actions": [
+      "mireling__idle",
+      "mireling__leap",
+      "mireling__walk"
+    ],
+    "status": "PASS"
+  },
+  {
+    "actor": "sentry",
+    "cameraElevation": 74.99999987994416,
+    "cameraType": "ORTHO",
+    "orthoScale": 5.400000095367432,
+    "projectedGroundPivot": [
+      96.0,
+      95.99995422363281
+    ],
+    "bones": 10,
+    "meshes": 24,
+    "actions": [
+      "sentry__bash",
+      "sentry__guard",
+      "sentry__idle",
+      "sentry__light",
+      "sentry__walk"
+    ],
+    "status": "PASS"
+  }
+]

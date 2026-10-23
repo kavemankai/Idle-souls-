@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="240" height="280" viewBox="0 0 240 280"><defs>
-<linearGradient id="stone" x2=".3" y2="1"><stop stop-color="#747d75"/><stop offset=".48" stop-color="#626e67"/><stop offset="1" stop-color="#475751"/></linearGradient>
+<linearGradient id="stone" x2=".3" y2="1"><stop stop-color="#737b73"/><stop offset=".48" stop-color="#626e67"/><stop offset="1" stop-color="#59655e"/></linearGradient>
 <linearGradient id="wall" x2=".2" y2="1"><stop stop-color="#879087"/><stop offset="1" stop-color="#515f59"/></linearGradient>
 <radialGradient id="soil"><stop stop-color="#4a4c3d"/><stop offset="1" stop-color="#252f2b"/></radialGradient>
 <radialGradient id="light"><stop stop-color="#dfab6b" stop-opacity=".23"/><stop offset="1" stop-color="#dfab6b" stop-opacity="0"/></radialGradient>

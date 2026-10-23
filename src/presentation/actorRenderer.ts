@@ -1,14 +1,7 @@
 import Phaser from 'phaser';
 import { type ActorView } from '../contracts/presentation';
 import { facingAngle } from './directions';
-const ATTACKS = ['light', 'heavy', 'bash', 'leap'];
-export function chooseFrame(actor: ActorView, available: (name: string) => boolean): { frame: string; missing: boolean } {
-  const count = actor.action === 'walk' ? 4 : ['guard', ...ATTACKS].includes(actor.action) ? 3 : 1;
-  const index = Math.min(count - 1, Math.floor(Math.max(0, Math.min(.999, actor.progress)) * count));
-  const frame = `${actor.kind}__${actor.action}__${actor.facing}__${String(index).padStart(2, '0')}`;
-  if (available(frame)) return { frame, missing: false };
-  return { frame: `${actor.kind}__idle__${actor.facing}__00`, missing: true };
-}
+import { ATTACKS, chooseFrame } from './spriteSelection';
 export class ActorRenderer {
   private sprite: Phaser.GameObjects.Sprite;
   private shadow: Phaser.GameObjects.Ellipse;
@@ -34,6 +27,10 @@ export class ActorRenderer {
       fx.setTexture(actor.action === 'heavy' || actor.action === 'bash' ? 'fx-heavy' : actor.action === 'leap' ? 'fx-landing' : 'fx-slash');
       fx.setPosition(actor.x+Math.cos(theta)*15,actor.y+Math.sin(theta)*15).setRotation(theta+Math.PI/2).setDepth(actor.y+.8).setAlpha(reduced ? .65 : actor.phase === 'recovery' ? .18 : .85).setVisible(true);
     }
+    if (!choice.missing && actor.action === 'guard' && actor.phase === 'active') {
+      const theta=facingAngle(actor.facing);
+      fx.setTexture('fx-impact').setScale(.1).setPosition(actor.x+Math.cos(theta)*12+Math.sin(theta)*10,actor.y+Math.sin(theta)*12-Math.cos(theta)*10).setRotation(0).setAlpha(.65).setDepth(actor.y+1).setVisible(true);
+    } else fx.setScale(.34);
     if (debug) {
       overlay.setDepth(1000).lineStyle(1,0xe7c684,.9).strokeCircle(actor.x,actor.y,13);
       overlay.lineStyle(1,0xe9ebe0).lineBetween(actor.x-5,actor.y,actor.x+5,actor.y).lineBetween(actor.x,actor.y-5,actor.x,actor.y+5);

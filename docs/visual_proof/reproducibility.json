@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "actor": "adventurer",
+  "action": "guard",
+  "facing": "NE",
+  "sourceFrame": 2,
+  "decodedRGBA_SHA256": "acea1fc42d951e87e3d89a8df6074f492a140c60673f2c074ea374c59e475b3e",
+  "regeneratedRGBA_SHA256": "acea1fc42d951e87e3d89a8df6074f492a140c60673f2c074ea374c59e475b3e",
+  "method": "Exact decoded pixel equality from retained .blend; PNG container metadata may differ",
+  "blender": "4.3.2",
+  "command": "python tools/blender/reproduce.py"
+}

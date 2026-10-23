@@ -12,9 +12,12 @@
     "test": "tsx --test tests/*.test.ts",
     "test:browser": "playwright test",
     "assets:environment": "python tools/environment/export.py",
-    "assets:characters": "blender -b -t 4 --python tools/blender/export.py",
+    "assets:characters": "blender -b -t 4 --python tools/blender/export.py -- --from-blend",
     "assets:atlas": "python tools/atlas/pack.py",
-    "evidence": "tsx tools/capture.ts"
+    "evidence": "tsx tools/capture.ts",
+    "assets:characters:rebuild": "blender -b -t 4 --python tools/blender/export.py",
+    "assets:validate": "python tools/atlas/validate.py",
+    "assets:reproduce": "python tools/blender/reproduce.py"
   },
   "dependencies": {
     "phaser": "4.2.1"

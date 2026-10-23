@@ -9,7 +9,7 @@ SRC=ROOT/'assets/environments/source'; OUT=ROOT/'assets/environments/runtime'
 SRC.mkdir(parents=True,exist_ok=True); OUT.mkdir(parents=True,exist_ok=True)
 random.seed(1847)
 DEFS='''<defs>
-<linearGradient id="stone" x2=".3" y2="1"><stop stop-color="#747d75"/><stop offset=".48" stop-color="#626e67"/><stop offset="1" stop-color="#475751"/></linearGradient>
+<linearGradient id="stone" x2=".3" y2="1"><stop stop-color="#737b73"/><stop offset=".48" stop-color="#626e67"/><stop offset="1" stop-color="#59655e"/></linearGradient>
 <linearGradient id="wall" x2=".2" y2="1"><stop stop-color="#879087"/><stop offset="1" stop-color="#515f59"/></linearGradient>
 <radialGradient id="soil"><stop stop-color="#4a4c3d"/><stop offset="1" stop-color="#252f2b"/></radialGradient>
 <radialGradient id="light"><stop stop-color="#dfab6b" stop-opacity=".23"/><stop offset="1" stop-color="#dfab6b" stop-opacity="0"/></radialGradient>
@@ -22,7 +22,7 @@ def save(name,w,h,body):
 for k in range(6):
     pts=[(5,random.randint(4,12)),(random.randint(45,60),3),(117,random.randint(4,12)),(124,55),(120,118),(64,125),(7,119),(2,64)]
     p=' '.join(f'{x},{y}' for x,y in pts)
-    body=f'<g id="underpaint"><path d="M3 12L120 8 127 121 8 128Z" fill="#242e2a"/></g><g id="stone-planes"><polygon points="{p}" fill="url(#stone)" stroke="#3b4943" stroke-width="2"/><path d="M9 14L55 8 111 13" fill="none" stroke="#a1a99a" stroke-opacity=".4" stroke-width="3"/><path d="M12 113L65 119 113 113" fill="none" stroke="#34453f" stroke-width="5" opacity=".35"/></g>'
+    body=f'<g id="underpaint"><path d="M3 12L120 8 127 121 8 128Z" fill="#515e54"/></g><g id="stone-planes"><polygon points="{p}" fill="url(#stone)" stroke="#536157" stroke-width="2"/><path d="M9 14L55 8 111 13" fill="none" stroke="#a1a99a" stroke-opacity=".4" stroke-width="3"/><path d="M12 113L65 119 113 113" fill="none" stroke="#536054" stroke-width="5" opacity=".35"/></g>'
     body+='<g id="brush-wear" opacity=".24">'
     for j in range(6):
         x=random.randrange(12,108); y=random.choice([random.randrange(12,25),random.randrange(96,115)])
@@ -32,7 +32,8 @@ for k in range(6):
     if k==3: body+='<path d="M124 91l-20 -8 -8 6 -8 -14 -22 -5"/>'
     body+='</g>'
     save(f'paving-{k}',128,128,body)
-save('earth',256,256,'''<g id="earth-base"><rect width="256" height="256" fill="url(#soil)"/></g><g id="broad-brushes" fill="none" stroke-linecap="round" opacity=".19"><path d="M12 49Q85 18 173 35M48 79Q153 51 243 91M-10 201Q80 155 180 182M64 244Q164 194 244 216" stroke="#7d765b" stroke-width="11"/><path d="M-5 124Q92 99 207 136M20 223Q118 193 260 242" stroke="#172a25" stroke-width="20"/></g>''')
+save('road-underpaint',1024,768,'''<g id="broad-road-paint"><path d="M0 272L232 260 251 141 348 102 638 107 780 188 785 270 1024 268 1024 505 780 507 733 646 591 672 365 655 237 555 236 499 0 505Z" fill="#536056"/><path d="M0 297L248 288 264 155 352 117 640 121 766 194 770 290 1024 287 1024 482 763 488 721 632 591 655 367 638 252 548 251 481 0 480Z" fill="#59655b" opacity=".5"/></g>''')
+save('earth',256,256,'''<g id="earth-base"><rect width="256" height="256" fill="url(#soil)"/></g><g id="broad-brushes" fill="none" stroke-linecap="round" opacity=".045"><path d="M12 49Q85 18 173 35M48 79Q153 51 243 91M-10 201Q80 155 180 182M64 244Q164 194 244 216" stroke="#7d765b" stroke-width="17"/><path d="M-5 124Q92 99 207 136M20 223Q118 193 260 242" stroke="#172a25" stroke-width="24"/></g>''')
 save('moss',192,160,'''<g id="soft-olive-underpainting" fill="#3d4b36" opacity=".55"><path d="M8 91Q29 37 69 61Q112 17 141 59Q187 62 177 117Q137 150 101 126Q50 157 8 91Z"/></g><g id="moss-brushes" fill="none" stroke-linecap="round"><path d="M24 92l16 -8m-8 22 28 -12m-3 -18 21 -10m10 34 29 -18m-3 -15 16 -7m12 44 19 -12m-21 22 21 -8m-90 14 18 -7" stroke="#66734b" stroke-width="5" opacity=".45"/><path d="M42 75l10 -5m48 4 15 -5m18 46 10 -4" stroke="#89916a" stroke-width="2" opacity=".38"/></g>''')
 save('rubble',192,128,'''<g id="ground-shadow" fill="#14251f" opacity=".45"><ellipse cx="95" cy="84" rx="84" ry="27"/></g><g id="stone-chips" stroke="#38483f" stroke-width="2"><path d="M22 71l20 -22 35 7 8 27 -41 8Z" fill="#5d685d"/><path d="M97 84l-8 -34 36 -18 24 17 -4 38Z" fill="#6c7569"/><path d="M149 85l8 -20 20 8 -3 19Z" fill="#566457"/><path d="M60 100l16 -9 15 14 -30 4Z" fill="#777c69"/></g><g id="edge-paint" fill="none" stroke="#a7aa91" opacity=".45" stroke-width="2"><path d="M28 69l16 -16 26 5M95 50l29 -13 19 12M159 69l14 5"/></g>''')
 # Short wall module with visible south elevation, individually layered blocks.
