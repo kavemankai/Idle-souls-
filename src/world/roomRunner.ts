@@ -18,6 +18,8 @@ export interface RoomRunnerConfig {
   startFace?: number; startHp?: number; defeated?: readonly boolean[]; seedOffset?: number;
   /** End the run on reaching this point instead of crossing the exit door. */
   goal?: Point;
+  /** Walk to this point first, then to the exit (a dead-end room, or a U-turn through the door it came in by). */
+  via?: Point;
   /** Replaces the encounter's enemy positions (same archetypes, same order). */
   enemies?: EnemySpec[];
   /** Single-enemy shorthand for `enemies`; the archetype defaults to the encounter's first. */
@@ -59,6 +61,7 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
   notes: string[] = [];
   private fightIdx: number[] = [];
   private route: Point[] = [];
+  private viaPending: boolean;
   protected readonly room: RoomManifest;
   readonly entry: Door;
   readonly exit: Door;
@@ -70,9 +73,9 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
   constructor(readonly sim: SimApi, readonly cfg: C) {
     this.room = cfg.room;
     const door = (id: string | undefined, fallback: Door) => { if (!id) return fallback; const d = this.room.doors.find(x => x.id === id); if (!d) throw new Error(`${this.room.id} has no door ${id}`); return d; };
-    if (this.room.doors.length < 2) throw new Error(`${this.room.id} needs at least two doors to be run`);
+    if (this.room.doors.length < 1) throw new Error(`${this.room.id} has no doors`);
     this.entry = door(cfg.entryDoor ?? this.room.entryDoor, this.room.doors[0]);
-    this.exit = door(cfg.exitDoor ?? this.room.exitDoor, this.room.doors.find(d => d !== this.entry)!);
+    this.exit = door(cfg.exitDoor ?? this.room.exitDoor, this.room.doors.find(d => d !== this.entry) ?? this.entry);
     this.prepared = sim.room.prepare(simRoom(this.room));
     this.stats = sim.allocate(cfg.level, cfg.focus, cfg.seed);
     const derived = sim.derive(this.stats, false);
@@ -86,6 +89,7 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
     const specs: EnemySpec[] = cfg.enemies ?? (cfg.enemy ? [{ arch: cfg.enemy.arch ?? base[0].arch, ...cfg.enemy }] : base);
     // An enemy killed on an earlier visit stays dead and takes no part in this one.
     this.foes = specs.map((s, i) => { const dead = cfg.defeated?.[i] === true; return { arch: s.arch, x: s.x, y: s.y, face: spawnAngle(s), alive: !dead, engaged: dead }; });
+    this.viaPending = cfg.via !== undefined;
     const out = OUT[this.exit.side];
     this.goal = cfg.goal ?? { x: this.exit.center.x + out[0] * 2, y: this.exit.center.y + out[1] * 2 };
   }
@@ -113,9 +117,11 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
     this.mix();
   }
   private replan() {
-    const route = planRoute(this.sim, this.prepared, this.room.bounds, this.hero, this.goal);
-    if (!route) { this.state = 'unresolved'; this.note(`No route to the ${this.exit.side} threshold.`); return; }
-    this.route = route;
+    const via = this.viaPending ? this.cfg.via! : null;
+    const first = planRoute(this.sim, this.prepared, this.room.bounds, this.hero, via ?? this.goal);
+    const second = first && via ? planRoute(this.sim, this.prepared, this.room.bounds, via, this.goal) : [];
+    if (!first || !second) { this.state = 'unresolved'; this.note(`No route to the ${this.exit.side} threshold.`); return; }
+    this.route = first.concat(second);
   }
   private travel() {
     const det = this.room.detection;
@@ -130,6 +136,7 @@ export class RoomRunner<C extends RoomRunnerConfig = RoomRunnerConfig> {
       if (d <= budget) { this.hero.x = next.x; this.hero.y = next.y; this.route.shift(); budget -= d; }
       else { this.hero.x += dx / d * budget; this.hero.y += dy / d * budget; budget = 0; }
     }
+    if (this.viaPending && M.hypot(this.hero.x - this.cfg.via!.x, this.hero.y - this.cfg.via!.y) < 1e-6) this.viaPending = false;
     if (this.cfg.goal ? this.route.length === 0 && M.hypot(this.hero.x - this.goal.x, this.hero.y - this.goal.y) < 1e-6 : crossed(this.exit, this.hero)) {
       this.state = 'completed';
       this.hero.moving = false;
