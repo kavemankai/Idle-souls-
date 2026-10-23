@@ -134,6 +134,7 @@ export class OldRoadVisualScene extends Phaser.Scene {
     const dy=this.touch[1]+(inForm?0:Number(this.keys.DOWN.isDown||this.keys.S.isDown)-Number(this.keys.UP.isDown||this.keys.W.isDown));
     this.viewer.update(delta,dx,dy);
     if(this.scale.width<600 && this.scale.height>this.scale.width && !this.calibration) this.cameras.main.centerOn(this.viewer.hero.x+65,this.viewer.hero.y-35);
+    if(this.scale.height<500 && !this.calibration) this.cameras.main.centerOn(this.viewer.hero.x+135,this.viewer.hero.y-15);
     if(this.calibration) return;
     const snapshot=this.viewer.read(Boolean(dx||dy));
     const results=snapshot.actors.map((actor,i)=>this.actors[i].draw(actor,this.debug,this.reduced));
