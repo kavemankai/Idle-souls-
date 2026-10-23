@@ -53,6 +53,7 @@ export class O1Controller {
     this.enemy = { x: spawn.x, y: spawn.y, face: spawnAngle(spawn), alive: true };
     this.goal = { x: this.room.threshold.x + 2, y: (this.room.threshold.y[0] + this.room.threshold.y[1]) / 2 };
   }
+  get routePoints(): readonly Point[] { return this.route; }
   get terminal() { return TERMINAL.includes(this.state); }
   dispatch() {
     if (this.state !== 'ready') return;

@@ -23,6 +23,8 @@ export interface SimFightConfig {
 export interface PreparedRoom { readonly __prepared: true }
 export interface SimApi {
   HZ: number;
+  MAX_LEVEL: number;
+  PROFILES: Record<string, unknown>;
   ARCH: Record<string, { speed: number; r: number }>;
   allocate(level: number, focus: string, seed?: number): Record<string, number>;
   derive(stats: Record<string, number>, god: boolean): { moveMult: number; hp: number };
