@@ -13,6 +13,7 @@
     "test:browser": "playwright test",
     "assets:environment": "python tools/environment/export.py && python tools/environment/export_o1_additions.py",
     "assets:vfx": "python tools/environment/export_o1_vfx.py",
+    "audio:import": "python tools/audio/import_cc0.py",
     "assets:characters": "blender -b -t 4 --python tools/blender/export.py -- --from-blend",
     "assets:atlas": "python tools/atlas/pack.py",
     "evidence": "tsx tools/capture.ts",

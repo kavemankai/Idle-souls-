@@ -9,6 +9,7 @@ import { O1PresentationAdapter } from '../world/o1Adapter';
 import { O1 } from '../world/o1Room';
 import { combatPane, totalsPane, buildPane, logPane } from './o1Panels';
 import { drawCues } from './o1Cues';
+import { O1Audio } from '../audio/O1Audio';
 import type { PresentationSnapshot } from '../contracts/presentation';
 declare const __BUILD_SHA__: string;
 const TICK_MS = 1000 / 30;
@@ -49,6 +50,7 @@ export class O1Scene extends Phaser.Scene {
   private defence = { blocks: 0, parries: 0, perfects: 0 };
   private shieldCue: 'block' | 'parry' | 'perfect' | null = null;
   private shieldCueMs = 0;
+  private readonly audio = new O1Audio();
   private hud!: HTMLElement;
   constructor() { super('O1'); }
   preload() { loadOldRoadAssets(this); }
@@ -74,7 +76,7 @@ export class O1Scene extends Phaser.Scene {
     if (ticks > 0) for (let i = 0; i < ticks && !this.controller.terminal; i++) this.controller.step();
     this.layout();
     this.scale.on('resize', this.layout, this);
-    this.events.once('shutdown', () => this.hud.remove());
+    this.events.once('shutdown', () => { this.audio.destroy(); this.hud.remove(); });
     window.__O1_RUN__ = (cfg: O1Config) => runO1(this.sim, cfg);
     this.syncHud();
     window.__O1_READY__ = true; window.__VISUAL_READY__ = true;
@@ -90,7 +92,7 @@ export class O1Scene extends Phaser.Scene {
   private reset() {
     this.controller = new O1Controller(this.sim, this.config());
     this.adapter = new O1PresentationAdapter(this.controller);
-    this.clips.clear(); this.acc = 0;
+    this.clips.clear(); this.acc = 0; this.audio.reset();
     this.defence = { blocks: 0, parries: 0, perfects: 0 };
     this.shieldCue = null; this.shieldCueMs = 0;
   }
@@ -116,7 +118,8 @@ export class O1Scene extends Phaser.Scene {
     <label>Doctrine<select id="doctrine">${opts(DOCTRINES, pick('doctrine', DOCTRINES, 'measured'))}</select></label>
     <button id="dispatch" class="primary">Dispatch to O2</button></div>
     <ul id="log" aria-label="Run notes"></ul><p id="clips"></p>
-    <div class="toggles"><button id="proxy" aria-pressed="${this.debug}">Solids &amp; route</button><button id="reduced" aria-pressed="${this.reduced}">Reduced FX</button><button id="speed" aria-pressed="${this.speed > 1}" aria-label="Playback speed">Speed x${this.speed > 1 ? this.speed : 4}</button><a href="?">Visual study ↗</a></div></div>
+    <div class="toggles"><button id="proxy" aria-pressed="${this.debug}">Solids &amp; route</button><button id="reduced" aria-pressed="${this.reduced}">Reduced FX</button><button id="speed" aria-pressed="${this.speed > 1}" aria-label="Playback speed">Speed x${this.speed > 1 ? this.speed : 4}</button><a href="?">Visual study ↗</a></div>
+    <div class="audio-controls" role="group" aria-label="Music and sound effects"><button id="audio-enable" aria-pressed="false" type="button">Enable audio</button><label>Track<select id="audio-track"><option value="whispers">Whispers in the Fog</option><option value="town_ruins">Town in Ruins</option><option value="cathedral">Cathedral in the Forest</option><option value="pursuit">Determined Pursuit</option><option value="boss">Epic Boss Battle</option></select></label><label>Music<input id="audio-music" aria-label="Music volume" type="range" min="0" max="100" value="45"></label><label>SFX<input id="audio-sfx" aria-label="Sound effects volume" type="range" min="0" max="100" value="60"></label></div></div>
     <div class="o1-pane" id="pane-combat" role="tabpanel" hidden><div class="toggles"><button id="cues" aria-pressed="${this.showCues}">Combat cues</button><button id="ghosts" aria-pressed="${this.showGhosts}">Reaction lag</button></div><div id="body-combat"></div></div>
     <div class="o1-pane" id="pane-totals" role="tabpanel" hidden></div><div class="o1-pane" id="pane-build" role="tabpanel" hidden></div><div class="o1-pane" id="pane-log" role="tabpanel" hidden></div>
     <p id="status" aria-live="polite"></p><p id="result" aria-live="polite"></p></section>
@@ -125,7 +128,7 @@ export class O1Scene extends Phaser.Scene {
     document.body.append(hud);
     const q = <T extends HTMLElement>(id: string) => hud.querySelector<T>(`#${id}`)!;
     for (const id of ['seed', 'opponent', 'level', 'focus', 'doctrine']) q(id).addEventListener('change', () => { this.reset(); this.syncHud(); });
-    q('dispatch').addEventListener('click', () => { if (this.controller.state !== 'ready') this.reset(); this.controller.dispatch(); this.syncHud(); });
+    q('dispatch').addEventListener('click', () => { if (this.controller.state !== 'ready') this.reset(); if (!this.audio.isEnabled) { this.audio.enable(); this.syncAudioButton(); } this.audio.play('ui_dispatch', .5); this.controller.dispatch(); this.syncHud(); });
     q('speed').addEventListener('click', e => { this.speed = this.speed > 1 ? 1 : 4; (e.currentTarget as HTMLElement).setAttribute('aria-pressed', String(this.speed > 1)); (e.currentTarget as HTMLElement).textContent = `Speed x${this.speed > 1 ? this.speed : 4}`; });
     q('proxy').addEventListener('click', e => { this.debug = !this.debug; (e.currentTarget as HTMLElement).setAttribute('aria-pressed', String(this.debug)); });
     this.setTab(this.tab); this.setCam(this.camMode);
@@ -139,6 +142,15 @@ export class O1Scene extends Phaser.Scene {
     q('cues').addEventListener('click', e => { this.showCues = !this.showCues; (e.currentTarget as HTMLElement).setAttribute('aria-pressed', String(this.showCues)); });
     q('ghosts').addEventListener('click', e => { this.showGhosts = !this.showGhosts; (e.currentTarget as HTMLElement).setAttribute('aria-pressed', String(this.showGhosts)); });
     q('reduced').addEventListener('click', e => { this.reduced = !this.reduced; (e.currentTarget as HTMLElement).setAttribute('aria-pressed', String(this.reduced)); });
+    q('audio-enable').addEventListener('click', () => { this.audio.toggle(); this.syncAudioButton(); });
+    q('audio-track').addEventListener('change', () => this.audio.setTrack(q<HTMLSelectElement>('audio-track').value));
+    const setGain = () => this.audio.setLevels(Number(q<HTMLInputElement>('audio-music').value) / 100, Number(q<HTMLInputElement>('audio-sfx').value) / 100);
+    q('audio-music').addEventListener('input', setGain); q('audio-sfx').addEventListener('input', setGain);
+  }
+  private syncAudioButton() {
+    const button = this.hud.querySelector<HTMLButtonElement>('#audio-enable')!;
+    button.textContent = this.audio.isEnabled ? 'Audio on' : 'Enable audio';
+    button.setAttribute('aria-pressed', String(this.audio.isEnabled));
   }
   private setTab(tab: string) {
     this.tab = tab; this.paneKey = '';
@@ -226,6 +238,7 @@ export class O1Scene extends Phaser.Scene {
       while (this.acc >= TICK_MS && !c.terminal) { c.step(); this.acc -= TICK_MS; }
     }
     const snapshot = this.adapter.read(delta);
+    this.audio.update(delta, c.state, c.fight, snapshot.actors);
     this.moveCamera(delta, snapshot);
     const [hero, enemy] = snapshot.actors;
     const counts = snapshot.combat?.totals;
