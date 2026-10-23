@@ -1,0 +1,1916 @@
+{
+ "directSurvey/1": {
+  "version": 1,
+  "seed": 1,
+  "outcome": "died",
+  "summary": "Fell in O3 after 3 fights; reached O3.",
+  "plan": {
+   "objectives": [
+    {
+     "id": "survey-T1",
+     "kind": "survey",
+     "room": "T1"
+    },
+    {
+     "id": "reach-O3",
+     "kind": "reach",
+     "room": "O3"
+    }
+   ],
+   "avoid": [],
+   "exploration": "direct",
+   "doctrine": "measured",
+   "retreatHpPct": 40,
+   "returnRoute": "safest"
+  },
+  "objectives": [
+   {
+    "id": "survey-T1",
+    "kind": "survey",
+    "room": "T1",
+    "status": "completed",
+    "note": "Surveyed."
+   },
+   {
+    "id": "reach-O3",
+    "kind": "reach",
+    "room": "O3",
+    "status": "suspended",
+    "note": "Health 4% is below the 40% retreat setting."
+   }
+  ],
+  "route": [
+   "C0",
+   "O1",
+   "O2",
+   "T1",
+   "O2",
+   "O3"
+  ],
+  "discovered": [
+   "T1"
+  ],
+  "fights": [
+   {
+    "room": "O1",
+    "won": true,
+    "enemiesDefeated": 1,
+    "hpLeft": 52,
+    "hpMax": 90
+   },
+   {
+    "room": "O2",
+    "won": true,
+    "enemiesDefeated": 1,
+    "hpLeft": 4,
+    "hpMax": 90
+   },
+   {
+    "room": "O3",
+    "won": false,
+    "enemiesDefeated": 0,
+    "hpLeft": 0,
+    "hpMax": 90
+   }
+  ],
+  "ticks": 3416,
+  "hpLeft": 0,
+  "hpMax": 90,
+  "digest": "f349508a",
+  "intent": [
+   {
+    "tick": 0,
+    "kind": "launch",
+    "room": "C0",
+    "text": "Launched with 2 objectives: direct exploration, measured doctrine, retreat below 40% health, safest way home.",
+    "cause": "Plan accepted at camp."
+   },
+   {
+    "tick": 0,
+    "kind": "objective",
+    "room": "C0",
+    "text": "Objective 1: survey Tower Yard.",
+    "cause": "Next in the plan order."
+   },
+   {
+    "tick": 0,
+    "kind": "route",
+    "room": "C0",
+    "text": "Objective 1: C0 > O1 > O2 > T1 (ends at unexplored ground). No other permitted way.",
+    "cause": "Direct exploration: shortest walking distance."
+   },
+   {
+    "tick": 1682,
+    "kind": "fight",
+    "room": "O1",
+    "text": "Won 1 fight in Outer Road, 1 enemies down; health 52 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   },
+   {
+    "tick": 1705,
+    "kind": "route",
+    "room": "O2",
+    "text": "Objective 1: O2 > T1 (ends at unexplored ground). No other permitted way.",
+    "cause": "Direct exploration: shortest walking distance."
+   },
+   {
+    "tick": 2123,
+    "kind": "discovery",
+    "room": "T1",
+    "text": "Entered Tower Yard for the first time. It is now on the map.",
+    "cause": "Map memory is permanent."
+   },
+   {
+    "tick": 2123,
+    "kind": "objective",
+    "room": "T1",
+    "text": "Objective 1 done: surveyed Tower Yard.",
+    "cause": "Arrival at the objective room."
+   },
+   {
+    "tick": 2123,
+    "kind": "objective",
+    "room": "T1",
+    "text": "Objective 2: reach Broken Causeway.",
+    "cause": "Next in the plan order."
+   },
+   {
+    "tick": 2123,
+    "kind": "route",
+    "room": "T1",
+    "text": "Objective 2: T1 > O2 > O3. No other permitted way.",
+    "cause": "Direct exploration: shortest walking distance."
+   },
+   {
+    "tick": 2582,
+    "kind": "route",
+    "room": "O2",
+    "text": "Objective 2: O2 > O3. No other permitted way.",
+    "cause": "Direct exploration: shortest walking distance."
+   },
+   {
+    "tick": 3187,
+    "kind": "fight",
+    "room": "O2",
+    "text": "Won 1 fight in Crossroads, 1 enemies down; health 4 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   },
+   {
+    "tick": 3247,
+    "kind": "retreat",
+    "room": "O3",
+    "text": "Heading for camp. Health 4% is below the 40% retreat setting.",
+    "cause": "Survival policy"
+   },
+   {
+    "tick": 3247,
+    "kind": "route",
+    "room": "O3",
+    "text": "Way home: O3 > O2 > O1 > C0. No other permitted way.",
+    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 3415,
+    "kind": "fight",
+    "room": "O3",
+    "text": "Lost 1 fight in Broken Causeway, 0 enemies down; health 0 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   }
+  ]
+ },
+ "directSurvey/2": {
+  "version": 1,
+  "seed": 2,
+  "outcome": "died",
+  "summary": "Fell in O3 after 3 fights; reached O3.",
+  "plan": {
+   "objectives": [
+    {
+     "id": "survey-T1",
+     "kind": "survey",
+     "room": "T1"
+    },
+    {
+     "id": "reach-O3",
+     "kind": "reach",
+     "room": "O3"
+    }
+   ],
+   "avoid": [],
+   "exploration": "direct",
+   "doctrine": "measured",
+   "retreatHpPct": 40,
+   "returnRoute": "safest"
+  },
+  "objectives": [
+   {
+    "id": "survey-T1",
+    "kind": "survey",
+    "room": "T1",
+    "status": "completed",
+    "note": "Surveyed."
+   },
+   {
+    "id": "reach-O3",
+    "kind": "reach",
+    "room": "O3",
+    "status": "suspended",
+    "note": "Health 14% is below the 40% retreat setting."
+   }
+  ],
+  "route": [
+   "C0",
+   "O1",
+   "O2",
+   "T1",
+   "O2",
+   "O3"
+  ],
+  "discovered": [
+   "T1"
+  ],
+  "fights": [
+   {
+    "room": "O1",
+    "won": true,
+    "enemiesDefeated": 1,
+    "hpLeft": 66,
+    "hpMax": 90
+   },
+   {
+    "room": "O2",
+    "won": true,
+    "enemiesDefeated": 1,
+    "hpLeft": 13,
+    "hpMax": 90
+   },
+   {
+    "room": "O3",
+    "won": false,
+    "enemiesDefeated": 0,
+    "hpLeft": 0,
+    "hpMax": 90
+   }
+  ],
+  "ticks": 2487,
+  "hpLeft": 0,
+  "hpMax": 90,
+  "digest": "d21d8832",
+  "intent": [
+   {
+    "tick": 0,
+    "kind": "launch",
+    "room": "C0",
+    "text": "Launched with 2 objectives: direct exploration, measured doctrine, retreat below 40% health, safest way home.",
+    "cause": "Plan accepted at camp."
+   },
+   {
+    "tick": 0,
+    "kind": "objective",
+    "room": "C0",
+    "text": "Objective 1: survey Tower Yard.",
+    "cause": "Next in the plan order."
+   },
+   {
+    "tick": 0,
+    "kind": "route",
+    "room": "C0",
+    "text": "Objective 1: C0 > O1 > O2 > T1 (ends at unexplored ground). No other permitted way.",
+    "cause": "Direct exploration: shortest walking distance."
+   },
+   {
+    "tick": 804,
+    "kind": "fight",
+    "room": "O1",
+    "text": "Won 1 fight in Outer Road, 1 enemies down; health 66 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   },
+   {
+    "tick": 827,
+    "kind": "route",
+    "room": "O2",
+    "text": "Objective 1: O2 > T1 (ends at unexplored ground). No other permitted way.",
+    "cause": "Direct exploration: shortest walking distance."
+   },
+   {
+    "tick": 1245,
+    "kind": "discovery",
+    "room": "T1",
+    "text": "Entered Tower Yard for the first time. It is now on the map.",
+    "cause": "Map memory is permanent."
+   },
+   {
+    "tick": 1245,
+    "kind": "objective",
+    "room": "T1",
+    "text": "Objective 1 done: surveyed Tower Yard.",
+    "cause": "Arrival at the objective room."
+   },
+   {
+    "tick": 1245,
+    "kind": "objective",
+    "room": "T1",
+    "text": "Objective 2: reach Broken Causeway.",
+    "cause": "Next in the plan order."
+   },
+   {
+    "tick": 1245,
+    "kind": "route",
+    "room": "T1",
+    "text": "Objective 2: T1 > O2 > O3. No other permitted way.",
+    "cause": "Direct exploration: shortest walking distance."
+   },
+   {
+    "tick": 1704,
+    "kind": "route",
+    "room": "O2",
+    "text": "Objective 2: O2 > O3. No other permitted way.",
+    "cause": "Direct exploration: shortest walking distance."
+   },
+   {
+    "tick": 2275,
+    "kind": "fight",
+    "room": "O2",
+    "text": "Won 1 fight in Crossroads, 1 enemies down; health 13 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   },
+   {
+    "tick": 2335,
+    "kind": "retreat",
+    "room": "O3",
+    "text": "Heading for camp. Health 14% is below the 40% retreat setting.",
+    "cause": "Survival policy"
+   },
+   {
+    "tick": 2335,
+    "kind": "route",
+    "room": "O3",
+    "text": "Way home: O3 > O2 > O1 > C0. No other permitted way.",
+    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 2486,
+    "kind": "fight",
+    "room": "O3",
+    "text": "Lost 1 fight in Broken Causeway, 0 enemies down; health 0 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   }
+  ]
+ },
+ "directSurvey/3": {
+  "version": 1,
+  "seed": 3,
+  "outcome": "died",
+  "summary": "Fell in O3 after 3 fights; reached O3.",
+  "plan": {
+   "objectives": [
+    {
+     "id": "survey-T1",
+     "kind": "survey",
+     "room": "T1"
+    },
+    {
+     "id": "reach-O3",
+     "kind": "reach",
+     "room": "O3"
+    }
+   ],
+   "avoid": [],
+   "exploration": "direct",
+   "doctrine": "measured",
+   "retreatHpPct": 40,
+   "returnRoute": "safest"
+  },
+  "objectives": [
+   {
+    "id": "survey-T1",
+    "kind": "survey",
+    "room": "T1",
+    "status": "completed",
+    "note": "Surveyed."
+   },
+   {
+    "id": "reach-O3",
+    "kind": "reach",
+    "room": "O3",
+    "status": "suspended",
+    "note": "Health 29% is below the 40% retreat setting."
+   }
+  ],
+  "route": [
+   "C0",
+   "O1",
+   "O2",
+   "T1",
+   "O2",
+   "O3"
+  ],
+  "discovered": [
+   "T1"
+  ],
+  "fights": [
+   {
+    "room": "O1",
+    "won": true,
+    "enemiesDefeated": 1,
+    "hpLeft": 63,
+    "hpMax": 90
+   },
+   {
+    "room": "O2",
+    "won": true,
+    "enemiesDefeated": 1,
+    "hpLeft": 26,
+    "hpMax": 90
+   },
+   {
+    "room": "O3",
+    "won": false,
+    "enemiesDefeated": 0,
+    "hpLeft": 0,
+    "hpMax": 90
+   }
+  ],
+  "ticks": 2876,
+  "hpLeft": 0,
+  "hpMax": 90,
+  "digest": "30712ba8",
+  "intent": [
+   {
+    "tick": 0,
+    "kind": "launch",
+    "room": "C0",
+    "text": "Launched with 2 objectives: direct exploration, measured doctrine, retreat below 40% health, safest way home.",
+    "cause": "Plan accepted at camp."
+   },
+   {
+    "tick": 0,
+    "kind": "objective",
+    "room": "C0",
+    "text": "Objective 1: survey Tower Yard.",
+    "cause": "Next in the plan order."
+   },
+   {
+    "tick": 0,
+    "kind": "route",
+    "room": "C0",
+    "text": "Objective 1: C0 > O1 > O2 > T1 (ends at unexplored ground). No other permitted way.",
+    "cause": "Direct exploration: shortest walking distance."
+   },
+   {
+    "tick": 1024,
+    "kind": "fight",
+    "room": "O1",
+    "text": "Won 1 fight in Outer Road, 1 enemies down; health 63 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   },
+   {
+    "tick": 1047,
+    "kind": "route",
+    "room": "O2",
+    "text": "Objective 1: O2 > T1 (ends at unexplored ground). No other permitted way.",
+    "cause": "Direct exploration: shortest walking distance."
+   },
+   {
+    "tick": 1465,
+    "kind": "discovery",
+    "room": "T1",
+    "text": "Entered Tower Yard for the first time. It is now on the map.",
+    "cause": "Map memory is permanent."
+   },
+   {
+    "tick": 1465,
+    "kind": "objective",
+    "room": "T1",
+    "text": "Objective 1 done: surveyed Tower Yard.",
+    "cause": "Arrival at the objective room."
+   },
+   {
+    "tick": 1465,
+    "kind": "objective",
+    "room": "T1",
+    "text": "Objective 2: reach Broken Causeway.",
+    "cause": "Next in the plan order."
+   },
+   {
+    "tick": 1465,
+    "kind": "route",
+    "room": "T1",
+    "text": "Objective 2: T1 > O2 > O3. No other permitted way.",
+    "cause": "Direct exploration: shortest walking distance."
+   },
+   {
+    "tick": 1924,
+    "kind": "route",
+    "room": "O2",
+    "text": "Objective 2: O2 > O3. No other permitted way.",
+    "cause": "Direct exploration: shortest walking distance."
+   },
+   {
+    "tick": 2409,
+    "kind": "fight",
+    "room": "O2",
+    "text": "Won 1 fight in Crossroads, 1 enemies down; health 26 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   },
+   {
+    "tick": 2469,
+    "kind": "retreat",
+    "room": "O3",
+    "text": "Heading for camp. Health 29% is below the 40% retreat setting.",
+    "cause": "Survival policy"
+   },
+   {
+    "tick": 2469,
+    "kind": "route",
+    "room": "O3",
+    "text": "Way home: O3 > O2 > O1 > C0. No other permitted way.",
+    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 2875,
+    "kind": "fight",
+    "room": "O3",
+    "text": "Lost 1 fight in Broken Causeway, 0 enemies down; health 0 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   }
+  ]
+ },
+ "directSurvey/4": {
+  "version": 1,
+  "seed": 4,
+  "outcome": "extracted",
+  "summary": "Back at camp alive with 3 of 90 health after 3 fights.",
+  "plan": {
+   "objectives": [
+    {
+     "id": "survey-T1",
+     "kind": "survey",
+     "room": "T1"
+    },
+    {
+     "id": "reach-O3",
+     "kind": "reach",
+     "room": "O3"
+    }
+   ],
+   "avoid": [],
+   "exploration": "direct",
+   "doctrine": "measured",
+   "retreatHpPct": 40,
+   "returnRoute": "safest"
+  },
+  "objectives": [
+   {
+    "id": "survey-T1",
+    "kind": "survey",
+    "room": "T1",
+    "status": "completed",
+    "note": "Surveyed."
+   },
+   {
+    "id": "reach-O3",
+    "kind": "reach",
+    "room": "O3",
+    "status": "completed",
+    "note": "Reached."
+   }
+  ],
+  "route": [
+   "C0",
+   "O1",
+   "O2",
+   "T1",
+   "O2",
+   "O3",
+   "O2",
+   "O1",
+   "C0"
+  ],
+  "discovered": [
+   "T1"
+  ],
+  "fights": [
+   {
+    "room": "O1",
+    "won": true,
+    "enemiesDefeated": 1,
+    "hpLeft": 90,
+    "hpMax": 90
+   },
+   {
+    "room": "O2",
+    "won": true,
+    "enemiesDefeated": 1,
+    "hpLeft": 47,
+    "hpMax": 90
+   },
+   {
+    "room": "O3",
+    "won": true,
+    "enemiesDefeated": 2,
+    "hpLeft": 3,
+    "hpMax": 90
+   }
+  ],
+  "ticks": 3386,
+  "hpLeft": 3,
+  "hpMax": 90,
+  "digest": "1c669ad0",
+  "intent": [
+   {
+    "tick": 0,
+    "kind": "launch",
+    "room": "C0",
+    "text": "Launched with 2 objectives: direct exploration, measured doctrine, retreat below 40% health, safest way home.",
+    "cause": "Plan accepted at camp."
+   },
+   {
+    "tick": 0,
+    "kind": "objective",
+    "room": "C0",
+    "text": "Objective 1: survey Tower Yard.",
+    "cause": "Next in the plan order."
+   },
+   {
+    "tick": 0,
+    "kind": "route",
+    "room": "C0",
+    "text": "Objective 1: C0 > O1 > O2 > T1 (ends at unexplored ground). No other permitted way.",
+    "cause": "Direct exploration: shortest walking distance."
+   },
+   {
+    "tick": 477,
+    "kind": "fight",
+    "room": "O1",
+    "text": "Won 1 fight in Outer Road, 1 enemies down; health 90 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   },
+   {
+    "tick": 500,
+    "kind": "route",
+    "room": "O2",
+    "text": "Objective 1: O2 > T1 (ends at unexplored ground). No other permitted way.",
+    "cause": "Direct exploration: shortest walking distance."
+   },
+   {
+    "tick": 918,
+    "kind": "discovery",
+    "room": "T1",
+    "text": "Entered Tower Yard for the first time. It is now on the map.",
+    "cause": "Map memory is permanent."
+   },
+   {
+    "tick": 918,
+    "kind": "objective",
+    "room": "T1",
+    "text": "Objective 1 done: surveyed Tower Yard.",
+    "cause": "Arrival at the objective room."
+   },
+   {
+    "tick": 918,
+    "kind": "objective",
+    "room": "T1",
+    "text": "Objective 2: reach Broken Causeway.",
+    "cause": "Next in the plan order."
+   },
+   {
+    "tick": 918,
+    "kind": "route",
+    "room": "T1",
+    "text": "Objective 2: T1 > O2 > O3. No other permitted way.",
+    "cause": "Direct exploration: shortest walking distance."
+   },
+   {
+    "tick": 1377,
+    "kind": "route",
+    "room": "O2",
+    "text": "Objective 2: O2 > O3. No other permitted way.",
+    "cause": "Direct exploration: shortest walking distance."
+   },
+   {
+    "tick": 1796,
+    "kind": "fight",
+    "room": "O2",
+    "text": "Won 1 fight in Crossroads, 1 enemies down; health 47 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   },
+   {
+    "tick": 1856,
+    "kind": "objective",
+    "room": "O3",
+    "text": "Objective 2 done: reached Broken Causeway.",
+    "cause": "Arrival at the objective room."
+   },
+   {
+    "tick": 1856,
+    "kind": "retreat",
+    "room": "O3",
+    "text": "Heading for camp. Every objective is done or skipped.",
+    "cause": "Return to Camp ends every plan."
+   },
+   {
+    "tick": 1856,
+    "kind": "route",
+    "room": "O3",
+    "text": "Way home: O3 > O2 > O1 > C0. No other permitted way.",
+    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 2731,
+    "kind": "fight",
+    "room": "O3",
+    "text": "Won 1 fight in Broken Causeway, 2 enemies down; health 3 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   },
+   {
+    "tick": 2791,
+    "kind": "route",
+    "room": "O2",
+    "text": "Way home: O2 > O1 > C0. No other permitted way.",
+    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 3264,
+    "kind": "end",
+    "room": "C0",
+    "text": "Arrived at camp alive. Banking comes with M3.",
+    "cause": "Extraction means arriving at camp alive."
+   }
+  ]
+ },
+ "thoroughSurvey/1": {
+  "version": 1,
+  "seed": 1,
+  "outcome": "extracted",
+  "summary": "Back at camp alive with 80 of 90 health after 1 fight.",
+  "plan": {
+   "objectives": [
+    {
+     "id": "survey-T1",
+     "kind": "survey",
+     "room": "T1"
+    }
+   ],
+   "avoid": [],
+   "exploration": "thorough",
+   "doctrine": "guarded",
+   "retreatHpPct": 40,
+   "returnRoute": "safest"
+  },
+  "objectives": [
+   {
+    "id": "survey-T1",
+    "kind": "survey",
+    "room": "T1",
+    "status": "completed",
+    "note": "Surveyed."
+   }
+  ],
+  "route": [
+   "C0",
+   "O1",
+   "O2",
+   "T1",
+   "T2",
+   "T1",
+   "O2",
+   "O1",
+   "C0"
+  ],
+  "discovered": [
+   "T1",
+   "T2"
+  ],
+  "fights": [
+   {
+    "room": "O1",
+    "won": true,
+    "enemiesDefeated": 1,
+    "hpLeft": 80,
+    "hpMax": 90
+   }
+  ],
+  "ticks": 2962,
+  "hpLeft": 80,
+  "hpMax": 90,
+  "digest": "e3f8781f",
+  "intent": [
+   {
+    "tick": 0,
+    "kind": "launch",
+    "room": "C0",
+    "text": "Launched with 1 objective: thorough exploration, guarded doctrine, retreat below 40% health, safest way home.",
+    "cause": "Plan accepted at camp."
+   },
+   {
+    "tick": 0,
+    "kind": "objective",
+    "room": "C0",
+    "text": "Objective 1: survey Tower Yard.",
+    "cause": "Next in the plan order."
+   },
+   {
+    "tick": 0,
+    "kind": "route",
+    "room": "C0",
+    "text": "Objective 1: C0 > O1 > O2 > T1 (ends at unexplored ground). No other permitted way.",
+    "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 977,
+    "kind": "fight",
+    "room": "O1",
+    "text": "Won 1 fight in Outer Road, 1 enemies down; health 80 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   },
+   {
+    "tick": 1001,
+    "kind": "route",
+    "room": "O2",
+    "text": "Objective 1: O2 > T1 (ends at unexplored ground). No other permitted way.",
+    "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 1419,
+    "kind": "discovery",
+    "room": "T1",
+    "text": "Entered Tower Yard for the first time. It is now on the map.",
+    "cause": "Map memory is permanent."
+   },
+   {
+    "tick": 1419,
+    "kind": "objective",
+    "room": "T1",
+    "text": "Objective 1 done: surveyed Tower Yard.",
+    "cause": "Arrival at the objective room."
+   },
+   {
+    "tick": 1419,
+    "kind": "route",
+    "room": "T1",
+    "text": "Thorough survey looks into Tower Barracks: T1 > T2 (ends at unexplored ground). No other permitted way.",
+    "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 1660,
+    "kind": "discovery",
+    "room": "T2",
+    "text": "Entered Tower Barracks for the first time. It is now on the map.",
+    "cause": "Map memory is permanent."
+   },
+   {
+    "tick": 1660,
+    "kind": "sweep",
+    "room": "T2",
+    "text": "Looked around Tower Barracks.",
+    "cause": "Thorough survey looks into Tower Barracks."
+   },
+   {
+    "tick": 1660,
+    "kind": "route",
+    "room": "T2",
+    "text": "Thorough survey returns to Tower Yard: T2 > T1. No other permitted way.",
+    "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 1998,
+    "kind": "sweep",
+    "room": "T1",
+    "text": "Back in Tower Yard; the survey goes on.",
+    "cause": "Thorough survey returns to Tower Yard."
+   },
+   {
+    "tick": 1998,
+    "kind": "retreat",
+    "room": "T1",
+    "text": "Heading for camp. Every objective is done or skipped.",
+    "cause": "Return to Camp ends every plan."
+   },
+   {
+    "tick": 1998,
+    "kind": "route",
+    "room": "T1",
+    "text": "Way home: T1 > O2 > O1 > C0. No other permitted way.",
+    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 2413,
+    "kind": "route",
+    "room": "O2",
+    "text": "Way home: O2 > O1 > C0. No other permitted way.",
+    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 2840,
+    "kind": "end",
+    "room": "C0",
+    "text": "Arrived at camp alive. Banking comes with M3.",
+    "cause": "Extraction means arriving at camp alive."
+   }
+  ]
+ },
+ "thoroughSurvey/2": {
+  "version": 1,
+  "seed": 2,
+  "outcome": "extracted",
+  "summary": "Back at camp alive with 80 of 90 health after 1 fight.",
+  "plan": {
+   "objectives": [
+    {
+     "id": "survey-T1",
+     "kind": "survey",
+     "room": "T1"
+    }
+   ],
+   "avoid": [],
+   "exploration": "thorough",
+   "doctrine": "guarded",
+   "retreatHpPct": 40,
+   "returnRoute": "safest"
+  },
+  "objectives": [
+   {
+    "id": "survey-T1",
+    "kind": "survey",
+    "room": "T1",
+    "status": "completed",
+    "note": "Surveyed."
+   }
+  ],
+  "route": [
+   "C0",
+   "O1",
+   "O2",
+   "T1",
+   "T2",
+   "T1",
+   "O2",
+   "O1",
+   "C0"
+  ],
+  "discovered": [
+   "T1",
+   "T2"
+  ],
+  "fights": [
+   {
+    "room": "O1",
+    "won": true,
+    "enemiesDefeated": 1,
+    "hpLeft": 80,
+    "hpMax": 90
+   }
+  ],
+  "ticks": 3219,
+  "hpLeft": 80,
+  "hpMax": 90,
+  "digest": "447eaae9",
+  "intent": [
+   {
+    "tick": 0,
+    "kind": "launch",
+    "room": "C0",
+    "text": "Launched with 1 objective: thorough exploration, guarded doctrine, retreat below 40% health, safest way home.",
+    "cause": "Plan accepted at camp."
+   },
+   {
+    "tick": 0,
+    "kind": "objective",
+    "room": "C0",
+    "text": "Objective 1: survey Tower Yard.",
+    "cause": "Next in the plan order."
+   },
+   {
+    "tick": 0,
+    "kind": "route",
+    "room": "C0",
+    "text": "Objective 1: C0 > O1 > O2 > T1 (ends at unexplored ground). No other permitted way.",
+    "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 1236,
+    "kind": "fight",
+    "room": "O1",
+    "text": "Won 1 fight in Outer Road, 1 enemies down; health 80 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   },
+   {
+    "tick": 1258,
+    "kind": "route",
+    "room": "O2",
+    "text": "Objective 1: O2 > T1 (ends at unexplored ground). No other permitted way.",
+    "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 1676,
+    "kind": "discovery",
+    "room": "T1",
+    "text": "Entered Tower Yard for the first time. It is now on the map.",
+    "cause": "Map memory is permanent."
+   },
+   {
+    "tick": 1676,
+    "kind": "objective",
+    "room": "T1",
+    "text": "Objective 1 done: surveyed Tower Yard.",
+    "cause": "Arrival at the objective room."
+   },
+   {
+    "tick": 1676,
+    "kind": "route",
+    "room": "T1",
+    "text": "Thorough survey looks into Tower Barracks: T1 > T2 (ends at unexplored ground). No other permitted way.",
+    "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 1917,
+    "kind": "discovery",
+    "room": "T2",
+    "text": "Entered Tower Barracks for the first time. It is now on the map.",
+    "cause": "Map memory is permanent."
+   },
+   {
+    "tick": 1917,
+    "kind": "sweep",
+    "room": "T2",
+    "text": "Looked around Tower Barracks.",
+    "cause": "Thorough survey looks into Tower Barracks."
+   },
+   {
+    "tick": 1917,
+    "kind": "route",
+    "room": "T2",
+    "text": "Thorough survey returns to Tower Yard: T2 > T1. No other permitted way.",
+    "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 2255,
+    "kind": "sweep",
+    "room": "T1",
+    "text": "Back in Tower Yard; the survey goes on.",
+    "cause": "Thorough survey returns to Tower Yard."
+   },
+   {
+    "tick": 2255,
+    "kind": "retreat",
+    "room": "T1",
+    "text": "Heading for camp. Every objective is done or skipped.",
+    "cause": "Return to Camp ends every plan."
+   },
+   {
+    "tick": 2255,
+    "kind": "route",
+    "room": "T1",
+    "text": "Way home: T1 > O2 > O1 > C0. No other permitted way.",
+    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 2670,
+    "kind": "route",
+    "room": "O2",
+    "text": "Way home: O2 > O1 > C0. No other permitted way.",
+    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 3097,
+    "kind": "end",
+    "room": "C0",
+    "text": "Arrived at camp alive. Banking comes with M3.",
+    "cause": "Extraction means arriving at camp alive."
+   }
+  ]
+ },
+ "thoroughSurvey/3": {
+  "version": 1,
+  "seed": 3,
+  "outcome": "extracted",
+  "summary": "Back at camp alive with 80 of 90 health after 1 fight.",
+  "plan": {
+   "objectives": [
+    {
+     "id": "survey-T1",
+     "kind": "survey",
+     "room": "T1"
+    }
+   ],
+   "avoid": [],
+   "exploration": "thorough",
+   "doctrine": "guarded",
+   "retreatHpPct": 40,
+   "returnRoute": "safest"
+  },
+  "objectives": [
+   {
+    "id": "survey-T1",
+    "kind": "survey",
+    "room": "T1",
+    "status": "completed",
+    "note": "Surveyed."
+   }
+  ],
+  "route": [
+   "C0",
+   "O1",
+   "O2",
+   "T1",
+   "T2",
+   "T1",
+   "O2",
+   "O1",
+   "C0"
+  ],
+  "discovered": [
+   "T1",
+   "T2"
+  ],
+  "fights": [
+   {
+    "room": "O1",
+    "won": true,
+    "enemiesDefeated": 1,
+    "hpLeft": 80,
+    "hpMax": 90
+   }
+  ],
+  "ticks": 3282,
+  "hpLeft": 80,
+  "hpMax": 90,
+  "digest": "e065ded2",
+  "intent": [
+   {
+    "tick": 0,
+    "kind": "launch",
+    "room": "C0",
+    "text": "Launched with 1 objective: thorough exploration, guarded doctrine, retreat below 40% health, safest way home.",
+    "cause": "Plan accepted at camp."
+   },
+   {
+    "tick": 0,
+    "kind": "objective",
+    "room": "C0",
+    "text": "Objective 1: survey Tower Yard.",
+    "cause": "Next in the plan order."
+   },
+   {
+    "tick": 0,
+    "kind": "route",
+    "room": "C0",
+    "text": "Objective 1: C0 > O1 > O2 > T1 (ends at unexplored ground). No other permitted way.",
+    "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 1298,
+    "kind": "fight",
+    "room": "O1",
+    "text": "Won 1 fight in Outer Road, 1 enemies down; health 80 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   },
+   {
+    "tick": 1321,
+    "kind": "route",
+    "room": "O2",
+    "text": "Objective 1: O2 > T1 (ends at unexplored ground). No other permitted way.",
+    "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 1739,
+    "kind": "discovery",
+    "room": "T1",
+    "text": "Entered Tower Yard for the first time. It is now on the map.",
+    "cause": "Map memory is permanent."
+   },
+   {
+    "tick": 1739,
+    "kind": "objective",
+    "room": "T1",
+    "text": "Objective 1 done: surveyed Tower Yard.",
+    "cause": "Arrival at the objective room."
+   },
+   {
+    "tick": 1739,
+    "kind": "route",
+    "room": "T1",
+    "text": "Thorough survey looks into Tower Barracks: T1 > T2 (ends at unexplored ground). No other permitted way.",
+    "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 1980,
+    "kind": "discovery",
+    "room": "T2",
+    "text": "Entered Tower Barracks for the first time. It is now on the map.",
+    "cause": "Map memory is permanent."
+   },
+   {
+    "tick": 1980,
+    "kind": "sweep",
+    "room": "T2",
+    "text": "Looked around Tower Barracks.",
+    "cause": "Thorough survey looks into Tower Barracks."
+   },
+   {
+    "tick": 1980,
+    "kind": "route",
+    "room": "T2",
+    "text": "Thorough survey returns to Tower Yard: T2 > T1. No other permitted way.",
+    "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 2318,
+    "kind": "sweep",
+    "room": "T1",
+    "text": "Back in Tower Yard; the survey goes on.",
+    "cause": "Thorough survey returns to Tower Yard."
+   },
+   {
+    "tick": 2318,
+    "kind": "retreat",
+    "room": "T1",
+    "text": "Heading for camp. Every objective is done or skipped.",
+    "cause": "Return to Camp ends every plan."
+   },
+   {
+    "tick": 2318,
+    "kind": "route",
+    "room": "T1",
+    "text": "Way home: T1 > O2 > O1 > C0. No other permitted way.",
+    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 2733,
+    "kind": "route",
+    "room": "O2",
+    "text": "Way home: O2 > O1 > C0. No other permitted way.",
+    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 3160,
+    "kind": "end",
+    "room": "C0",
+    "text": "Arrived at camp alive. Banking comes with M3.",
+    "cause": "Extraction means arriving at camp alive."
+   }
+  ]
+ },
+ "thoroughSurvey/4": {
+  "version": 1,
+  "seed": 4,
+  "outcome": "extracted",
+  "summary": "Back at camp alive with 90 of 90 health after 1 fight.",
+  "plan": {
+   "objectives": [
+    {
+     "id": "survey-T1",
+     "kind": "survey",
+     "room": "T1"
+    }
+   ],
+   "avoid": [],
+   "exploration": "thorough",
+   "doctrine": "guarded",
+   "retreatHpPct": 40,
+   "returnRoute": "safest"
+  },
+  "objectives": [
+   {
+    "id": "survey-T1",
+    "kind": "survey",
+    "room": "T1",
+    "status": "completed",
+    "note": "Surveyed."
+   }
+  ],
+  "route": [
+   "C0",
+   "O1",
+   "O2",
+   "T1",
+   "T2",
+   "T1",
+   "O2",
+   "O1",
+   "C0"
+  ],
+  "discovered": [
+   "T1",
+   "T2"
+  ],
+  "fights": [
+   {
+    "room": "O1",
+    "won": true,
+    "enemiesDefeated": 1,
+    "hpLeft": 90,
+    "hpMax": 90
+   }
+  ],
+  "ticks": 2796,
+  "hpLeft": 90,
+  "hpMax": 90,
+  "digest": "7622596e",
+  "intent": [
+   {
+    "tick": 0,
+    "kind": "launch",
+    "room": "C0",
+    "text": "Launched with 1 objective: thorough exploration, guarded doctrine, retreat below 40% health, safest way home.",
+    "cause": "Plan accepted at camp."
+   },
+   {
+    "tick": 0,
+    "kind": "objective",
+    "room": "C0",
+    "text": "Objective 1: survey Tower Yard.",
+    "cause": "Next in the plan order."
+   },
+   {
+    "tick": 0,
+    "kind": "route",
+    "room": "C0",
+    "text": "Objective 1: C0 > O1 > O2 > T1 (ends at unexplored ground). No other permitted way.",
+    "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 812,
+    "kind": "fight",
+    "room": "O1",
+    "text": "Won 1 fight in Outer Road, 1 enemies down; health 90 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   },
+   {
+    "tick": 835,
+    "kind": "route",
+    "room": "O2",
+    "text": "Objective 1: O2 > T1 (ends at unexplored ground). No other permitted way.",
+    "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 1253,
+    "kind": "discovery",
+    "room": "T1",
+    "text": "Entered Tower Yard for the first time. It is now on the map.",
+    "cause": "Map memory is permanent."
+   },
+   {
+    "tick": 1253,
+    "kind": "objective",
+    "room": "T1",
+    "text": "Objective 1 done: surveyed Tower Yard.",
+    "cause": "Arrival at the objective room."
+   },
+   {
+    "tick": 1253,
+    "kind": "route",
+    "room": "T1",
+    "text": "Thorough survey looks into Tower Barracks: T1 > T2 (ends at unexplored ground). No other permitted way.",
+    "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 1494,
+    "kind": "discovery",
+    "room": "T2",
+    "text": "Entered Tower Barracks for the first time. It is now on the map.",
+    "cause": "Map memory is permanent."
+   },
+   {
+    "tick": 1494,
+    "kind": "sweep",
+    "room": "T2",
+    "text": "Looked around Tower Barracks.",
+    "cause": "Thorough survey looks into Tower Barracks."
+   },
+   {
+    "tick": 1494,
+    "kind": "route",
+    "room": "T2",
+    "text": "Thorough survey returns to Tower Yard: T2 > T1. No other permitted way.",
+    "cause": "Thorough exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 1832,
+    "kind": "sweep",
+    "room": "T1",
+    "text": "Back in Tower Yard; the survey goes on.",
+    "cause": "Thorough survey returns to Tower Yard."
+   },
+   {
+    "tick": 1832,
+    "kind": "retreat",
+    "room": "T1",
+    "text": "Heading for camp. Every objective is done or skipped.",
+    "cause": "Return to Camp ends every plan."
+   },
+   {
+    "tick": 1832,
+    "kind": "route",
+    "room": "T1",
+    "text": "Way home: T1 > O2 > O1 > C0. No other permitted way.",
+    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 2247,
+    "kind": "route",
+    "room": "O2",
+    "text": "Way home: O2 > O1 > C0. No other permitted way.",
+    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 2674,
+    "kind": "end",
+    "room": "C0",
+    "text": "Arrived at camp alive. Banking comes with M3.",
+    "cause": "Extraction means arriving at camp alive."
+   }
+  ]
+ },
+ "cautious/1": {
+  "version": 1,
+  "seed": 1,
+  "outcome": "extracted",
+  "summary": "Back at camp alive with 29 of 90 health after 2 fights.",
+  "plan": {
+   "objectives": [
+    {
+     "id": "reach-O3",
+     "kind": "reach",
+     "room": "O3"
+    },
+    {
+     "id": "reach-KT",
+     "kind": "reach",
+     "room": "KT"
+    }
+   ],
+   "avoid": [],
+   "exploration": "safe",
+   "doctrine": "pressing",
+   "retreatHpPct": 95,
+   "returnRoute": "safest"
+  },
+  "objectives": [
+   {
+    "id": "reach-O3",
+    "kind": "reach",
+    "room": "O3",
+    "status": "suspended",
+    "note": "Health 73% is below the 95% retreat setting."
+   },
+   {
+    "id": "reach-KT",
+    "kind": "reach",
+    "room": "KT",
+    "status": "suspended",
+    "note": "Health 73% is below the 95% retreat setting."
+   }
+  ],
+  "route": [
+   "C0",
+   "O1",
+   "O2",
+   "O1",
+   "C0"
+  ],
+  "discovered": [],
+  "fights": [
+   {
+    "room": "O1",
+    "won": true,
+    "enemiesDefeated": 1,
+    "hpLeft": 66,
+    "hpMax": 90
+   },
+   {
+    "room": "O2",
+    "won": true,
+    "enemiesDefeated": 1,
+    "hpLeft": 29,
+    "hpMax": 90
+   }
+  ],
+  "ticks": 1716,
+  "hpLeft": 29,
+  "hpMax": 90,
+  "digest": "69d03fe4",
+  "intent": [
+   {
+    "tick": 0,
+    "kind": "launch",
+    "room": "C0",
+    "text": "Launched with 2 objectives: safe exploration, pressing doctrine, retreat below 95% health, safest way home.",
+    "cause": "Plan accepted at camp."
+   },
+   {
+    "tick": 0,
+    "kind": "objective",
+    "room": "C0",
+    "text": "Objective 1: reach Broken Causeway.",
+    "cause": "Next in the plan order."
+   },
+   {
+    "tick": 0,
+    "kind": "route",
+    "room": "C0",
+    "text": "Objective 1: C0 > O1 > O2 > O3. No other permitted way.",
+    "cause": "Safe exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 745,
+    "kind": "fight",
+    "room": "O1",
+    "text": "Won 1 fight in Outer Road, 1 enemies down; health 66 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   },
+   {
+    "tick": 768,
+    "kind": "retreat",
+    "room": "O2",
+    "text": "Heading for camp. Health 73% is below the 95% retreat setting.",
+    "cause": "Survival policy"
+   },
+   {
+    "tick": 768,
+    "kind": "route",
+    "room": "O2",
+    "text": "Way home: O2 > O1 > C0. No other permitted way.",
+    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 1321,
+    "kind": "fight",
+    "room": "O2",
+    "text": "Won 1 fight in Crossroads, 1 enemies down; health 29 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   },
+   {
+    "tick": 1594,
+    "kind": "end",
+    "room": "C0",
+    "text": "Arrived at camp alive. Banking comes with M3.",
+    "cause": "Extraction means arriving at camp alive."
+   }
+  ]
+ },
+ "cautious/2": {
+  "version": 1,
+  "seed": 2,
+  "outcome": "died",
+  "summary": "Fell in O2 after 2 fights; reached O2.",
+  "plan": {
+   "objectives": [
+    {
+     "id": "reach-O3",
+     "kind": "reach",
+     "room": "O3"
+    },
+    {
+     "id": "reach-KT",
+     "kind": "reach",
+     "room": "KT"
+    }
+   ],
+   "avoid": [],
+   "exploration": "safe",
+   "doctrine": "pressing",
+   "retreatHpPct": 95,
+   "returnRoute": "safest"
+  },
+  "objectives": [
+   {
+    "id": "reach-O3",
+    "kind": "reach",
+    "room": "O3",
+    "status": "suspended",
+    "note": "Health 34% is below the 95% retreat setting."
+   },
+   {
+    "id": "reach-KT",
+    "kind": "reach",
+    "room": "KT",
+    "status": "suspended",
+    "note": "Health 34% is below the 95% retreat setting."
+   }
+  ],
+  "route": [
+   "C0",
+   "O1",
+   "O2"
+  ],
+  "discovered": [],
+  "fights": [
+   {
+    "room": "O1",
+    "won": true,
+    "enemiesDefeated": 1,
+    "hpLeft": 31,
+    "hpMax": 90
+   },
+   {
+    "room": "O2",
+    "won": false,
+    "enemiesDefeated": 0,
+    "hpLeft": 0,
+    "hpMax": 90
+   }
+  ],
+  "ticks": 1258,
+  "hpLeft": 0,
+  "hpMax": 90,
+  "digest": "ebc0c81f",
+  "intent": [
+   {
+    "tick": 0,
+    "kind": "launch",
+    "room": "C0",
+    "text": "Launched with 2 objectives: safe exploration, pressing doctrine, retreat below 95% health, safest way home.",
+    "cause": "Plan accepted at camp."
+   },
+   {
+    "tick": 0,
+    "kind": "objective",
+    "room": "C0",
+    "text": "Objective 1: reach Broken Causeway.",
+    "cause": "Next in the plan order."
+   },
+   {
+    "tick": 0,
+    "kind": "route",
+    "room": "C0",
+    "text": "Objective 1: C0 > O1 > O2 > O3. No other permitted way.",
+    "cause": "Safe exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 887,
+    "kind": "fight",
+    "room": "O1",
+    "text": "Won 1 fight in Outer Road, 1 enemies down; health 31 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   },
+   {
+    "tick": 910,
+    "kind": "retreat",
+    "room": "O2",
+    "text": "Heading for camp. Health 34% is below the 95% retreat setting.",
+    "cause": "Survival policy"
+   },
+   {
+    "tick": 910,
+    "kind": "route",
+    "room": "O2",
+    "text": "Way home: O2 > O1 > C0. No other permitted way.",
+    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 1257,
+    "kind": "fight",
+    "room": "O2",
+    "text": "Lost 1 fight in Crossroads, 0 enemies down; health 0 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   }
+  ]
+ },
+ "cautious/3": {
+  "version": 1,
+  "seed": 3,
+  "outcome": "died",
+  "summary": "Fell in O2 after 2 fights; reached O2.",
+  "plan": {
+   "objectives": [
+    {
+     "id": "reach-O3",
+     "kind": "reach",
+     "room": "O3"
+    },
+    {
+     "id": "reach-KT",
+     "kind": "reach",
+     "room": "KT"
+    }
+   ],
+   "avoid": [],
+   "exploration": "safe",
+   "doctrine": "pressing",
+   "retreatHpPct": 95,
+   "returnRoute": "safest"
+  },
+  "objectives": [
+   {
+    "id": "reach-O3",
+    "kind": "reach",
+    "room": "O3",
+    "status": "suspended",
+    "note": "Health 73% is below the 95% retreat setting."
+   },
+   {
+    "id": "reach-KT",
+    "kind": "reach",
+    "room": "KT",
+    "status": "suspended",
+    "note": "Health 73% is below the 95% retreat setting."
+   }
+  ],
+  "route": [
+   "C0",
+   "O1",
+   "O2"
+  ],
+  "discovered": [],
+  "fights": [
+   {
+    "room": "O1",
+    "won": true,
+    "enemiesDefeated": 1,
+    "hpLeft": 66,
+    "hpMax": 90
+   },
+   {
+    "room": "O2",
+    "won": false,
+    "enemiesDefeated": 0,
+    "hpLeft": 0,
+    "hpMax": 90
+   }
+  ],
+  "ticks": 1023,
+  "hpLeft": 0,
+  "hpMax": 90,
+  "digest": "210696a7",
+  "intent": [
+   {
+    "tick": 0,
+    "kind": "launch",
+    "room": "C0",
+    "text": "Launched with 2 objectives: safe exploration, pressing doctrine, retreat below 95% health, safest way home.",
+    "cause": "Plan accepted at camp."
+   },
+   {
+    "tick": 0,
+    "kind": "objective",
+    "room": "C0",
+    "text": "Objective 1: reach Broken Causeway.",
+    "cause": "Next in the plan order."
+   },
+   {
+    "tick": 0,
+    "kind": "route",
+    "room": "C0",
+    "text": "Objective 1: C0 > O1 > O2 > O3. No other permitted way.",
+    "cause": "Safe exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 663,
+    "kind": "fight",
+    "room": "O1",
+    "text": "Won 1 fight in Outer Road, 1 enemies down; health 66 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   },
+   {
+    "tick": 686,
+    "kind": "retreat",
+    "room": "O2",
+    "text": "Heading for camp. Health 73% is below the 95% retreat setting.",
+    "cause": "Survival policy"
+   },
+   {
+    "tick": 686,
+    "kind": "route",
+    "room": "O2",
+    "text": "Way home: O2 > O1 > C0. No other permitted way.",
+    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 1022,
+    "kind": "fight",
+    "room": "O2",
+    "text": "Lost 1 fight in Crossroads, 0 enemies down; health 0 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   }
+  ]
+ },
+ "cautious/4": {
+  "version": 1,
+  "seed": 4,
+  "outcome": "extracted",
+  "summary": "Back at camp alive with 2 of 90 health after 2 fights.",
+  "plan": {
+   "objectives": [
+    {
+     "id": "reach-O3",
+     "kind": "reach",
+     "room": "O3"
+    },
+    {
+     "id": "reach-KT",
+     "kind": "reach",
+     "room": "KT"
+    }
+   ],
+   "avoid": [],
+   "exploration": "safe",
+   "doctrine": "pressing",
+   "retreatHpPct": 95,
+   "returnRoute": "safest"
+  },
+  "objectives": [
+   {
+    "id": "reach-O3",
+    "kind": "reach",
+    "room": "O3",
+    "status": "suspended",
+    "note": "Health 73% is below the 95% retreat setting."
+   },
+   {
+    "id": "reach-KT",
+    "kind": "reach",
+    "room": "KT",
+    "status": "suspended",
+    "note": "Health 73% is below the 95% retreat setting."
+   }
+  ],
+  "route": [
+   "C0",
+   "O1",
+   "O2",
+   "O1",
+   "C0"
+  ],
+  "discovered": [],
+  "fights": [
+   {
+    "room": "O1",
+    "won": true,
+    "enemiesDefeated": 1,
+    "hpLeft": 66,
+    "hpMax": 90
+   },
+   {
+    "room": "O2",
+    "won": true,
+    "enemiesDefeated": 1,
+    "hpLeft": 2,
+    "hpMax": 90
+   }
+  ],
+  "ticks": 1713,
+  "hpLeft": 2,
+  "hpMax": 90,
+  "digest": "372392b1",
+  "intent": [
+   {
+    "tick": 0,
+    "kind": "launch",
+    "room": "C0",
+    "text": "Launched with 2 objectives: safe exploration, pressing doctrine, retreat below 95% health, safest way home.",
+    "cause": "Plan accepted at camp."
+   },
+   {
+    "tick": 0,
+    "kind": "objective",
+    "room": "C0",
+    "text": "Objective 1: reach Broken Causeway.",
+    "cause": "Next in the plan order."
+   },
+   {
+    "tick": 0,
+    "kind": "route",
+    "room": "C0",
+    "text": "Objective 1: C0 > O1 > O2 > O3. No other permitted way.",
+    "cause": "Safe exploration: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 739,
+    "kind": "fight",
+    "room": "O1",
+    "text": "Won 1 fight in Outer Road, 1 enemies down; health 66 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   },
+   {
+    "tick": 762,
+    "kind": "retreat",
+    "room": "O2",
+    "text": "Heading for camp. Health 73% is below the 95% retreat setting.",
+    "cause": "Survival policy"
+   },
+   {
+    "tick": 762,
+    "kind": "route",
+    "room": "O2",
+    "text": "Way home: O2 > O1 > C0. No other permitted way.",
+    "cause": "Safest way home: cheapest by walking distance plus a danger charge per region label."
+   },
+   {
+    "tick": 1318,
+    "kind": "fight",
+    "room": "O2",
+    "text": "Won 1 fight in Crossroads, 1 enemies down; health 2 of 90.",
+    "cause": "The simulator ran the fight; the expedition layer only reads the outcome."
+   },
+   {
+    "tick": 1591,
+    "kind": "end",
+    "room": "C0",
+    "text": "Arrived at camp alive. Banking comes with M3.",
+    "cause": "Extraction means arriving at camp alive."
+   }
+  ]
+ }
+}

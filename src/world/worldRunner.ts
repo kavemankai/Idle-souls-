@@ -10,8 +10,10 @@ import { WorldGraph } from './worldGraph';
 export const OLD_ROAD_ENCOUNTERS: Readonly<Record<string, string>> = { O1: 'mireling', O2: 'sentry', O3: 'mireling2' };
 export interface WorldRunConfig {
   seed: number; level: number; focus: string; doctrine: SimDoctrine;
-  /** Start and turn-around rooms. The route between them is the graph's shortest path over ordinary links. */
-  from: string; to: string;
+  /** Start and turn-around rooms. The route between them is the graph's shortest path over ordinary links. Ignored when a navigator is given. */
+  from?: string; to?: string;
+  /** Decides, on every arrival, which door to leave by. Without one the walk is the fixed there-and-back of `from` and `to`. */
+  navigator?: Navigator;
   /** Room to encounter id, for the rooms that have enemies. Defaults to OLD_ROAD_ENCOUNTERS; a missing room is empty. */
   encounters?: Readonly<Record<string, string>>;
   /** Door of the turn-around room that marks the frontier of the known world. Defaults to its first door that is not on the way in. */
@@ -20,89 +22,130 @@ export interface WorldRunConfig {
   hpOverride?: number; maxFightTicks?: number;
 }
 export type WorldState = 'ready' | 'outbound' | 'homebound' | 'home' | 'defeated' | 'unresolved';
-export interface LegResult { room: string; phase: 'out' | 'back'; result: RoomResult }
+/** What a navigator sees each time the adventurer starts a stretch inside a room (arriving, or turning round at a door). Everything is read-only. */
+export interface ArrivalCtx {
+  room: string; entry: string | null; tick: number; hp: number; hpMax: number; pos: Point;
+  /** Index of this stretch in the whole walk, 0 for the first. */
+  leg: number;
+  dead: ReadonlyMap<string, readonly boolean[]>; results: readonly LegResult[];
+}
+/** `exit` is a door of the current room. `cross` false means: walk to the door, then ask again from inside the same room (a turn-around). */
+export type NavDecision = { exit: string; cross: boolean; label?: string; via?: Point } | { goal: Point; label?: string } | { halt: string };
+export interface Navigator {
+  start: string;
+  arrive(ctx: ArrivalCtx): NavDecision;
+  /** Called when a stretch ends, win or lose, before the next arrival. */
+  legEnded?(result: LegResult, ctx: ArrivalCtx): void;
+}
+export interface LegResult { room: string; phase: string; entry: string | null; result: RoomResult }
 export interface WorldResult {
-  outcome: 'home' | 'defeated' | 'unresolved'; rooms: string[]; legs: LegResult[]; ticks: number; fights: number; enemiesDefeated: number;
+  outcome: 'home' | 'defeated' | 'unresolved'; rooms: string[]; haltReason: string | null; legs: LegResult[]; ticks: number; fights: number; enemiesDefeated: number;
   hpLeft: number; hpMax: number; finalPos: Point; digest: string;
   /** Largest distance covered in one tick while walking (rooms and the passages between them) and while the simulator moved the adventurer. */
   maxWalkStep: number; maxFightStep: number;
   /** Per room, which of its enemies are dead at the end. */
   dead: Record<string, boolean[]>;
 }
-interface Leg { room: string; phase: 'out' | 'back'; entry: string | null; exit: string | null }
 
 /** Room-local position to world position. Every manifest is centred on its schedule centre. */
 export function toWorld(room: RoomManifest, p: Point): Point { const c = room.plan!.center; return { x: c.x + p.x, y: c.y + p.y }; }
 export function toLocal(room: RoomManifest, p: Point): Point { const c = room.plan!.center; return { x: p.x - c.x, y: p.y - c.y }; }
 
+/** M1's fixed walk: out along the graph's shortest ordinary path to a turn-around room, across its frontier door, and back the same way to the start room's centre. */
+export class WalkNavigator implements Navigator {
+  readonly start: string;
+  readonly rooms: string[];
+  private readonly turn: string | null;
+  constructor(graph: WorldGraph, manifests: Readonly<Record<string, RoomManifest>>, from: string, to: string, turnDoor?: string) {
+    const path = graph.path(from, to);
+    if (!path) throw new Error(`no ordinary route from ${from} to ${to}`);
+    this.start = from; this.rooms = path;
+    const before = path.length > 1 ? path[path.length - 2] : null;
+    this.turn = turnDoor ?? manifests[to].doors.find(d => d.to !== before)?.id ?? null;
+    if (this.turn && !manifests[to].doors.some(d => d.id === this.turn)) throw new Error(`${to} has no door ${this.turn}`);
+  }
+  arrive(ctx: ArrivalCtx): NavDecision {
+    const path = this.rooms, n = path.length, i = ctx.leg;
+    if (i < n) return { exit: i < n - 1 ? `to-${path[i + 1]}` : this.turn!, cross: i < n - 1, label: 'out' };
+    const j = i - n;   // 0 is the first leg after the turn-around, still in the last room
+    if (j === n - 1) return { goal: { x: 0, y: 0 }, label: 'back' };
+    return { exit: `to-${path[n - 2 - j]}`, cross: true, label: 'back' };
+  }
+}
+
 /**
- * One expedition on foot: from a room out through the graph's path to a turn-around room, then back the same way to the start room's centre.
- * Rooms are run by RoomRunner. Between rooms the adventurer walks the straight passage from one door to the other at walking speed, so the world position
- * never jumps. Enemies killed stay dead for the rest of the walk; living ones that never fought keep their places and can see the adventurer on any later pass.
- * Health carries. This class only sequences; it never picks a tactic.
+ * An expedition on foot. Rooms are run by RoomRunner. Between rooms the adventurer walks the straight passage from one door to the paired door at walking
+ * speed, so the world position never jumps. Enemies killed stay dead for the rest of the walk; living ones that never fought keep their places and can see
+ * the adventurer on any later pass. Health carries. A navigator picks the exit door on every arrival. This class only sequences; it never picks a tactic.
  */
 export class WorldRunner {
   state: WorldState = 'ready';
   tick = 0;
-  readonly rooms: string[];
-  readonly legs: Leg[];
   readonly results: LegResult[] = [];
   readonly dead = new Map<string, boolean[]>();
+  readonly nav: Navigator;
   /** The runner of the leg in progress, null while walking a passage. */
   runner: RoomRunner | null = null;
+  /** Room the adventurer is in, or is walking toward. */
+  room = '';
   pos: Point = { x: 0, y: 0 };
   hp = 0; hpMax = 0;
   maxWalkStep = 0; maxFightStep = 0;
+  haltReason: string | null = null;
   notes: string[] = [];
   private legIdx = -1;
-  private passage: { to: Point; next: number } | null = null;
+  private decision: NavDecision | null = null;
+  private entry: string | null = null;
+  private passage: { to: Point; room: string; entry: string } | null = null;
   private face = 0;
   private hash = 2166136261;
   private readonly speed: number;
   readonly graph: WorldGraph;
   constructor(readonly sim: SimApi, readonly cfg: WorldRunConfig, graph = new WorldGraph(), private readonly manifests: Readonly<Record<string, RoomManifest>> = ROOMS) {
     this.graph = graph;
-    const path = graph.path(cfg.from, cfg.to);
-    if (!path) throw new Error(`no ordinary route from ${cfg.from} to ${cfg.to}`);
-    this.rooms = path;
-    const last = this.manifests[cfg.to], before = path.length > 1 ? path[path.length - 2] : null;
-    const turn = cfg.turnDoor ?? last.doors.find(d => d.to !== before)?.id ?? null;
-    if (turn && !last.doors.some(d => d.id === turn)) throw new Error(`${cfg.to} has no door ${turn}`);
-    const out: Leg[] = path.map((room, i) => ({ room, phase: 'out' as const, entry: i > 0 ? `to-${path[i - 1]}` : null, exit: i < path.length - 1 ? `to-${path[i + 1]}` : turn }));
-    const back: Leg[] = path.slice().reverse().map((room, i, rev) => ({ room, phase: 'back' as const, entry: i === 0 ? turn : `to-${rev[i - 1]}`, exit: i < rev.length - 1 ? `to-${rev[i + 1]}` : null }));
-    this.legs = [...out, ...back];
+    if (!cfg.navigator && (!cfg.from || !cfg.to)) throw new Error('a world run needs a navigator or both from and to');
+    this.nav = cfg.navigator ?? new WalkNavigator(graph, manifests, cfg.from!, cfg.to!, cfg.turnDoor);
     const derived = sim.derive(sim.allocate(cfg.level, cfg.focus, cfg.seed), false);
     this.speed = sim.ARCH.adventurer.speed * derived.moveMult;
     this.hpMax = cfg.hpOverride ?? derived.hp; this.hp = this.hpMax;
-    const first = this.manifests[cfg.from];
-    this.pos = toWorld(first, { x: 0, y: 0 });
+    this.room = this.nav.start;
+    this.pos = toWorld(this.manifests[this.nav.start], { x: 0, y: 0 });
   }
+  /** Rooms of the planned walk when the navigator has one, else the rooms entered so far, in order and without repeats. */
+  get rooms(): string[] { return (this.nav as { rooms?: string[] }).rooms ?? [...new Set(this.results.map(l => l.room).concat(this.runner ? [this.room] : []))]; }
   get terminal() { return this.state === 'home' || this.state === 'defeated' || this.state === 'unresolved'; }
   dispatch() {
     if (this.state !== 'ready') return;
     this.state = 'outbound';
-    this.note(`Dispatched from ${this.cfg.from} to ${this.cfg.to}: ${this.rooms.join(' > ')}.`);
-    this.beginLeg(0, { x: 0, y: 0 }, 0);
+    this.note(`Dispatched from ${this.nav.start}.`);
+    this.beginLeg(this.nav.start, null, { x: 0, y: 0 }, 0);
   }
-  private room(id: string) { return this.manifests[id]; }
+  private manifest(id: string) { return this.manifests[id]; }
   private note(text: string) { this.notes.push(`${this.tick}: ${text}`); }
-  /** Start a room leg with the adventurer at room-local `at`. */
-  private beginLeg(i: number, at: Point, face: number) {
-    this.legIdx = i;
-    const leg = this.legs[i], room = this.room(leg.room);
-    const last = i === this.legs.length - 1;
-    const encounter = this.cfg.encounters?.[leg.room] ?? (this.cfg.encounters ? undefined : OLD_ROAD_ENCOUNTERS[leg.room]);
-    const exitDoor = leg.exit ? room.doors.find(d => d.id === leg.exit)! : room.doors.find(d => d.id !== leg.entry)!;
+  private ctx(room: string, entry: string | null, pos: Point): ArrivalCtx {
+    return { room, entry, tick: this.tick, hp: this.hp, hpMax: this.hpMax, pos, leg: this.legIdx, dead: this.dead, results: this.results };
+  }
+  /** Start a stretch in `room` with the adventurer at room-local `at`, after asking the navigator where to go. */
+  private beginLeg(room: string, entry: string | null, at: Point, face: number) {
+    this.legIdx++;
+    this.room = room; this.entry = entry;
+    const m = this.manifest(room);
+    const dec = this.nav.arrive(this.ctx(room, entry, at));
+    this.decision = dec;
+    if ('halt' in dec) { this.state = 'unresolved'; this.haltReason = dec.halt; this.runner = null; this.note(`Halted in ${room}: ${dec.halt}`); return; }
+    const goal = 'goal' in dec ? dec.goal : undefined;
+    const exitDoor = 'exit' in dec ? m.doors.find(d => d.id === dec.exit) : m.doors.find(d => d.id !== entry);
+    if (!exitDoor) throw new Error(`${room} has no door ${'exit' in dec ? dec.exit : ''}`);
+    const encounter = this.cfg.encounters?.[room] ?? (this.cfg.encounters ? undefined : OLD_ROAD_ENCOUNTERS[room]);
     this.runner = new RoomRunner(this.sim, {
       seed: this.cfg.seed, level: this.cfg.level, focus: this.cfg.focus, doctrine: this.cfg.doctrine,
-      encounter, room,
-      entryDoor: leg.entry ?? undefined, exitDoor: exitDoor.id, start: at, startFace: face,
-      startHp: this.hp, hpOverride: this.hpMax, defeated: this.dead.get(leg.room), seedOffset: (i + 1) * 100003, maxFightTicks: this.cfg.maxFightTicks,
-      // The walk ends at the start room's centre; every other leg ends at its exit door.
-      goal: last ? { x: 0, y: 0 } : undefined,
+      encounter, room: m,
+      entryDoor: entry ?? undefined, exitDoor: exitDoor.id, start: at, startFace: face,
+      startHp: this.hp, hpOverride: this.hpMax, defeated: this.dead.get(room), seedOffset: this.legIdx * 100003 + 100003, maxFightTicks: this.cfg.maxFightTicks,
+      goal, via: 'exit' in dec ? dec.via : undefined,
     });
     this.runner.dispatch();
-    this.note(`Entered ${leg.room} (${leg.phase}).`);
+    this.note(`Entered ${room}.`);
   }
   /** Advance exactly one tick. */
   step() {
@@ -116,7 +159,7 @@ export class WorldRunner {
       r.step();
       fighting = r.fightTicks > ticksBefore;   // this tick belonged to the simulator, which owns the adventurer's motion
       // While the simulator owns the fight the adventurer's place is the fighter's, not the walker's.
-      this.pos = toWorld(this.room(this.legs[this.legIdx].room), fighting && r.fight && r.state !== 'travelling' ? r.fight.p : r.hero);
+      this.pos = toWorld(this.manifest(this.room), fighting && r.fight && r.state !== 'travelling' ? r.fight.p : r.hero);
       this.hp = r.hp;
       if (r.terminal) this.endLeg(r);
     }
@@ -126,23 +169,26 @@ export class WorldRunner {
     this.mix();
   }
   private endLeg(r: RoomRunner) {
-    const leg = this.legs[this.legIdx];
-    this.results.push({ room: leg.room, phase: leg.phase, result: r.result() });
-    this.dead.set(leg.room, r.foes.map(f => f.engaged && !f.alive));
+    const dec = this.decision!, room = this.room;
+    const lr: LegResult = { room, phase: ('exit' in dec || 'goal' in dec) ? dec.label ?? 'walk' : 'walk', entry: this.entry, result: r.result() };
+    this.results.push(lr);
+    this.dead.set(room, r.foes.map(f => f.engaged && !f.alive));
+    this.nav.legEnded?.(lr, this.ctx(room, this.entry, r.hero));
     if (r.state === 'defeated') { this.state = 'defeated'; this.note('The adventurer fell.'); return; }
-    if (r.state === 'unresolved') { this.state = 'unresolved'; this.note(`Stopped in ${leg.room}: ${r.notes[r.notes.length - 1]}`); return; }
-    const next = this.legIdx + 1;
-    if (next >= this.legs.length) { this.state = 'home'; this.note(`Back at ${this.cfg.from}.`); this.runner = null; return; }
-    const nextLeg = this.legs[next];
-    if (nextLeg.room === leg.room) {
-      // Turn-around: stay where the adventurer stands.
-      this.state = 'homebound'; this.note(`Turned back at the ${leg.exit} frontier.`);
-      this.beginLeg(next, r.hero, r.hero.face);
+    if (r.state === 'unresolved') { this.state = 'unresolved'; this.note(`Stopped in ${room}: ${r.notes[r.notes.length - 1]}`); return; }
+    if ('goal' in dec) { this.state = 'home'; this.note(`Back at ${this.nav.start}.`); this.runner = null; return; }
+    const exit = 'exit' in dec ? dec : null;
+    if (!exit) return;
+    if (!exit.cross) {
+      // Turn-around: stay where the adventurer stands and ask again from the same door.
+      this.state = 'homebound'; this.note(`Turned back at the ${exit.exit} door.`);
+      this.beginLeg(room, exit.exit, r.hero, r.hero.face);
       return;
     }
     // Walk the passage from where the adventurer stands to the paired door of the next room.
-    const there = this.room(nextLeg.room), arrival = there.doors.find((d: Door) => d.id === nextLeg.entry)!;
-    this.passage = { to: toWorld(there, arrival.center), next };
+    const here = this.manifest(room), door = here.doors.find(d => d.id === exit.exit)!;
+    const there = this.manifest(door.to), arrival = there.doors.find((d: Door) => d.id === `to-${room}`)!;
+    this.passage = { to: toWorld(there, arrival.center), room: door.to, entry: arrival.id };
     this.face = r.hero.face;
     this.runner = null;
   }
@@ -151,9 +197,9 @@ export class WorldRunner {
     if (d > 1e-9) this.face = M.atan2(dy, dx);
     if (d <= this.speed) {
       this.pos = { x: p.to.x, y: p.to.y };
-      const there = this.room(this.legs[p.next].room);
+      const there = this.manifest(p.room);
       this.passage = null;
-      this.beginLeg(p.next, toLocal(there, this.pos), this.face);
+      this.beginLeg(p.room, p.entry, toLocal(there, this.pos), this.face);
     } else this.pos = { x: this.pos.x + dx / d * this.speed, y: this.pos.y + dy / d * this.speed };
   }
   private mix() {
@@ -169,7 +215,7 @@ export class WorldRunner {
   }
   result(): WorldResult {
     return {
-      outcome: this.state === 'home' || this.state === 'defeated' ? this.state : 'unresolved', rooms: this.rooms, legs: this.results, ticks: this.tick,
+      outcome: this.state === 'home' || this.state === 'defeated' ? this.state : 'unresolved', rooms: this.rooms, haltReason: this.haltReason, legs: this.results, ticks: this.tick,
       fights: this.results.reduce((n, l) => n + l.result.fights, 0), enemiesDefeated: this.results.reduce((n, l) => n + l.result.enemiesDefeated, 0),
       hpLeft: Math.round(this.hp), hpMax: this.hpMax, finalPos: { x: Math.round(this.pos.x * 10) / 10, y: Math.round(this.pos.y * 10) / 10 }, digest: this.digest,
       maxWalkStep: Math.round(this.maxWalkStep * 1000) / 1000, maxFightStep: Math.round(this.maxFightStep * 1000) / 1000,

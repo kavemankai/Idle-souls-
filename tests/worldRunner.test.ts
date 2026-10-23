@@ -21,14 +21,12 @@ test('the walk follows the graph path out and back and ends at the camp centre',
 });
 
 test('the adventurer never jumps: walking steps stay within walking speed, across rooms and passages', () => {
-  const w = new WorldRunner(sim, { ...base });
   const speed = sim.ARCH.adventurer.speed * sim.derive(sim.allocate(80, 'balanced', 1), false).moveMult;
   const sets: (Record<string, string> | undefined)[] = [{}, undefined, { O1: 'mireling2', O2: 'mireling', O3: 'sentry' }];
   for (const encounters of sets) for (const seed of [1, 2, 3]) {
     const r = runWorld(sim, { ...base, seed, encounters, hpOverride: 5000 });
     assert.ok(r.maxWalkStep <= speed + 1e-3, `seed ${seed}: walked ${r.maxWalkStep} in one tick, speed ${speed}`);
   }
-  assert.ok(w.legs.length === 8);
 });
 
 test('a killed enemy stays dead for the rest of the walk', () => {

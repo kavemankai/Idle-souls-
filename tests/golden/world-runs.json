@@ -7,10 +7,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -31,6 +33,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -51,6 +54,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "defeated",
      "fought": true,
@@ -99,10 +103,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -123,6 +129,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -143,6 +150,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -163,6 +171,7 @@
    {
     "room": "O3",
     "phase": "out",
+    "entry": "to-O2",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -183,6 +192,7 @@
    {
     "room": "O3",
     "phase": "back",
+    "entry": "to-S1",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -203,6 +213,7 @@
    {
     "room": "O2",
     "phase": "back",
+    "entry": "to-O3",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -223,6 +234,7 @@
    {
     "room": "O1",
     "phase": "back",
+    "entry": "to-O2",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -243,6 +255,7 @@
    {
     "room": "C0",
     "phase": "back",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -295,10 +308,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -319,6 +334,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -339,6 +355,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "defeated",
      "fought": true,
@@ -387,10 +404,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -411,6 +430,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -431,6 +451,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -451,6 +472,7 @@
    {
     "room": "O3",
     "phase": "out",
+    "entry": "to-O2",
     "result": {
      "outcome": "defeated",
      "fought": true,
@@ -503,10 +525,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -527,6 +551,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -547,6 +572,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -567,6 +593,7 @@
    {
     "room": "O3",
     "phase": "out",
+    "entry": "to-O2",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -587,6 +614,7 @@
    {
     "room": "O3",
     "phase": "back",
+    "entry": "to-S1",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -607,6 +635,7 @@
    {
     "room": "O2",
     "phase": "back",
+    "entry": "to-O3",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -627,6 +656,7 @@
    {
     "room": "O1",
     "phase": "back",
+    "entry": "to-O2",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -647,6 +677,7 @@
    {
     "room": "C0",
     "phase": "back",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -699,10 +730,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -723,6 +756,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -743,6 +777,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -763,6 +798,7 @@
    {
     "room": "O3",
     "phase": "out",
+    "entry": "to-O2",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -783,6 +819,7 @@
    {
     "room": "O3",
     "phase": "back",
+    "entry": "to-S1",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -803,6 +840,7 @@
    {
     "room": "O2",
     "phase": "back",
+    "entry": "to-O3",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -823,6 +861,7 @@
    {
     "room": "O1",
     "phase": "back",
+    "entry": "to-O2",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -843,6 +882,7 @@
    {
     "room": "C0",
     "phase": "back",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -895,10 +935,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -919,6 +961,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -939,6 +982,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -959,6 +1003,7 @@
    {
     "room": "O3",
     "phase": "out",
+    "entry": "to-O2",
     "result": {
      "outcome": "defeated",
      "fought": true,
@@ -1011,10 +1056,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -1035,6 +1082,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -1055,6 +1103,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -1075,6 +1124,7 @@
    {
     "room": "O3",
     "phase": "out",
+    "entry": "to-O2",
     "result": {
      "outcome": "defeated",
      "fought": true,
@@ -1127,10 +1177,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -1151,6 +1203,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -1171,6 +1224,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -1191,6 +1245,7 @@
    {
     "room": "O3",
     "phase": "out",
+    "entry": "to-O2",
     "result": {
      "outcome": "defeated",
      "fought": true,
@@ -1243,10 +1298,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -1267,6 +1324,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -1287,6 +1345,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -1307,6 +1366,7 @@
    {
     "room": "O3",
     "phase": "out",
+    "entry": "to-O2",
     "result": {
      "outcome": "defeated",
      "fought": true,
@@ -1359,10 +1419,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -1383,6 +1445,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -1403,6 +1466,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "defeated",
      "fought": true,
@@ -1451,10 +1515,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -1475,6 +1541,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -1495,6 +1562,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -1515,6 +1583,7 @@
    {
     "room": "O3",
     "phase": "out",
+    "entry": "to-O2",
     "result": {
      "outcome": "defeated",
      "fought": true,
@@ -1567,10 +1636,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -1591,6 +1662,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -1611,6 +1683,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -1631,6 +1704,7 @@
    {
     "room": "O3",
     "phase": "out",
+    "entry": "to-O2",
     "result": {
      "outcome": "defeated",
      "fought": true,
@@ -1683,10 +1757,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -1707,6 +1783,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -1727,6 +1804,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -1747,6 +1825,7 @@
    {
     "room": "O3",
     "phase": "out",
+    "entry": "to-O2",
     "result": {
      "outcome": "defeated",
      "fought": true,
@@ -1799,10 +1878,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -1823,6 +1904,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -1843,6 +1925,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -1863,6 +1946,7 @@
    {
     "room": "O3",
     "phase": "out",
+    "entry": "to-O2",
     "result": {
      "outcome": "defeated",
      "fought": true,
@@ -1915,10 +1999,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -1939,6 +2025,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -1959,6 +2046,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -1979,6 +2067,7 @@
    {
     "room": "O3",
     "phase": "out",
+    "entry": "to-O2",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -1999,6 +2088,7 @@
    {
     "room": "O3",
     "phase": "back",
+    "entry": "to-S1",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -2019,6 +2109,7 @@
    {
     "room": "O2",
     "phase": "back",
+    "entry": "to-O3",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -2039,6 +2130,7 @@
    {
     "room": "O1",
     "phase": "back",
+    "entry": "to-O2",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -2059,6 +2151,7 @@
    {
     "room": "C0",
     "phase": "back",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -2111,10 +2204,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -2135,6 +2230,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -2155,6 +2251,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -2175,6 +2272,7 @@
    {
     "room": "O3",
     "phase": "out",
+    "entry": "to-O2",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -2195,6 +2293,7 @@
    {
     "room": "O3",
     "phase": "back",
+    "entry": "to-S1",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -2215,6 +2314,7 @@
    {
     "room": "O2",
     "phase": "back",
+    "entry": "to-O3",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -2235,6 +2335,7 @@
    {
     "room": "O1",
     "phase": "back",
+    "entry": "to-O2",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -2255,6 +2356,7 @@
    {
     "room": "C0",
     "phase": "back",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -2307,10 +2409,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -2331,6 +2435,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -2351,6 +2456,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -2371,6 +2477,7 @@
    {
     "room": "O3",
     "phase": "out",
+    "entry": "to-O2",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -2391,6 +2498,7 @@
    {
     "room": "O3",
     "phase": "back",
+    "entry": "to-S1",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -2411,6 +2519,7 @@
    {
     "room": "O2",
     "phase": "back",
+    "entry": "to-O3",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -2431,6 +2540,7 @@
    {
     "room": "O1",
     "phase": "back",
+    "entry": "to-O2",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -2451,6 +2561,7 @@
    {
     "room": "C0",
     "phase": "back",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -2503,10 +2614,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -2527,6 +2640,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -2547,6 +2661,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -2567,6 +2682,7 @@
    {
     "room": "O3",
     "phase": "out",
+    "entry": "to-O2",
     "result": {
      "outcome": "defeated",
      "fought": true,
@@ -2619,10 +2735,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -2643,6 +2761,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -2663,6 +2782,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -2683,6 +2803,7 @@
    {
     "room": "O3",
     "phase": "out",
+    "entry": "to-O2",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -2703,6 +2824,7 @@
    {
     "room": "O3",
     "phase": "back",
+    "entry": "to-S1",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -2723,6 +2845,7 @@
    {
     "room": "O2",
     "phase": "back",
+    "entry": "to-O3",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -2743,6 +2866,7 @@
    {
     "room": "O1",
     "phase": "back",
+    "entry": "to-O2",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -2763,6 +2887,7 @@
    {
     "room": "C0",
     "phase": "back",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -2815,10 +2940,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -2839,6 +2966,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -2859,6 +2987,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -2879,6 +3008,7 @@
    {
     "room": "O3",
     "phase": "out",
+    "entry": "to-O2",
     "result": {
      "outcome": "defeated",
      "fought": true,
@@ -2931,10 +3061,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -2955,6 +3087,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -2975,6 +3108,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "defeated",
      "fought": true,
@@ -3024,10 +3158,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -3048,6 +3184,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "completed",
      "fought": true,
@@ -3068,6 +3205,7 @@
    {
     "room": "O2",
     "phase": "out",
+    "entry": "to-O1",
     "result": {
      "outcome": "defeated",
      "fought": true,
@@ -3117,10 +3255,12 @@
    "O2",
    "O3"
   ],
+  "haltReason": null,
   "legs": [
    {
     "room": "C0",
     "phase": "out",
+    "entry": null,
     "result": {
      "outcome": "completed",
      "fought": false,
@@ -3141,6 +3281,7 @@
    {
     "room": "O1",
     "phase": "out",
+    "entry": "to-C0",
     "result": {
      "outcome": "defeated",
      "fought": true,
