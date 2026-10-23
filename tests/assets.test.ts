@@ -29,15 +29,42 @@ test('all trimmed frames reconstruct a common feet anchor independently of equip
     }
   }
 });
-test('selective attacks test every actual heading without rotating or borrowing a quadrant', () => {
-  const frames=atlas('adventurer').frames;
-  for(const facing of FACINGS) {
-    const actor: ActorView={id:'hero',kind:'adventurer',x:0,y:0,visible:true,action:'light',phase:'active',progress:.5,facing};
-    const selected=chooseFrame(actor,n=>Boolean(frames[n]));
-    if(['N','NE','E','S','SW'].includes(facing)) {
-      assert.equal(selected.frame,`adventurer__light__${facing}__01`);assert.equal(selected.missing,false);
-    } else {
-      assert.equal(selected.frame,`adventurer__idle__${facing}__00`);assert.equal(selected.missing,true);
+test('O1 wave 1 has genuine eight-heading clips and never borrows a quadrant', () => {
+  const cases: Array<{ kind: ActorView['kind']; action: ActorView['action']; phases: string[] }> = [
+    { kind: 'adventurer', action: 'light', phases: ['windup', 'active', 'recovery'] },
+    { kind: 'adventurer', action: 'dodge', phases: ['windup'] },
+    { kind: 'adventurer', action: 'reaction', phases: ['windup'] },
+    { kind: 'sentry', action: 'light', phases: ['windup', 'active', 'recovery'] },
+    { kind: 'sentry', action: 'bash', phases: ['windup', 'active', 'recovery'] },
+  ];
+  for (const { kind, action, phases } of cases) {
+    const frames = atlas(kind).frames;
+    for (const facing of FACINGS) {
+      for (const [index, phase] of phases.entries()) {
+        const actor: ActorView = { id: 'proof', kind, x: 0, y: 0, visible: true, action, phase: phase as ActorView['phase'], progress: .5, facing };
+        const selected = chooseFrame(actor, (name) => Boolean(frames[name]));
+        const name = `${kind}__${action}__${facing}__${String(index).padStart(2, '0')}`;
+        assert.equal(selected.frame, name, name);
+        assert.equal(selected.missing, false, name);
+      }
+    }
+  }
+});
+test('O1 wave 2 stagger and Mireling bite have genuine eight-heading frames', () => {
+  const cases: Array<{ kind: ActorView['kind']; action: ActorView['action']; phases: ActorView['phase'][] }> = [
+    { kind: 'sentry', action: 'reaction', phases: ['active'] },
+    { kind: 'mireling', action: 'reaction', phases: ['active'] },
+    { kind: 'mireling', action: 'light', phases: ['windup', 'active', 'recovery'] },
+  ];
+  for (const { kind, action, phases } of cases) {
+    const frames = atlas(kind).frames;
+    for (const facing of FACINGS) {
+      for (const [i, phase] of phases.entries()) {
+        const actor: ActorView = { id: 'proof', kind, x: 0, y: 0, visible: true, facing, action, phase, progress: .5 };
+        const selection = chooseFrame(actor, name => Boolean(frames[name]));
+        assert.equal(selection.frame, `${kind}__${action}__${facing}__${String(i).padStart(2, '0')}`);
+        assert.equal(selection.missing, false);
+      }
     }
   }
 });

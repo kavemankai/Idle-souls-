@@ -2,19 +2,22 @@
   "actors": [
     {
       "actor": "adventurer",
-      "frames": 113,
+      "frames": 128,
       "width": 1024,
       "height": 1024,
       "rgbaBytes": 4194304,
-      "pngBytes": 581275,
-      "sha256": "631e7e1e68bad3dd4d429e1ff552966e9b35225f854ceb280e84026e5860fec0",
+      "pngBytes": 667661,
+      "sha256": "3016e4c10a5ff222d587be0a78d1e61632c06162f3beeab5baa57df7642f178b",
       "directions": {
         "dodge": [
           "E",
           "N",
           "NE",
+          "NW",
           "S",
-          "SW"
+          "SE",
+          "SW",
+          "W"
         ],
         "guard": [
           "E",
@@ -50,15 +53,21 @@
           "E",
           "N",
           "NE",
+          "NW",
           "S",
-          "SW"
+          "SE",
+          "SW",
+          "W"
         ],
         "reaction": [
           "E",
           "N",
           "NE",
+          "NW",
           "S",
-          "SW"
+          "SE",
+          "SW",
+          "W"
         ],
         "walk": [
           "E",
@@ -78,8 +87,8 @@
       "width": 1024,
       "height": 512,
       "rgbaBytes": 2097152,
-      "pngBytes": 300536,
-      "sha256": "173b75ed08bcd2820862b8399082dbd1a9a2431464bc66c667535382aec2cf6f",
+      "pngBytes": 300529,
+      "sha256": "66cc1d5c8b1855f335581c87401df95f964c9880b86b879c0c6a8621328d6882",
       "directions": {
         "guard": [
           "E",
@@ -115,12 +124,12 @@
     },
     {
       "actor": "mireling",
-      "frames": 64,
+      "frames": 96,
       "width": 1024,
-      "height": 512,
-      "rgbaBytes": 2097152,
-      "pngBytes": 512032,
-      "sha256": "2917c3f7f163e6725b143aedd3e47ad9e9b0cd132e543a0d346bd73cdf93a171",
+      "height": 1024,
+      "rgbaBytes": 4194304,
+      "pngBytes": 766200,
+      "sha256": "266c7c1c3ca14f0dc55975138e8d253810336548a9e2eca63b4cd0f2697cbdf2",
       "directions": {
         "idle": [
           "E",
@@ -133,6 +142,26 @@
           "W"
         ],
         "leap": [
+          "E",
+          "N",
+          "NE",
+          "NW",
+          "S",
+          "SE",
+          "SW",
+          "W"
+        ],
+        "light": [
+          "E",
+          "N",
+          "NE",
+          "NW",
+          "S",
+          "SE",
+          "SW",
+          "W"
+        ],
+        "reaction": [
           "E",
           "N",
           "NE",
@@ -156,19 +185,22 @@
     },
     {
       "actor": "sentry",
-      "frames": 94,
+      "frames": 120,
       "width": 1024,
       "height": 1024,
       "rgbaBytes": 4194304,
-      "pngBytes": 420851,
-      "sha256": "f0be60decef0dd7a793493dfea0632e194581c39f5eccfffd438cf4e731c7998",
+      "pngBytes": 547394,
+      "sha256": "fae98238d927c6a2bd9b1ba68f54116749efd64a94d3391239db680bfb35cfb5",
       "directions": {
         "bash": [
           "E",
           "N",
           "NE",
+          "NW",
           "S",
-          "SW"
+          "SE",
+          "SW",
+          "W"
         ],
         "guard": [
           "E",
@@ -194,8 +226,21 @@
           "E",
           "N",
           "NE",
+          "NW",
           "S",
-          "SW"
+          "SE",
+          "SW",
+          "W"
+        ],
+        "reaction": [
+          "E",
+          "N",
+          "NE",
+          "NW",
+          "S",
+          "SE",
+          "SW",
+          "W"
         ],
         "walk": [
           "E",
@@ -210,8 +255,8 @@
       }
     }
   ],
-  "totalRGBABytes": 12582912,
-  "totalPNGBytes": 1814694,
+  "totalRGBABytes": 14680064,
+  "totalPNGBytes": 2281784,
   "padding": 3,
   "edgeExtrusion": 2,
   "physicalPhonePerformance": "NOT TESTED"

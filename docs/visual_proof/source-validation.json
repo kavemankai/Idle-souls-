@@ -53,6 +53,8 @@
     "actions": [
       "mireling__idle",
       "mireling__leap",
+      "mireling__light",
+      "mireling__reaction",
       "mireling__walk"
     ],
     "status": "PASS"
@@ -73,6 +75,7 @@
       "sentry__guard",
       "sentry__idle",
       "sentry__light",
+      "sentry__reaction",
       "sentry__walk"
     ],
     "status": "PASS"
