@@ -200,15 +200,15 @@ const SIM = (function () {
 
   // Training focus: how a level's points are spread. random: seeded.
   const ONES = Object.fromEntries(STATS.map(s => [s.key, 1]));
-  // Weights are tuned so every focus lands within 15 points of the others at level 80 (tools/focus-spread.js).
-  // Why the extras sit where they do: Vitality, Reflex, Swing Power and Discipline are worth 3 to 10 times a point of
-  // Balance, Dodge Power, Positioning or Guard Speed, so focuses that lean on them get only a small extra weight.
+  // Extras are chosen so each focus has about the same average stat value at level 80 (tools/focus-spread.js). Vitality,
+  // Reflex, Swing Power and Discipline are worth 3 to 10 times a point of Balance, Dodge Power, Positioning or Guard Speed,
+  // so weights piled on the weak stats make a focus weak. Matchups still differ: Survivor beats the Breaker, not Sentry + Mireling.
   const PROFILES = {
     balanced: ONES,
-    duelist: Object.assign({}, ONES, { swingSpeed: 2, swingPower: 2, swingSkill: 2, reflex: 1, perception: 2 }),
-    bulwark: Object.assign({}, ONES, { guardSpeed: 2, guardStrength: 2, guardSkill: 2, balance: 2, endurance: 2, vitality: 1 }),
-    skirmisher: Object.assign({}, ONES, { moveSpeed: 2, dodgePower: 2, dodgeSkill: 2, positioning: 2, reflex: 2, wind: 2 }),
-    survivor: Object.assign({}, ONES, { vitality: 2, endurance: 2, balance: 2 }),
+    duelist: Object.assign({}, ONES, { swingSpeed: 2, swingPower: 2, swingSkill: 2, perception: 2 }),
+    bulwark: Object.assign({}, ONES, { guardStrength: 2, guardSkill: 2, endurance: 2, balance: 2, discipline: 2 }),
+    skirmisher: Object.assign({}, ONES, { moveSpeed: 2, dodgeSkill: 2, positioning: 2, reflex: 2, wind: 2 }),
+    survivor: Object.assign({}, ONES, { vitality: 2, endurance: 2, balance: 2, composure: 2 }),
   };
   PROFILES.even = PROFILES.balanced;
   function allocate(level, profile, seed) {

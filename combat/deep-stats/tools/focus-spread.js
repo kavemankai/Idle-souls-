@@ -1,7 +1,8 @@
 // Focus balance check: win % per training focus at one level, and the max-min spread.
 //   node tools/focus-spread.js [--enc breaker,stalker,sentryMireling] [--level 80] [--doc measured] [--n 300] [--from 1]
 //   node tools/focus-spread.js --ablate survivor     revert each boosted stat of one focus to its balanced value, one at a time
-// Run from deep-stats/. Acceptance target: spread <= 15 points on single elites and Sentry + Mireling at level 80.
+// Run from deep-stats/. Target at level 80: the focus averages over the encounters within 15 points of each other.
+// Single cells differ more, because a focus has matchups (Survivor beats the Breaker, not Sentry + Mireling).
 const SIM = require('../combat-sim.js');
 const arg = (k, d) => { const i = process.argv.indexOf('--' + k); return i > 0 ? process.argv[i + 1] : d; };
 const encs = arg('enc', 'breaker,stalker,sentryMireling').split(',');
@@ -38,9 +39,13 @@ if (ablate) {
     console.log(`${encounter} ${doctrine} L${level} ${ablate} ${cell(ref)} | ${rows.join(' | ')}`);
   }
 } else {
+  const tot = FOCUSES.map(() => 0); let cells = 0;
   for (const encounter of encs) for (const doctrine of docs) {
     const rs = FOCUSES.map(f => win(encounter, doctrine, seed => SIM.allocate(level, f, seed)));
     const pcts = rs.map(r => r.pct);
+    rs.forEach((r, i) => tot[i] += r.pct); cells++;
     console.log(`${encounter.padEnd(15)} ${doctrine.padEnd(9)} L${level} ${FOCUSES.map((f, i) => `${f} ${cell(rs[i])}`).join(' | ')} | spread ${Math.max(...pcts) - Math.min(...pcts)}`);
   }
+  const av = tot.map(t => t / cells);
+  console.log(`mean over ${cells} cells: ${FOCUSES.map((f, i) => `${f} ${av[i].toFixed(1)}`).join(' | ')} | range ${(Math.max(...av) - Math.min(...av)).toFixed(1)}`);
 }
