@@ -189,9 +189,13 @@ const SIM = (function () {
     });
   }
 
-  // Level = points spent above the fresh adventurer. Health comes from Vitality, not level.
-  const MAX_LEVEL = 1 + STATS.reduce((a, s) => a + 20 - BASE[s.key], 0);
-  function playerLevel(stats) { return 1 + STATS.reduce((a, s) => a + Math.max(0, (stats[s.key] || BASE[s.key]) - BASE[s.key]), 0); }
+  // Level 1 is the fresh adventurer. Each level above it grants POINTS_PER_LEVEL stat points, because 18 stats dilute a point
+  // (half of them are worth under a quarter of a win point each at level 80), so one point per level made progress too slow.
+  const POINTS_PER_LEVEL = 1.3;
+  const MAX_POINTS = STATS.reduce((a, s) => a + 20 - BASE[s.key], 0);
+  const MAX_LEVEL = 1 + Math.floor(MAX_POINTS / POINTS_PER_LEVEL);
+  function pointsSpent(stats) { return STATS.reduce((a, s) => a + Math.max(0, (stats[s.key] || BASE[s.key]) - BASE[s.key]), 0); }
+  function playerLevel(stats) { return 1 + Math.round(pointsSpent(stats) / POINTS_PER_LEVEL); }
   function playerHp(stats) { return derive(stats, false).hp; }
 
   // Training focus: how a level's points are spread. random: seeded.
@@ -209,7 +213,7 @@ const SIM = (function () {
   PROFILES.even = PROFILES.balanced;
   function allocate(level, profile, seed) {
     const st = Object.assign({}, BASE);
-    let pts = clamp(level, 1, MAX_LEVEL) - 1;
+    let pts = Math.min(MAX_POINTS, Math.round((clamp(level, 1, MAX_LEVEL) - 1) * POINTS_PER_LEVEL));
     if (profile === 'random') {
       const rng = mulberry32(seed || 1);
       while (pts > 0) { const k = STATS[Math.floor(rng() * STATS.length)].key; if (st[k] < 20) { st[k]++; pts--; } }
@@ -1120,6 +1124,6 @@ const SIM = (function () {
 
   function runFight(cfg) { const S = createFight(cfg); while (!S.over) step(S); return S; }
 
-  return { HZ, ARENA_R, MOVES, ARCH, ENCOUNTERS, DOCTRINES, STATS, CAUSES, derive, playerLevel, playerHp, allocate, setPhys, PROFILES, FAMILIES, BASE, MAX_LEVEL, fromSix, isMind, playerMoves, createFight, step, runFight, fmt };
+  return { HZ, ARENA_R, MOVES, ARCH, ENCOUNTERS, DOCTRINES, STATS, CAUSES, derive, playerLevel, pointsSpent, POINTS_PER_LEVEL, playerHp, allocate, setPhys, PROFILES, FAMILIES, BASE, MAX_LEVEL, fromSix, isMind, playerMoves, createFight, step, runFight, fmt };
 })();
 if (typeof module !== 'undefined') module.exports = SIM;

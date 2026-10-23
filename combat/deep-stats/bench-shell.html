@@ -153,7 +153,7 @@ details.fam summary .avg { font-variant-numeric: tabular-nums; color: var(--mute
       </div>
       <div class="row"><span>Level</span>
         <div class="bar">
-          <button data-level="1">Fresh</button><button data-level="40">40</button><button data-level="80">80</button><button data-level="140">140</button><button data-level="200">200</button><button data-level="265">Max</button>
+          <button data-level="1">Fresh</button><button data-level="40">40</button><button data-level="80">80</button><button data-level="140">140</button><button data-level="9999">Max</button>
           <label class="check"><input type="checkbox" id="god"> Perfect mind</label>
         </div>
         <p class="godnote">Sword, shield, legs and body change the adventurer’s moves. Mind stats are the AI’s handicaps. Perfect mind removes every mind handicap and leaves the body as set.</p>
@@ -238,7 +238,7 @@ details.fam summary .avg { font-variant-numeric: tabular-nums; color: var(--mute
       const ks = STATS.filter(s => s.family === f.key);
       $('avg-' + f.key).textContent = state.god && f.key === 'mind' ? 'perfect' : 'avg ' + (ks.reduce((a, s) => a + state.stats[s.key], 0) / ks.length).toFixed(1);
     });
-    $('lvl').innerHTML = `Level <b>${SIM.playerLevel(state.stats)}</b> of ${SIM.MAX_LEVEL}, health <b>${d.hp}</b>. A fresh adventurer has body stats 7 and mind stats 1; every point above that is a level.`;
+    $('lvl').innerHTML = `Level <b>${SIM.playerLevel(state.stats)}</b> of ${SIM.MAX_LEVEL}, health <b>${d.hp}</b>. A fresh adventurer has body stats 7 and mind stats 1; each level above 1 adds ${SIM.POINTS_PER_LEVEL} stat points (${SIM.pointsSpent(state.stats)} spent).`;
   }
 
   function bindSeg(id, key) {
