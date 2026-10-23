@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="192" height="128" viewBox="0 0 192 128"><defs>
+<linearGradient id="stone" x2=".3" y2="1"><stop stop-color="#737b73"/><stop offset=".48" stop-color="#626e67"/><stop offset="1" stop-color="#59655e"/></linearGradient>
+<linearGradient id="wall" x2=".2" y2="1"><stop stop-color="#879087"/><stop offset="1" stop-color="#515f59"/></linearGradient>
+<radialGradient id="soil"><stop stop-color="#4a4c3d"/><stop offset="1" stop-color="#252f2b"/></radialGradient>
+<radialGradient id="light"><stop stop-color="#dfab6b" stop-opacity=".23"/><stop offset="1" stop-color="#dfab6b" stop-opacity="0"/></radialGradient>
+</defs><g id="ground-shadow" fill="#14251f" opacity=".45"><ellipse cx="95" cy="84" rx="84" ry="27"/></g><g id="stone-chips" stroke="#38483f" stroke-width="2"><path d="M22 71l20 -22 35 7 8 27 -41 8Z" fill="#5d685d"/><path d="M97 84l-8 -34 36 -18 24 17 -4 38Z" fill="#6c7569"/><path d="M149 85l8 -20 20 8 -3 19Z" fill="#566457"/><path d="M60 100l16 -9 15 14 -30 4Z" fill="#777c69"/></g><g id="edge-paint" fill="none" stroke="#a7aa91" opacity=".45" stroke-width="2"><path d="M28 69l16 -16 26 5M95 50l29 -13 19 12M159 69l14 5"/></g></svg>

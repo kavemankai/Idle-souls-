@@ -1,0 +1,19 @@
+{
+  "status": "VISUAL-ONLY proposed proxies; no collision engine",
+  "origin": [
+    950,
+    1750
+  ],
+  "clearFloor": [
+    480,
+    440
+  ],
+  "pillar": {
+    "x": 10,
+    "y": -125,
+    "radius": 27,
+    "movement": "proposed-blocking",
+    "sight": "unverified",
+    "projectiles": "unverified"
+  }
+}

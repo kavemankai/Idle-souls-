@@ -1,0 +1,41 @@
+actor,clip,requested_heading,authored_frames,runtime_policy,review_status,limitation
+adventurer,light,N,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+adventurer,light,NE,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+adventurer,light,E,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+adventurer,light,SE,0,no attack drawn; labelled unavailable; idle view only,BLOCKED,Actual eight-heading simulation truth review requires authoritative source
+adventurer,light,S,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+adventurer,light,SW,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+adventurer,light,W,0,no attack drawn; labelled unavailable; idle view only,BLOCKED,Actual eight-heading simulation truth review requires authoritative source
+adventurer,light,NW,0,no attack drawn; labelled unavailable; idle view only,BLOCKED,Actual eight-heading simulation truth review requires authoritative source
+adventurer,heavy,N,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+adventurer,heavy,NE,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+adventurer,heavy,E,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+adventurer,heavy,SE,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+adventurer,heavy,S,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+adventurer,heavy,SW,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+adventurer,heavy,W,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+adventurer,heavy,NW,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+sentry,light,N,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+sentry,light,NE,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+sentry,light,E,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+sentry,light,SE,0,no attack drawn; labelled unavailable; idle view only,BLOCKED,Actual eight-heading simulation truth review requires authoritative source
+sentry,light,S,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+sentry,light,SW,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+sentry,light,W,0,no attack drawn; labelled unavailable; idle view only,BLOCKED,Actual eight-heading simulation truth review requires authoritative source
+sentry,light,NW,0,no attack drawn; labelled unavailable; idle view only,BLOCKED,Actual eight-heading simulation truth review requires authoritative source
+sentry,bash,N,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+sentry,bash,NE,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+sentry,bash,E,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+sentry,bash,SE,0,no attack drawn; labelled unavailable; idle view only,BLOCKED,Actual eight-heading simulation truth review requires authoritative source
+sentry,bash,S,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+sentry,bash,SW,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+sentry,bash,W,0,no attack drawn; labelled unavailable; idle view only,BLOCKED,Actual eight-heading simulation truth review requires authoritative source
+sentry,bash,NW,0,no attack drawn; labelled unavailable; idle view only,BLOCKED,Actual eight-heading simulation truth review requires authoritative source
+mireling,leap,N,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+mireling,leap,NE,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+mireling,leap,E,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+mireling,leap,SE,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+mireling,leap,S,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+mireling,leap,SW,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+mireling,leap,W,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
+mireling,leap,NW,3,exact authored view,NOT TESTED,Actual eight-heading simulation truth review requires authoritative source
