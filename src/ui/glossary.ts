@@ -1,0 +1,30 @@
+/** Plain-words meanings for the terms the screens and the intent feed use. Kept short; one sentence where one will do. */
+export interface Term { id: string; term: string; meaning: string }
+export const GLOSSARY: readonly Term[] = [
+  { id: 'plan', term: 'Plan', meaning: 'What you ask for before launch: up to five objectives, rooms to avoid, how careful to be and when to turn back. You do not steer afterwards, except to retreat or redirect.' },
+  { id: 'objective', term: 'Objective', meaning: 'One thing the plan asks for: reach a room, survey it, explore on from the edge of the map, open a gate, or recover a cache. Return to Camp is always added last.' },
+  { id: 'carried', term: 'Carried, at risk', meaning: 'Everything you win or pick up. It is not yours until you reach camp alive.' },
+  { id: 'bank', term: 'Bank', meaning: 'What is safe at camp. Only arriving at camp alive banks anything: not a retreat, a quiet corner, a sanctuary or a boss.' },
+  { id: 'cache', term: 'Recovery cache', meaning: 'If the adventurer falls, what it carried stays in one cache where it fell. A second fall before you collect it replaces it, and what it held is lost for good.' },
+  { id: 'avoid', term: 'Avoid', meaning: 'Rooms the adventurer will never enter, even on the way home. If the only way home crosses one, extraction is blocked rather than broken.' },
+  { id: 'retreat', term: 'Retreat', meaning: 'Head for camp now. In a fight the adventurer stops attacking and walks out by the nearest permitted way. Enemies stay in their room but can still hit it on the way. It is not a bank.' },
+  { id: 'disengage', term: 'Disengage', meaning: 'The first step of a retreat in a fight: stop attacking, keep guarding, walk to the door.' },
+  { id: 'withdraw', term: 'Withdraw', meaning: 'The retreat on foot, room by room, by the way home you chose.' },
+  { id: 'doctrine', term: 'Doctrine', meaning: 'How boldly it fights: Guarded, Measured or Pressing. A way of fighting, not a stat bonus.' },
+  { id: 'exploration', term: 'Exploration style', meaning: 'Safe and Thorough avoid dangerous rooms when a quieter way exists; Direct takes the shortest. Thorough also looks into the rooms beside a surveyed one.' },
+  { id: 'danger', term: 'Danger mark', meaning: 'One ! is a mid-level room, two !! a high one. It is a label from the map, not odds of winning.' },
+  { id: 'fog', term: 'Fog', meaning: 'Rooms you have not entered. The map keeps what you have seen, forever, even after a fall.' },
+  { id: 'frontier', term: 'Edge of the map', meaning: 'A room you know exists but have not entered. A route can end there; it never crosses fog.' },
+  { id: 'gate', term: 'Gate', meaning: 'A sealed way between rooms. A fog gate needs a Gate Key; the sluice is worked by hand. Opening is permanent and does not start a fight.' },
+  { id: 'key', term: 'Gate Key', meaning: 'Opens one fog gate for good. A key found on a run cannot open a gate until you have carried it home and banked it; then you issue it to a later expedition.' },
+  { id: 'fresh', term: 'Fresh key', meaning: 'Found this run or recovered from a cache. Not usable at a gate yet.' },
+  { id: 'prepared', term: 'Prepared key', meaning: 'Banked earlier and issued from camp for this expedition. It can open a gate. Unspent ones come home.' },
+  { id: 'shortcut', term: 'Shortcut', meaning: 'A link opened for good that shortens the way home. Later expeditions use it without being asked.' },
+  { id: 'sanctuary', term: 'Sanctuary', meaning: 'A quiet place to rest once per expedition and take one temporary upgrade. It never banks, never protects a cache and never takes you home.' },
+  { id: 'ration', term: 'Ration', meaning: 'Heals about a third of health. Drunk only when no enemy is near and health is under the plan setting. You start with two that are never banked.' },
+  { id: 'level', term: 'Expedition level', meaning: 'Temporary power gained by fighting and exploring on this run. It is gone when the run ends. Only banked loot stays.' },
+  { id: 'mastery', term: 'Mastery', meaning: 'Experience that is carried like loot: banked at camp, lost with a cache.' },
+  { id: 'chronicle', term: 'Chronicle', meaning: 'The record of one expedition: the route, every choice and why, the fights, what was banked or lost, and what ended it.' },
+  { id: 'skipped', term: 'Skipped, blocked', meaning: 'An objective with no permitted way. It is skipped with its reason and the plan carries on in order.' },
+];
+export const termById = (id: string) => GLOSSARY.find(t => t.id === id);
