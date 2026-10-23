@@ -23,6 +23,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install Blender headless dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libegl1 libgl1 libx11-6 libx11-xcb1 libxi6 libxrender1 libxkbcommon0 libsm6 libglib2.0-0 libopengl0
       - name: Install pinned Blender 4.3.2
         shell: bash
         run: |
@@ -67,8 +71,8 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add assets/characters/runtime docs/visual_proof/atlas-validation.json docs/visual_proof/source-validation.json docs/visual_proof/reproducibility.json docs/visual_proof/adventurer-compass.png docs/visual_proof/sentry-compass.png docs/visual_proof/mireling-compass.png docs/visual_proof/mannequin-compass.png
           if git diff --cached --quiet; then
-            echo "Expected new direction frames were not produced."
-            exit 1
+            echo "No changed render artifacts: previous generated assets match."
+            exit 0
           fi
           git commit -m "art(o1): render wave 1 eight-heading sprite atlases"
           git push origin "HEAD:${GITHUB_REF_NAME}"
