@@ -29,3 +29,9 @@ The importer fetches all original source payloads and converts them to OGG Vorbi
 Runtime: only selected music/ambience/cues are requested by the browser; full audio library is NOT preloaded. Audio requires a user gesture, selectable soundtrack and independent music/effects volumes. Background ambience ducks under normal combat. Damage, contact, defence and death cues come from simulator events; attacks from simulator move IDs; footsteps from actual presentation movement. None of this alters the 30 Hz authoritative simulation.
 
 This is a production-candidate first pass. Individual sound choices are deterministic based on file-name heuristics and still require human audition, loudness equalisation, seamless-loop checks and mobile speaker review. Shipping all library files in the public directory increases deployment size and should be replaced with a separate CDN/archive for final release, even though none are preloaded.
+
+## O1 sound curation after import
+
+The deterministic first-pass filenames did not always fit the intended event. tools/audio/curate_o1.py replaces the 20 runtime cue copies with explicitly chosen files from the complete 428-item inventory, without removing anything in the library. Hero uses leather footsteps, Sentry uses metal footsteps, and Mireling uses soft grassy steps. Sword swing and heavy swing use different swishes. A threshold uses a spell chime rather than coins; creature bite uses an insect clip rather than breathing. Shield contact, perfect block and parry are distinguishable.
+
+A dedicated Chromium audio smoke test verifies click-to-unlock, music track selection, dispatch cue HTTP success and turning audio off. Human audition still required: filenames alone do not verify tonal fit, loudness, loops or quality on phone speakers.

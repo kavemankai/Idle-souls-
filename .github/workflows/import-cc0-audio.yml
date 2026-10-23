@@ -24,7 +24,12 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends ffmpeg
-          python tools/audio/import_cc0.py
+          if [ ! -f docs/audio/IMPORT_MANIFEST.json ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            python tools/audio/import_cc0.py
+          else
+            echo "Existing verified source inventory present; preserving acquired audio."
+          fi
+          python tools/audio/curate_o1.py
       - name: Lint, check catalogue and build runtime
         run: |
           npm ci
@@ -32,6 +37,10 @@ jobs:
           npm run typecheck
           npm test
           npm run build
+      - name: Browser audio playback smoke test
+        run: |
+          npx playwright install --with-deps chromium
+          npx playwright test tests/browser/audio.spec.ts
       - name: Publish complete compressed audio for review
         uses: actions/upload-artifact@v4
         with:
