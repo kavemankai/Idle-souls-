@@ -1,0 +1,36 @@
+retreat Watchtower (T1, T2) guarded 0
+retreat Watchtower (T1, T2) guarded 30
+retreat Watchtower (T1, T2) guarded 50
+retreat Watchtower (T1, T2) guarded 70
+retreat Watchtower (T1, T2) measured 0
+retreat Watchtower (T1, T2) measured 30
+retreat Watchtower (T1, T2) measured 50
+retreat Watchtower (T1, T2) measured 70
+retreat Watchtower (T1, T2) pressing 0
+retreat Watchtower (T1, T2) pressing 30
+retreat Watchtower (T1, T2) pressing 50
+retreat Watchtower (T1, T2) pressing 70
+retreat Sunken Passage (S1, S2) guarded 0
+retreat Sunken Passage (S1, S2) guarded 30
+retreat Sunken Passage (S1, S2) guarded 50
+retreat Sunken Passage (S1, S2) guarded 70
+retreat Sunken Passage (S1, S2) measured 0
+retreat Sunken Passage (S1, S2) measured 30
+retreat Sunken Passage (S1, S2) measured 50
+retreat Sunken Passage (S1, S2) measured 70
+retreat Sunken Passage (S1, S2) pressing 0
+retreat Sunken Passage (S1, S2) pressing 30
+retreat Sunken Passage (S1, S2) pressing 50
+retreat Sunken Passage (S1, S2) pressing 70
+retreat Crypt (north) guarded 0
+retreat Crypt (north) guarded 30
+retreat Crypt (north) guarded 50
+retreat Crypt (north) guarded 70
+retreat Crypt (north) measured 0
+retreat Crypt (north) measured 30
+retreat Crypt (north) measured 50
+retreat Crypt (north) measured 70
+retreat Crypt (north) pressing 0
+retreat Crypt (north) pressing 30
+retreat Crypt (north) pressing 50
+retreat Crypt (north) pressing 70

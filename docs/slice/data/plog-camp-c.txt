@@ -1,0 +1,10 @@
+campaign 1 {"first Gate Key banked":1,"mapped the Watchtower gate":85}
+campaign 2 {"first Gate Key banked":1,"mapped the Watchtower gate":14}
+campaign 3 {"first Gate Key banked":1,"mapped the Watchtower gate":2}
+campaign 4 {"first Gate Key banked":2}
+campaign 5 {"first Gate Key banked":2,"mapped the Watchtower gate":47}
+campaign 6 {"first Gate Key banked":2,"mapped the Watchtower gate":119}
+campaign 7 {"first Gate Key banked":5,"mapped the Watchtower gate":14}
+campaign 8 {"first Gate Key banked":1,"mapped the Watchtower gate":81}
+campaign 9 {"first Gate Key banked":1,"mapped the Watchtower gate":22}
+campaign 10 {"first Gate Key banked":2,"mapped the Watchtower gate":15}

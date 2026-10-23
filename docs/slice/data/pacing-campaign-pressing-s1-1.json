@@ -1,0 +1,144 @@
+{
+ "style": "pressing",
+ "rows": [
+  {
+   "campaign": 1,
+   "expeditions": 120,
+   "finished": false,
+   "milestones": {
+    "mapped the Watchtower gate": 11,
+    "first Gate Key banked": 12
+   },
+   "deaths": 16,
+   "gameHours": 2.2303611111111112,
+   "maxLevel": 4,
+   "gold": 692,
+   "discovered": 6
+  },
+  {
+   "campaign": 2,
+   "expeditions": 120,
+   "finished": false,
+   "milestones": {
+    "mapped the Watchtower gate": 37,
+    "first Gate Key banked": 40
+   },
+   "deaths": 13,
+   "gameHours": 2.368583333333333,
+   "maxLevel": 4,
+   "gold": 652,
+   "discovered": 6
+  },
+  {
+   "campaign": 3,
+   "expeditions": 120,
+   "finished": false,
+   "milestones": {
+    "mapped the Watchtower gate": 20,
+    "first Gate Key banked": 25
+   },
+   "deaths": 9,
+   "gameHours": 2.4234351851851854,
+   "maxLevel": 4,
+   "gold": 686,
+   "discovered": 6
+  },
+  {
+   "campaign": 4,
+   "expeditions": 76,
+   "finished": false,
+   "milestones": {
+    "first Gate Key banked": 1,
+    "mapped the Watchtower gate": 31
+   },
+   "deaths": 9,
+   "gameHours": 1.3474166666666667,
+   "maxLevel": 4,
+   "gold": 290,
+   "discovered": 6
+  },
+  {
+   "campaign": 5,
+   "expeditions": 120,
+   "finished": false,
+   "milestones": {
+    "mapped the Watchtower gate": 24,
+    "first Gate Key banked": 57
+   },
+   "deaths": 20,
+   "gameHours": 2.334203703703704,
+   "maxLevel": 3,
+   "gold": 698,
+   "discovered": 6
+  },
+  {
+   "campaign": 6,
+   "expeditions": 120,
+   "finished": false,
+   "milestones": {
+    "mapped the Watchtower gate": 41,
+    "first Gate Key banked": 61
+   },
+   "deaths": 23,
+   "gameHours": 2.323972222222222,
+   "maxLevel": 4,
+   "gold": 685,
+   "discovered": 6
+  },
+  {
+   "campaign": 7,
+   "expeditions": 120,
+   "finished": false,
+   "milestones": {
+    "mapped the Watchtower gate": 32,
+    "first Gate Key banked": 67
+   },
+   "deaths": 11,
+   "gameHours": 2.2889444444444447,
+   "maxLevel": 4,
+   "gold": 678,
+   "discovered": 6
+  },
+  {
+   "campaign": 8,
+   "expeditions": 120,
+   "finished": false,
+   "milestones": {
+    "mapped the Watchtower gate": 38,
+    "first Gate Key banked": 57
+   },
+   "deaths": 10,
+   "gameHours": 2.374398148148148,
+   "maxLevel": 4,
+   "gold": 616,
+   "discovered": 6
+  },
+  {
+   "campaign": 9,
+   "expeditions": 120,
+   "finished": false,
+   "milestones": {
+    "first Gate Key banked": 1,
+    "mapped the Watchtower gate": 13
+   },
+   "deaths": 11,
+   "gameHours": 2.5158425925925925,
+   "maxLevel": 4,
+   "gold": 728,
+   "discovered": 6
+  },
+  {
+   "campaign": 10,
+   "expeditions": 12,
+   "finished": false,
+   "milestones": {
+    "first Gate Key banked": 1
+   },
+   "deaths": 2,
+   "gameHours": 0.13820370370370372,
+   "maxLevel": 4,
+   "gold": 24,
+   "discovered": 5
+  }
+ ]
+}
