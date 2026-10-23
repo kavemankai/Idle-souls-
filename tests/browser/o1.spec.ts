@@ -47,7 +47,7 @@ for (const viewport of [{ width: 1280, height: 720 }, { width: 390, height: 844 
 test('browser and Node agree on seeded O1 runs across opponents and doctrines', async ({ page }) => {
   await ready(page, '/?scene=o1');
   const cases: O1Config[] = [];
-  for (const opponent of ['mireling', 'sentry'] as const) for (const doctrine of ['measured', 'guarded', 'pressing'] as const) for (const seed of [1, 2, 9]) cases.push({ seed, opponent, level: 80, focus: 'balanced', doctrine });
+  for (const opponent of ['mireling', 'sentry', 'mireling2', 'sentryMireling'] as const) for (const doctrine of ['measured', 'guarded', 'pressing'] as const) for (const seed of [1, 9]) cases.push({ seed, opponent, level: 80, focus: 'balanced', doctrine });
   cases.push({ seed: 4, opponent: 'sentry', level: 1, focus: 'balanced', doctrine: 'measured' }, { seed: 4, opponent: 'mireling', level: 140, focus: 'survivor', doctrine: 'pressing' });
   const inPage = await page.evaluate(cs => cs.map(c => window.__O1_RUN__(c)), cases);
   inPage.forEach((r, i) => expect(r, JSON.stringify(cases[i])).toEqual(runO1(sim, cases[i])));
@@ -140,4 +140,16 @@ test('?cam=action opens in the action camera', async ({ page }) => {
   await ready(page, '/?scene=o1&opponent=sentry&seed=2&ticks=175&hold&cam=action');
   await expect(page.locator('#camAction')).toHaveAttribute('aria-pressed', 'true');
   await expect.poll(async () => page.evaluate(() => { const s = window.__O1_STATE__ as { zoom: number; fit: number }; return s.zoom / s.fit; }), { timeout: 5000 }).toBeGreaterThan(1.25);
+});
+
+test('a pair runs from the page and matches the Node run', async ({ page }) => {
+  await ready(page, '/?scene=o1&speed=16&opponent=sentryMireling&seed=3');
+  await page.click('#dispatch');
+  await page.waitForFunction(() => ['completed', 'defeated', 'unresolved'].includes((window.__O1_STATE__ as { state: string }).state), null, { timeout: 90000 });
+  const got = (await state(page)) as PageState & { fights: number; enemiesAlive: number };
+  const want = runO1(sim, { seed: 3, opponent: 'sentryMireling', level: 80, focus: 'balanced', doctrine: 'measured' });
+  expect(got.digest).toBe(want.digest); expect(got.tick).toBe(want.ticks); expect(got.fights).toBe(want.fights);
+  expect(got.enemiesAlive).toBe(2 - want.enemiesDefeated);
+  await page.click('#tab-combat');
+  await expect(page.locator('#body-combat .fighter')).toHaveCount(3);
 });

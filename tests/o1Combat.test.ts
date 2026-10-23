@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { loadSim } from '../src/combat/loadSimNode';
 import { O1Controller, type O1Config } from '../src/world/o1Controller';
 import { O1PresentationAdapter } from '../src/world/o1Adapter';
-import { describeStat } from '../src/world/o1Combat';
+import { defenceCue, describeStat } from '../src/world/o1Combat';
 import { VisualSequence } from '../src/presentation/visualSequence';
 
 const sim = loadSim();
@@ -66,4 +66,14 @@ test('the build block quotes the simulator numbers for all 18 stats', () => {
 test('the visual study never sets combat detail', () => {
   const s = new VisualSequence().read();
   assert.equal(s.combat, undefined); assert.equal(s.build, undefined); assert.equal(s.source, 'visual-only');
+});
+
+test('a shield cue needs a rise in the simulator totals, and a new fight restarts the baseline', () => {
+  const zero = { blocks: 0, parries: 0, perfects: 0 };
+  assert.equal(defenceCue(zero, { blocks: 1, parries: 0, perfects: 0 }, false).cue, 'block');
+  assert.equal(defenceCue({ blocks: 1, parries: 0, perfects: 0 }, { blocks: 1, parries: 0, perfects: 0 }, false).cue, null);
+  assert.equal(defenceCue(zero, { blocks: 1, parries: 1, perfects: 1 }, false).cue, 'parry');
+  // Second fight: totals restart, so one block (1) must still cue although the last fight ended with 5 blocks.
+  assert.equal(defenceCue({ blocks: 5, parries: 0, perfects: 0 }, { blocks: 1, parries: 0, perfects: 0 }, false).cue, null, 'without the reset the cue is swallowed');
+  assert.equal(defenceCue({ blocks: 5, parries: 0, perfects: 0 }, { blocks: 1, parries: 0, perfects: 0 }, true).cue, 'block');
 });

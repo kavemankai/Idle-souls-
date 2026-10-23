@@ -48,27 +48,23 @@ export class O1PresentationAdapter implements PresentationAdapter {
   read(deltaMs = 0): PresentationSnapshot {
     this.visualMs += Math.max(0, Math.min(250, deltaMs));
     const c = this.c, S = c.fight;
-    const kind = c.cfg.opponent as ActorKind;
     const facing = (a: number) => facingFromVector(Math.cos(a), Math.sin(a));
     const live = c.state === 'fighting' || (S !== null && (c.state === 'defeated' || c.state === 'unresolved'));
     const viewPose = (id: string, f: SimFighter): View => (f.dead || f.hp <= 0) ? this.deathPose(id) : poseOf(f, S!);
-    let hero: ActorView, enemy: ActorView;
-    if (live && S) {
-      const e = S.enemies[0];
-      hero = { id: 'hero', kind: 'adventurer', x: S.p.x, y: S.p.y, facing: facing(S.p.face), ...viewPose('hero', S.p), visible: true };
-      enemy = { id: 'enemy', kind, x: e.x, y: e.y, facing: facing(e.face), ...viewPose('enemy', e), visible: true };
-    } else {
+    let hero: ActorView;
+    if (live && S) hero = { id: 'hero', kind: 'adventurer', x: S.p.x, y: S.p.y, facing: facing(S.p.face), ...viewPose('hero', S.p), visible: true };
+    else {
       const walking = c.state === 'travelling' && c.hero.moving;
       hero = { id: 'hero', kind: 'adventurer', x: c.hero.x, y: c.hero.y, facing: facing(c.hero.face), action: walking ? 'walk' : 'idle', phase: 'active', progress: walking ? (c.tick % 18) / 18 : 0, visible: true };
-      // Preserve the corpse at the last authoritative position after victory.
-      if (S && !c.enemy.alive && (S.enemies[0].dead || S.enemies[0].hp <= 0)) {
-        const e = S.enemies[0];
-        enemy = { id: 'enemy', kind, x: e.x, y: e.y, facing: facing(e.face), ...this.deathPose('enemy'), visible: true };
-      } else {
-        enemy = { id: 'enemy', kind, x: c.enemy.x, y: c.enemy.y, facing: facing(c.enemy.face), action: 'idle', phase: 'active', progress: 0, visible: c.enemy.alive };
-      }
     }
+    const foes = c.foes.map((f, i): ActorView => {
+      const id = c.foes.length > 1 ? `enemy${i}` : 'enemy', kind = f.arch as ActorKind, fighter = c.fighterOf(i);
+      if (live && S && f.engaged && fighter) return { id, kind, x: fighter.x, y: fighter.y, facing: facing(fighter.face), ...viewPose(id, fighter), visible: true };
+      // A foe that fell stays where the simulator left it, in its death pose, through later fights and after the run.
+      if (!f.alive) return { id, kind, x: f.x, y: f.y, facing: facing(f.face), ...this.deathPose(id), visible: true };
+      return { id, kind, x: f.x, y: f.y, facing: facing(f.face), action: 'idle', phase: 'active', progress: 0, visible: true };
+    });
     this.build ??= buildView(c.sim, c.stats, c.cfg.focus, c.cfg.doctrine);
-    return { source: 'authoritative', tick: c.tick, actors: [hero, enemy], build: this.build, combat: S ? combatView(c.sim, S) : undefined };
+    return { source: 'authoritative', tick: c.tick, actors: [hero, ...foes], build: this.build, combat: S ? combatView(c.sim, S) : undefined };
   }
 }

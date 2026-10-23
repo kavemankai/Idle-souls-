@@ -2,28 +2,158 @@
   "id": "O1",
   "name": "Outer Road",
   "note": "Trial settings. Positions, openings and detection values are not design locks. Local frame: centre (0,0), x east, y south, simulation units. World centre (950,1750).",
-  "floor": { "x": [-240, 240], "y": [-220, 220] },
-  "bounds": [-300, -200, 300, 200],
+  "floor": {
+    "x": [
+      -240,
+      240
+    ],
+    "y": [
+      -220,
+      220
+    ]
+  },
+  "bounds": [
+    -300,
+    -200,
+    300,
+    200
+  ],
   "solids": {
     "rects": [
-      [-300, -260, 300, -200],
-      [-300, 200, 300, 260],
-      [-300, -200, -240, -87],
-      [-300, 87, -240, 200],
-      [240, -200, 300, -87],
-      [240, 87, 300, 200]
+      [
+        -300,
+        -260,
+        300,
+        -200
+      ],
+      [
+        -300,
+        200,
+        300,
+        260
+      ],
+      [
+        -300,
+        -200,
+        -240,
+        -87
+      ],
+      [
+        -300,
+        87,
+        -240,
+        200
+      ],
+      [
+        240,
+        -200,
+        300,
+        -87
+      ],
+      [
+        240,
+        87,
+        300,
+        200
+      ]
     ],
-    "circles": [{ "id": "pillar", "x": 10, "y": -125, "r": 27 }]
+    "circles": [
+      {
+        "id": "pillar",
+        "x": 10,
+        "y": -125,
+        "r": 27
+      }
+    ]
   },
   "openings": [
-    { "side": "west", "y": [-87, 87] },
-    { "side": "east", "y": [-87, 87] }
+    {
+      "side": "west",
+      "y": [
+        -87,
+        87
+      ]
+    },
+    {
+      "side": "east",
+      "y": [
+        -87,
+        87
+      ]
+    }
   ],
-  "entry": { "x": -240, "y": 0 },
-  "threshold": { "x": 240, "y": [-87, 87] },
-  "spawns": {
-    "mireling": { "x": 65, "y": 80, "facing": "NW" },
-    "sentry": { "x": 90, "y": -25, "facing": "SW" }
+  "entry": {
+    "x": -240,
+    "y": 0
   },
-  "detection": { "range": 160, "arcDegrees": 120 }
+  "threshold": {
+    "x": 240,
+    "y": [
+      -87,
+      87
+    ]
+  },
+  "encounters": {
+    "mireling": {
+      "name": "Mireling",
+      "enemies": [
+        {
+          "arch": "mireling",
+          "x": 65,
+          "y": 80,
+          "facing": "NW"
+        }
+      ]
+    },
+    "sentry": {
+      "name": "Ashen Sentry",
+      "enemies": [
+        {
+          "arch": "sentry",
+          "x": 90,
+          "y": -25,
+          "facing": "SW"
+        }
+      ]
+    },
+    "mireling2": {
+      "name": "Two Mirelings",
+      "enemies": [
+        {
+          "arch": "mireling",
+          "x": 65,
+          "y": 80,
+          "facing": "NW"
+        },
+        {
+          "arch": "mireling",
+          "x": 125,
+          "y": 30,
+          "facing": "W"
+        }
+      ]
+    },
+    "sentryMireling": {
+      "name": "Sentry and Mireling",
+      "enemies": [
+        {
+          "arch": "sentry",
+          "x": 90,
+          "y": -25,
+          "facing": "SW"
+        },
+        {
+          "arch": "mireling",
+          "x": 65,
+          "y": 80,
+          "facing": "NW"
+        }
+      ]
+    }
+  },
+  "detection": {
+    "range": 160,
+    "arcDegrees": 120,
+    "alertRadius": 120
+  }
 }

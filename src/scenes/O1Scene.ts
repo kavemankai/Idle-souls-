@@ -7,6 +7,7 @@ import type { SimApi, SimDoctrine } from '../combat/simApi';
 import { O1Controller, runO1, type O1Config, type O1Opponent, type O1Result } from '../world/o1Controller';
 import { O1PresentationAdapter } from '../world/o1Adapter';
 import { O1 } from '../world/o1Room';
+import { defenceCue } from '../world/o1Combat';
 import { combatPane, totalsPane, buildPane, logPane } from './o1Panels';
 import { drawCues } from './o1Cues';
 import { O1Audio } from '../audio/O1Audio';
@@ -16,6 +17,7 @@ const TICK_MS = 1000 / 30;
 /** Zoom steps relative to the fit-the-room view. */
 const CAM_STEPS = [1, 1.6, 2.4, 3.4];
 const FOCUSES = ['balanced', 'duelist', 'bulwark', 'skirmisher', 'survivor'];
+const OPPONENTS: O1Opponent[] = ['mireling', 'sentry', 'mireling2', 'sentryMireling'];
 const DOCTRINES: SimDoctrine[] = ['measured', 'guarded', 'pressing'];
 const OUTCOME_TEXT: Record<string, string> = {
   completed: 'Reached the slice endpoint.', defeated: 'Defeated. Travel stopped.', unresolved: 'Unresolved. Travel stopped.',
@@ -27,7 +29,8 @@ export class O1Scene extends Phaser.Scene {
   private controller!: O1Controller;
   private adapter!: O1PresentationAdapter;
   private hero!: ActorRenderer;
-  private enemies!: Record<O1Opponent, ActorRenderer>;
+  /** Enough renderers for the largest encounter: two Mirelings or a Sentry and a Mireling. */
+  private pool!: Record<string, ActorRenderer[]>;
   private overlay!: Phaser.GameObjects.Graphics;
   private cues!: Phaser.GameObjects.Graphics;
   private intent!: Phaser.GameObjects.Text;
@@ -58,7 +61,7 @@ export class O1Scene extends Phaser.Scene {
     paintOldRoad(this, { room: O1, eastLabel: '' });
     this.sim = loadSim();
     this.hero = new ActorRenderer(this, 'adventurer');
-    this.enemies = { mireling: new ActorRenderer(this, 'mireling'), sentry: new ActorRenderer(this, 'sentry') };
+    this.pool = { mireling: [new ActorRenderer(this, 'mireling'), new ActorRenderer(this, 'mireling')], sentry: [new ActorRenderer(this, 'sentry')] };
     this.drawEndpoint();
     this.overlay = this.add.graphics().setDepth(999);
     this.cues = this.add.graphics().setDepth(998);
@@ -94,7 +97,7 @@ export class O1Scene extends Phaser.Scene {
     this.adapter = new O1PresentationAdapter(this.controller);
     this.clips.clear(); this.acc = 0; this.audio.reset();
     this.defence = { blocks: 0, parries: 0, perfects: 0 };
-    this.shieldCue = null; this.shieldCueMs = 0;
+    this.shieldCue = null; this.shieldCueMs = 0; this.defenceFight = 0;
   }
   private drawEndpoint() {
     const x = O1.threshold.x, [y0, y1] = O1.threshold.y;
@@ -112,7 +115,7 @@ export class O1Scene extends Phaser.Scene {
     <section class="scene-title"><p class="eyebrow">O1 &nbsp; / &nbsp; AUTONOMOUS TRAVERSAL · TRIAL SETTINGS</p><h2>West to east, on its own.</h2><p>The adventurer walks, the simulator fights.</p></section>
     <section class="workbench o1-bench" aria-label="Dispatch controls"><div class="o1-tabs" role="tablist" aria-label="Panels">${['run', 'combat', 'totals', 'build', 'log'].map(t => `<button role="tab" id="tab-${t}" data-tab="${t}" aria-selected="${t === this.tab}">${t[0].toUpperCase()}${t.slice(1)}</button>`).join('')}</div>
     <div class="o1-pane" id="pane-run" role="tabpanel"><div class="o1-grid"><label>Seed<input id="seed" type="number" min="1" step="1" value="${Math.max(1, Math.round(Number(params.get('seed')) || 1))}"></label>
-    <label>Opponent<select id="opponent">${opts(['mireling', 'sentry'], pick('opponent', ['mireling', 'sentry'], 'mireling'))}</select></label>
+    <label>Opponent<select id="opponent">${OPPONENTS.map(o => `<option value="${o}"${o === pick('opponent', OPPONENTS, 'mireling') ? ' selected' : ''}>${O1.encounters[o].name}</option>`).join('')}</select></label>
     <label>Level<input id="level" type="number" min="1" max="${this.sim.MAX_LEVEL}" step="1" value="${Math.max(1, Math.min(this.sim.MAX_LEVEL, Math.round(Number(params.get('level')) || 80)))}"></label>
     <label>Focus<select id="focus">${opts(FOCUSES, pick('focus', FOCUSES, 'balanced'))}</select></label>
     <label>Doctrine<select id="doctrine">${opts(DOCTRINES, pick('doctrine', DOCTRINES, 'measured'))}</select></label>
@@ -203,15 +206,17 @@ export class O1Scene extends Phaser.Scene {
   }
   /** Where the camera wants to be. Presentation only: it reads actor positions from the snapshot and never touches the run. */
   private camTarget(snap: PresentationSnapshot) {
-    const [hero, enemy] = snap.actors, fighting = this.controller.state === 'fighting' && enemy.visible, fit = this.fit;
+    const hero = snap.actors[0], foes = this.controller.foes.filter(f => f.engaged && f.alive), fighting = this.controller.state === 'fighting' && foes.length > 0, fit = this.fit;
+    const xs = [hero.x, ...foes.map(f => f.x)], ys = [hero.y, ...foes.map(f => f.y)];
+    const box = { cx: (Math.min(...xs) + Math.max(...xs)) / 2, cy: (Math.min(...ys) + Math.max(...ys)) / 2, w: Math.max(...xs) - Math.min(...xs), h: Math.max(...ys) - Math.min(...ys) };
     let x = 0, y = 0, z = fit;
     if (this.camMode === 'manual') {
       z = fit * CAM_STEPS[this.camStep];
-      x = fighting ? (hero.x + enemy.x) / 2 : hero.x; y = fighting ? (hero.y + enemy.y) / 2 : hero.y;
+      x = fighting ? box.cx : hero.x; y = fighting ? box.cy : hero.y;
     } else if (this.camMode === 'action') {
       if (fighting) {
-        x = (hero.x + enemy.x) / 2; y = (hero.y + enemy.y) / 2;
-        z = Math.max(fit * 1.3, Math.min(fit * 3.6, Math.min(this.view.w / (Math.abs(hero.x - enemy.x) + 300), this.view.h / (Math.abs(hero.y - enemy.y) + 260))));
+        x = box.cx; y = box.cy;
+        z = Math.max(fit * 1.3, Math.min(fit * 3.6, Math.min(this.view.w / (box.w + 300), this.view.h / (box.h + 260))));
       } else {
         const a = Math.atan2(Math.sin(this.controller.hero.face), Math.cos(this.controller.hero.face));
         x = hero.x + Math.cos(a) * 40; y = hero.y + Math.sin(a) * 20; z = fit * 1.9;
@@ -240,25 +245,18 @@ export class O1Scene extends Phaser.Scene {
     const snapshot = this.adapter.read(delta);
     this.audio.update(delta, c.state, c.fight, snapshot.actors);
     this.moveCamera(delta, snapshot);
-    const [hero, enemy] = snapshot.actors;
-    const counts = snapshot.combat?.totals;
-    if (counts) {
-      // Confirmed successful player defensive actions only, never guessed from a guard pose.
-      const next = counts.parries > this.defence.parries ? 'parry'
-        : counts.perfects > this.defence.perfects ? 'perfect'
-        : counts.blocks > this.defence.blocks ? 'block' : null;
-      if (next) { this.shieldCue = next; this.shieldCueMs = 165; }
-      this.defence = { blocks: counts.blocks, parries: counts.parries, perfects: counts.perfects };
-    }
+    const [hero, ...foes] = snapshot.actors;
+    // Confirmed successful player defensive actions only, never guessed from a guard pose.
+    const dc = defenceCue(this.defence, snapshot.combat?.totals, c.fights !== this.defenceFight);
+    this.defenceFight = c.fights; this.defence = dc.counts;
+    if (dc.cue) { this.shieldCue = dc.cue; this.shieldCueMs = 165; }
     this.shieldCueMs = Math.max(0, this.shieldCueMs - Math.min(delta, 100));
-    const playerTruth = snapshot.combat?.combatants[0], enemyTruth = snapshot.combat?.combatants[1];
-    const results = [this.hero.draw(hero, this.debug, this.reduced, playerTruth, this.shieldCueMs > 0 ? this.shieldCue : null)];
-    for (const key of Object.keys(this.enemies) as O1Opponent[]) {
-      const mine = key === c.cfg.opponent;
-      const r = this.enemies[key].draw(mine ? enemy : { ...enemy, visible: false }, this.debug, this.reduced, mine ? enemyTruth : undefined);
-      if (mine) results.push(r);
-    }
-    [hero, enemy].forEach((a, i) => { if (results[i].missing && a.visible) this.clips.add(`${a.kind} ${a.action} ${a.facing}`); });
+    const truthOf = (i: number) => { const slot = c.fightSlot(i); return slot >= 0 && c.foes[i].engaged ? snapshot.combat?.combatants[1 + slot] : undefined; };
+    const drawn = [{ a: hero, r: this.hero.draw(hero, this.debug, this.reduced, snapshot.combat?.combatants[0], this.shieldCueMs > 0 ? this.shieldCue : null) }];
+    const used: Record<string, number> = {};
+    foes.forEach((a, i) => { const n = used[a.kind] ?? 0; used[a.kind] = n + 1; drawn.push({ a, r: this.pool[a.kind][n].draw(a, this.debug, this.reduced, truthOf(i)) }); });
+    for (const kind of Object.keys(this.pool)) this.pool[kind].slice(used[kind] ?? 0).forEach(r => r.draw({ ...hero, visible: false }, false, false));
+    drawn.forEach(({ a, r }) => { if (r.missing && a.visible) this.clips.add(`${a.kind} ${a.action} ${a.facing}`); });
     const cueOn = this.showCues && !this.reduced && !!snapshot.combat;
     if (cueOn) drawCues(this.cues, snapshot.combat!, { ghosts: this.showGhosts }); else this.cues.clear();
     const hv = snapshot.combat?.combatants[0], intent = snapshot.combat?.mind.intent;
@@ -268,7 +266,7 @@ export class O1Scene extends Phaser.Scene {
     this.drawOverlay();
     this.syncHud();
     const hx = Math.round(c.hero.x * 10) / 10, hy = Math.round(c.hero.y * 10) / 10;
-    window.__O1_STATE__ = { source: snapshot.source, state: c.state, tick: c.tick, fought: c.fought, hp: Math.round(c.hp), hpMax: c.hpMax, hero: { x: hx, y: hy }, enemyAlive: c.enemy.alive, digest: c.digest, missing: [...this.clips], speed: this.speed, build: __BUILD_SHA__, viewport: [this.scale.width, this.scale.height], zoom: this.cameras.main.zoom, fit: this.fit, cam: { mode: this.camMode, step: this.camStep, x: Math.round(this.cam.x * 10) / 10, y: Math.round(this.cam.y * 10) / 10 } };
+    window.__O1_STATE__ = { source: snapshot.source, state: c.state, tick: c.tick, fought: c.fought, hp: Math.round(c.hp), hpMax: c.hpMax, hero: { x: hx, y: hy }, enemiesAlive: c.foes.filter(f => f.alive).length, fights: c.fights, digest: c.digest, missing: [...this.clips], speed: this.speed, build: __BUILD_SHA__, viewport: [this.scale.width, this.scale.height], zoom: this.cameras.main.zoom, fit: this.fit, cam: { mode: this.camMode, step: this.camStep, x: Math.round(this.cam.x * 10) / 10, y: Math.round(this.cam.y * 10) / 10 } };
   }
   private drawOverlay() {
     const g = this.overlay.clear();
@@ -280,16 +278,18 @@ export class O1Scene extends Phaser.Scene {
     g.lineStyle(1, 0x9ed6d0, .8).beginPath().moveTo(c.hero.x, c.hero.y);
     for (const p of c.routePoints) g.lineTo(p.x, p.y);
     g.strokePath();
-    if (c.enemy.alive && c.state !== 'fighting') {
+    for (const f of c.foes) {
+      if (!f.alive || f.engaged) continue;
       const half = O1.detection.arcDegrees * Math.PI / 360, r = O1.detection.range;
-      g.lineStyle(1, 0xd98c6a, .7).beginPath().moveTo(c.enemy.x, c.enemy.y).lineTo(c.enemy.x + Math.cos(c.enemy.face - half) * r, c.enemy.y + Math.sin(c.enemy.face - half) * r);
-      g.arc(c.enemy.x, c.enemy.y, r, c.enemy.face - half, c.enemy.face + half).lineTo(c.enemy.x, c.enemy.y).strokePath();
+      g.lineStyle(1, 0xd98c6a, .7).beginPath().moveTo(f.x, f.y).lineTo(f.x + Math.cos(f.face - half) * r, f.y + Math.sin(f.face - half) * r);
+      g.arc(f.x, f.y, r, f.face - half, f.face + half).lineTo(f.x, f.y).strokePath();
+      g.lineStyle(1, 0xd98c6a, .3).strokeCircle(f.x, f.y, O1.detection.alertRadius);
     }
   }
   private syncHud() {
     const c = this.controller, q = (id: string) => this.hud.querySelector<HTMLElement>(`#${id}`)!;
     const label: Record<string, string> = { ready: 'Ready', travelling: 'Travelling', fighting: 'Fighting', completed: 'Completed', defeated: 'Defeated', unresolved: 'Unresolved' };
-    q('status').textContent = `${label[c.state]} · tick ${c.tick} · health ${Math.round(c.hp)}/${c.hpMax}${c.state === 'fighting' ? ` · ${c.fight?.enemies[0].name} ${Math.round(c.fight?.enemies[0].hp ?? 0)}` : ''}`;
+    q('status').textContent = `${label[c.state]} · tick ${c.tick} · health ${Math.round(c.hp)}/${c.hpMax}${c.state === 'fighting' && c.fight ? ` · ${c.fight.enemies.filter(e => !e.dead).map(e => `${e.name} ${Math.round(e.hp)}`).join(' · ')}` : ''}${c.fights > 1 || c.foes.length > 1 ? ` · fight ${Math.max(1, c.fights)}, ${c.foes.filter(f => f.alive).length} of ${c.foes.length} enemies left` : ''}`;
     q('result').textContent = c.terminal ? `${OUTCOME_TEXT[c.state]} ${c.fought ? 'A fight occurred.' : 'No fight occurred.'}` : '';
     const lines = (c.fight ? c.fight.events.map(e => e.text) : []).concat(c.fight ? [] : c.notes).slice(-4);
     const log = q('log'); const html = lines.map(l => `<li>${l.replace(/[<>&]/g, '')}</li>`).join('');
