@@ -1,7 +1,7 @@
 {
- "capturedAt": "2026-10-23T07:32:33.299Z",
+ "capturedAt": "2026-10-23T07:54:56.912Z",
  "tool": "Chromium / Playwright against the built preview, real Phaser runtime and the real simulator",
- "checkoutSHA": "2a48eada3677f20561f970e33649143eb3099ac8",
+ "checkoutSHA": "2ddefdf57b3d72df3eab333df632771ed883752d",
  "note": "Software-rendered cloud captures. No human review and no physical device or touch testing is claimed. State fields come from window.__O1_STATE__.",
  "captures": [
   {
@@ -23,11 +23,12 @@
      "x": -240,
      "y": 0
     },
-    "enemyAlive": true,
+    "enemiesAlive": 1,
+    "fights": 0,
     "digest": "811c9dc5",
     "missing": [],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      1280,
      720
@@ -62,11 +63,12 @@
      "x": -142.7,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "1d38465b",
+    "enemiesAlive": 1,
+    "fights": 0,
+    "digest": "686fac05",
     "missing": [],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      1280,
      720
@@ -93,7 +95,7 @@
    "state": {
     "source": "authoritative",
     "state": "fighting",
-    "tick": 194,
+    "tick": 193,
     "fought": true,
     "hp": 90,
     "hpMax": 90,
@@ -101,11 +103,12 @@
      "x": -72.6,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "61f861ba",
+    "enemiesAlive": 1,
+    "fights": 1,
+    "digest": "d1300f25",
     "missing": [],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      1280,
      720
@@ -140,13 +143,14 @@
      "x": -65.8,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "5e2bdb73",
+    "enemiesAlive": 1,
+    "fights": 1,
+    "digest": "9f384541",
     "missing": [
      "sentry light W"
     ],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      1280,
      720
@@ -181,11 +185,12 @@
      "x": 240.3,
      "y": 0.2
     },
-    "enemyAlive": false,
-    "digest": "23e59215",
+    "enemiesAlive": 0,
+    "fights": 1,
+    "digest": "8146a30b",
     "missing": [],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      1280,
      720
@@ -220,13 +225,14 @@
      "x": -67.3,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "fd755da2",
+    "enemiesAlive": 1,
+    "fights": 1,
+    "digest": "72bae384",
     "missing": [
      "adventurer reaction W"
     ],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      1280,
      720
@@ -261,13 +267,14 @@
      "x": -65.8,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "788670eb",
+    "enemiesAlive": 1,
+    "fights": 1,
+    "digest": "bd3d2db9",
     "missing": [
      "sentry light W"
     ],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      1280,
      720
@@ -302,11 +309,12 @@
      "x": 162.3,
      "y": 102
     },
-    "enemyAlive": false,
-    "digest": "61ee37f0",
+    "enemiesAlive": 0,
+    "fights": 1,
+    "digest": "05269cdc",
     "missing": [],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      1280,
      720
@@ -341,13 +349,94 @@
      "x": -65.8,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "788670eb",
+    "enemiesAlive": 1,
+    "fights": 1,
+    "digest": "bd3d2db9",
     "missing": [
      "sentry light W"
     ],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
+    "viewport": [
+     1280,
+     720
+    ],
+    "zoom": 1.176,
+    "fit": 1.176,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-desktop-pair-fight.png",
+   "viewport": [
+    1280,
+    720
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=sentryMireling&ticks=190&hold&cam=action",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 190,
+    "fought": true,
+    "hp": 69,
+    "hpMax": 90,
+    "hero": {
+     "x": -72.6,
+     "y": 0
+    },
+    "enemiesAlive": 2,
+    "fights": 1,
+    "digest": "8348ce3f",
+    "missing": [],
+    "speed": 1,
+    "build": "2ddefdf",
+    "viewport": [
+     1280,
+     720
+    ],
+    "zoom": 1.7056894725852167,
+    "fit": 1.176,
+    "cam": {
+     "mode": "action",
+     "step": 0,
+     "x": -18.3,
+     "y": 49.1
+    }
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-desktop-two-mirelings.png",
+   "viewport": [
+    1280,
+    720
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=mireling2&ticks=190&hold",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 190,
+    "fought": true,
+    "hp": 90,
+    "hpMax": 90,
+    "hero": {
+     "x": -72.6,
+     "y": 0
+    },
+    "enemiesAlive": 2,
+    "fights": 1,
+    "digest": "e97d3c37",
+    "missing": [],
+    "speed": 1,
+    "build": "2ddefdf",
     "viewport": [
      1280,
      720
@@ -382,13 +471,14 @@
      "x": -65.8,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "788670eb",
+    "enemiesAlive": 1,
+    "fights": 1,
+    "digest": "bd3d2db9",
     "missing": [
      "sentry light W"
     ],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      1280,
      720
@@ -423,13 +513,14 @@
      "x": -65.8,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "788670eb",
+    "enemiesAlive": 1,
+    "fights": 1,
+    "digest": "bd3d2db9",
     "missing": [
      "sentry light W"
     ],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      1280,
      720
@@ -464,11 +555,12 @@
      "x": 162.3,
      "y": 102
     },
-    "enemyAlive": false,
-    "digest": "61ee37f0",
+    "enemiesAlive": 0,
+    "fights": 1,
+    "digest": "05269cdc",
     "missing": [],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      1280,
      720
@@ -495,7 +587,7 @@
    "state": {
     "source": "authoritative",
     "state": "fighting",
-    "tick": 194,
+    "tick": 193,
     "fought": true,
     "hp": 90,
     "hpMax": 90,
@@ -503,11 +595,12 @@
      "x": -72.6,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "61f861ba",
+    "enemiesAlive": 1,
+    "fights": 1,
+    "digest": "d1300f25",
     "missing": [],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      1920,
      1080
@@ -542,11 +635,12 @@
      "x": -240,
      "y": 0
     },
-    "enemyAlive": true,
+    "enemiesAlive": 1,
+    "fights": 0,
     "digest": "811c9dc5",
     "missing": [],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      390,
      844
@@ -581,11 +675,12 @@
      "x": -140.4,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "cddcd849",
+    "enemiesAlive": 1,
+    "fights": 0,
+    "digest": "ea729e21",
     "missing": [],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      390,
      844
@@ -612,7 +707,7 @@
    "state": {
     "source": "authoritative",
     "state": "fighting",
-    "tick": 194,
+    "tick": 195,
     "fought": true,
     "hp": 90,
     "hpMax": 90,
@@ -620,11 +715,12 @@
      "x": -72.6,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "61f861ba",
+    "enemiesAlive": 1,
+    "fights": 1,
+    "digest": "9e9b9b0c",
     "missing": [],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      390,
      844
@@ -651,7 +747,7 @@
    "state": {
     "source": "authoritative",
     "state": "fighting",
-    "tick": 175,
+    "tick": 174,
     "fought": true,
     "hp": 74,
     "hpMax": 90,
@@ -659,13 +755,14 @@
      "x": -65.8,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "788670eb",
+    "enemiesAlive": 1,
+    "fights": 1,
+    "digest": "408b5b3e",
     "missing": [
      "sentry light W"
     ],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      390,
      844
@@ -700,11 +797,12 @@
      "x": 240.3,
      "y": 0.2
     },
-    "enemyAlive": false,
-    "digest": "23e59215",
+    "enemiesAlive": 0,
+    "fights": 1,
+    "digest": "8146a30b",
     "missing": [],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      390,
      844
@@ -739,13 +837,14 @@
      "x": -67.3,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "fd755da2",
+    "enemiesAlive": 1,
+    "fights": 1,
+    "digest": "72bae384",
     "missing": [
      "adventurer reaction W"
     ],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      390,
      844
@@ -780,13 +879,14 @@
      "x": -65.8,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "788670eb",
+    "enemiesAlive": 1,
+    "fights": 1,
+    "digest": "bd3d2db9",
     "missing": [
      "sentry light W"
     ],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      390,
      844
@@ -821,11 +921,12 @@
      "x": 162.3,
      "y": 102
     },
-    "enemyAlive": false,
-    "digest": "61ee37f0",
+    "enemiesAlive": 0,
+    "fights": 1,
+    "digest": "05269cdc",
     "missing": [],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      390,
      844
@@ -860,13 +961,94 @@
      "x": -65.8,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "788670eb",
+    "enemiesAlive": 1,
+    "fights": 1,
+    "digest": "bd3d2db9",
     "missing": [
      "sentry light W"
     ],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
+    "viewport": [
+     390,
+     844
+    ],
+    "zoom": 0.609375,
+    "fit": 0.609375,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-portrait-pair-fight.png",
+   "viewport": [
+    390,
+    844
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=sentryMireling&ticks=190&hold&cam=action",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 190,
+    "fought": true,
+    "hp": 69,
+    "hpMax": 90,
+    "hero": {
+     "x": -72.6,
+     "y": 0
+    },
+    "enemiesAlive": 2,
+    "fights": 1,
+    "digest": "8348ce3f",
+    "missing": [],
+    "speed": 1,
+    "build": "2ddefdf",
+    "viewport": [
+     390,
+     844
+    ],
+    "zoom": 0.9336388891477788,
+    "fit": 0.609375,
+    "cam": {
+     "mode": "action",
+     "step": 0,
+     "x": -18.3,
+     "y": 49.1
+    }
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-portrait-two-mirelings.png",
+   "viewport": [
+    390,
+    844
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=mireling2&ticks=190&hold",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 190,
+    "fought": true,
+    "hp": 90,
+    "hpMax": 90,
+    "hero": {
+     "x": -72.6,
+     "y": 0
+    },
+    "enemiesAlive": 2,
+    "fights": 1,
+    "digest": "e97d3c37",
+    "missing": [],
+    "speed": 1,
+    "build": "2ddefdf",
     "viewport": [
      390,
      844
@@ -901,13 +1083,14 @@
      "x": -65.8,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "788670eb",
+    "enemiesAlive": 1,
+    "fights": 1,
+    "digest": "bd3d2db9",
     "missing": [
      "sentry light W"
     ],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      390,
      844
@@ -942,13 +1125,14 @@
      "x": -65.8,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "788670eb",
+    "enemiesAlive": 1,
+    "fights": 1,
+    "digest": "bd3d2db9",
     "missing": [
      "sentry light W"
     ],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      390,
      844
@@ -983,11 +1167,12 @@
      "x": 162.3,
      "y": 102
     },
-    "enemyAlive": false,
-    "digest": "61ee37f0",
+    "enemiesAlive": 0,
+    "fights": 1,
+    "digest": "05269cdc",
     "missing": [],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      390,
      844
@@ -1022,11 +1207,12 @@
      "x": -240,
      "y": 0
     },
-    "enemyAlive": true,
+    "enemiesAlive": 1,
+    "fights": 0,
     "digest": "811c9dc5",
     "missing": [],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      844,
      390
@@ -1053,19 +1239,20 @@
    "state": {
     "source": "authoritative",
     "state": "travelling",
-    "tick": 45,
+    "tick": 44,
     "fought": false,
     "hp": 90,
     "hpMax": 90,
     "hero": {
-     "x": -138.2,
+     "x": -140.4,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "3d3d2ed5",
+    "enemiesAlive": 1,
+    "fights": 0,
+    "digest": "ea729e21",
     "missing": [],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      844,
      390
@@ -1100,11 +1287,12 @@
      "x": -72.6,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "61f861ba",
+    "enemiesAlive": 1,
+    "fights": 1,
+    "digest": "aa29d806",
     "missing": [],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      844,
      390
@@ -1131,7 +1319,7 @@
    "state": {
     "source": "authoritative",
     "state": "fighting",
-    "tick": 174,
+    "tick": 176,
     "fought": true,
     "hp": 74,
     "hpMax": 90,
@@ -1139,13 +1327,14 @@
      "x": -65.8,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "5bf66756",
+    "enemiesAlive": 1,
+    "fights": 1,
+    "digest": "090d0cf6",
     "missing": [
      "sentry light W"
     ],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      844,
      390
@@ -1180,11 +1369,12 @@
      "x": 240.3,
      "y": 0.2
     },
-    "enemyAlive": false,
-    "digest": "23e59215",
+    "enemiesAlive": 0,
+    "fights": 1,
+    "digest": "8146a30b",
     "missing": [],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      844,
      390
@@ -1219,13 +1409,14 @@
      "x": -67.3,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "fd755da2",
+    "enemiesAlive": 1,
+    "fights": 1,
+    "digest": "72bae384",
     "missing": [
      "adventurer reaction W"
     ],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      844,
      390
@@ -1260,13 +1451,14 @@
      "x": -65.8,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "788670eb",
+    "enemiesAlive": 1,
+    "fights": 1,
+    "digest": "bd3d2db9",
     "missing": [
      "sentry light W"
     ],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      844,
      390
@@ -1301,11 +1493,12 @@
      "x": 162.3,
      "y": 102
     },
-    "enemyAlive": false,
-    "digest": "61ee37f0",
+    "enemiesAlive": 0,
+    "fights": 1,
+    "digest": "05269cdc",
     "missing": [],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      844,
      390
@@ -1340,13 +1533,94 @@
      "x": -65.8,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "788670eb",
+    "enemiesAlive": 1,
+    "fights": 1,
+    "digest": "bd3d2db9",
     "missing": [
      "sentry light W"
     ],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
+    "viewport": [
+     844,
+     390
+    ],
+    "zoom": 0.606,
+    "fit": 0.606,
+    "cam": {
+     "mode": "overview",
+     "step": 0,
+     "x": 0,
+     "y": 0
+    }
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-landscape-pair-fight.png",
+   "viewport": [
+    844,
+    390
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=sentryMireling&ticks=190&hold&cam=action",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 190,
+    "fought": true,
+    "hp": 69,
+    "hpMax": 90,
+    "hero": {
+     "x": -72.6,
+     "y": 0
+    },
+    "enemiesAlive": 2,
+    "fights": 1,
+    "digest": "8348ce3f",
+    "missing": [],
+    "speed": 1,
+    "build": "2ddefdf",
+    "viewport": [
+     844,
+     390
+    ],
+    "zoom": 0.8789522282199331,
+    "fit": 0.606,
+    "cam": {
+     "mode": "action",
+     "step": 0,
+     "x": -18.3,
+     "y": 49.1
+    }
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-landscape-two-mirelings.png",
+   "viewport": [
+    844,
+    390
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&opponent=mireling2&ticks=190&hold",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 190,
+    "fought": true,
+    "hp": 90,
+    "hpMax": 90,
+    "hero": {
+     "x": -72.6,
+     "y": 0
+    },
+    "enemiesAlive": 2,
+    "fights": 1,
+    "digest": "e97d3c37",
+    "missing": [],
+    "speed": 1,
+    "build": "2ddefdf",
     "viewport": [
      844,
      390
@@ -1381,13 +1655,14 @@
      "x": -65.8,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "788670eb",
+    "enemiesAlive": 1,
+    "fights": 1,
+    "digest": "bd3d2db9",
     "missing": [
      "sentry light W"
     ],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      844,
      390
@@ -1422,13 +1697,14 @@
      "x": -65.8,
      "y": 0
     },
-    "enemyAlive": true,
-    "digest": "788670eb",
+    "enemiesAlive": 1,
+    "fights": 1,
+    "digest": "bd3d2db9",
     "missing": [
      "sentry light W"
     ],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      844,
      390
@@ -1463,11 +1739,12 @@
      "x": 162.3,
      "y": 102
     },
-    "enemyAlive": false,
-    "digest": "61ee37f0",
+    "enemiesAlive": 0,
+    "fights": 1,
+    "digest": "05269cdc",
     "missing": [],
     "speed": 1,
-    "build": "2a48ead",
+    "build": "2ddefdf",
     "viewport": [
      844,
      390
