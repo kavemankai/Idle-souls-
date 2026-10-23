@@ -428,14 +428,15 @@ const SIM = (function () {
   function createFight(cfg) {
     const enc = ENCOUNTERS[cfg.encounter] || ENCOUNTERS.breaker;
     const S = {
-      tick: 0, over: false, winner: null, events: [], cfg, inst: 0, lastEnemyAtk: -99,
+      tick: 0, over: false, winner: null, events: [], cfg, inst: 0, lastEnemyAtk: -99, room: cfg.room ? prepareRoom(cfg.room) : null,
       rngA: mulberry32((cfg.seed * 2654435761) ^ 0x1234),
       rngE: mulberry32((cfg.seed * 40503) ^ 0xBEEF),
       d: derive(cfg.stats, cfg.god),
       ai: { lastHit: 0, snaps: [], beliefs: [], plans: {}, target: 0, thinkT: 0, chase: null, recoverT: 0, noiseT: 0, spacingNoise: 0, strafe: 1, strafeT: 60, readout: '', truth: '', intent: '', windowInst: 0 },
       stats: { guardBreaksDealt: 0, counteredHits: 0, parries: 0, dodgeCounters: 0, dmgBy: { late: 0, misread: 0, committed: 0, stamina: 0, dodge: 0, short: 0, iframes: 0, parry: 0, gamble: 0, surrounded: 0, hesitated: 0, guardbreak: 0 }, dealt: 0, taken: 0, dodges: 0, blocks: 0, perfects: 0, punishes: 0 },
     };
-    S.p = makeFighter('adventurer', -110, 0, 0);
+    const sa = (cfg.spawns && cfg.spawns.adventurer) || { x: -110, y: 0, face: 0 };   // cfg.spawns overrides the default positions
+    S.p = makeFighter('adventurer', sa.x, sa.y, sa.face || 0);
     S.p.mv = playerMoves(S.d);
     S.p.hp = S.p.maxHp = cfg.hpOverride || S.d.hp;
     S.p.st = S.p.maxSt = S.d.maxSt;
@@ -452,13 +453,15 @@ const SIM = (function () {
       const k = isR ? ri++ : mi++, cnt = isR ? ranged : melee;
       const spread = cnt === 1 ? 0 : -0.9 + 1.8 * k / (cnt - 1);
       const rad = isR ? 185 : 110;
-      const x = Math.cos(spread * (isR ? 0.6 : 1)) * rad, y = Math.sin(spread * (isR ? 0.6 : 1)) * rad;
+      const se = cfg.spawns && cfg.spawns.enemies && cfg.spawns.enemies[i];
+      const x = se ? se.x : Math.cos(spread * (isR ? 0.6 : 1)) * rad, y = se ? se.y : Math.sin(spread * (isR ? 0.6 : 1)) * rad;
       seen[arch] = (seen[arch] || 0) + 1;
       const name = counts[arch] > 1 ? `${ARCH[arch].name} ${'ABCD'[seen[arch] - 1]}` : ARCH[arch].name;
-      const e = makeFighter(arch, x, y, Math.PI, name);
+      const e = makeFighter(arch, x, y, se && se.face != null ? se.face : Math.PI, name);
       e.mv = MOVES; e.idx = i; e.hist = []; e.ai = { cool: (ARCH[arch].fodder ? 20 + i * 18 : 30 + i * 25), mode: 'circle', modeT: 0, dir: i % 2 ? -1 : 1, feint: false, chained: false };
       return e;
     });
+    if (S.room) { resolve(S, S.p); S.enemies.forEach(e => resolve(S, e)); }
     return S;
   }
 
@@ -525,6 +528,7 @@ const SIM = (function () {
     const dx = d.x - a.x, dy = d.y - a.y, dist = Math.hypot(dx, dy);
     if (dist > m.range + d.r) return;
     if (Math.abs(angDiff(Math.atan2(dy, dx), a.face)) > m.arc + Math.atan2(d.r, Math.max(dist, 1))) return;
+    if (S.room && !losClear(S, a.x, a.y, d.x, d.y)) return;
     const isP = d === S.p;
     if (d.iframe) {
       if (!a.evadeLogged) { a.evadeLogged = true; if (isP) { S.stats.dodges++; ev(S, `Dodged ${a.name}’s ${m.name}.`, 'good'); } }
@@ -633,7 +637,7 @@ const SIM = (function () {
     }
     if (m.kind === 'dodge') {
       const t = f.actT;
-      if (t <= 9) { const v = m.dist * (2 * (10 - t)) / 90; f.x += Math.cos(f.dodgeDir) * v; f.y += Math.sin(f.dodgeDir) * v; }
+      if (t <= 9) { const v = m.dist * (2 * (10 - t)) / 90; place(S, f, Math.cos(f.dodgeDir) * v, Math.sin(f.dodgeDir) * v); }
       f.iframe = t >= m.iStart && t <= m.iEnd;
       if (t >= m.dur) {
         f.act = null; f.iframe = false;
@@ -651,7 +655,7 @@ const SIM = (function () {
       // Shield up: keeps turning to face and edges forward at a crawl.
       const dist = Math.hypot(tgt.x - f.x, tgt.y - f.y), ang = Math.atan2(tgt.y - f.y, tgt.x - f.x);
       turnToward(f, ang, f.turn);
-      if (dist > 50) { f.x += Math.cos(ang) * f.speed * 0.35; f.y += Math.sin(ang) * f.speed * 0.35; }
+      if (dist > 50) place(S, f, Math.cos(ang) * f.speed * 0.35, Math.sin(ang) * f.speed * 0.35);
       if (f.actT >= m.active + m.recovery) { f.act = null; onActEnd(S, f); }
       return;
     }
@@ -667,7 +671,7 @@ const SIM = (function () {
       if (f.actT < m.windup - m.track) turnToward(f, Math.atan2(tgt.y - f.y, tgt.x - f.x), f.turn * (f === S.p ? S.d.trackMult : 1));
     } else if (f.actT <= m.windup + m.active) {
       const v = m.lunge / m.active;
-      f.x += Math.cos(f.face) * v; f.y += Math.sin(f.face) * v;
+      place(S, f, Math.cos(f.face) * v, Math.sin(f.face) * v);
       if (isP) { for (const e of S.enemies) if (!e.dead && !f.hitSet.has(e.idx)) checkHit(S, f, e, m); }
       else if (!f.actHit) checkHit(S, f, S.p, m);
       if (!f.act) return;
@@ -679,22 +683,95 @@ const SIM = (function () {
     const d = Math.hypot(f.x, f.y), lim = ARENA_R - f.r;
     if (d > lim) { f.x *= lim / d; f.y *= lim / d; }
   }
-  function moveF(f) {
-    if (!f.dead && !f.act && f.stagger <= 0) { f.x += f.mvx; f.y += f.mvy; }
-    keepInArena(f);
+
+  // Optional room geometry (cfg.room). Without it every function below falls back to the circular arena, so legacy fights are unchanged.
+  // room = { bounds: [x0, y0, x1, y1], solids: { rects: [[x0, y0, x1, y1]], circles: [{ x, y, r }] } }; coordinates are the fight's own.
+  function prepareRoom(room) {
+    const sol = room.solids || {};
+    return {
+      rects: (sol.rects || []).map(r => r.slice()),
+      circles: (sol.circles || []).map(c => ({ x: c.x, y: c.y, r: c.r })),
+      bounds: room.bounds ? room.bounds.slice() : null,
+    };
+  }
+  // Distance from a point to the nearest solid surface (negative inside a solid) and the unit normal pointing away from it.
+  function nearestSolid(R, x, y) {
+    let best = { d: Infinity, nx: 0, ny: 0 };
+    for (const [x0, y0, x1, y1] of R.rects) {
+      const dx = x - clamp(x, x0, x1), dy = y - clamp(y, y0, y1), dd = Math.hypot(dx, dy);
+      let d = dd, nx = 0, ny = 0;
+      if (dd > 0) { nx = dx / dd; ny = dy / dd; }
+      else {
+        const l = x - x0, r = x1 - x, t = y - y0, b = y1 - y, m = Math.min(l, r, t, b);
+        d = -m;
+        if (m === l) nx = -1; else if (m === r) nx = 1; else if (m === t) ny = -1; else ny = 1;
+      }
+      if (d < best.d) best = { d, nx, ny };
+    }
+    for (const c of R.circles) {
+      const dx = x - c.x, dy = y - c.y, dd = Math.hypot(dx, dy), d = dd - c.r;
+      if (d < best.d) best = { d, nx: dd > 0 ? dx / dd : 1, ny: dd > 0 ? dy / dd : 0 };
+    }
+    if (R.bounds) {
+      const [x0, y0, x1, y1] = R.bounds;
+      for (const [d, nx, ny] of [[x - x0, 1, 0], [x1 - x, -1, 0], [y - y0, 0, 1], [y1 - y, 0, -1]]) if (d < best.d) best = { d, nx, ny };
+    }
+    return best;
+  }
+  // Push a body out of every solid it overlaps (a few passes settle corners).
+  function resolve(S, f) {
+    for (let pass = 0; pass < 4; pass++) {
+      const n = nearestSolid(S.room, f.x, f.y);
+      if (n.d >= f.r) return;
+      const push = f.r - n.d;
+      f.x += n.nx * push; f.y += n.ny * push;
+    }
+  }
+  // Move a body by (dx, dy). In a room it moves in short sub-steps and is resolved after each, so a dodge or lunge cannot tunnel through a wall.
+  function place(S, f, dx, dy) {
+    if (!S.room) { f.x += dx; f.y += dy; return; }
+    const n = Math.max(1, Math.ceil(Math.hypot(dx, dy) / 6));
+    for (let i = 0; i < n; i++) { f.x += dx / n; f.y += dy / n; resolve(S, f); }
+  }
+  function confine(S, f) { if (S.room) resolve(S, f); else keepInArena(f); }
+  // True when the straight segment crosses no solid. Bodies are points here; the caller allows for radius.
+  function losClear(S, x0, y0, x1, y1) {
+    if (!S.room) return true;
+    const dx = x1 - x0, dy = y1 - y0;
+    for (const [rx0, ry0, rx1, ry1] of S.room.rects) {
+      let t0 = 0, t1 = 1, hit = true;
+      for (const [p, d, lo, hi] of [[x0, dx, rx0, rx1], [y0, dy, ry0, ry1]]) {
+        if (Math.abs(d) < 1e-9) { if (p < lo || p > hi) { hit = false; break; } }
+        else { let a = (lo - p) / d, b = (hi - p) / d; if (a > b) { const t = a; a = b; b = t; } t0 = Math.max(t0, a); t1 = Math.min(t1, b); if (t0 > t1) { hit = false; break; } }
+      }
+      if (hit) return false;
+    }
+    const len2 = dx * dx + dy * dy;
+    for (const c of S.room.circles) {
+      const t = len2 > 0 ? clamp(((c.x - x0) * dx + (c.y - y0) * dy) / len2, 0, 1) : 0;
+      if (Math.hypot(x0 + dx * t - c.x, y0 + dy * t - c.y) < c.r) return false;
+    }
+    return true;
+  }
+
+  function moveF(S, f) {
+    if (!f.dead && !f.act && f.stagger <= 0) place(S, f, f.mvx, f.mvy);
+    confine(S, f);
   }
   function separate(S) {
     const bodies = [S.p, ...alive(S)];
     for (let i = 0; i < bodies.length; i++) for (let j = i + 1; j < bodies.length; j++) {
       const a = bodies[i], b = bodies[j], dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 0.01, min = a.r + b.r;
-      if (d < min) { const push = (min - d) / 2; a.x -= dx / d * push; a.y -= dy / d * push; b.x += dx / d * push; b.y += dy / d * push; keepInArena(a); keepInArena(b); }
+      if (d < min) { const push = (min - d) / 2; a.x -= dx / d * push; a.y -= dy / d * push; b.x += dx / d * push; b.y += dy / d * push; confine(S, a); confine(S, b); }
     }
   }
   function updateProjectiles(S) {
     const p = S.p, keep = [];
     for (const pr of S.projectiles) {
+      const px0 = pr.x, py0 = pr.y;
       pr.x += pr.vx; pr.y += pr.vy;
-      if (Math.hypot(pr.x, pr.y) > ARENA_R + 10 || S.tick - pr.born > 90) continue;
+      if (S.room ? (nearestSolid(S.room, pr.x, pr.y).d < 0 || !losClear(S, px0, py0, pr.x, pr.y)) : Math.hypot(pr.x, pr.y) > ARENA_R + 10) continue;
+      if (S.tick - pr.born > 90) continue;
       if (Math.hypot(pr.x - p.x, pr.y - p.y) > p.r + 3) { keep.push(pr); continue; }
       if (p.iframe) { if (!pr.evaded) { pr.evaded = true; S.stats.dodges++; ev(S, `Rolled through ${pr.owner.name}’s ${pr.name}.`, 'good'); } keep.push(pr); continue; }
       const from = Math.atan2(-pr.vy, -pr.vx), outsideGuard = Math.abs(angDiff(from, p.face)) >= S.d.guardArc;
@@ -882,7 +959,7 @@ const SIM = (function () {
       for (const r of [0, 0.8, -0.8, 1.57, -1.57]) {
         const a = away + r, ex = p.x + Math.cos(a) * p.mv.dodge.dist, ey = p.y + Math.sin(a) * p.mv.dodge.dist;
         let s = 0;
-        if (Math.hypot(ex, ey) > ARENA_R - p.r - 8) s -= 3;
+        if (S.room ? (nearestSolid(S.room, ex, ey).d < p.r + 8 || !losClear(S, p.x, p.y, ex, ey)) : Math.hypot(ex, ey) > ARENA_R - p.r - 8) s -= 3;
         const dEnd = Math.hypot(ex - lx, ey - ly);
         const off = Math.abs(angDiff(Math.atan2(ey - snap.y, ex - snap.x), snap.face));
         if (dEnd > m.range + p.r + 4 || off > m.arc + 0.35) s += 2;
@@ -1134,8 +1211,8 @@ const SIM = (function () {
       const lim = ARCH[e.arch].threatReach + 25 + 60 * d.flankSense;
       if (dd < lim) { const w = (lim - dd) / lim * 1.4 * d.flankSense; vx += dx / dd * w; vy += dy / dd * w; }
     });
-    const fromC = Math.hypot(p.x, p.y);
-    if (fromC > ARENA_R - 45) { vx -= p.x / fromC * 0.9; vy -= p.y / fromC * 0.9; }
+    if (S.room) { const w = nearestSolid(S.room, p.x, p.y); if (w.d < 45) { vx += w.nx * 0.9; vy += w.ny * 0.9; } }
+    else { const fromC = Math.hypot(p.x, p.y); if (fromC > ARENA_R - 45) { vx -= p.x / fromC * 0.9; vy -= p.y / fromC * 0.9; } }
     const mag = Math.hypot(vx, vy);
     if (mag > 0.05) moveToward(S, Math.atan2(vy, vx), Math.min(1, mag));
     if (!top) {
@@ -1288,7 +1365,7 @@ const SIM = (function () {
     advance(S, p);
     for (const e of S.enemies) advance(S, e);
     updateProjectiles(S);
-    moveF(p); S.enemies.forEach(moveF); separate(S);
+    moveF(S, p); S.enemies.forEach(e => moveF(S, e)); separate(S);
     regen(p, S.d);
     p.poise = Math.min(p.maxPoise, p.poise + 0.15);
     for (const e of S.enemies) e.poise = Math.min(e.maxPoise, e.poise + 0.15);
@@ -1302,7 +1379,7 @@ const SIM = (function () {
 
   function runFight(cfg) { const S = createFight(cfg); while (!S.over) step(S); return S; }
 
-  return { HZ, ARENA_R, MOVES, ARCH, ENCOUNTERS, DOCTRINES, STATS, CAUSES, derive, playerLevel, pointsSpent, POINTS_PER_LEVEL, playerHp, allocate, setPhys, PROFILES, FAMILIES, BASE, MAX_LEVEL, fromSix, isMind, playerMoves, createFight, step, runFight, fmt };
+  return { HZ, ARENA_R, MOVES, ARCH, ENCOUNTERS, DOCTRINES, STATS, CAUSES, derive, playerLevel, pointsSpent, POINTS_PER_LEVEL, playerHp, allocate, setPhys, PROFILES, FAMILIES, BASE, MAX_LEVEL, fromSix, isMind, playerMoves, createFight, step, runFight, fmt, room: { prepare: prepareRoom, nearest: nearestSolid, losClear: (R, x0, y0, x1, y1) => losClear({ room: R }, x0, y0, x1, y1) } };
 })();
 if (typeof module !== 'undefined') module.exports = SIM;
 

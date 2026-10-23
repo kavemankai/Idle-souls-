@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { FACINGS, type Action, type Facing } from '../contracts/presentation';
-import { paintOldRoad, ENVIRONMENT_TEXTURES } from '../presentation/environment';
+import { paintOldRoad } from '../presentation/environment';
+import { loadOldRoadAssets } from '../presentation/assets';
 import { ActorRenderer } from '../presentation/actorRenderer';
 import { VisualSequence, type Composition } from '../presentation/visualSequence';
 declare const __BUILD_SHA__: string;
@@ -15,11 +16,7 @@ export class OldRoadVisualScene extends Phaser.Scene {
   private status!: HTMLElement;
   private calibration = false;
   constructor() { super('OldRoad'); }
-  preload() {
-    ENVIRONMENT_TEXTURES.forEach(key => this.load.image(key,`environments/runtime/${key}.png`));
-    ['adventurer','sentry','mireling','mannequin'].forEach(key => this.load.atlas(key,`characters/runtime/${key}.png`,`characters/runtime/${key}.json`));
-    ['slash','heavy','impact','landing'].forEach(key => this.load.image(`fx-${key}`,`vfx/runtime/${key}.png`));
-  }
+  preload() { loadOldRoadAssets(this); }
   create() {
     paintOldRoad(this);
     const initialParams=new URLSearchParams(location.search);

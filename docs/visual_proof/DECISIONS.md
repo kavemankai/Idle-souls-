@@ -12,4 +12,14 @@
 - O1 clear floor remains the proposed 480×440 at world center (950,1750); east/west thresholds are visual routes only. Cover and wall proxy outlines are proposed annotations, **not tested movement/LOS/projectile collision**. There is no gate, sanctuary, loot or fake extraction button.
 - Phone portrait uses a local adventurer-focused crop, while desktop and landscape use the full diorama when space permits. Orientation remains open.
 
-Combat integration V5 is BLOCKED: only main branch docs and maps existed at eaf4475. Neither the main combat simulation nor deep-stats split is available. A creator/workstream-selected source and baseline seeded replay are required before connecting the readonly adapter. No source was guessed.
+Combat integration V5 was BLOCKED at eaf4475 (no combat source in the repository). It is now connected for O1 only, see the entry below. The visual study still uses no simulator.
+
+2026-10-23, O1 traversal slice (`?scene=o1`). All values below are **trial settings**, kept in `combat/rooms/o1.json`, none is a design lock.
+
+- Source: the deep-stats split in `combat/deep-stats/combat-sim.js`, the source Kyle chose for combat. Baseline for seeded replay: `combat/deep-stats/tools/legacy-golden.json` (78 cells x 20 seeds, legacy arena) and the per-run digest returned by `runO1`, compared between Node and the browser in `tests/browser/o1.spec.ts`.
+- Room: 480x440 floor, local frame centre (0,0), x east, y south. North and south walls have inner faces at y = -200 and +200. West and east openings are 174 wide, so a radius-13 body can use the middle 148 units. Pillar at (10,-125), radius 27, the same proxy the study already drew. Wall art is painted on these faces.
+- Travel: entry (-240,0), threshold x = 240. Reaching it completes the slice. Grid A* (8 units) around solids inflated by 15, smoothed. The route is fixed, seeds only change the fight.
+- Enemy: fixed at the doc-29 test spawn (Mireling (65,80) facing NW, Sentry (90,-25) facing SW). Detection: 160 units, 120 degree cone, blocked by solids. With these spawns the adventurer is always seen, about 160 units out, so the no-contact path is tested with alternate spawns only.
+- Hand-off: at detection the simulator receives the adventurer's current position and heading and the enemy's spawn. After a win travel resumes from the simulator's position. Death and the 150 s fight limit stop travel (`defeated`, `unresolved`).
+- Perception: the adventurer AI still knows where enemies are through the pillar (handicapped-god model). Solids block movement, hits and projectiles, not the AI's knowledge. Revisit if O1 runs show it matters.
+- Not claimed: no human review, no device or touch testing, no combat QA sign-off. Evidence images are software-rendered cloud captures in `docs/o1_slice/`.

@@ -1,0 +1,628 @@
+{
+ "capturedAt": "2026-10-23T06:32:47.379Z",
+ "tool": "Chromium / Playwright against the built preview, real Phaser runtime and the real simulator",
+ "checkoutSHA": "a1b45c563aae8b083c6a7d3a16d8e1cf22e85d6a",
+ "note": "Software-rendered cloud captures. No human review and no physical device or touch testing is claimed. State fields come from window.__O1_STATE__.",
+ "captures": [
+  {
+   "file": "screenshots/O1-desktop-ready.png",
+   "viewport": [
+    1280,
+    720
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1",
+   "state": {
+    "source": "authoritative",
+    "state": "ready",
+    "tick": 0,
+    "fought": false,
+    "hp": 90,
+    "hpMax": 90,
+    "hero": {
+     "x": -240,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "811c9dc5",
+    "missing": [],
+    "speed": 1,
+    "build": "a1b45c5",
+    "viewport": [
+     1280,
+     720
+    ],
+    "zoom": 1.176
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-desktop-travelling.png",
+   "viewport": [
+    1280,
+    720
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&ticks=40&debug",
+   "state": {
+    "source": "authoritative",
+    "state": "travelling",
+    "tick": 43,
+    "fought": false,
+    "hp": 90,
+    "hpMax": 90,
+    "hero": {
+     "x": -142.7,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "1d38465b",
+    "missing": [],
+    "speed": 1,
+    "build": "a1b45c5",
+    "viewport": [
+     1280,
+     720
+    ],
+    "zoom": 1.176
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-desktop-mireling-fight.png",
+   "viewport": [
+    1280,
+    720
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&ticks=190",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 193,
+    "fought": true,
+    "hp": 90,
+    "hpMax": 90,
+    "hero": {
+     "x": -72.6,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "e5a5006b",
+    "missing": [],
+    "speed": 1,
+    "build": "a1b45c5",
+    "viewport": [
+     1280,
+     720
+    ],
+    "zoom": 1.176
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-desktop-sentry-fight.png",
+   "viewport": [
+    1280,
+    720
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&ticks=170&opponent=sentry",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 173,
+    "fought": true,
+    "hp": 74,
+    "hpMax": 90,
+    "hero": {
+     "x": -65.8,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "5e2bdb73",
+    "missing": [
+     "sentry light W"
+    ],
+    "speed": 1,
+    "build": "a1b45c5",
+    "viewport": [
+     1280,
+     720
+    ],
+    "zoom": 1.176
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-desktop-completed.png",
+   "viewport": [
+    1280,
+    720
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&ticks=3000",
+   "state": {
+    "source": "authoritative",
+    "state": "completed",
+    "tick": 705,
+    "fought": true,
+    "hp": 72,
+    "hpMax": 90,
+    "hero": {
+     "x": 240.3,
+     "y": 0.2
+    },
+    "enemyAlive": false,
+    "digest": "23e59215",
+    "missing": [],
+    "speed": 1,
+    "build": "a1b45c5",
+    "viewport": [
+     1280,
+     720
+    ],
+    "zoom": 1.176
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-desktop-defeated.png",
+   "viewport": [
+    1280,
+    720
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&ticks=3000&opponent=sentry&level=1&seed=2",
+   "state": {
+    "source": "authoritative",
+    "state": "defeated",
+    "tick": 357,
+    "fought": true,
+    "hp": 0,
+    "hpMax": 75,
+    "hero": {
+     "x": -67.3,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "fd755da2",
+    "missing": [
+     "adventurer reaction W"
+    ],
+    "speed": 1,
+    "build": "a1b45c5",
+    "viewport": [
+     1280,
+     720
+    ],
+    "zoom": 1.176
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-hd-mireling-fight.png",
+   "viewport": [
+    1920,
+    1080
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&ticks=190",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 194,
+    "fought": true,
+    "hp": 90,
+    "hpMax": 90,
+    "hero": {
+     "x": -72.6,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "61f861ba",
+    "missing": [],
+    "speed": 1,
+    "build": "a1b45c5",
+    "viewport": [
+     1920,
+     1080
+    ],
+    "zoom": 1.5
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-portrait-ready.png",
+   "viewport": [
+    390,
+    844
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1",
+   "state": {
+    "source": "authoritative",
+    "state": "ready",
+    "tick": 0,
+    "fought": false,
+    "hp": 90,
+    "hpMax": 90,
+    "hero": {
+     "x": -240,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "811c9dc5",
+    "missing": [],
+    "speed": 1,
+    "build": "a1b45c5",
+    "viewport": [
+     390,
+     844
+    ],
+    "zoom": 0.609375
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-portrait-travelling.png",
+   "viewport": [
+    390,
+    844
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&ticks=40&debug",
+   "state": {
+    "source": "authoritative",
+    "state": "travelling",
+    "tick": 44,
+    "fought": false,
+    "hp": 90,
+    "hpMax": 90,
+    "hero": {
+     "x": -140.4,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "cddcd849",
+    "missing": [],
+    "speed": 1,
+    "build": "a1b45c5",
+    "viewport": [
+     390,
+     844
+    ],
+    "zoom": 0.609375
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-portrait-mireling-fight.png",
+   "viewport": [
+    390,
+    844
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&ticks=190",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 194,
+    "fought": true,
+    "hp": 90,
+    "hpMax": 90,
+    "hero": {
+     "x": -72.6,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "61f861ba",
+    "missing": [],
+    "speed": 1,
+    "build": "a1b45c5",
+    "viewport": [
+     390,
+     844
+    ],
+    "zoom": 0.609375
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-portrait-sentry-fight.png",
+   "viewport": [
+    390,
+    844
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&ticks=170&opponent=sentry",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 175,
+    "fought": true,
+    "hp": 74,
+    "hpMax": 90,
+    "hero": {
+     "x": -65.8,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "788670eb",
+    "missing": [
+     "sentry light W"
+    ],
+    "speed": 1,
+    "build": "a1b45c5",
+    "viewport": [
+     390,
+     844
+    ],
+    "zoom": 0.609375
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-portrait-completed.png",
+   "viewport": [
+    390,
+    844
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&ticks=3000",
+   "state": {
+    "source": "authoritative",
+    "state": "completed",
+    "tick": 705,
+    "fought": true,
+    "hp": 72,
+    "hpMax": 90,
+    "hero": {
+     "x": 240.3,
+     "y": 0.2
+    },
+    "enemyAlive": false,
+    "digest": "23e59215",
+    "missing": [],
+    "speed": 1,
+    "build": "a1b45c5",
+    "viewport": [
+     390,
+     844
+    ],
+    "zoom": 0.609375
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-portrait-defeated.png",
+   "viewport": [
+    390,
+    844
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&ticks=3000&opponent=sentry&level=1&seed=2",
+   "state": {
+    "source": "authoritative",
+    "state": "defeated",
+    "tick": 357,
+    "fought": true,
+    "hp": 0,
+    "hpMax": 75,
+    "hero": {
+     "x": -67.3,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "fd755da2",
+    "missing": [
+     "adventurer reaction W"
+    ],
+    "speed": 1,
+    "build": "a1b45c5",
+    "viewport": [
+     390,
+     844
+    ],
+    "zoom": 0.609375
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-landscape-ready.png",
+   "viewport": [
+    844,
+    390
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1",
+   "state": {
+    "source": "authoritative",
+    "state": "ready",
+    "tick": 0,
+    "fought": false,
+    "hp": 90,
+    "hpMax": 90,
+    "hero": {
+     "x": -240,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "811c9dc5",
+    "missing": [],
+    "speed": 1,
+    "build": "a1b45c5",
+    "viewport": [
+     844,
+     390
+    ],
+    "zoom": 0.606
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-landscape-travelling.png",
+   "viewport": [
+    844,
+    390
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&ticks=40&debug",
+   "state": {
+    "source": "authoritative",
+    "state": "travelling",
+    "tick": 44,
+    "fought": false,
+    "hp": 90,
+    "hpMax": 90,
+    "hero": {
+     "x": -140.4,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "cddcd849",
+    "missing": [],
+    "speed": 1,
+    "build": "a1b45c5",
+    "viewport": [
+     844,
+     390
+    ],
+    "zoom": 0.606
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-landscape-mireling-fight.png",
+   "viewport": [
+    844,
+    390
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&ticks=190",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 194,
+    "fought": true,
+    "hp": 90,
+    "hpMax": 90,
+    "hero": {
+     "x": -72.6,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "61f861ba",
+    "missing": [],
+    "speed": 1,
+    "build": "a1b45c5",
+    "viewport": [
+     844,
+     390
+    ],
+    "zoom": 0.606
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-landscape-sentry-fight.png",
+   "viewport": [
+    844,
+    390
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&ticks=170&opponent=sentry",
+   "state": {
+    "source": "authoritative",
+    "state": "fighting",
+    "tick": 175,
+    "fought": true,
+    "hp": 74,
+    "hpMax": 90,
+    "hero": {
+     "x": -65.8,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "788670eb",
+    "missing": [
+     "sentry light W"
+    ],
+    "speed": 1,
+    "build": "a1b45c5",
+    "viewport": [
+     844,
+     390
+    ],
+    "zoom": 0.606
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-landscape-completed.png",
+   "viewport": [
+    844,
+    390
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&ticks=3000",
+   "state": {
+    "source": "authoritative",
+    "state": "completed",
+    "tick": 705,
+    "fought": true,
+    "hp": 72,
+    "hpMax": 90,
+    "hero": {
+     "x": 240.3,
+     "y": 0.2
+    },
+    "enemyAlive": false,
+    "digest": "23e59215",
+    "missing": [],
+    "speed": 1,
+    "build": "a1b45c5",
+    "viewport": [
+     844,
+     390
+    ],
+    "zoom": 0.606
+   },
+   "errors": []
+  },
+  {
+   "file": "screenshots/O1-landscape-defeated.png",
+   "viewport": [
+    844,
+    390
+   ],
+   "deviceScaleFactor": 1,
+   "url": "?scene=o1&ticks=3000&opponent=sentry&level=1&seed=2",
+   "state": {
+    "source": "authoritative",
+    "state": "defeated",
+    "tick": 357,
+    "fought": true,
+    "hp": 0,
+    "hpMax": 75,
+    "hero": {
+     "x": -67.3,
+     "y": 0
+    },
+    "enemyAlive": true,
+    "digest": "fd755da2",
+    "missing": [
+     "adventurer reaction W"
+    ],
+    "speed": 1,
+    "build": "a1b45c5",
+    "viewport": [
+     844,
+     390
+    ],
+    "zoom": 0.606
+   },
+   "errors": []
+  }
+ ]
+}

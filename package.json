@@ -17,7 +17,9 @@
     "evidence": "tsx tools/capture.ts",
     "assets:characters:rebuild": "blender -b -t 4 --python tools/blender/export.py",
     "assets:validate": "python tools/atlas/validate.py",
-    "assets:reproduce": "python tools/blender/reproduce.py"
+    "assets:reproduce": "python tools/blender/reproduce.py",
+    "evidence:o1": "tsx tools/capture-o1.ts",
+    "report:o1": "tsx tools/o1-report.ts"
   },
   "dependencies": {
     "phaser": "4.2.1"
