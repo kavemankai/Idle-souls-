@@ -1,0 +1,20 @@
+{
+  "revision": "p0-75-v1",
+  "elevation": 75,
+  "azimuth": -90,
+  "orthoScale": 5.4,
+  "canvas": [
+    192,
+    192
+  ],
+  "cameraTarget": [
+    0,
+    0,
+    0
+  ],
+  "world": "+Y north, +Z up; screen Y down",
+  "engine": "BLENDER_WORKBENCH",
+  "worldUnitsPerBlenderUnit": 22.4,
+  "license": "Original project-generated geometry; CC0-1.0 asset grant; no third-party imagery",
+  "hash": "d54ea8a3019483bd"
+}
