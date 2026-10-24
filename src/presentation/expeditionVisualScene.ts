@@ -33,7 +33,6 @@ class LiveExpeditionScene extends Phaser.Scene {
   private cameraX = 0;
   private cameraY = 0;
   private cameraZoom = 1;
-  private lastRoom = '';
 
   constructor(
     private readonly host: HTMLElement,
@@ -174,7 +173,6 @@ class LiveExpeditionScene extends Phaser.Scene {
     }
     this.cameras.main.centerOn(this.cameraX, this.cameraY);
     this.cameras.main.setZoom(this.cameraZoom);
-    this.lastRoom = world.room;
 
     this.host.dataset.visualRoom = view.room;
     this.host.dataset.visualTick = String(view.tick);
