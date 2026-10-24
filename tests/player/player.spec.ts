@@ -36,3 +36,32 @@ test('the production package serves real offline audio', async ({ request }) => 
   expect(response.ok()).toBe(true);
   expect((await response.body()).subarray(0, 4).toString()).toBe('OggS');
 });
+
+test('production Android entry shows live animated combat viewport rather than only a map dot', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 780 });
+  await page.goto('/');
+  await expect(page.locator('#launch')).toBeVisible();
+  await page.locator('#guide-skip').click();
+  await page.locator('[data-preset=first]').click();
+  await page.locator('#launch').click();
+  const stage = page.locator('#battle-scene');
+  await expect(stage).toBeVisible();
+  await expect(stage.locator('canvas')).toBeVisible({ timeout: 30000 });
+  await expect.poll(() => stage.getAttribute('data-visual-ready'), { timeout: 30000 }).toBe('true');
+  await expect.poll(async () => Number(await stage.getAttribute('data-visual-actors')), { timeout: 15000 }).toBeGreaterThanOrEqual(1);
+  const bounds = await stage.boundingBox();
+  expect(bounds).not.toBeNull();
+  expect(bounds!.width).toBeGreaterThanOrEqual(300);
+  expect(bounds!.height).toBeGreaterThanOrEqual(300);
+  await expect(page.locator('#expedition-map')).toBeVisible();
+  await expect(page.locator('#expedition-map')).not.toHaveAttribute('open');
+  const first = Number(await stage.getAttribute('data-visual-tick'));
+  await expect.poll(async () => Number(await stage.getAttribute('data-visual-tick')), { timeout: 15000 }).toBeGreaterThan(first);
+  await page.locator('#xp-pause').click();
+  await expect(page.locator('#xp-pause')).toHaveText('Resume expedition');
+  const stopped = Number(await stage.getAttribute('data-visual-tick'));
+  await page.waitForTimeout(350);
+  expect(Number(await stage.getAttribute('data-visual-tick'))).toBe(stopped);
+  await expect(page.locator('#retreat-now')).toBeVisible();
+  expect(await page.evaluate(() => typeof window.__O1_RUN__)).toBe('undefined');
+});
