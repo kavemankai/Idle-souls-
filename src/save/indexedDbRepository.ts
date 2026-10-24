@@ -36,7 +36,7 @@ export class IndexedDbDurableRepository implements DurableRepository {
       let value: T;
       const tx = db.transaction(TABLE, 'readwrite');
       const store = tx.objectStore(TABLE);
-      const fail = (error: string) => { if (!done) { done = true; try { tx.abort(); } catch {} reject(new Error(error)); } };
+      const fail = (error: string) => { if (!done) { done = true; try { tx.abort(); } catch { /* Transaction was already closed. */ } reject(new Error(error)); } };
       const finish = (v: T) => { value = v; };
       tx.oncomplete = () => { db.close(); if (!done) resolve(value); };
       tx.onabort = () => { db.close(); if (!done) reject(tx.error ?? new Error('Durable transaction aborted')); };
