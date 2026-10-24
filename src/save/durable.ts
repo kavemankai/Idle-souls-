@@ -78,7 +78,7 @@ function bankProblems(value: unknown, at: string): string[] {
   else for (const [k, n] of Object.entries(b.supplies)) {
     if (!/^[a-z][a-z0-9-]{0,63}$/.test(k) || !count(n)) problems.push(at + '.supplies contains invalid item or quantity ' + k);
   }
-  if (!strings(b.gear)) problems.push(at + '.gear has invalid or duplicate IDs');
+  if (!Array.isArray(b.gear) || b.gear.length > 1024 || !b.gear.every(g => typeof g === 'string' && g.length > 0 && g.length <= 180)) problems.push(at + '.gear contains invalid IDs');
   else if (b.gear.some((g: string) => g === 'starter-sword' || g === 'starter-shield')) problems.push(at + '.gear contains protected starter equipment');
   return problems;
 }
