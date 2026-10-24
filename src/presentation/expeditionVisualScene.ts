@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import type { ActorKind, ActorView } from '../contracts/presentation';
 import { ActorRenderer } from './actorRenderer';
+import { CombatOverlays } from './combatOverlays';
 import { loadOldRoadAssets } from './assets';
 import { paintOldRoad } from './environment';
 import { readExpeditionVisual, type ExpeditionVisualActor } from './expeditionVisual';
@@ -19,6 +20,7 @@ class LiveExpeditionScene extends Phaser.Scene {
   private roomId = '';
   private sprites = new Map<string, ActorRenderer>();
   private placeholders = new Map<string, Placeholder>();
+  private overlays: CombatOverlays | null = null;
   private cameraReady = false;
   private cameraX = 0;
   private cameraY = 0;
@@ -38,10 +40,14 @@ class LiveExpeditionScene extends Phaser.Scene {
   create() {
     this.host.dataset.visualReady = 'true';
     this.scale.on('resize', () => { this.cameraReady = false; });
-    this.events.once('shutdown', () => { this.host.removeAttribute('data-visual-ready'); });
+    this.events.once('shutdown', () => {
+      this.overlays?.destroy(); this.overlays = null;
+      this.host.removeAttribute('data-visual-ready');
+    });
   }
 
   private showRoom(room: string) {
+    this.overlays?.destroy(); this.overlays = null;
     this.children.removeAll(true);
     this.sprites.clear();
     this.placeholders.clear();
@@ -54,6 +60,7 @@ class LiveExpeditionScene extends Phaser.Scene {
       fontFamily: 'Georgia', fontSize: '20px', color: '#ddd4bb',
       backgroundColor: '#17262099', padding: { x: 8, y: 4 },
     }).setDepth(980).setAlpha(.9);
+    this.overlays = new CombatOverlays(this);
   }
 
   private drawActor(actor: ExpeditionVisualActor, combatants: ReturnType<typeof readExpeditionVisual>['combat']) {
@@ -94,6 +101,7 @@ class LiveExpeditionScene extends Phaser.Scene {
     const view = readExpeditionVisual(world);
     if (view.room !== this.roomId) this.showRoom(view.room);
     for (const actor of view.actors) this.drawActor(actor, view.combat);
+    const feedback = this.overlays?.render(view, delta);
     const hero = view.actors[0];
     const opponents = view.fighting ? view.actors.slice(1).filter(a =>
       a.action !== 'death' && Math.abs(a.x - hero.x) < 250 && Math.abs(a.y - hero.y) < 250) : [];
@@ -119,6 +127,8 @@ class LiveExpeditionScene extends Phaser.Scene {
     this.host.dataset.visualTick = String(view.tick);
     this.host.dataset.visualCombat = String(view.fighting);
     this.host.dataset.visualActors = String(view.actors.length);
+    this.host.dataset.visualHpBars = String(feedback?.bars ?? 0);
+    this.host.dataset.visualDamageCues = String(feedback?.totalPopups ?? 0);
   }
 }
 
