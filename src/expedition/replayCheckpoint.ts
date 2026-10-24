@@ -59,7 +59,7 @@ export function checkpoint(id: string, cfg: ExpeditionConfig, run: ExpeditionRun
   if (!/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(id)) throw new Error('Invalid expedition identity');
   if (run.world.tick > MAX_REPLAY_TICKS || journal.length > MAX_REPLAY_COMMANDS) throw new Error('Replay bound exceeded');
   return {
-    version: 1, id, config: structuredClone(cfg), commands: structuredClone(journal),
+    version: 1, id, config: structuredClone(cfg), commands: structuredClone([...journal]),
     tick: run.world.tick, fingerprint: continuationFingerprint(run),
     rulesVersion: RULES_VERSION, contentVersion: CONTENT_VERSION,
   };
