@@ -1,4 +1,5 @@
 # Idle Souls — Codex Visual Production Handoff
+> Historical visual-production handoff. Product direction and delivery scope are superseded by [the mobile release specification](docs/release/SPEC.md). Statements about missing combat/runtime code describe the original starting point. Retain the technical art guidance where compatible with that specification.
 **Baseline:** GitHub main at a5d93d4 (design library v0.17)
 **Scope:** Begin implementation with the visual vertical slice; protect existing game-design locks and leave tactical combat authoritative to its separate workstream.
 **Execution mode:** Work autonomously through reasonable implementation choices, run checks, produce screenshots and commit coherent increments. Stop only for a change to an explicitly locked decision or an essential unavailable dependency.

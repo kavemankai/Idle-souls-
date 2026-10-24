@@ -1,0 +1,3 @@
+# Generated text and embedded simulator blocks are checked byte-for-byte.
+# Keep their checkout identical on Windows, Linux and macOS; binary assets stay binary.
+* text=auto eol=lf

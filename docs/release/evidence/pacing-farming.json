@@ -1,0 +1,149 @@
+{
+ "n": 30,
+ "rows": [
+  {
+   "loop": "safe loop: survey the Outer Road",
+   "style": "cautious",
+   "start": 1,
+   "extracted": 30,
+   "meanGold": 6,
+   "meanMastery": 2,
+   "meanXp": 20,
+   "meanMinutes": 0.7172037037037037,
+   "goldPerHour": 501.94944356941824,
+   "masteryPerHour": 167.3164811898061
+  },
+  {
+   "loop": "safe loop: survey the Outer Road",
+   "style": "pressing",
+   "start": 1,
+   "extracted": 24,
+   "meanGold": 4.8,
+   "meanMastery": 1.6,
+   "meanXp": 18.6,
+   "meanMinutes": 0.5999629629629627,
+   "goldPerHour": 480.0296314587322,
+   "masteryPerHour": 160.00987715291075
+  },
+  {
+   "loop": "safe loop: reach the Crossroads",
+   "style": "cautious",
+   "start": 1,
+   "extracted": 21,
+   "meanGold": 8.5,
+   "meanMastery": 2.8333333333333335,
+   "meanXp": 21.766666666666666,
+   "meanMinutes": 0.8645925925925929,
+   "goldPerHour": 589.873200822481,
+   "masteryPerHour": 196.6244002741603
+  },
+  {
+   "loop": "safe loop: reach the Crossroads",
+   "style": "pressing",
+   "start": 1,
+   "extracted": 14,
+   "meanGold": 3.2,
+   "meanMastery": 1.0666666666666667,
+   "meanXp": 14.666666666666666,
+   "meanMinutes": 0.7268518518518517,
+   "goldPerHour": 264.1528662420383,
+   "masteryPerHour": 88.05095541401275
+  },
+  {
+   "loop": "Old Road loop: O3 and the Key Trial",
+   "style": "cautious",
+   "start": 1,
+   "extracted": 27,
+   "meanGold": 4.2,
+   "meanMastery": 1.4,
+   "meanXp": 6.4,
+   "meanMinutes": 0.8560555555555556,
+   "goldPerHour": 294.3734181322604,
+   "masteryPerHour": 98.12447271075345
+  },
+  {
+   "loop": "Old Road loop: O3 and the Key Trial",
+   "style": "pressing",
+   "start": 1,
+   "extracted": 21,
+   "meanGold": 2.6,
+   "meanMastery": 0.8666666666666667,
+   "meanXp": 5.133333333333334,
+   "meanMinutes": 0.7891666666666668,
+   "goldPerHour": 197.67687434002107,
+   "masteryPerHour": 65.8922914466737
+  },
+  {
+   "loop": "Watchtower: T1, T2",
+   "style": "cautious",
+   "start": 3,
+   "extracted": 29,
+   "meanGold": 23.266666666666666,
+   "meanMastery": 7.2,
+   "meanXp": 71.7,
+   "meanMinutes": 1.6217222222222223,
+   "goldPerHour": 860.8132643623034,
+   "masteryPerHour": 266.3834743585352
+  },
+  {
+   "loop": "Watchtower: T1, T2",
+   "style": "pressing",
+   "start": 3,
+   "extracted": 26,
+   "meanGold": 12.5,
+   "meanMastery": 3.9,
+   "meanXp": 60.666666666666664,
+   "meanMinutes": 1.3952407407407406,
+   "goldPerHour": 537.5416428865323,
+   "masteryPerHour": 167.71299258059807
+  },
+  {
+   "loop": "Sunken Passage: S1, S2",
+   "style": "cautious",
+   "start": 4,
+   "extracted": 28,
+   "meanGold": 31.866666666666667,
+   "meanMastery": 10.533333333333333,
+   "meanXp": 102.16666666666667,
+   "meanMinutes": 1.8517962962962962,
+   "goldPerHour": 1032.51097532926,
+   "masteryPerHour": 341.2902387071612
+  },
+  {
+   "loop": "Sunken Passage: S1, S2",
+   "style": "pressing",
+   "start": 4,
+   "extracted": 22,
+   "meanGold": 21.733333333333334,
+   "meanMastery": 7.2,
+   "meanXp": 96.66666666666667,
+   "meanMinutes": 1.7037222222222221,
+   "goldPerHour": 765.3829849675548,
+   "masteryPerHour": 253.56246127759482
+  },
+  {
+   "loop": "Crypt (north): T2, K3, K2",
+   "style": "cautious",
+   "start": 5,
+   "extracted": 30,
+   "meanGold": 34.666666666666664,
+   "meanMastery": 10.666666666666666,
+   "meanXp": 143.56666666666666,
+   "meanMinutes": 1.8647222222222222,
+   "goldPerHour": 1115.4476389095785,
+   "masteryPerHour": 343.2146581260241
+  },
+  {
+   "loop": "Crypt (north): T2, K3, K2",
+   "style": "pressing",
+   "start": 5,
+   "extracted": 26,
+   "meanGold": 23.3,
+   "meanMastery": 7.166666666666667,
+   "meanXp": 135.06666666666666,
+   "meanMinutes": 1.7929629629629629,
+   "goldPerHour": 779.7149349307995,
+   "masteryPerHour": 239.82648213179098
+  }
+ ]
+}

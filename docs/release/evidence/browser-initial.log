@@ -1,0 +1,87 @@
+
+> idle-souls-visual-proof@0.1.0 test:browser
+> playwright test --reporter=line
+
+
+[WebServer] (node:1736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 66 tests using 1 worker
+
+(node:20840) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/66] tests\browser\audio.spec.ts:3:1 › O1 audio is user-unlocked, all music is lazily selectable and sound files are served
+[2/66] tests\browser\expedition.spec.ts:12:3 › plan, launch and read the Chronicle at 1280x720
+[3/66] tests\browser\expedition.spec.ts:12:3 › plan, launch and read the Chronicle at 390x844
+[4/66] tests\browser\expedition.spec.ts:12:3 › plan, launch and read the Chronicle at 844x390
+[5/66] tests\browser\expedition.spec.ts:36:1 › the page and Node produce the same Chronicle for the same plan
+[6/66] tests\browser\expedition.spec.ts:52:1 › browser and Node agree on expeditions across plans and seeds
+[7/66] tests\browser\expedition.spec.ts:72:1 › avoiding the objective room is a conflict and launch stays off; removing the avoid clears it
+[8/66] tests\browser\expedition.spec.ts:83:1 › a retreat order starts at once, is logged as manual, and suspends the objectives
+[9/66] tests\browser\expedition.spec.ts:96:1 › the fresh map offers only what is on it and a preset drops places it cannot reach
+[10/66] tests\browser\expedition.spec.ts:109:1 › a returning expedition banks its loot once, and the camp shows it next time
+[11/66] tests\browser\expedition.spec.ts:126:1 › a fall leaves one cache, the camp warns about it, and a recover objective brings it home
+[12/66] tests\browser\expedition.spec.ts:143:1 › the save can be exported and imported, and a damaged save is refused
+[13/66] tests\browser\expedition.spec.ts:153:1 › a new game starts in fog: only the Outer Road can be chosen, and walking it opens up the map
+[14/66] tests\browser\expedition.spec.ts:172:1 › a banked key opens a gate only when issued; the gate then stays open and costs nothing again
+[15/66] tests\browser\expedition.spec.ts:202:3 › progression controls, level line and Chronicle progress at 1280x720
+[16/66] tests\browser\expedition.spec.ts:202:3 › progression controls, level line and Chronicle progress at 390x844
+[17/66] tests\browser\expedition.spec.ts:202:3 › progression controls, level line and Chronicle progress at 844x390
+[18/66] tests\browser\expedition.spec.ts:226:1 › progress=0 hides the progression controls and keeps the fixed level field
+[19/66] tests\browser\expedition.spec.ts:234:1 › browser and Node agree on boss expeditions: first clears, a rematch, the Castellan and an abandoned fight
+[20/66] tests\browser\expedition.spec.ts:255:1 › a boss is challenged on purpose, cleared once, persisted, and then offered as an opt-in rematch
+[21/66] tests\browser\m9.spec.ts:11:1 › the Chronicle screen shows route, decisions with causes, gains, keys, loot fate and what stays
+[22/66] tests\browser\m9.spec.ts:28:1 › a fall names its cause from the simulator
+[23/66] tests\browser\m9.spec.ts:40:1 › finished expeditions are listed, reopened, bounded to twenty, and kept apart from the save
+[24/66] tests\browser\m9.spec.ts:62:1 › the Help and history buttons are off while an expedition is out, so a press cannot drop it
+[25/66] tests\browser\m9.spec.ts:81:1 › camp map: tap picks a room and adds an objective; Avoid works by button, by long press and from the list
+[26/66] tests\browser\m9.spec.ts:113:1 › camp map: the keyboard moves between rooms, and an edge room offers Explore from here
+[27/66] tests\browser\m9.spec.ts:132:1 › camp map: the route preview shows its three states in words
+[28/66] tests\browser\m9.spec.ts:146:1 › the first-run guide shows one screen at a time, can be skipped, and does not come back
+[29/66] tests\browser\m9.spec.ts:166:1 › the glossary drawer defines the terms the feed uses
+[30/66] tests\browser\m9.spec.ts:173:1 › the stored onboarding flag survives a reload in normal storage
+[31/66] tests\browser\m9.spec.ts:188:1 › larger text and reduced motion are stored and applied
+[32/66] tests\browser\m9.spec.ts:209:1 › reduced motion follows the system setting when the player says nothing
+[33/66] tests\browser\m9.spec.ts:216:1 › audio is off until Enable audio; every cue has a visual pair; volumes are independent
+[34/66] tests\browser\m9.spec.ts:241:1 › a fall and a return each raise a cue with a visual line
+[35/66] tests\browser\m9.spec.ts:287:1 › audit: names on controls, labels on inputs, heading order and unique ids on every screen
+[36/66] tests\browser\m9.spec.ts:304:1 › audit: the guide screen has a valid structure too
+[37/66] tests\browser\m9.spec.ts:309:1 › keyboard: Tab reaches the planner controls in order with a visible focus ring, and Enter and Space press buttons
+[38/66] tests\browser\m9.spec.ts:329:1 › keyboard: the details drawers open and close with Enter and Escape on the map selection
+[39/66] tests\browser\m9.spec.ts:339:1 › no signal is colour only: gates, avoid, danger and low health carry a mark or pattern
+[40/66] tests\browser\m9.spec.ts:374:3 › layout at 390x844: no sideways scroll, no clipped controls, 44px targets, readable text
+[41/66] tests\browser\m9.spec.ts:374:3 › layout at 844x390: no sideways scroll, no clipped controls, 44px targets, readable text
+[42/66] tests\browser\m9.spec.ts:374:3 › layout at 360x640: no sideways scroll, no clipped controls, 44px targets, readable text
+[43/66] tests\browser\m9.spec.ts:374:3 › layout at 768x1024: no sideways scroll, no clipped controls, 44px targets, readable text
+[44/66] tests\browser\m9.spec.ts:374:3 › layout at 1280x720: no sideways scroll, no clipped controls, 44px targets, readable text
+[45/66] tests\browser\m9.spec.ts:409:1 › layout with larger text at 360x640 still has no sideways scroll or clipped control
+[46/66] tests\browser\o1.spec.ts:13:3 › O1 dispatch matches the Node run at 1280x720
+[47/66] tests\browser\o1.spec.ts:13:3 › O1 dispatch matches the Node run at 390x844
+[48/66] tests\browser\o1.spec.ts:13:3 › O1 dispatch matches the Node run at 844x390
+[49/66] tests\browser\o1.spec.ts:48:1 › browser and Node agree on seeded O1 runs across opponents and doctrines
+[50/66] tests\browser\o1.spec.ts:57:1 › browser and Node agree on the walking expedition from camp to the Broken Causeway and back
+[51/66] tests\browser\o1.spec.ts:71:1 › the visual study and its scenes still load without the O1 scene
+[52/66] tests\browser\o1.spec.ts:79:3 › combat tabs show the simulator's numbers at 1280x720
+[53/66] tests\browser\o1.spec.ts:79:3 › combat tabs show the simulator's numbers at 390x844
+[54/66] tests\browser\o1.spec.ts:79:3 › combat tabs show the simulator's numbers at 844x390
+[55/66] tests\browser\o1.spec.ts:113:1 › combat cues can be turned off and the run does not change
+[56/66] tests\browser\o1.spec.ts:122:3 › zoom buttons and the action cam work at 1280x720
+[57/66] tests\browser\o1.spec.ts:122:3 › zoom buttons and the action cam work at 390x844
+[58/66] tests\browser\o1.spec.ts:122:3 › zoom buttons and the action cam work at 844x390
+[59/66] tests\browser\o1.spec.ts:154:1 › ?cam=action opens in the action camera
+[60/66] tests\browser\o1.spec.ts:160:1 › a pair runs from the page and matches the Node run
+[61/66] tests\browser\perf.spec.ts:7:1 › at 16x the screen stays smooth: few long tasks, none over the budget
+tests\browser\perf.spec.ts:7:1 › at 16x the screen stays smooth: few long tasks, none over the budget
+[perf] 16x run: 11.1 s wall, {"longTasks":1,"longest":127,"frames":726,"medianFrame":16.699999999999818,"p95Frame":16.799999999999272,"worstFrame":100}
+
+[62/66] tests\browser\perf.spec.ts:33:1 › twenty expeditions in one page do not grow the heap without bound
+tests\browser\perf.spec.ts:33:1 › twenty expeditions in one page do not grow the heap without bound
+[perf] heap after 3 expeditions 23.4 MB, after 20 23.9 MB, growth 2.3%
+
+[63/66] tests\browser\preview.spec.ts:3:3 › render and operate visual controls at 1280x720
+[64/66] tests\browser\preview.spec.ts:3:3 › render and operate visual controls at 390x844
+[65/66] tests\browser\preview.spec.ts:3:3 › render and operate visual controls at 844x390
+[66/66] tests\browser\preview.spec.ts:38:1 › calibration contains eight authored guard views and no missing frames
+  66 passed (2.8m)

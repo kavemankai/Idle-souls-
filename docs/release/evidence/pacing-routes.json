@@ -1,0 +1,446 @@
+{
+ "n": 30,
+ "rows": [
+  {
+   "route": "Old Road (O3, KT)",
+   "style": "cautious",
+   "start": 1,
+   "extracted": 27,
+   "died": 3,
+   "complete": 0,
+   "bossKills": 0,
+   "meanLevel": 1,
+   "meanMinutes": 0.8560555555555556,
+   "meanBankedGold": 4.2,
+   "meanDepth": 1.6666666666666667,
+   "deepest": "O2",
+   "deathRooms": {
+    "O2": 3
+   }
+  },
+  {
+   "route": "Old Road (O3, KT)",
+   "style": "pressing",
+   "start": 1,
+   "extracted": 21,
+   "died": 9,
+   "complete": 0,
+   "bossKills": 0,
+   "meanLevel": 1,
+   "meanMinutes": 0.7891666666666668,
+   "meanBankedGold": 2.6,
+   "meanDepth": 1.5666666666666667,
+   "deepest": "O2",
+   "deathRooms": {
+    "O2": 6,
+    "O1": 3
+   }
+  },
+  {
+   "route": "Watchtower (T1, T2)",
+   "style": "cautious",
+   "start": 1,
+   "extracted": 30,
+   "died": 0,
+   "complete": 1,
+   "bossKills": 0,
+   "meanLevel": 1.7666666666666666,
+   "meanMinutes": 1.234925925925926,
+   "meanBankedGold": 6.233333333333333,
+   "meanDepth": 2.3666666666666667,
+   "deepest": "T1",
+   "deathRooms": {}
+  },
+  {
+   "route": "Watchtower (T1, T2)",
+   "style": "cautious",
+   "start": 3,
+   "extracted": 29,
+   "died": 1,
+   "complete": 12,
+   "bossKills": 0,
+   "meanLevel": 4.733333333333333,
+   "meanMinutes": 1.6217222222222223,
+   "meanBankedGold": 23.266666666666666,
+   "meanDepth": 3.2333333333333334,
+   "deepest": "T1",
+   "deathRooms": {
+    "T2": 1
+   }
+  },
+  {
+   "route": "Watchtower (T1, T2)",
+   "style": "pressing",
+   "start": 1,
+   "extracted": 23,
+   "died": 7,
+   "complete": 0,
+   "bossKills": 0,
+   "meanLevel": 1.7,
+   "meanMinutes": 1.0759629629629626,
+   "meanBankedGold": 3,
+   "meanDepth": 2.2,
+   "deepest": "T1",
+   "deathRooms": {
+    "T1": 2,
+    "O1": 3,
+    "T2": 2
+   }
+  },
+  {
+   "route": "Watchtower (T1, T2)",
+   "style": "pressing",
+   "start": 3,
+   "extracted": 26,
+   "died": 4,
+   "complete": 5,
+   "bossKills": 0,
+   "meanLevel": 4.3,
+   "meanMinutes": 1.3952407407407406,
+   "meanBankedGold": 12.5,
+   "meanDepth": 2.966666666666667,
+   "deepest": "T1",
+   "deathRooms": {
+    "T2": 4
+   }
+  },
+  {
+   "route": "Sunken Passage (S1, S2, sanctuary)",
+   "style": "cautious",
+   "start": 1,
+   "extracted": 27,
+   "died": 3,
+   "complete": 0,
+   "bossKills": 0,
+   "meanLevel": 1,
+   "meanMinutes": 0.8560555555555556,
+   "meanBankedGold": 4.2,
+   "meanDepth": 1.6666666666666667,
+   "deepest": "O2",
+   "deathRooms": {
+    "O2": 3
+   }
+  },
+  {
+   "route": "Sunken Passage (S1, S2, sanctuary)",
+   "style": "cautious",
+   "start": 4,
+   "extracted": 28,
+   "died": 2,
+   "complete": 4,
+   "bossKills": 0,
+   "meanLevel": 5.2,
+   "meanMinutes": 1.8517962962962962,
+   "meanBankedGold": 31.866666666666667,
+   "meanDepth": 3.7666666666666666,
+   "deepest": "S1",
+   "deathRooms": {
+    "S2": 2
+   }
+  },
+  {
+   "route": "Sunken Passage (S1, S2, sanctuary)",
+   "style": "pressing",
+   "start": 1,
+   "extracted": 21,
+   "died": 9,
+   "complete": 0,
+   "bossKills": 0,
+   "meanLevel": 1,
+   "meanMinutes": 0.7891666666666668,
+   "meanBankedGold": 2.6,
+   "meanDepth": 1.5666666666666667,
+   "deepest": "O2",
+   "deathRooms": {
+    "O2": 6,
+    "O1": 3
+   }
+  },
+  {
+   "route": "Sunken Passage (S1, S2, sanctuary)",
+   "style": "pressing",
+   "start": 4,
+   "extracted": 22,
+   "died": 8,
+   "complete": 2,
+   "bossKills": 0,
+   "meanLevel": 5.233333333333333,
+   "meanMinutes": 1.7037222222222221,
+   "meanBankedGold": 21.733333333333334,
+   "meanDepth": 3.6,
+   "deepest": "O3",
+   "deathRooms": {
+    "S1": 3,
+    "S2": 5
+   }
+  },
+  {
+   "route": "Crypt by the south (S3 sluice side, K1, K2)",
+   "style": "cautious",
+   "start": 1,
+   "extracted": 27,
+   "died": 3,
+   "complete": 0,
+   "bossKills": 0,
+   "meanLevel": 1,
+   "meanMinutes": 0.8560555555555556,
+   "meanBankedGold": 4.2,
+   "meanDepth": 1.6666666666666667,
+   "deepest": "O2",
+   "deathRooms": {
+    "O2": 3
+   }
+  },
+  {
+   "route": "Crypt by the south (S3 sluice side, K1, K2)",
+   "style": "cautious",
+   "start": 5,
+   "extracted": 30,
+   "died": 0,
+   "complete": 0,
+   "bossKills": 0,
+   "meanLevel": 6,
+   "meanMinutes": 1.8237592592592593,
+   "meanBankedGold": 31.466666666666665,
+   "meanDepth": 3.7666666666666666,
+   "deepest": "S1",
+   "deathRooms": {}
+  },
+  {
+   "route": "Crypt by the south (S3 sluice side, K1, K2)",
+   "style": "pressing",
+   "start": 1,
+   "extracted": 21,
+   "died": 9,
+   "complete": 0,
+   "bossKills": 0,
+   "meanLevel": 1,
+   "meanMinutes": 0.7891666666666668,
+   "meanBankedGold": 2.6,
+   "meanDepth": 1.5666666666666667,
+   "deepest": "O2",
+   "deathRooms": {
+    "O2": 6,
+    "O1": 3
+   }
+  },
+  {
+   "route": "Crypt by the south (S3 sluice side, K1, K2)",
+   "style": "pressing",
+   "start": 5,
+   "extracted": 23,
+   "died": 7,
+   "complete": 0,
+   "bossKills": 0,
+   "meanLevel": 5.9,
+   "meanMinutes": 1.5868148148148147,
+   "meanBankedGold": 21.766666666666666,
+   "meanDepth": 3.4,
+   "deepest": "O3",
+   "deathRooms": {
+    "O3": 4,
+    "S1": 3
+   }
+  },
+  {
+   "route": "Crypt by the north (T2, K3, K2)",
+   "style": "cautious",
+   "start": 1,
+   "extracted": 29,
+   "died": 1,
+   "complete": 0,
+   "bossKills": 0,
+   "meanLevel": 1.7666666666666666,
+   "meanMinutes": 1.2307222222222225,
+   "meanBankedGold": 4.6,
+   "meanDepth": 2.4,
+   "deepest": "T1",
+   "deathRooms": {
+    "T2": 1
+   }
+  },
+  {
+   "route": "Crypt by the north (T2, K3, K2)",
+   "style": "cautious",
+   "start": 5,
+   "extracted": 30,
+   "died": 0,
+   "complete": 1,
+   "bossKills": 0,
+   "meanLevel": 6.366666666666666,
+   "meanMinutes": 1.8647222222222222,
+   "meanBankedGold": 34.666666666666664,
+   "meanDepth": 4.3,
+   "deepest": "T2",
+   "deathRooms": {}
+  },
+  {
+   "route": "Crypt by the north (T2, K3, K2)",
+   "style": "pressing",
+   "start": 1,
+   "extracted": 25,
+   "died": 5,
+   "complete": 0,
+   "bossKills": 0,
+   "meanLevel": 1.7,
+   "meanMinutes": 1.1132962962962958,
+   "meanBankedGold": 4.333333333333333,
+   "meanDepth": 2.2,
+   "deepest": "T1",
+   "deathRooms": {
+    "T1": 2,
+    "O1": 3
+   }
+  },
+  {
+   "route": "Crypt by the north (T2, K3, K2)",
+   "style": "pressing",
+   "start": 5,
+   "extracted": 26,
+   "died": 4,
+   "complete": 0,
+   "bossKills": 0,
+   "meanLevel": 6.2,
+   "meanMinutes": 1.7929629629629629,
+   "meanBankedGold": 23.3,
+   "meanDepth": 4.166666666666667,
+   "deepest": "T2",
+   "deathRooms": {
+    "T2": 2,
+    "K2": 1,
+    "K3": 1
+   }
+  },
+  {
+   "route": "Bell Warden (gate already open)",
+   "style": "cautious",
+   "start": 1,
+   "extracted": 30,
+   "died": 0,
+   "complete": 0,
+   "bossKills": 0,
+   "meanLevel": 1.7666666666666666,
+   "meanMinutes": 1.2308148148148148,
+   "meanBankedGold": 5.766666666666667,
+   "meanDepth": 2.3666666666666667,
+   "deepest": "T1",
+   "deathRooms": {}
+  },
+  {
+   "route": "Bell Warden (gate already open)",
+   "style": "cautious",
+   "start": 5,
+   "extracted": 30,
+   "died": 0,
+   "complete": 1,
+   "bossKills": 1,
+   "meanLevel": 6.233333333333333,
+   "meanMinutes": 1.754888888888889,
+   "meanBankedGold": 33.46666666666667,
+   "meanDepth": 4.066666666666666,
+   "deepest": "T2",
+   "deathRooms": {}
+  },
+  {
+   "route": "Bell Warden (gate already open)",
+   "style": "pressing",
+   "start": 1,
+   "extracted": 25,
+   "died": 5,
+   "complete": 0,
+   "bossKills": 0,
+   "meanLevel": 1.7,
+   "meanMinutes": 1.1135555555555554,
+   "meanBankedGold": 4.333333333333333,
+   "meanDepth": 2.2,
+   "deepest": "T1",
+   "deathRooms": {
+    "T1": 2,
+    "O1": 3
+   }
+  },
+  {
+   "route": "Bell Warden (gate already open)",
+   "style": "pressing",
+   "start": 5,
+   "extracted": 30,
+   "died": 0,
+   "complete": 1,
+   "bossKills": 1,
+   "meanLevel": 6.133333333333334,
+   "meanMinutes": 1.858277777777778,
+   "meanBankedGold": 31.066666666666666,
+   "meanDepth": 4.066666666666666,
+   "deepest": "T2",
+   "deathRooms": {}
+  },
+  {
+   "route": "Castellan (both gates already open)",
+   "style": "cautious",
+   "start": 1,
+   "extracted": 29,
+   "died": 1,
+   "complete": 0,
+   "bossKills": 0,
+   "meanLevel": 1.7666666666666666,
+   "meanMinutes": 1.2307222222222225,
+   "meanBankedGold": 4.6,
+   "meanDepth": 2.4,
+   "deepest": "T1",
+   "deathRooms": {
+    "T2": 1
+   }
+  },
+  {
+   "route": "Castellan (both gates already open)",
+   "style": "cautious",
+   "start": 7,
+   "extracted": 30,
+   "died": 0,
+   "complete": 0,
+   "bossKills": 0,
+   "meanLevel": 7.533333333333333,
+   "meanMinutes": 1.9106481481481488,
+   "meanBankedGold": 32.733333333333334,
+   "meanDepth": 4.333333333333333,
+   "deepest": "T2",
+   "deathRooms": {}
+  },
+  {
+   "route": "Castellan (both gates already open)",
+   "style": "pressing",
+   "start": 1,
+   "extracted": 25,
+   "died": 5,
+   "complete": 0,
+   "bossKills": 0,
+   "meanLevel": 1.7,
+   "meanMinutes": 1.1132962962962958,
+   "meanBankedGold": 4.333333333333333,
+   "meanDepth": 2.2,
+   "deepest": "T1",
+   "deathRooms": {
+    "T1": 2,
+    "O1": 3
+   }
+  },
+  {
+   "route": "Castellan (both gates already open)",
+   "style": "pressing",
+   "start": 7,
+   "extracted": 26,
+   "died": 4,
+   "complete": 0,
+   "bossKills": 0,
+   "meanLevel": 7.633333333333334,
+   "meanMinutes": 1.9430185185185187,
+   "meanBankedGold": 27.633333333333333,
+   "meanDepth": 4.333333333333333,
+   "deepest": "T2",
+   "deathRooms": {
+    "K3": 3,
+    "T2": 1
+   }
+  }
+ ]
+}

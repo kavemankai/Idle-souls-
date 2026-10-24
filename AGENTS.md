@@ -1,4 +1,5 @@
 # Idle Souls implementation
+Product direction is now owned by `docs/release/SPEC.md` (the supplied mobile release plan). It supersedes conflicting historical design locks and handoff scope. `docs/release/BASELINE.md` records verified behavior; `docs/release/ISSUES.md` sequences remaining work. Existing runtime rules below describe the prototype until their release milestone intentionally changes them; they are not evidence that release features exist.
 Read CODEX_VISUAL_PRODUCTION_HANDOFF.md and the design library index before changes.
 16_DECISIONS_AND_OPEN_QUESTIONS.md owns locks. L22/L23/L24 are binding: Blender-to-2D characters, fixed +75° orthographic camera, eight locomotion/guard facings, selective attacks with honest coverage. No mirroring asymmetric gear.
 Ashen Reliquary appearance, scale and palette remain PROPOSED; record trial choices in docs/visual_proof/DECISIONS.md.

@@ -4,6 +4,6 @@ import { browserLaunchOptions } from './tools/browser';
 const port = Number(process.env.PW_PORT) || 5173, url = `http://127.0.0.1:${port}`;
 export default defineConfig({
   testDir: './tests/browser', workers: 1,
-  use: { baseURL: url, launchOptions: browserLaunchOptions },
+  use: { baseURL: url, launchOptions: browserLaunchOptions, trace: 'retain-on-failure', screenshot: 'only-on-failure' },
   webServer: { command: `npm run dev -- --port ${port}`, url, reuseExistingServer: !process.env.CI && !process.env.PW_PORT },
 });

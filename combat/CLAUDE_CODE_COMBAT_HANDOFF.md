@@ -1,4 +1,5 @@
 # Combat system handoff for Claude Code
+> Historical handoff: combat and expedition systems have expanded since this snapshot. Current product direction is [the mobile release specification](../docs/release/SPEC.md). Use `CLAUDE.md` and the current simulator for technical constraints and behavior; the original scope and next-work list below are historical.
 
 Autonomous Dungeon Crawler (RUN.world). Combat is the heart of the game, and this folder is the only part of the game that exists as code. Read this file before changing anything.
 

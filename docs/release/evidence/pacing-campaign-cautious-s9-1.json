@@ -1,0 +1,23 @@
+{
+ "style": "cautious",
+ "rows": [
+  {
+   "campaign": 1,
+   "expeditions": 120,
+   "finished": false,
+   "milestones": {
+    "first Gate Key banked": 1,
+    "mapped the Watchtower gate": 2,
+    "Watchtower gate opened": 3,
+    "Bell Warden defeated": 3,
+    "mapped the Castellan gate": 13,
+    "Castellan gate opened": 26
+   },
+   "deaths": 0,
+   "gameHours": 3.8307685185185183,
+   "maxLevel": 9,
+   "gold": 4195,
+   "discovered": 12
+  }
+ ]
+}

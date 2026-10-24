@@ -1,4 +1,5 @@
 # Autonomous Dungeon Crawler — Design Library
+> Historical design library. [The mobile release specification](../docs/release/SPEC.md) owns current product direction and supersedes conflicting locks, including bank-before-use keys, temporary-only progression, platform and monetization proposals. These documents remain implementation references where compatible; their historical status labels do not approve release readiness.
 **Version:** 0.17 detailed design library (locked 75° orthographic camera and selective eight-direction sprites)  
 **Updated:** 2026-10-23  
 **Platform:** standalone browser/PC/mobile-capable project with RUN.world as a possible distribution target; exact targets OPEN  

@@ -1,0 +1,329 @@
+{
+ "n": 30,
+ "rows": [
+  {
+   "route": "Watchtower (T1, T2)",
+   "doctrine": "guarded",
+   "threshold": 0,
+   "start": 3,
+   "extracted": 14,
+   "died": 16,
+   "complete": 14
+  },
+  {
+   "route": "Watchtower (T1, T2)",
+   "doctrine": "guarded",
+   "threshold": 30,
+   "start": 3,
+   "extracted": 21,
+   "died": 9,
+   "complete": 13
+  },
+  {
+   "route": "Watchtower (T1, T2)",
+   "doctrine": "guarded",
+   "threshold": 50,
+   "start": 3,
+   "extracted": 25,
+   "died": 5,
+   "complete": 13
+  },
+  {
+   "route": "Watchtower (T1, T2)",
+   "doctrine": "guarded",
+   "threshold": 70,
+   "start": 3,
+   "extracted": 29,
+   "died": 1,
+   "complete": 5
+  },
+  {
+   "route": "Watchtower (T1, T2)",
+   "doctrine": "measured",
+   "threshold": 0,
+   "start": 3,
+   "extracted": 0,
+   "died": 30,
+   "complete": 0
+  },
+  {
+   "route": "Watchtower (T1, T2)",
+   "doctrine": "measured",
+   "threshold": 30,
+   "start": 3,
+   "extracted": 20,
+   "died": 10,
+   "complete": 0
+  },
+  {
+   "route": "Watchtower (T1, T2)",
+   "doctrine": "measured",
+   "threshold": 50,
+   "start": 3,
+   "extracted": 26,
+   "died": 4,
+   "complete": 0
+  },
+  {
+   "route": "Watchtower (T1, T2)",
+   "doctrine": "measured",
+   "threshold": 70,
+   "start": 3,
+   "extracted": 29,
+   "died": 1,
+   "complete": 0
+  },
+  {
+   "route": "Watchtower (T1, T2)",
+   "doctrine": "pressing",
+   "threshold": 0,
+   "start": 3,
+   "extracted": 0,
+   "died": 30,
+   "complete": 0
+  },
+  {
+   "route": "Watchtower (T1, T2)",
+   "doctrine": "pressing",
+   "threshold": 30,
+   "start": 3,
+   "extracted": 22,
+   "died": 8,
+   "complete": 0
+  },
+  {
+   "route": "Watchtower (T1, T2)",
+   "doctrine": "pressing",
+   "threshold": 50,
+   "start": 3,
+   "extracted": 27,
+   "died": 3,
+   "complete": 0
+  },
+  {
+   "route": "Watchtower (T1, T2)",
+   "doctrine": "pressing",
+   "threshold": 70,
+   "start": 3,
+   "extracted": 29,
+   "died": 1,
+   "complete": 0
+  },
+  {
+   "route": "Sunken Passage (S1, S2)",
+   "doctrine": "guarded",
+   "threshold": 0,
+   "start": 4,
+   "extracted": 8,
+   "died": 22,
+   "complete": 8
+  },
+  {
+   "route": "Sunken Passage (S1, S2)",
+   "doctrine": "guarded",
+   "threshold": 30,
+   "start": 4,
+   "extracted": 21,
+   "died": 9,
+   "complete": 7
+  },
+  {
+   "route": "Sunken Passage (S1, S2)",
+   "doctrine": "guarded",
+   "threshold": 50,
+   "start": 4,
+   "extracted": 28,
+   "died": 2,
+   "complete": 4
+  },
+  {
+   "route": "Sunken Passage (S1, S2)",
+   "doctrine": "guarded",
+   "threshold": 70,
+   "start": 4,
+   "extracted": 30,
+   "died": 0,
+   "complete": 0
+  },
+  {
+   "route": "Sunken Passage (S1, S2)",
+   "doctrine": "measured",
+   "threshold": 0,
+   "start": 4,
+   "extracted": 0,
+   "died": 30,
+   "complete": 0
+  },
+  {
+   "route": "Sunken Passage (S1, S2)",
+   "doctrine": "measured",
+   "threshold": 30,
+   "start": 4,
+   "extracted": 17,
+   "died": 13,
+   "complete": 0
+  },
+  {
+   "route": "Sunken Passage (S1, S2)",
+   "doctrine": "measured",
+   "threshold": 50,
+   "start": 4,
+   "extracted": 25,
+   "died": 5,
+   "complete": 0
+  },
+  {
+   "route": "Sunken Passage (S1, S2)",
+   "doctrine": "measured",
+   "threshold": 70,
+   "start": 4,
+   "extracted": 30,
+   "died": 0,
+   "complete": 0
+  },
+  {
+   "route": "Sunken Passage (S1, S2)",
+   "doctrine": "pressing",
+   "threshold": 0,
+   "start": 4,
+   "extracted": 0,
+   "died": 30,
+   "complete": 0
+  },
+  {
+   "route": "Sunken Passage (S1, S2)",
+   "doctrine": "pressing",
+   "threshold": 30,
+   "start": 4,
+   "extracted": 22,
+   "died": 8,
+   "complete": 0
+  },
+  {
+   "route": "Sunken Passage (S1, S2)",
+   "doctrine": "pressing",
+   "threshold": 50,
+   "start": 4,
+   "extracted": 29,
+   "died": 1,
+   "complete": 0
+  },
+  {
+   "route": "Sunken Passage (S1, S2)",
+   "doctrine": "pressing",
+   "threshold": 70,
+   "start": 4,
+   "extracted": 30,
+   "died": 0,
+   "complete": 0
+  },
+  {
+   "route": "Crypt (north)",
+   "doctrine": "guarded",
+   "threshold": 0,
+   "start": 5,
+   "extracted": 0,
+   "died": 30,
+   "complete": 0
+  },
+  {
+   "route": "Crypt (north)",
+   "doctrine": "guarded",
+   "threshold": 30,
+   "start": 5,
+   "extracted": 19,
+   "died": 11,
+   "complete": 0
+  },
+  {
+   "route": "Crypt (north)",
+   "doctrine": "guarded",
+   "threshold": 50,
+   "start": 5,
+   "extracted": 28,
+   "died": 2,
+   "complete": 0
+  },
+  {
+   "route": "Crypt (north)",
+   "doctrine": "guarded",
+   "threshold": 70,
+   "start": 5,
+   "extracted": 30,
+   "died": 0,
+   "complete": 0
+  },
+  {
+   "route": "Crypt (north)",
+   "doctrine": "measured",
+   "threshold": 0,
+   "start": 5,
+   "extracted": 0,
+   "died": 30,
+   "complete": 0
+  },
+  {
+   "route": "Crypt (north)",
+   "doctrine": "measured",
+   "threshold": 30,
+   "start": 5,
+   "extracted": 21,
+   "died": 9,
+   "complete": 0
+  },
+  {
+   "route": "Crypt (north)",
+   "doctrine": "measured",
+   "threshold": 50,
+   "start": 5,
+   "extracted": 28,
+   "died": 2,
+   "complete": 0
+  },
+  {
+   "route": "Crypt (north)",
+   "doctrine": "measured",
+   "threshold": 70,
+   "start": 5,
+   "extracted": 30,
+   "died": 0,
+   "complete": 0
+  },
+  {
+   "route": "Crypt (north)",
+   "doctrine": "pressing",
+   "threshold": 0,
+   "start": 5,
+   "extracted": 0,
+   "died": 30,
+   "complete": 0
+  },
+  {
+   "route": "Crypt (north)",
+   "doctrine": "pressing",
+   "threshold": 30,
+   "start": 5,
+   "extracted": 25,
+   "died": 5,
+   "complete": 0
+  },
+  {
+   "route": "Crypt (north)",
+   "doctrine": "pressing",
+   "threshold": 50,
+   "start": 5,
+   "extracted": 27,
+   "died": 3,
+   "complete": 0
+  },
+  {
+   "route": "Crypt (north)",
+   "doctrine": "pressing",
+   "threshold": 70,
+   "start": 5,
+   "extracted": 30,
+   "died": 0,
+   "complete": 0
+  }
+ ]
+}
