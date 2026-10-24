@@ -411,7 +411,7 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
       if (view === 'run') syncCtl();
     });
     syncCtl();
-    return 'Order recorded; saving before continuation.';
+    return order.type === 'retreat' ? 'Retreat ordered; saving before continuation.' : 'Redirect ordered; saving before continuation.';
   }
   const canvas = h('canvas', { id: 'map', width: 640, height: 420, role: 'img', 'aria-label': 'Expedition map', 'aria-describedby': 'xstatus' });
   let feed: HTMLElement, objList: HTMLElement, status: HTMLElement, bar: HTMLElement, ctl: HTMLElement, result: HTMLElement, redirectSel: HTMLSelectElement;
