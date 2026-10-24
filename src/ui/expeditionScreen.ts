@@ -10,7 +10,11 @@ import { describeBank } from '../expedition/loot';
 import { UPGRADES, upgradeById, type UpgradeId } from '../progression/experience';
 import { MAX_DESIGN_LEVEL } from '../progression/levelTable';
 import { settle, type Settlement } from '../expedition/settle';
-import { LocalStore, MemoryStore, exportSave, importSave, load, persist, type SaveStore } from '../save/save';
+import { LocalStore, MemoryStore, defaultSave, exportSave, importSave, load, persist, type SaveStore } from '../save/save';
+import { parseDurable, serializeDurable, toLegacy, type SaveV3 } from '../save/durable';
+import { playerSaveRepository } from '../save/nativeRepository';
+import { commitCheckpoint, commitDiscard, commitDispatch, commitSettlement } from '../save/durableSettlement';
+import { ExpeditionCommandJournal, checkpoint, restoreExpedition } from '../expedition/replayCheckpoint';
 import type { Save } from '../save/saveTypes';
 import { PrefsStore } from './prefs';
 import { History, entryId } from './history';
@@ -74,11 +78,19 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
   let chronicle: Chronicle | null = null;
   let acc = 0, last = 0, raf = 0;
   let notice = '';
-  // The save lives in browser storage (memory only with ?save=memory, for tests). Nothing changes it except a finished expedition and an import.
+  // Developer fixtures retain their V2 storage. Shipped players use only V3 durable storage.
   const store: SaveStore = params.get('save') === 'memory' ? new MemoryStore() : new LocalStore();
-  const loaded = load(store);
+  const loaded = developer ? load(store) : { save: defaultSave(), note: null };
   let save: Save = loaded.save;
   let saveNote = loaded.note ?? '';
+  const durableRepo = developer ? null : playerSaveRepository();
+  let durable: SaveV3 | null = null;
+  let storageBlocked = !developer;
+  let dispatchPending = false, pauseAfterDispatch = false;
+  let journal: ExpeditionCommandJournal | null = null;
+  let activeId = '';
+  let lastQueuedTick = 0, lastEventCount = 0, lastPickupCount = 0, lastRoom = '';
+  let checkpointQueue: Promise<void> = Promise.resolve();
   let settlement: Settlement | null = null;
   let startedAt = 0;
   let issue = 0;
@@ -118,7 +130,7 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
   motionQuery?.addEventListener?.('change', applyPrefs);
   /** Skip link, settings row and the cue banner: shown on every screen. Each control is a labelled button of at least 44 px. */
   /** While an expedition is out, the buttons that would leave the screen are off, so a stray press cannot drop the run. */
-  const busy = () => view === 'run' && !!run && !run.world.terminal;
+  const busy = () => dispatchPending || (view === 'run' && !!run && (!run.world.terminal || (!developer && !!durable?.activeExpedition)));
   function toolbar(): Node {
     const wrap = h('div', { id: 'tools' });
     const rerender = () => wrap.replaceChildren(...build());
@@ -198,7 +210,12 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
         sealed.length ? h('ul', { id: 'gates-seen' }, ...sealed.map(g => h('li', {}, `${name(graph, g.from)} to ${name(graph, g.to)}: sealed. It ${needText(g.need)}.`))) : null,
         save.camp.cache ? h('p', { class: 'warn', id: 'cache-line' }, `A recovery cache waits in ${name(graph, save.camp.cache.room)}: ${describeBank(save.camp.cache.contents)}. A new fall before you collect it replaces it, and what it holds is lost for good.`) : h('p', { class: 'hint', id: 'cache-line' }, 'No recovery cache is waiting.'),
         save.camp.cache ? h('button', { type: 'button', id: 'add-recover', disabled: objectives.length >= MAX_OBJECTIVES || objectives.some(o => o.kind === 'recover'), onclick: () => { objectives.push({ id: `o${nextId++}`, kind: 'recover', room: save.camp.cache!.room }); renderPlan(); } }, 'Add: recover the cache') : null,
-        saveNote ? h('p', { class: 'warn' }, saveNote) : null),
+        saveNote ? h('p', { class: 'warn' }, saveNote) : null,
+        !developer && !durable ? h('p', { class: 'warn', id: 'durable-status' }, 'Checking durable storage. Dispatch is disabled until your save is safe.') : null,
+        !developer && durable?.activeExpedition ? h('div', { id: 'saved-expedition' },
+          h('p', { class: 'warn' }, 'An unfinished expedition is saved at tick ' + durable.activeExpedition.tick + '. Carried loot was not banked.'),
+          h('button', { type: 'button', id: 'resume-saved', onclick: resumeSavedExpedition }, 'Resume saved expedition'),
+          h('button', { type: 'button', id: 'discard-saved', onclick: () => { void discardSavedExpedition(); } }, 'Discard unfinished expedition')) : null),
       mapCard,
       h('section', { class: 'card' }, h('h2', {}, 'Quick start'),
         h('div', { class: 'presets' }, ...Object.entries(PRESETS).map(([id, p]) => h('button', { type: 'button', 'data-preset': id, onclick: () => applyPreset(p) }, p.label)))),
@@ -228,16 +245,31 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
             : h('label', {}, 'Level', h('input', { type: 'number', id: 'level', min: '1', max: String(sim.MAX_LEVEL), value: String(level), onchange: (e) => { level = Math.max(1, Math.min(sim.MAX_LEVEL, Math.round(Number((e.target as HTMLInputElement).value) || 80))); } })),
           h('label', {}, 'Focus', h('select', { id: 'focus', onchange: (e) => { focus = (e.target as HTMLSelectElement).value; } }, ...['balanced', 'duelist', 'bulwark', 'skirmisher', 'survivor'].map(f => { const op = h('option', { value: f }, cap(f)); if (f === focus) op.selected = true; return op; }))))): '',
       h('details', { class: 'card', id: 'save-card' }, h('summary', {}, 'Save: export, import'),
-        h('p', { class: 'hint' }, 'The save is one text kept in this browser. Export it as a backup; import replaces it, after checking it.'),
-        h('a', { class: 'btn', id: 'export-save', href: `data:application/json;charset=utf-8,${encodeURIComponent(exportSave(save))}`, download: 'idle-souls-save.json' }, 'Export save'),
+        h('p', { class: 'hint' }, developer ? 'Developer save kept in this browser.' : 'Save backups require an explicit import confirmation. The previous durable save is retained.'),
+        h('a', { class: 'btn', id: 'export-save', href: `data:application/json;charset=utf-8,${encodeURIComponent(!developer && durable ? serializeDurable(durable) : exportSave(save))}`, download: 'idle-souls-save.json' }, 'Export save'),
         h('textarea', { id: 'import-text', rows: '3', 'aria-label': 'Save text to import' }),
-        h('button', { type: 'button', id: 'import-go', onclick: () => { const r = importSave(store, (screen.querySelector('#import-text') as HTMLTextAreaElement).value); if (r.ok) { save = load(store).save; saveNote = 'Save imported.'; } else saveNote = r.error; renderPlan(); } }, 'Import save')),
+        h('button', { type: 'button', id: 'import-go', disabled: !developer && !durable, onclick: () => {
+           const raw = (screen.querySelector('#import-text') as HTMLTextAreaElement).value;
+           if (developer) {
+             const r = importSave(store, raw);
+             if (r.ok) { save = load(store).save; saveNote = 'Save imported.'; } else saveNote = r.error;
+             renderPlan(); return;
+           }
+           const parsed = parseDurable(raw);
+           if (!parsed.ok) { saveNote = parsed.error; renderPlan(); return; }
+           if (!window.confirm('Replace existing progress and the unfinished expedition? The previous save is backed up.')) return;
+           void durableRepo!.import(raw, true).then(r => {
+             if (r.ok) { durable = r.save; save = toLegacy(r.save); storageBlocked = false; saveNote = 'Imported and verified durable save.'; }
+             else saveNote = r.error;
+             renderPlan();
+           });
+         } }, 'Import save')),
       h('section', { class: 'card launch' },
         h('div', { class: `badge ${pf.status}`, id: 'preflight', 'data-status': pf.status }, STATUS_LABEL[pf.status] ?? pf.status),
         h('p', { class: 'hint', id: 'home-line' }, objectives.length ? `Way home: ${pf.home.route ? pf.home.route.rooms.map(r => name(graph, r)).join(' > ') : pf.home.reason}` : ''),
         ...pf.messages.map(m => h('p', { class: 'warn' }, m)),
         h('p', { class: 'hint', id: 'risk-rule' }, 'Everything you win or pick up is carried and at risk until you reach camp alive. Only camp banks it: not a retreat, a quiet corner or a boss. If you fall, what you carry stays in one recovery cache where you fell.'),
-        h('button', { type: 'button', id: 'launch', class: 'primary', disabled: !pf.launchable, onclick: launch }, 'Launch expedition')),
+        h('button', { type: 'button', id: 'launch', class: 'primary', disabled: !pf.launchable || (!developer && (storageBlocked || !durable || !!durable.activeExpedition)), onclick: launch }, 'Launch expedition')),
       glossaryDrawer());
     if (notice) { main.append(h('p', { class: 'warn', role: 'status' }, notice)); notice = ''; }
   }
@@ -253,11 +285,101 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
   // ---------- Expedition ----------
   function launch() {
     if (!lifecycle.active) return;
-    if (!developer) seed = crypto.getRandomValues(new Uint32Array(1))[0] || 1;
+    if (!developer) { void launchDurable(); return; }
     runCfg = cfg(); startedAt = save.camp.expeditions; settlement = null;
     run = startExpedition(sim, runCfg, graph);
     chronicle = null; paused = false; acc = 0; last = 0; toast = '';
     renderRun();
+  }
+  async function launchDurable() {
+    if (!durableRepo || !durable || storageBlocked || durable.activeExpedition || dispatchPending) return;
+    dispatchPending = true; pauseAfterDispatch = false;
+    seed = crypto.getRandomValues(new Uint32Array(1))[0] || 1;
+    const config = cfg(), candidate = startExpedition(sim, config, graph);
+    const id = 'run:' + save.camp.expeditions + ':' + seed + ':' + Date.now();
+    let first;
+    try { first = checkpoint(id, config, candidate, []); }
+    catch (error) { dispatchPending = false; saveNote = String(error); renderPlan(); return; }
+    const written = await commitDispatch(durableRepo, durable.revision, first);
+    if (!written.ok) { dispatchPending = false; saveNote = 'Cannot dispatch without a durable checkpoint: ' + written.error; renderPlan(); return; }
+    durable = written.save; save = toLegacy(durable);
+    runCfg = config; run = candidate; startedAt = save.camp.expeditions;
+    activeId = id; journal = new ExpeditionCommandJournal(run);
+    lastQueuedTick = 0; lastEventCount = 0; lastPickupCount = 0; lastRoom = run.world.room;
+    checkpointQueue = Promise.resolve();
+    settlement = null; chronicle = null; paused = pauseAfterDispatch; acc = 0; last = 0; toast = pauseAfterDispatch ? 'Paused by Back during dispatch.' : '';
+    dispatchPending = false; renderRun();
+  }
+  function resumeSavedExpedition() {
+    if (!durable?.activeExpedition || !durableRepo || storageBlocked) return;
+    const snap = durable.activeExpedition;
+    try {
+      const restored = restoreExpedition(sim, snap, graph);
+      runCfg = snap.config; run = restored; startedAt = durable.camp.expeditions;
+      activeId = snap.id; journal = new ExpeditionCommandJournal(restored);
+      journal.commands.push(...structuredClone(snap.commands));
+      lastQueuedTick = snap.tick;
+      lastEventCount = restored.expedition.events.length;
+      lastPickupCount = restored.world.ledger.gains.length; lastRoom = restored.world.room;
+      checkpointQueue = Promise.resolve();
+      settlement = null; chronicle = null; paused = true; acc = 0; last = 0;
+      toast = 'Restored exact checkpoint state. Press Resume when ready.';
+      renderRun();
+    } catch (error) {
+      saveNote = 'Checkpoint could not be verified; original retained. ' + String(error);
+      renderPlan();
+    }
+  }
+  async function discardSavedExpedition() {
+    if (!durable?.activeExpedition || !durableRepo || storageBlocked) return;
+    if (!window.confirm('Discard carried loot and this unfinished expedition? Nothing will be banked.')) return;
+    const result = await commitDiscard(durableRepo, durable.revision, durable.activeExpedition.id);
+    if (result.ok) { durable = result.save; save = toLegacy(result.save); saveNote = 'The unfinished expedition was discarded.'; }
+    else saveNote = 'Discard failed; the expedition is preserved: ' + result.error;
+    renderPlan();
+  }
+  /** Serial checkpoint writer. Disk failure stops play instead of silently using volatile memory. */
+  function queueCheckpoint(force = false): Promise<void> {
+    if (developer || !durableRepo || !durable || !run || !runCfg || !journal || storageBlocked) return checkpointQueue;
+    const w = run.world, ex = run.expedition;
+    if (!force && w.tick - lastQueuedTick < 60 && w.room === lastRoom &&
+      ex.events.length === lastEventCount && w.ledger.gains.length === lastPickupCount) return checkpointQueue;
+    let snap;
+    try { snap = checkpoint(activeId, runCfg, run, journal.commands); }
+    catch (error) { storageBlocked = true; if (view === 'run') pauseRun('Cannot safely checkpoint: ' + String(error)); return checkpointQueue; }
+    lastQueuedTick = snap.tick; lastRoom = w.room;
+    lastEventCount = ex.events.length; lastPickupCount = w.ledger.gains.length;
+    checkpointQueue = checkpointQueue.then(async () => {
+      if (!durable || !durableRepo || storageBlocked) return;
+      const result = await commitCheckpoint(durableRepo, durable.revision, snap);
+      if (result.ok) { durable = result.save; save = toLegacy(result.save); }
+      else {
+        storageBlocked = true;
+        if (view === 'run') pauseRun('Your progress is NOT safely saved: ' + result.error + '. Reload to recover the last committed checkpoint.');
+      }
+    }).catch(error => {
+      storageBlocked = true;
+      if (view === 'run') pauseRun('Your progress is NOT safely saved: ' + String(error));
+    });
+    return checkpointQueue;
+  }
+  /** An accepted order is committed before playback can advance another tick. */
+  function issueOrder(order: { type: 'retreat' } | { type: 'redirect'; room: string }): string {
+    if (!run) return 'No running expedition';
+    if (developer || !journal) return run.expedition.order(order) ?? 'Order accepted.';
+    if (storageBlocked) return 'Storage is unavailable. Expedition is paused; do not continue.';
+    const wasPaused = paused;
+    paused = true; acc = 0; last = 0; audio.setSuspended(true);
+    const reason = journal.order(order);
+    if (reason !== null) { paused = wasPaused; syncCtl(); return reason; }
+    void queueCheckpoint(true).then(() => {
+      if (!storageBlocked && !wasPaused && lifecycle.active) {
+        paused = false; acc = 0; last = 0; audio.setSuspended(false);
+      }
+      if (view === 'run') syncCtl();
+    });
+    syncCtl();
+    return order.type === 'retreat' ? 'Retreat ordered; saving before continuation.' : 'Redirect ordered; saving before continuation.';
   }
   const canvas = h('canvas', { id: 'map', width: 640, height: 420, role: 'img', 'aria-label': 'Expedition map', 'aria-describedby': 'xstatus' });
   let feed: HTMLElement, objList: HTMLElement, status: HTMLElement, bar: HTMLElement, ctl: HTMLElement, result: HTMLElement, redirectSel: HTMLSelectElement;
@@ -282,14 +404,14 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
       ...[1, 4, 16].map(s => h('button', { type: 'button', 'data-speed': String(s), 'aria-pressed': String(s === speed), onclick: () => { speed = s; syncCtl(); } }, `${s}x`)),
       h('button', { type: 'button', id: 'xp-pause', 'aria-pressed': String(paused), onclick: () => { if (!lifecycle.active) return; paused = !paused; acc = 0; last = 0; audio.setSuspended(paused); syncCtl(); } }, 'Pause'),
       developer ? h('button', { type: 'button', id: 'skip', onclick: () => { if (paused || !lifecycle.active) return; while (!r.world.terminal && r.world.tick < 30 * 3000) r.world.step(); draw(); } }, 'Skip to end') : null,
-      h('button', { type: 'button', id: 'retreat-now', class: 'danger', onclick: () => { toast = r.expedition.order({ type: 'retreat' }) ?? 'Retreat ordered. It starts now; in a fight the adventurer disengages first.'; draw(); } }, 'Retreat to camp'));
+      h('button', { type: 'button', id: 'retreat-now', class: 'danger', onclick: () => { toast = issueOrder({ type: 'retreat' }); draw(); } }, 'Retreat to camp'));
     screen.append(h('div', { id: 'main', tabindex: '-1' },
       h('div', { class: 'bar' }, h('div', {}, h('p', { class: 'eyebrow' }, developer ? 'EXPEDITION · TRIAL SETTINGS' : 'EXPEDITION'), h('h1', {}, 'On the road')),
         h('button', { type: 'button', id: 'back-to-plan', disabled: busy(), onclick: renderPlan }, 'Back to plan')),
       h('div', { class: 'cols' },
         h('div', { class: 'left' }, h('section', { class: 'card mapcard' }, canvas, status, bar, levelEl, carriedEl, sanctEl), ctl,
           h('section', { class: 'card' }, h('h2', {}, 'Change course'), h('p', { class: 'hint' }, 'A redirect waits for the next doorway. A retreat does not.'),
-            h('div', { class: 'redirect' }, redirectSel, h('button', { type: 'button', id: 'redirect-go', onclick: () => { toast = r.expedition.order({ type: 'redirect', room: redirectSel.value }) ?? `Redirect to ${name(graph, redirectSel.value)} queued for the next doorway.`; draw(); } }, 'Go there first'))),
+            h('div', { class: 'redirect' }, redirectSel, h('button', { type: 'button', id: 'redirect-go', onclick: () => { toast = issueOrder({ type: 'redirect', room: redirectSel.value }); draw(); } }, 'Go there first'))),
           h('section', { class: 'card' }, h('h2', {}, 'Objectives'), objList)),
         h('div', { class: 'right' }, h('section', { class: 'card' }, h('h2', {}, 'Intent feed'), feed), result))));
     feedCount = 0; syncCtl();
@@ -314,6 +436,7 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
     // Steps run in order, so the run is the same however many fit in a frame. A frame spends at most ~12 ms on them, so a heavy fight at 16x slows
     // the playback a little instead of freezing the page; the backlog is capped so it never snowballs.
     if (!paused) { const t0 = performance.now(); while (acc >= 1 && !r.world.terminal) { r.world.step(); acc -= 1; if (performance.now() - t0 > 12) break; } acc = Math.min(acc, 60); }
+    if (!developer && !storageBlocked) void queueCheckpoint();
     draw();
     if (!r.world.terminal) raf = requestAnimationFrame(frame);
   }
@@ -346,18 +469,60 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
     drawWorldMap(canvas, { graph, known: ex.known, open: ex.openLinks, visited: ex.visited, avoid: new Set(runCfg!.plan.avoid), route: ex.route ? ex.route.rooms : null, routeKind: 'confirmed', here: r.world.room, target: ex.target, hero: r.world.pos, cache: r.world.ledger.cache });
   }
   function finish(r: ExpeditionRun) {
-    const c = finishChronicle(runCfg!, r).chronicle; chronicle = c;
-    settlement = settle(save, c, startedAt);
-    if (settlement.applied) { try { persist(store, settlement.save); save = settlement.save; } catch (e) { settlement = { ...settlement, applied: false, refused: `The save could not be written: ${(e as Error).message}`, lines: [`The save could not be written: ${(e as Error).message}`] }; } }
+    const c = finishChronicle(runCfg!, r).chronicle;
+    chronicle = c; // Prevent a duplicate finish callback while an async save is pending.
+    if (developer) {
+      settlement = settle(save, c, startedAt);
+      if (settlement.applied) {
+        try { persist(store, settlement.save); save = settlement.save; }
+        catch (e) {
+          settlement = { ...settlement, applied: false, refused: 'The save could not be written: ' + String(e), lines: ['The save could not be written: ' + String(e)] };
+        }
+      }
+      presentSettlement(c, r);
+      return;
+    }
+    void commitFinalSettlement(c, r);
+  }
+  async function commitFinalSettlement(c: Chronicle, r: ExpeditionRun) {
+    await queueCheckpoint(true);
+    if (!durableRepo || !durable || storageBlocked) {
+      const reason = 'Your expedition is NOT safely settled. Keep this screen and retry after storage is available; the previous checkpoint remains intact.';
+      settlement = { ...settle(save, c, startedAt), applied: false, refused: reason, lines: [reason] };
+      presentSettlement(c, r);
+      return;
+    }
+    // Domain settlement is computed once from the pre-commit bank. Only the
+    // repository transaction may make that outcome visible as banked.
+    const preview = settle(save, c, startedAt);
+    if (!preview.applied) { settlement = preview; presentSettlement(c, r); return; }
+    const written = await commitSettlement(durableRepo, durable.revision, activeId, c, startedAt);
+    if (written.ok) {
+      durable = written.save; save = toLegacy(written.save);
+      settlement = preview;
+    } else {
+      const reason = 'Settlement was NOT committed: ' + written.error;
+      settlement = { ...preview, applied: false, refused: reason, lines: [reason] };
+    }
+    presentSettlement(c, r);
+  }
+  function presentSettlement(c: Chronicle, r: ExpeditionRun) {
+    const current = settlement!;
     const deathCause = describeDeath(sim, graph, r);
-    const opened = settlement!.applied ? c.loot.opened.map(k => { const l = graph.links.find(x => WorldGraph.linkKey(x.from, x.to) === k); return `Opened for good: ${l ? `${name(graph, l.from)} and ${name(graph, l.to)}` : k}.`; }) : [];
-    const lines = [...settlement!.lines, ...opened];
-    history.add({ id: entryId(c, save.camp.expeditions), at: Date.now(), chronicle: c, settlement: lines, deathCause });
+    const opened = current.applied ? c.loot.opened.map(k => {
+      const l = graph.links.find(x => WorldGraph.linkKey(x.from, x.to) === k);
+      return 'Opened for good: ' + (l ? name(graph, l.from) + ' and ' + name(graph, l.to) : k) + '.';
+    }) : [];
+    const lines = [...current.lines, ...opened];
+    if (current.applied) history.add({ id: entryId(c, save.camp.expeditions), at: Date.now(), chronicle: c, settlement: lines, deathCause });
     if (c.outcome === 'died') audio.cue('death');
     result.hidden = false;
-    result.replaceChildren(renderChronicle(c, { graph, settlement: lines, deathCause, actions: [h('button', { type: 'button', id: 'again', onclick: renderPlan }, 'Plan another')] }));
+    const actions = current.applied || developer ?
+      [h('button', { type: 'button', id: 'again', onclick: renderPlan }, 'Plan another')] :
+      [h('button', { type: 'button', id: 'retry-settlement', onclick: () => { storageBlocked = false; void commitFinalSettlement(c, r); } }, 'Retry durable settlement')];
+    result.replaceChildren(renderChronicle(c, { graph, settlement: lines, deathCause, actions }));
     syncCtl();
-    screen.querySelector<HTMLButtonElement>('#back-to-plan')!.disabled = false;
+    screen.querySelector<HTMLButtonElement>('#back-to-plan')!.disabled = busy();
     screen.querySelector('#tools')?.replaceWith(toolbar());
   }
 
@@ -400,11 +565,15 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
     audio.setSuspended(true); syncCtl(); draw();
   };
   const unsubscribe = lifecycle.subscribe(active => {
-    if (!active && busy()) pauseRun('Paused while away. Resume when ready.');
+    if (!active && busy()) {
+      pauseRun('Paused while away. Resume when ready.');
+      if (!developer) void queueCheckpoint(true); // Best effort; periodic commits guarantee the prior checkpoint.
+    }
     audio.setSuspended(!active || (busy() && paused));
     if (view === 'run' && run) { acc = 0; last = 0; syncCtl(); }
   });
   const removeBack = lifecycle.onBack(() => {
+    if (dispatchPending) { pauseAfterDispatch = true; return true; }
     const drawer = screen.querySelector<HTMLDetailsElement>('details[open]');
     if (drawer) { drawer.open = false; drawer.querySelector('summary')?.focus(); return true; }
     if (busy()) { pauseRun('Paused. Resume the expedition or retreat to camp.'); return true; }
@@ -414,6 +583,21 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
     return false;
   });
   renderPlan();
+  if (durableRepo) {
+    void durableRepo.load().then(loadedDurable => {
+      if (loadedDurable.ok) {
+        durable = loadedDurable.save;
+        save = toLegacy(loadedDurable.save);
+        storageBlocked = false;
+        if (loadedDurable.migratedFrom !== null) saveNote = 'Legacy save migrated to durable version 3. Original retained.';
+      } else {
+        storageBlocked = true;
+        saveNote = 'Your save is NOT safely available: ' + loadedDurable.error +
+          (loadedDurable.backupAvailable ? '. A backup exists; export it before attempting recovery.' : '');
+      }
+      renderPlan();
+    }).catch(error => { storageBlocked = true; saveNote = 'Cannot open durable saves: ' + String(error); renderPlan(); });
+  }
   return () => { cancelAnimationFrame(raf); unsubscribe(); removeBack(); audio.disable(); motionQuery?.removeEventListener?.('change', applyPrefs); screen.remove(); };
 }
 declare global {
