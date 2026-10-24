@@ -61,7 +61,8 @@ function paintHall(scene: Phaser.Scene, hall: Hallway): Phaser.GameObjects.Conta
   const container = scene.add.container(0, 0).setDepth(HALL_DEPTH);
   const g = scene.add.graphics();
   const [a, b, c, d] = hall.polygon;
-  g.fillStyle(COLORS.mortar, 1).fillPoints([a, b, c, d], true);
+  g.fillStyle(COLORS.mortar, 1).beginPath().moveTo(a.x, a.y)
+    .lineTo(b.x, b.y).lineTo(c.x, c.y).lineTo(d.x, d.y).closePath().fillPath();
   g.lineStyle(7, COLORS.edge, .9).lineBetween(a.x, a.y, b.x, b.y)
     .lineBetween(c.x, c.y, d.x, d.y);
   g.lineStyle(2, COLORS.floor, 1).lineBetween(a.x, a.y, b.x, b.y)
