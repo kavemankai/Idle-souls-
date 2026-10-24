@@ -1,0 +1,75 @@
+
+> idle-souls-visual-proof@0.1.0 test:player
+> npm run build:player && playwright test --config playwright.player.config.ts
+
+
+> idle-souls-visual-proof@0.1.0 build:player
+> npm run typecheck && vite build --mode player
+
+
+> idle-souls-visual-proof@0.1.0 typecheck
+> tsc --noEmit
+
+vite v8.3.5 building client environment for player...
+transforming...
+✓ 68 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-player/environments/runtime/props.json                0.30 kB │ gzip:  0.22 kB
+dist-player/index.html                                     0.47 kB │ gzip:  0.31 kB
+dist-player/environments/runtime/endpoint-threshold.png    1.21 kB
+dist-player/vfx/runtime/slash.png                          3.75 kB
+dist-player/vfx/runtime/impact.png                         3.82 kB
+dist-player/vfx/runtime/landing.png                        3.93 kB
+dist-player/environments/runtime/paving-5.png              5.50 kB
+dist-player/environments/runtime/paving-1.png              5.53 kB
+dist-player/environments/runtime/paving-3.png              6.08 kB
+dist-player/environments/runtime/paving-4.png              6.18 kB
+dist-player/environments/runtime/paving-2.png              6.19 kB
+dist-player/environments/runtime/paving-0.png              6.21 kB
+dist-player/environments/runtime/doorway-jamb-east.png     6.24 kB
+dist-player/vfx/runtime/dodge.png                          6.30 kB
+dist-player/vfx/runtime/parry.png                          6.30 kB
+dist-player/vfx/runtime/contact.png                        6.35 kB
+dist-player/environments/runtime/moss.png                  6.46 kB
+dist-player/environments/runtime/doorway-jamb-west.png     6.48 kB
+dist-player/vfx/runtime/stagger.png                        6.93 kB
+dist-player/environments/runtime/marker.png                7.07 kB
+dist-player/vfx/runtime/block.png                          7.44 kB
+dist-player/environments/runtime/rubble.png                7.50 kB
+dist-player/vfx/runtime/heavy.png                          7.69 kB
+dist-player/vfx/runtime/perfect.png                        8.91 kB
+dist-player/environments/runtime/wall.png                 10.23 kB
+dist-player/characters/runtime/mannequin.json             13.14 kB │ gzip:  1.15 kB
+dist-player/environments/runtime/pillar.png               14.84 kB
+dist-player/environments/runtime/wall-return-west.png     15.01 kB
+dist-player/environments/runtime/wall-return-east.png     15.56 kB
+dist-player/environments/runtime/road-underpaint.png      16.71 kB
+dist-player/environments/runtime/earth.png                17.63 kB
+dist-player/characters/runtime/mireling.json              24.51 kB │ gzip:  2.02 kB
+dist-player/characters/runtime/sentry.json                29.12 kB │ gzip:  2.50 kB
+dist-player/characters/runtime/adventurer.json            31.38 kB │ gzip:  2.65 kB
+dist-player/environments/runtime/warm-light.png           52.85 kB
+dist-player/characters/runtime/mannequin.png             300.52 kB
+dist-player/characters/runtime/sentry.png                693.13 kB
+dist-player/characters/runtime/adventurer.png            824.45 kB
+dist-player/characters/runtime/mireling.png              934.95 kB
+dist-player/assets/index-S-NIJr9v.css                      8.82 kB │ gzip:  2.46 kB
+dist-player/assets/web-BJCXxS8C.js                         0.84 kB │ gzip:  0.39 kB
+dist-player/assets/index-B_pGNdL2.js                     262.87 kB │ gzip: 82.23 kB
+
+✓ built in 809ms
+[WebServer] (node:16272) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14136) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:14980) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\player\player.spec.ts:4:3 › packaged player ignores debug URLs and keeps retreat visible at 360x640 (1.4s)
+  ok 2 tests\player\player.spec.ts:4:3 › packaged player ignores debug URLs and keeps retreat visible at 844x390 (510ms)
+  ok 3 tests\player\player.spec.ts:34:1 › the production package serves real offline audio (30ms)
+
+  3 passed (5.9s)

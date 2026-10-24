@@ -21,6 +21,7 @@ import { Guide, glossaryDrawer } from './onboarding';
 import { ExpeditionAudio } from './audioCues';
 import { describeDeath, renderChronicle } from './chronicleView';
 import './expedition.css';
+import { lifecycle } from '../platform/lifecycle';
 
 const KNOWLEDGE: Record<string, { label: string; rooms: string[] | 'all' }> = {
   save: { label: 'My map (fog stays until entered)', rooms: [] },
@@ -56,10 +57,11 @@ function h<K extends keyof HTMLElementTagNameMap>(tag: K, attrs: Record<string, 
 const cap = (s: string) => s[0].toUpperCase() + s.slice(1);
 
 /** The camp planner and the expedition screen. DOM and one canvas; it reads the expedition layer and never decides anything itself. */
-export function mountExpedition(root: HTMLElement) {
+export function mountExpedition(root: HTMLElement, options: { developer?: boolean } = {}) {
+  const developer = options.developer ?? true;
   const sim: SimApi = loadSim();
   const graph = new WorldGraph();
-  const params = new URLSearchParams(location.search);
+  const params = new URLSearchParams(developer ? location.search : '');
   let knowledge = params.get('known') && KNOWLEDGE[params.get('known')!] ? params.get('known')! : 'save';
   let plan: ExpeditionPlan = defaultPlan();
   let objectives: Objective[] = [];
@@ -99,7 +101,7 @@ export function mountExpedition(root: HTMLElement) {
     cueBanner.textContent = text; cueBanner.classList.remove('flash'); void cueBanner.offsetWidth; cueBanner.classList.add('flash');
   });
   audio.setLevels(prefs.get().music, prefs.get().effects);
-  window.__EXPEDITION_AUDIO__ = audio;
+  if (developer) window.__EXPEDITION_AUDIO__ = audio;
   const motionQuery = typeof matchMedia === 'function' ? matchMedia('(prefers-reduced-motion: reduce)') : null;
   let view: 'plan' | 'run' | 'history' | 'entry' = 'plan';
   let entryOpen = '';
@@ -143,7 +145,8 @@ export function mountExpedition(root: HTMLElement) {
   function renderPlan() {
     cancelAnimationFrame(raf);
     run = null; view = 'plan';
-    window.__EXPEDITION_STATE__ = () => ({ view: 'plan' });
+    audio.setSuspended(!lifecycle.active);
+    if (developer) window.__EXPEDITION_STATE__ = () => ({ view: 'plan' });
     screen.replaceChildren(toolbar());
     const main = h('div', { id: 'main', tabindex: '-1' });
     screen.append(main);
@@ -183,9 +186,9 @@ export function mountExpedition(root: HTMLElement) {
       onToggleAvoid: (room) => { plan.avoid = plan.avoid.includes(room) ? plan.avoid.filter(x => x !== room) : [...plan.avoid, room]; renderPlan(); (screen.querySelector(`[data-map-avoid="${room}"]`) as HTMLElement | null)?.focus(); },
     });
     main.append(
-      h('div', { class: 'bar' }, h('div', {}, h('p', { class: 'eyebrow' }, 'CAMP · EXPEDITION PLAN · TRIAL SETTINGS'), h('h1', {}, 'Plan an expedition')),
-        h('label', { class: 'know' }, 'Map ', h('select', { id: 'knowledge', onchange: (e) => { knowledge = (e.target as HTMLSelectElement).value; renderPlan(); } },
-          ...Object.entries(KNOWLEDGE).map(([v, d]) => { const op = h('option', { value: v }, d.label); if (v === knowledge) op.selected = true; return op; })))),
+      h('div', { class: 'bar' }, h('div', {}, h('p', { class: 'eyebrow' }, developer ? 'CAMP · EXPEDITION PLAN · TRIAL SETTINGS' : 'CAMP'), h('h1', {}, 'Plan an expedition')),
+        developer ? h('label', { class: 'know' }, 'Map ', h('select', { id: 'knowledge', onchange: (e) => { knowledge = (e.target as HTMLSelectElement).value; renderPlan(); } },
+          ...Object.entries(KNOWLEDGE).map(([v, d]) => { const op = h('option', { value: v }, d.label); if (v === knowledge) op.selected = true; return op; }))) : null),
       guide.render(renderPlan) ?? '',
       h('section', { class: 'card', id: 'camp-card' }, h('h2', {}, 'Camp'),
         h('p', { id: 'bank-line' }, `Banked: ${describeBank(save.camp.bank)}.`),
@@ -217,13 +220,13 @@ export function mountExpedition(root: HTMLElement) {
       h('section', { class: 'card' }, h('h2', {}, 'Avoid'),
         h('p', { class: 'hint' }, 'The adventurer will not enter these rooms for any reason, including the way home.'),
         h('div', { class: 'chips' }, ...avoidable.map(r => h('button', { type: 'button', 'data-avoid': r, 'aria-pressed': String(plan.avoid.includes(r)), onclick: () => { plan.avoid = plan.avoid.includes(r) ? plan.avoid.filter(x => x !== r) : [...plan.avoid, r]; renderPlan(); } }, name(graph, r))))),
-      h('details', { class: 'card' }, h('summary', {}, 'Advanced: seed, level, focus'),
+      developer ? h('details', { class: 'card' }, h('summary', {}, 'Advanced: seed, level, focus'),
         h('div', { class: 'grid3' },
           h('label', {}, 'Seed', h('input', { type: 'number', id: 'seed', min: '1', value: String(seed), onchange: (e) => { seed = Math.max(1, Math.round(Number((e.target as HTMLInputElement).value) || 1)); } })),
           progressOn
             ? h('label', {}, 'Start level (1 to 9)', h('input', { type: 'number', id: 'startlevel', min: '1', max: String(MAX_DESIGN_LEVEL), value: String(startLevel), onchange: (e) => { startLevel = Math.max(1, Math.min(MAX_DESIGN_LEVEL, Math.round(Number((e.target as HTMLInputElement).value) || 1))); } }))
             : h('label', {}, 'Level', h('input', { type: 'number', id: 'level', min: '1', max: String(sim.MAX_LEVEL), value: String(level), onchange: (e) => { level = Math.max(1, Math.min(sim.MAX_LEVEL, Math.round(Number((e.target as HTMLInputElement).value) || 80))); } })),
-          h('label', {}, 'Focus', h('select', { id: 'focus', onchange: (e) => { focus = (e.target as HTMLSelectElement).value; } }, ...['balanced', 'duelist', 'bulwark', 'skirmisher', 'survivor'].map(f => { const op = h('option', { value: f }, cap(f)); if (f === focus) op.selected = true; return op; }))))),
+          h('label', {}, 'Focus', h('select', { id: 'focus', onchange: (e) => { focus = (e.target as HTMLSelectElement).value; } }, ...['balanced', 'duelist', 'bulwark', 'skirmisher', 'survivor'].map(f => { const op = h('option', { value: f }, cap(f)); if (f === focus) op.selected = true; return op; }))))): '',
       h('details', { class: 'card', id: 'save-card' }, h('summary', {}, 'Save: export, import'),
         h('p', { class: 'hint' }, 'The save is one text kept in this browser. Export it as a backup; import replaces it, after checking it.'),
         h('a', { class: 'btn', id: 'export-save', href: `data:application/json;charset=utf-8,${encodeURIComponent(exportSave(save))}`, download: 'idle-souls-save.json' }, 'Export save'),
@@ -249,6 +252,8 @@ export function mountExpedition(root: HTMLElement) {
 
   // ---------- Expedition ----------
   function launch() {
+    if (!lifecycle.active) return;
+    if (!developer) seed = crypto.getRandomValues(new Uint32Array(1))[0] || 1;
     runCfg = cfg(); startedAt = save.camp.expeditions; settlement = null;
     run = startExpedition(sim, runCfg, graph);
     chronicle = null; paused = false; acc = 0; last = 0; toast = '';
@@ -275,12 +280,12 @@ export function mountExpedition(root: HTMLElement) {
     redirectSel = h('select', { id: 'redirect-room', 'aria-label': 'Redirect to' }, ...[...k, ...frontierRooms(graph, k, r.expedition.openLinks)].filter(x => x !== CAMP && !runCfg!.plan.avoid.includes(x)).sort().map(x => h('option', { value: x }, name(graph, x))));
     ctl = h('div', { class: 'ctl' },
       ...[1, 4, 16].map(s => h('button', { type: 'button', 'data-speed': String(s), 'aria-pressed': String(s === speed), onclick: () => { speed = s; syncCtl(); } }, `${s}x`)),
-      h('button', { type: 'button', id: 'xp-pause', 'aria-pressed': String(paused), onclick: () => { paused = !paused; syncCtl(); } }, 'Pause'),
-      h('button', { type: 'button', id: 'skip', onclick: () => { while (!r.world.terminal && r.world.tick < 30 * 3000) r.world.step(); draw(); } }, 'Skip to end'),
+      h('button', { type: 'button', id: 'xp-pause', 'aria-pressed': String(paused), onclick: () => { if (!lifecycle.active) return; paused = !paused; acc = 0; last = 0; audio.setSuspended(paused); syncCtl(); } }, 'Pause'),
+      developer ? h('button', { type: 'button', id: 'skip', onclick: () => { if (paused || !lifecycle.active) return; while (!r.world.terminal && r.world.tick < 30 * 3000) r.world.step(); draw(); } }, 'Skip to end') : null,
       h('button', { type: 'button', id: 'retreat-now', class: 'danger', onclick: () => { toast = r.expedition.order({ type: 'retreat' }) ?? 'Retreat ordered. It starts now; in a fight the adventurer disengages first.'; draw(); } }, 'Retreat to camp'));
     screen.append(h('div', { id: 'main', tabindex: '-1' },
-      h('div', { class: 'bar' }, h('div', {}, h('p', { class: 'eyebrow' }, 'EXPEDITION · TRIAL SETTINGS'), h('h1', {}, 'On the road')),
-        h('button', { type: 'button', id: 'back-to-plan', onclick: renderPlan }, 'Back to plan')),
+      h('div', { class: 'bar' }, h('div', {}, h('p', { class: 'eyebrow' }, developer ? 'EXPEDITION · TRIAL SETTINGS' : 'EXPEDITION'), h('h1', {}, 'On the road')),
+        h('button', { type: 'button', id: 'back-to-plan', disabled: busy(), onclick: renderPlan }, 'Back to plan')),
       h('div', { class: 'cols' },
         h('div', { class: 'left' }, h('section', { class: 'card mapcard' }, canvas, status, bar, levelEl, carriedEl, sanctEl), ctl,
           h('section', { class: 'card' }, h('h2', {}, 'Change course'), h('p', { class: 'hint' }, 'A redirect waits for the next doorway. A retreat does not.'),
@@ -293,11 +298,17 @@ export function mountExpedition(root: HTMLElement) {
   }
   function syncCtl() {
     ctl.querySelectorAll<HTMLButtonElement>('[data-speed]').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.speed) === speed)));
-    ctl.querySelector('#xp-pause')!.setAttribute('aria-pressed', String(paused));
+    const pause = ctl.querySelector<HTMLButtonElement>('#xp-pause')!;
+    pause.setAttribute('aria-pressed', String(paused));
+    pause.textContent = paused ? 'Resume expedition' : 'Pause';
+    pause.disabled = !lifecycle.active || !!run?.world.terminal;
+    const skip = ctl.querySelector<HTMLButtonElement>('#skip');
+    if (skip) skip.disabled = paused || !lifecycle.active || !!run?.world.terminal;
   }
   function frame(t: number) {
     const r = run;
     if (!r) return;
+    if (!lifecycle.active || paused) { acc = 0; last = 0; raf = requestAnimationFrame(frame); return; }
     if (last === 0) last = t;
     acc += Math.min(100, t - last) * speed * 30 / 1000; last = t;
     // Steps run in order, so the run is the same however many fit in a frame. A frame spends at most ~12 ms on them, so a heavy fight at 16x slows
@@ -328,7 +339,7 @@ export function mountExpedition(root: HTMLElement) {
     drawMap(r);
     if (w.terminal) for (const id of ['retreat-now', 'redirect-go', 'skip']) (ctl.parentElement!.querySelector(`#${id}`) as HTMLButtonElement | null)?.setAttribute('disabled', '');
     if (w.terminal && !chronicle) finish(r);
-    window.__EXPEDITION_STATE__ = () => ({ view: 'run', state: w.state, tick: w.tick, room: w.room, mode: ex.mode, hp: w.hp, intents: ex.intent.length, digest: w.digest, terminal: w.terminal });
+    if (developer) window.__EXPEDITION_STATE__ = () => ({ view: 'run', state: w.state, tick: w.tick, room: w.room, mode: ex.mode, hp: w.hp, intents: ex.intent.length, digest: w.digest, terminal: w.terminal, paused, active: lifecycle.active });
   }
   function drawMap(r: ExpeditionRun) {
     const ex = r.expedition;
@@ -345,13 +356,15 @@ export function mountExpedition(root: HTMLElement) {
     if (c.outcome === 'died') audio.cue('death');
     result.hidden = false;
     result.replaceChildren(renderChronicle(c, { graph, settlement: lines, deathCause, actions: [h('button', { type: 'button', id: 'again', onclick: renderPlan }, 'Plan another')] }));
+    syncCtl();
+    screen.querySelector<HTMLButtonElement>('#back-to-plan')!.disabled = false;
     screen.querySelector('#tools')?.replaceWith(toolbar());
   }
 
   // ---------- Past expeditions ----------
   function renderHistory() {
     view = entryOpen ? 'entry' : 'history';
-    window.__EXPEDITION_STATE__ = () => ({ view: 'history', open: entryOpen });
+    if (developer) window.__EXPEDITION_STATE__ = () => ({ view: 'history', open: entryOpen });
     screen.replaceChildren(toolbar());
     const all = history.list();
     const e = entryOpen ? history.get(entryOpen) : undefined;
@@ -375,12 +388,33 @@ export function mountExpedition(root: HTMLElement) {
         all.length ? h('button', { type: 'button', id: 'history-clear', onclick: () => { history.clear(); renderHistory(); } }, 'Clear the list') : null));
   }
 
-  window.__EXPEDITION_RUN__ = (c: ExpeditionConfig) => runExpedition(sim, c, 30 * 3000, graph).chronicle;
-  window.__EXPEDITION_SAVE__ = () => save;
+  if (developer) {
+    window.__EXPEDITION_RUN__ = (c: ExpeditionConfig) => runExpedition(sim, c, 30 * 3000, graph).chronicle;
+    window.__EXPEDITION_SAVE__ = () => save;
+  }
   // Test hook, only with ?save=memory: put the camp in a known state without playing to it.
-  if (params.get('save') === 'memory') window.__EXPEDITION_SET_SAVE__ = (next: Save) => { save = next; persist(store, save); renderPlan(); };
-  window.__EXPEDITION_READY__ = true;
+  if (developer && params.get('save') === 'memory') window.__EXPEDITION_SET_SAVE__ = (next: Save) => { save = next; persist(store, save); renderPlan(); };
+  if (developer) window.__EXPEDITION_READY__ = true;
+  const pauseRun = (message: string) => {
+    paused = true; acc = 0; last = 0; toast = message;
+    audio.setSuspended(true); syncCtl(); draw();
+  };
+  const unsubscribe = lifecycle.subscribe(active => {
+    if (!active && busy()) pauseRun('Paused while away. Resume when ready.');
+    audio.setSuspended(!active || (busy() && paused));
+    if (view === 'run' && run) { acc = 0; last = 0; syncCtl(); }
+  });
+  const removeBack = lifecycle.onBack(() => {
+    const drawer = screen.querySelector<HTMLDetailsElement>('details[open]');
+    if (drawer) { drawer.open = false; drawer.querySelector('summary')?.focus(); return true; }
+    if (busy()) { pauseRun('Paused. Resume the expedition or retreat to camp.'); return true; }
+    if (view === 'plan' && guide.visible) { guide.finish(); renderPlan(); return true; }
+    if (view === 'entry') { entryOpen = ''; renderHistory(); return true; }
+    if (view === 'history' || view === 'run') { renderPlan(); return true; }
+    return false;
+  });
   renderPlan();
+  return () => { cancelAnimationFrame(raf); unsubscribe(); removeBack(); audio.disable(); motionQuery?.removeEventListener?.('change', applyPrefs); screen.remove(); };
 }
 declare global {
   interface Window {

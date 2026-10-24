@@ -5,10 +5,14 @@ import { join } from 'node:path';
 /** Serve/export runtime assets only. Editable masters and render caches stay out of dist. */
 const root=join(import.meta.dirname,'assets');
 const categories=['environments','characters','vfx'];
-export default defineConfig({
-  base:'./',publicDir:false,
+export default defineConfig(({ mode }) => ({
+  base:'./',publicDir:'public',
+  server: { watch: { ignored: ['**/.tmp/**', '**/android/**', '**/dist-player/**', '**/test-results/**'] } },
   define:{__BUILD_SHA__:JSON.stringify(process.env.BUILD_SHA??execSync('git rev-parse --short HEAD').toString().trim())},
   plugins:[{
+    name:'idle-player-entry',
+    transformIndexHtml: { order: 'pre', handler(html) { return mode === 'player' ? html.replace('/src/main.ts', '/src/player.ts') : html; } },
+  },{
     name:'idle-runtime-assets',
     configureServer(server){server.middlewares.use((req,res,next)=>{
       const url=(req.url??'').split('?')[0];
@@ -26,5 +30,5 @@ export default defineConfig({
       }
     },
   }],
-  build:{chunkSizeWarningLimit:1600},
-});
+  build:{chunkSizeWarningLimit:1600, outDir: mode === 'player' ? 'dist-player' : 'dist'},
+}));

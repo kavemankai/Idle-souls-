@@ -3,6 +3,8 @@ import { OldRoadVisualScene } from './scenes/OldRoadVisualScene';
 import { O1Scene } from './scenes/O1Scene';
 import { mountExpedition } from './ui/expeditionScreen';
 import './style.css';
+import { bindBrowserLifecycle } from './platform/browser';
+bindBrowserLifecycle();
 // ?scene=o1 opens the autonomous O1 slice. Everything else (default, calibration, silhouette, attacks) is the visual study.
 // A hosted build can open on O1 without a query string (VITE_DEFAULT_SCENE=o1 or expedition); normal builds leave it unset.
 const sceneName = new URLSearchParams(location.search).get('scene') ?? import.meta.env.VITE_DEFAULT_SCENE;

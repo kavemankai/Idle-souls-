@@ -1,0 +1,17 @@
+[
+  {
+    "file": "app-debug.apk",
+    "bytes": 16304824,
+    "sha256": "A4C2841BA192A7ECDFB063FD1154F1BB2AAB4BA87D947E3EFAA8EC5E762888B6"
+  },
+  {
+    "file": "app-release-unsigned.apk",
+    "bytes": 15324825,
+    "sha256": "65FD56653AA170F6056FE9675854B4D0BB11F10AF2CFC412F783D98E058B0527"
+  },
+  {
+    "file": "app-release.aab",
+    "bytes": 14742930,
+    "sha256": "7C7D45DFBA1A938CA41818AE73349343E5FD1202D12A6680BA406C6385456F17"
+  }
+]

@@ -2,7 +2,7 @@
 
 An autonomous expedition RPG prototype built with Phaser 4.2.1, TypeScript 6.0.3 and Vite 8.3.5. Plan a route, watch the adventurer fight, retreat physically to camp, bank loot, and recover a cache after death. The deterministic combat simulator is `combat/deep-stats/combat-sim.js`; presentation reads its results.
 
-The [mobile release specification](docs/release/SPEC.md) is the source of truth for product direction. It supersedes conflicting historical handoffs and design locks. Read the [verified baseline](docs/release/BASELINE.md) and [prioritized issues](docs/release/ISSUES.md) for implementation status. Android packaging, durable active-run recovery, permanent power upgrades, safe offline farming and commerce are future milestones.
+The [mobile release specification](docs/release/SPEC.md) is the source of truth for product direction. It supersedes conflicting historical handoffs and design locks. Read the [verified baseline](docs/release/BASELINE.md), [Android foundation](docs/release/ANDROID.md) and [prioritized issues](docs/release/ISSUES.md) for implementation status. Durable active-run recovery, permanent power upgrades, safe offline farming and commerce are future milestones.
 
 ## Run locally
 
@@ -22,6 +22,8 @@ Development entry points:
 - `?scene=calibration`, `?scene=silhouette`, `?scene=attacks` — art review fixtures.
 
 The expedition interface and animated O1 viewer are still separate. Starting-level and stat controls are developer tools; they do not represent earned permanent progression. Saves are version 2 and do not recover an active expedition.
+
+`npm run dev:player` opens the player entry without developer scenes, URL cheats, test hooks or power controls. `npm run test:player` tests the production player bundle. With Java 21 and Android SDK 36 installed and `JAVA_HOME`/`ANDROID_HOME` configured, `npm run android:debug` builds an installable debug APK; `npm run android:release` builds unsigned release APK/AAB files. See [Android setup and device checks](docs/release/ANDROID.md).
 
 ## Verify
 
