@@ -30,9 +30,9 @@ The running player writes a committed dispatch checkpoint before it enables the 
 - No changes to `combat/deep-stats/combat-sim.js`, its fixtures, room manifests or golden comparisons.
 - Automatic tests: V0/V1/V2 import, version-3 checksum/invariants, failed writes and stale revisions, identical combat-fight continuation and later Chronicle, order timing, checkpoint/camp settlement idempotency, and optional-configuration serialization.
 - Mandatory CI before merge: `npm run lint`, `npm run typecheck`, `npm test`, both simulator golden checks, `npm run test:browser`, `npm run test:player`, `npm run android:debug` and `npm run android:release`.
-- Physical validation outstanding: Android force-stop/relaunch in the middle of a live fight; app background/foreground with pending writes; out-of-space; corrupt primary with valid backup; repeated import; restore after OS process eviction; slow-device replay latency.
+- Physical validation outstanding: Android force-stop/relaunch in the middle of a live fight; app background/foreground with pending writes; out-of-space; native corrupt primary with valid backup; repeated import; restore after OS process eviction; slow-device replay latency. Browser reload and injected IndexedDB corruption are not physical validation.
 - Recovery ceiling: 90,000 ticks / 2,048 accepted orders. Beyond the bound the game pauses rather than claiming an exact restore. Profile a safe duration on entry-level Android and either introduce full-state snapshots or adjust run length before release.
-- Backup recovery controls are currently incomplete: `readBackup` exists in both adapters, but a player-accessible corrupt-primary recovery/export screen is still required for final R02 sign-off.
+- The player now exposes **Inspect backup**, **Export verified backup**, and confirmation-gated **Restore this backup** when a primary fails validation. Browser Playwright exercises actual IndexedDB quarantine and read-back (`tests/player/durableRecovery.spec.ts`). Android SQLite backup recovery and process-kill behavior still require native-device validation.
 - Do not label a passing GitHub Actions build as a validated install, force-stop, device cold start or signed release.
 
 ## Transaction boundaries
@@ -44,3 +44,33 @@ The running player writes a committed dispatch checkpoint before it enables the 
 5. Permanent-upgrade purchases in PR #30 also use the same revision and transaction-ID contract and cannot execute while an active expedition exists.
 
 Keep R02 **open** until all acceptance checks and physical force-stop evidence are recorded.
+
+## Current implementation evidence (24 October 2026)
+
+- PR #29 implemented V3 transactional saves, deterministic command-journal replay and SQLite/IndexedDB stores; GitHub Android workflow `40065557182` completed successfully with a package artifact. Its browser-suite run `40065557254` failed one *retreat status text* test, while Ubuntu/Windows + simulator regressions passed.
+- PR #31 corrected the developer-harness message regression and merged into main. GitHub CI run `40066470990` passed browser specs and Windows/Ubuntu; Android run `40066470937` completed successfully with artifacts.
+- PR #33 introduced a fail-closed resume guard and confirmed backup controls. Browser reload/corrupt-primary assertions are implemented in `tests/player/durableRecovery.spec.ts` and are to be evaluated against the final merged-head workflow, not assumed passed by source presence.
+- A successful CI build proves package contents and automated software checks, not a physical force-stop/cold-start recovery.
+
+## Physical Android acceptance protocol
+
+Use a **test device and an expendable test profile**. Preserve any valuable existing saves by exporting first. Do not clear Android app data between force-stop and relaunch.
+
+1. Install the verified **debug** APK from the current head's `android-foundation` artifact, then launch the application:
+   ```sh
+   adb install -r app-debug.apk
+   adb shell am start -n io.github.kavemankai.idlesouls/.MainActivity
+   ```
+2. Start an organic expedition. During active combat, record the visible room, elapsed time, HP, enemy state and progression. Capture `adb logcat` separately.
+3. Kill the **process without clearing storage**, then cold-launch:
+   ```sh
+   adb shell am force-stop io.github.kavemankai.idlesouls
+   adb shell am start -n io.github.kavemankai.idlesouls/.MainActivity
+   ```
+   Verify that the saved expedition is offered, the recovered checkpoint is deterministic (the game's saved state and its future Chronicle/digest agree with a no-kill seeded control) and carried rewards were not banked on restart.
+4. Repeat at least three times: during combat, after a recorded order, and between reaching camp and final settlement. Confirm a settlement is counted once after relaunch and once after repeated button presses.
+5. Purchase the first affordable earned upgrade at camp, force-stop and relaunch, then verify the bank was charged once and its permanent rank applies to the *next* expedition.
+6. Repeat with simulated native write failures, full storage and a corrupt **test database** with a valid backup, using an isolated emulator or sacrificial test device; do not alter a live player's database.
+7. Record model, Android version, build SHA, original/resumed tick, seed, Chronicle digest, bank before/after, debug logs and pass/fail. Exercise one low-end and one mid-range physical phone.
+
+**Stop release** on any irrecoverable legitimate bank loss, duplicate reward or purchase, unexpected change in deterministic replay result, unsafe continuation after failed storage or inability to restore a valid backup. Browser-process reload is useful supporting evidence, not a replacement for this protocol.

@@ -1,6 +1,6 @@
 # R03 — earned permanent progression (engineering record)
 
-Status: **draft PR #30**, stacked on R02 PR #29, in turn stacked on merged Android CI PR #28. Do not merge R03 before the durable settlement and replay PR has independently passed.
+Status: progression implementation was originally merged as PR #30 into the old persistence feature branch, not main. PR #32 correctly integrated it into main on 24 October 2026, preserving the R02 replay/storage layer and PR #31's repaired retreat status. **Software integration is present; first-region product and physical-device acceptance remain open.**
 
 ## Design: campaign progression, never a debug grant
 
