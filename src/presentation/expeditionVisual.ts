@@ -2,7 +2,7 @@ import type { Action, CombatView, Facing, Gauge, Phase } from '../contracts/pres
 import { facingFromVector } from './directions';
 import { poseOf } from '../world/o1Adapter';
 import { combatView } from '../world/o1Combat';
-import { toLocal } from '../world/worldRunner';
+import { toWorld } from '../world/worldRunner';
 import type { WorldRunner } from '../world/worldRunner';
 import { ROOMS } from '../world/roomRegistry';
 
@@ -32,6 +32,7 @@ export interface ExpeditionVisualState {
   readonly heroHealth: Gauge;
   readonly fighting: boolean;
   readonly passage: boolean;
+  readonly heroStatus: string;
   readonly actors: readonly ExpeditionVisualActor[];
   readonly combat?: CombatView;
 }
@@ -40,12 +41,38 @@ const facing = (angle: number): Facing => facingFromVector(Math.cos(angle), Math
 const walk = (moving: boolean, tick: number): Pick<ExpeditionVisualActor, 'action' | 'phase' | 'progress'> =>
   ({ action: moving ? 'walk' : 'idle', phase: 'active', progress: moving ? tick % 18 / 18 : 0 });
 
+/** Only simulator/runner states influence this small player-facing action chip. */
+export function heroActionStatus(world: WorldRunner): string {
+  const r = world.runner;
+  const f = r?.state === 'fighting' ? r.fight?.p : null;
+  if (world.state === 'defeated') return '• Fallen';
+  if (r?.retreating) return '• Retreating';
+  if (f) {
+    const pose = poseOf(f, r!.fight!);
+    if (pose.action === 'death') return '• Fallen';
+    if (pose.action === 'dodge') return '• Dodging';
+    if (pose.action === 'guard') return '• Guarding';
+    if (pose.action === 'reaction') return '• Staggered';
+    if (['light', 'heavy', 'bash', 'leap'].includes(pose.action)) {
+      if (pose.phase === 'windup') return '• Winding up';
+      return pose.phase === 'recovery' ? '• Recovering' : '• Attacking';
+    }
+    return '• Fighting';
+  }
+  if (!r && !world.terminal) return '• Crossing passage';
+  if (r?.idleTicks && r.idleTicks > 0) return '• Resting';
+  if (world.state === 'homebound' && r?.hero.moving) return '• Returning';
+  if (r?.hero.moving) return '• Exploring';
+  return world.terminal ? '• Finished' : '• Surveying';
+}
+
 export function readExpeditionVisual(world: WorldRunner): ExpeditionVisualState {
   const r = world.runner;
   const fight = r?.state === 'fighting' ? r.fight : null;
   const hero = fight?.p;
-  const position = r ? (hero ?? r.hero) : toLocal(ROOMS[world.room], world.pos);
-  const heroPose = hero && fight ? poseOf(hero, fight) : walk(r?.hero.moving ?? false, world.tick);
+  // WorldRunner.pos is the single continuous position during combat, rooms and passages.
+  const position = world.pos;
+  const heroPose = hero && fight ? poseOf(hero, fight) : walk(r ? r.hero.moving : !world.terminal, world.tick);
   const heroFace = hero?.face ?? r?.hero.face ?? 0;
   const actors: ExpeditionVisualActor[] = [{
     id: 'hero', archetype: 'adventurer', illustrated: true,
@@ -60,13 +87,15 @@ export function readExpeditionVisual(world: WorldRunner): ExpeditionVisualState 
       fighter && fight ? poseOf(fighter, fight) : walk(false, world.tick);
     actors.push({
       id: 'foe-' + i, archetype: foe.arch, illustrated: illustrated(foe.arch),
-      x: fighter?.x ?? foe.x, y: fighter?.y ?? foe.y,
+      x: toWorld(ROOMS[world.room], { x: fighter?.x ?? foe.x, y: fighter?.y ?? foe.y }).x,
+      y: toWorld(ROOMS[world.room], { x: fighter?.x ?? foe.x, y: fighter?.y ?? foe.y }).y,
       facing: facing(fighter?.face ?? foe.face), ...pose,
       visible: true, combatSlot: slot >= 0 ? slot + 1 : null,
     });
   }
   return {
-    room: world.room, tick: world.tick, passage: r === null,
+    room: world.room, tick: world.tick, passage: r === null && !world.terminal,
+    heroStatus: heroActionStatus(world),
     // world.tick - r.tick is the room-visit offset; r.fights increments on
     // each actual fight. Presentation never assigns combat identities.
     fightKey: fight && r ? `${world.room}:${world.tick - r.tick}:${r.fights}` : null,
