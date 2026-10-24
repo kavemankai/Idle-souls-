@@ -39,6 +39,7 @@ export class ExpeditionAudio {
   private musicEl: HTMLAudioElement | null = null;
   private music = 0.4;
   private effects = 0.7;
+  private suspended = false;
   private readonly live = new Set<HTMLAudioElement>();
   /** Every cue ever requested, with whether sound was on. For tests and the visual pair. */
   readonly played: { cue: ExpeditionCue; sounded: boolean }[] = [];
@@ -55,7 +56,7 @@ export class ExpeditionAudio {
     try {
       this.musicEl = new Audio(`${this.base}/music/whispers.ogg`);
       this.musicEl.loop = true; this.musicEl.preload = 'none'; this.musicEl.volume = this.music;
-      void this.musicEl.play().catch(() => {});
+      if (!this.suspended) void this.musicEl.play().catch(() => {});
     } catch { this.musicEl = null; }
   }
   disable() {
@@ -64,11 +65,23 @@ export class ExpeditionAudio {
     for (const a of this.live) { a.pause(); a.src = ''; }
     this.live.clear();
   }
+  /** Preserve the player's preference while silencing interruptions; never replay stale effects. */
+  setSuspended(value: boolean) {
+    if (this.suspended === value) return;
+    this.suspended = value;
+    if (value) {
+      this.musicEl?.pause();
+      for (const audio of this.live) { audio.pause(); audio.src = ''; }
+      this.live.clear();
+    } else if (this.on && this.musicEl) {
+      void this.musicEl.play().catch(() => {});
+    }
+  }
   /** Play a cue and show its visual pair. The visual pair always fires. */
   cue(c: ExpeditionCue) {
-    this.played.push({ cue: c, sounded: this.on && this.effects > 0 });
+    this.played.push({ cue: c, sounded: this.on && !this.suspended && this.effects > 0 });
     this.onVisual(CUE_MAP[c].label, c);
-    if (!this.on || this.effects <= 0) return;
+    if (!this.on || this.suspended || this.effects <= 0) return;
     try {
       const a = new Audio(`${this.base}/cues/${CUE_MAP[c].file}.ogg`);
       a.volume = this.effects; this.live.add(a);

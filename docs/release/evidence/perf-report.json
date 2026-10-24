@@ -1,0 +1,26 @@
+{
+  "node": "v24.15.0",
+  "expedition": {
+    "runs": 5,
+    "medianMs": 358.2983000000004,
+    "maxMs": 532.8420999999998,
+    "medianPerFightMs": 89.5745750000001,
+    "maxPerFightMs": 133.21052499999996
+  },
+  "budget": {
+    "oldRoadExpeditionMs": 1000,
+    "perFightMs": 400
+  },
+  "bundle": {
+    "rawBytes": 1669972,
+    "gzipBytes": 448650,
+    "budget": 600000,
+    "files": [
+      {
+        "file": "index-DwmOih6K.js",
+        "raw": 1669972,
+        "gzip": 448650
+      }
+    ]
+  }
+}

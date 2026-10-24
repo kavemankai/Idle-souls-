@@ -6,12 +6,14 @@
  *   npx tsx tools/pacing-report.ts --part campaign --policy cautious|pressing --from 1 --count 20   whole-game journeys with a scripted player (see below)
  *   npx tsx tools/pacing-report.ts --assemble                           merge docs/slice/data/pacing-*.json into docs/slice/CALIBRATION_NUMBERS.md
  * Every part writes docs/slice/data/pacing-<part>[-n].json so parts can run in separate processes.
+ * Use --out-dir <directory> for an isolated run; --assemble --out <file> selects the assembled Markdown destination.
  *
  * The scripted player of the campaign part knows the map (it never wanders) and follows one policy: explore toward the next goal, bank a Gate Key at the Key Trial,
  * issue it, open the gate, fight what is behind it, recover a dropped cache first. It is a lower bound on a thoughtful player and an upper bound on a careless one,
  * not a model of either. The goals are: open the Watchtower gate and fight the Bell Warden, then open the Crypt gate and fight the Castellan.
  */
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { loadSim } from '../src/combat/loadSimNode';
 import { defaultPlan, type ExpeditionPlan, type Objective } from '../src/expedition/plan';
 import { runExpedition, type ExpeditionConfig } from '../src/expedition/run';
@@ -26,7 +28,7 @@ const N = Number(arg('n', '300'));
 const sim = loadSim();
 const graph = new WorldGraph();
 const ALL = [...graph.rooms.keys()];
-const DIR = 'docs/slice/data';
+const DIR = arg('out-dir', 'docs/slice/data');
 mkdirSync(DIR, { recursive: true });
 const MB_GATE = WorldGraph.linkKey('T2', 'MB'), B1_GATE = WorldGraph.linkKey('K2', 'B1');
 /** The encounter standing in each room for these runs: the one the arrival table fits (first row of the room). */
@@ -57,8 +59,8 @@ const ROUTES: RouteDef[] = [
   { name: 'Sunken Passage (S1, S2, sanctuary)', objectives: [obj('S1'), obj('S2')], order: ['C0', 'O1', 'O2', 'O3', 'S1', 'S2'], arrivalStart: 4 },
   { name: 'Crypt by the south (S3 sluice side, K1, K2)', objectives: [obj('S1'), obj('S2'), obj('K1'), obj('K2')], order: ['C0', 'O1', 'O2', 'O3', 'S1', 'S2', 'K1', 'K2'], arrivalStart: 5 },
   { name: 'Crypt by the north (T2, K3, K2)', objectives: [obj('T1'), obj('T2'), obj('K3'), obj('K2')], order: ['C0', 'O1', 'O2', 'T1', 'T2', 'K3', 'K2'], arrivalStart: 5 },
-  { name: 'Bell Warden (gate already open)', objectives: [obj('T1'), obj('T2'), obj('MB')], open: [MB_GATE], order: ['C0', 'O1', 'O2', 'T1', 'T2', 'MB'], arrivalStart: 5 },
-  { name: 'Castellan (both gates already open)', objectives: [obj('T1'), obj('T2'), obj('K3'), obj('K2'), obj('B1')], open: [MB_GATE, B1_GATE], order: ['C0', 'O1', 'O2', 'T1', 'T2', 'K3', 'K2', 'B1'], arrivalStart: 7 },
+  { name: 'Bell Warden (gate already open)', objectives: [obj('T1'), obj('T2'), obj('MB', 'challenge')], open: [MB_GATE], order: ['C0', 'O1', 'O2', 'T1', 'T2', 'MB'], arrivalStart: 5 },
+  { name: 'Castellan (both gates already open)', objectives: [obj('T1'), obj('T2'), obj('K3'), obj('K2'), obj('B1', 'challenge')], open: [MB_GATE, B1_GATE], order: ['C0', 'O1', 'O2', 'T1', 'T2', 'K3', 'K2', 'B1'], arrivalStart: 7 },
 ];
 
 function routes() {
@@ -128,8 +130,8 @@ function retreat() {
 // ---- campaign: a scripted player from a fresh save to the Castellan ----
 interface Goal { id: string; satisfied: (s: Save) => boolean; needKey: boolean; objectives: Objective[]; room: string }
 const GOALS: Goal[] = [
-  { id: 'warden', satisfied: s => s.world.defeatedBosses.includes('warden'), needKey: true, room: 'MB', objectives: [obj('T2', 'open', 'MB'), obj('MB')] },
-  { id: 'castellan', satisfied: s => s.world.defeatedBosses.includes('castellan'), needKey: true, room: 'B1', objectives: [obj('K2', 'open', 'B1'), obj('B1')] },
+  { id: 'warden', satisfied: s => s.world.defeatedBosses.includes('warden'), needKey: true, room: 'MB', objectives: [obj('T2', 'open', 'MB'), obj('MB', 'challenge')] },
+  { id: 'castellan', satisfied: s => s.world.defeatedBosses.includes('castellan'), needKey: true, room: 'B1', objectives: [obj('K2', 'open', 'B1'), obj('B1', 'challenge')] },
 ];
 /** Rooms on the way to `room` from camp, over every link that is ordinary or already open (the north way into the Crypt). */
 function wayTo(room: string, save: Save): string[] {
@@ -152,18 +154,19 @@ function campaign() {
       const route = wayTo(goal.room, save);
       const disc = new Set(save.world.discovered);
       const unknown = route.find(r => !disc.has(r));
+      const needsKey = goal.needKey && !save.world.openedLinks.includes(goal.id === 'warden' ? MB_GATE : B1_GATE);
       let p: ExpeditionPlan, issue = 0;
       if (unknown) {
         // Explore toward the goal: start from the frontier room (the first unknown room on the way), bounded to three rooms.
         p = plan(style, [{ id: 'x', kind: 'explore', room: unknown, depth: 3 }]);
-      } else if (goal.needKey && save.camp.bank.keys < 1) {
+      } else if (needsKey && save.camp.bank.keys < 1) {
         // Bank a key at the Key Trial (known once the Crossroads is mapped).
         p = plan(style, [obj('KT')]);
       } else {
-        p = plan(style, goal.objectives); issue = goal.needKey ? 1 : 0;
+        p = plan(style, goal.objectives); issue = needsKey ? 1 : 0;
       }
       if (save.camp.cache) p = { ...p, objectives: [obj(save.camp.cache.room, 'recover'), ...p.objectives].slice(0, 5) };
-      const cfg: ExpeditionConfig = { seed: k * 1000 + n, level: 80, focus: 'balanced', plan: p, known: save.world.discovered, encounters: ENCOUNTERS, progression: { startLevel: start, kitRations: 2 }, cache: save.camp.cache, issueKeys: issue, claims: save.world.claims, openLinks: save.world.openedLinks };
+      const cfg: ExpeditionConfig = { seed: k * 1000 + n, level: 80, focus: 'balanced', plan: p, known: save.world.discovered, encounters: ENCOUNTERS, progression: { startLevel: start, kitRations: 2 }, cache: save.camp.cache, issueKeys: issue, claims: save.world.claims, openLinks: save.world.openedLinks, defeatedBosses: save.world.defeatedBosses };
       const { chronicle: c } = runExpedition(sim, cfg);
       ticks += c.ticks; maxLevel = Math.max(maxLevel, c.progress?.level ?? 1);
       if (c.outcome === 'died') deaths++;
@@ -187,7 +190,7 @@ function campaign() {
 function assemble() {
   const read = (f: string) => JSON.parse(readFileSync(`${DIR}/${f}`, 'utf8'));
   const pct = (a: number, n: number) => `${(a / n * 100).toFixed(1)}%`;
-  const lines: string[] = ['# Calibration numbers (generated by tools/pacing-report.ts --assemble)', '', 'Real runner, real health, shipped progression, full roster, `docs/slice/data/*.json` for the raw rows. The analysis is in `CALIBRATION.md`.', ''];
+  const lines: string[] = ['# Calibration numbers (generated by tools/pacing-report.ts --assemble)', '', `Real runner, real health, shipped progression, full roster. Raw rows: ${DIR}/*.json. See docs/release/BASELINE.md for current sample limits; docs/slice/CALIBRATION.md is historical analysis.`, ''];
   lines.push('## Level table', '', '| Design level | Simulator level | Rows it was fitted to |', '|---|---|---|', ...LEVEL_TABLE.map(r => `| ${r.design} | ${r.sim} | ${r.note} |`), '');
   try {
     const fit = read('fit.json') as { checked: { row: { room: string; design: number; encounter: string; target: number }; sim: number; win: Record<string, Record<string, number>> }[] };
@@ -215,7 +218,7 @@ function assemble() {
     for (const m of names) { const v = rows.filter(r => r.milestones[m] !== undefined).map(r => r.milestones[m]); lines.push(`| ${m} | ${pct(v.length, rows.length)} | ${v.length ? median(v) : '-'} | ${v.length ? mean(v).toFixed(1) : '-'} | ${v.length ? Math.max(...v) : '-'} |`); }
     lines.push('', `Finished (Castellan defeated within the cap): ${pct(rows.filter(r => r.finished).length, rows.length)}. Mean deaths per campaign ${mean(rows.map(r => r.deaths)).toFixed(1)}, mean game hours ${mean(rows.map(r => r.gameHours)).toFixed(1)}, highest level reached in any expedition (mean) ${mean(rows.map(r => r.maxLevel)).toFixed(1)}.`, '');
   }
-  writeFileSync('docs/slice/CALIBRATION_NUMBERS.md', lines.join('\n'));
+  writeFileSync(arg('out', join(DIR, '..', 'CALIBRATION_NUMBERS.md')), lines.join('\n'));
   console.log(lines.join('\n'));
 }
 

@@ -1,0 +1,44 @@
+
+> idle-souls-visual-proof@0.1.0 test:browser
+> playwright test --grep zoom buttons|O1 dispatch matches|browser and Node agree on seeded O1 --repeat-each=3 --reporter=line
+
+
+[WebServer] (node:24308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 21 tests using 1 worker
+
+(node:21468) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/21] tests\browser\o1.spec.ts:13:3 › O1 dispatch matches the Node run at 1280x720
+[2/21] tests\browser\o1.spec.ts:13:3 › O1 dispatch matches the Node run at 390x844
+[3/21] tests\browser\o1.spec.ts:13:3 › O1 dispatch matches the Node run at 844x390
+[4/21] tests\browser\o1.spec.ts:48:1 › browser and Node agree on seeded O1 runs across opponents and doctrines
+[5/21] tests\browser\o1.spec.ts:122:3 › zoom buttons and the action cam work at 1280x720
+[6/21] tests\browser\o1.spec.ts:122:3 › zoom buttons and the action cam work at 390x844
+[7/21] tests\browser\o1.spec.ts:122:3 › zoom buttons and the action cam work at 844x390
+(node:20688) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[8/21] tests\browser\o1.spec.ts:13:3 › O1 dispatch matches the Node run at 1280x720
+[9/21] tests\browser\o1.spec.ts:13:3 › O1 dispatch matches the Node run at 390x844
+[10/21] tests\browser\o1.spec.ts:13:3 › O1 dispatch matches the Node run at 844x390
+[11/21] tests\browser\o1.spec.ts:48:1 › browser and Node agree on seeded O1 runs across opponents and doctrines
+[12/21] tests\browser\o1.spec.ts:122:3 › zoom buttons and the action cam work at 1280x720
+[13/21] tests\browser\o1.spec.ts:122:3 › zoom buttons and the action cam work at 390x844
+[14/21] tests\browser\o1.spec.ts:122:3 › zoom buttons and the action cam work at 844x390
+
+(node:1732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[15/21] tests\browser\o1.spec.ts:13:3 › O1 dispatch matches the Node run at 1280x720
+[16/21] tests\browser\o1.spec.ts:13:3 › O1 dispatch matches the Node run at 390x844
+[17/21] tests\browser\o1.spec.ts:13:3 › O1 dispatch matches the Node run at 844x390
+[18/21] tests\browser\o1.spec.ts:48:1 › browser and Node agree on seeded O1 runs across opponents and doctrines
+[19/21] tests\browser\o1.spec.ts:122:3 › zoom buttons and the action cam work at 1280x720
+[20/21] tests\browser\o1.spec.ts:122:3 › zoom buttons and the action cam work at 390x844
+[21/21] tests\browser\o1.spec.ts:122:3 › zoom buttons and the action cam work at 844x390
+  21 passed (2.6m)

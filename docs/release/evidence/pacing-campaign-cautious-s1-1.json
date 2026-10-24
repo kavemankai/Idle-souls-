@@ -1,0 +1,19 @@
+{
+ "style": "cautious",
+ "rows": [
+  {
+   "campaign": 1,
+   "expeditions": 120,
+   "finished": false,
+   "milestones": {
+    "first Gate Key banked": 1,
+    "mapped the Watchtower gate": 85
+   },
+   "deaths": 0,
+   "gameHours": 2.6209074074074072,
+   "maxLevel": 4,
+   "gold": 606,
+   "discovered": 6
+  }
+ ]
+}

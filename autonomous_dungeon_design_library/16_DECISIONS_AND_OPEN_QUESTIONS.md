@@ -1,4 +1,5 @@
 # 16 — Locked Decisions, Working Proposals and Open Questions
+> Historical decisions register. Conflicting decisions are superseded by [the mobile release specification](../docs/release/SPEC.md), including L19's mandatory bank-before-use trip. Current prototype behavior may still implement these older rules pending the scheduled release work. Do not infer completed implementation from the release specification.
 **Owner:** Game-design change control  
 **Status:** Active decisions register  
 **Updated:** 2026-10-23  

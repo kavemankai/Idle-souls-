@@ -1,5 +1,6 @@
 node_modules/
 dist/
+dist-player/
 .tmp/
 *.blend1
 __pycache__/

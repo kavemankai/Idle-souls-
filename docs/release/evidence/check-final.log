@@ -1,0 +1,421 @@
+
+> idle-souls-visual-proof@0.1.0 check
+> tsx tools/check.ts
+
+Baseline: win32, Node v24.15.0
+
+Checking lint
+
+> idle-souls-visual-proof@0.1.0 lint
+> eslint src tests tools --no-error-on-unmatched-pattern
+
+
+Checking typecheck
+
+> idle-souls-visual-proof@0.1.0 typecheck
+> tsc --noEmit
+
+
+Checking world generation
+
+> idle-souls-visual-proof@0.1.0 world:check
+> tsx tools/world/build-rooms.ts --check
+
+world files are current (18 files)
+
+Checking portable math
+in sync
+
+Checking production build
+
+> idle-souls-visual-proof@0.1.0 build
+> npm run typecheck && vite build
+
+
+> idle-souls-visual-proof@0.1.0 typecheck
+> tsc --noEmit
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 74 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/environments/runtime/props.json                  0.30 kB │ gzip:   0.22 kB
+dist/index.html                                       0.49 kB │ gzip:   0.34 kB
+dist/environments/runtime/endpoint-threshold.png      1.21 kB
+dist/vfx/runtime/slash.png                            3.75 kB
+dist/vfx/runtime/impact.png                           3.82 kB
+dist/vfx/runtime/landing.png                          3.93 kB
+dist/environments/runtime/paving-5.png                5.50 kB
+dist/environments/runtime/paving-1.png                5.53 kB
+dist/environments/runtime/paving-3.png                6.08 kB
+dist/environments/runtime/paving-4.png                6.18 kB
+dist/environments/runtime/paving-2.png                6.19 kB
+dist/environments/runtime/paving-0.png                6.21 kB
+dist/environments/runtime/doorway-jamb-east.png       6.24 kB
+dist/vfx/runtime/dodge.png                            6.30 kB
+dist/vfx/runtime/parry.png                            6.30 kB
+dist/vfx/runtime/contact.png                          6.35 kB
+dist/environments/runtime/moss.png                    6.46 kB
+dist/environments/runtime/doorway-jamb-west.png       6.48 kB
+dist/vfx/runtime/stagger.png                          6.93 kB
+dist/environments/runtime/marker.png                  7.07 kB
+dist/vfx/runtime/block.png                            7.44 kB
+dist/environments/runtime/rubble.png                  7.50 kB
+dist/vfx/runtime/heavy.png                            7.69 kB
+dist/vfx/runtime/perfect.png                          8.91 kB
+dist/environments/runtime/wall.png                   10.23 kB
+dist/characters/runtime/mannequin.json               13.14 kB │ gzip:   1.15 kB
+dist/environments/runtime/pillar.png                 14.84 kB
+dist/environments/runtime/wall-return-west.png       15.01 kB
+dist/environments/runtime/wall-return-east.png       15.56 kB
+dist/environments/runtime/road-underpaint.png        16.71 kB
+dist/environments/runtime/earth.png                  17.63 kB
+dist/characters/runtime/mireling.json                24.51 kB │ gzip:   2.02 kB
+dist/characters/runtime/sentry.json                  29.12 kB │ gzip:   2.50 kB
+dist/characters/runtime/adventurer.json              31.38 kB │ gzip:   2.65 kB
+dist/environments/runtime/warm-light.png             52.85 kB
+dist/characters/runtime/mannequin.png               300.52 kB
+dist/characters/runtime/sentry.png                  693.13 kB
+dist/characters/runtime/adventurer.png              824.45 kB
+dist/characters/runtime/mireling.png                934.95 kB
+dist/assets/index-BCLAK_H8.css                       18.23 kB │ gzip:   4.66 kB
+dist/assets/index-DLdv6y5Y.js                     1,666.74 kB │ gzip: 453.11 kB
+
+✓ built in 1.32s
+[plugin builtin:vite-reporter]
+(!) Some chunks are larger than 1600 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+Checking unit tests
+
+> idle-souls-visual-proof@0.1.0 test
+> tsx --test tests/*.test.ts
+
+✔ every text and boundary colour pair the screens use meets WCAG AA (4.5:1 text, 3:1 boundaries) (2.9241ms)
+✔ the contrast function matches known values (0.4756ms)
+1: survey of the Outer Road took 1 seed(s)
+2: Old Road explore, 1 seed(s)
+4: sanctuary visit, 9 seed(s)
+5: 40 runs at design level 2 to the Tower Yard: 39 home, 1 fell, 40 turned back
+7: sluice opened (8 seed(s)); way home 6 doors before, 1 after
+8: Warden first clear after 1 seed(s)
+8b: Castellan first clear after 4 seed(s)
+▶ the first session, steps 1 to 8, on the real stack
+  ✔ 1. start at camp, pick a preset, identify the first frontier (194.6564ms)
+  ✔ 2. traverse the Old Road, see an ordinary encounter and a plain description of what the adventurer does (203.0547ms)
+  ✔ 3. reveal the Watchtower and make one meaningful diversion decision (255.5912ms)
+  ✔ 4. reach the sanctuary, rest and choose a major upgrade without banking (5440.0693ms)
+  ✔ 5. continue toward an objective and face real extraction risk (17566.6207ms)
+  ✔ 6. after a death, relaunch and plan a route to the cache using the retained map (492.2921ms)
+  ✔ 7. open a shortcut and show the way home actually changes (5044.6373ms)
+  ✔ 8. kill the first boss, the world route changes, a later rematch does not undo the clear (2779.6314ms)
+  ✔ 8b. the main boss: open the last gate, defeat the Castellan, the campaign route unlocks and stays unlocked after a fall (2476.1798ms)
+✔ the first session, steps 1 to 8, on the real stack (34467.551ms)
+✔ stop conditions: the numbers behind them are measured, not asserted away (15228.2075ms)
+✔ every locomotion and applicable guard pose exists at all eight headings (22.6794ms)
+✔ all trimmed frames reconstruct a common feet anchor independently of equipment bounds (47.7846ms)
+✔ O1 wave 1 has genuine eight-heading clips and never borrows a quadrant (19.2831ms)
+✔ O1 wave 2 stagger and Mireling bite have genuine eight-heading frames (11.208ms)
+✔ visual fixture cannot mutate simulation and never produces combat outcomes (1.6825ms)
+✔ attack pose follows supplied phase even when move phase durations are unequal (6.7013ms)
+✔ 14 source packs yield all music, ambience, and selected O1 cues (47.069ms)
+✔ the default encounter table covers every authored room, names real encounters, and leaves the Old Road as it was (5.8418ms)
+✔ scenario 1 / D05 / D11: a sealed boss gate with no key changes the map only; the challenge is skipped and the next objective still runs (473.864ms)
+✔ scenario 2 / D06: a key in hand and a sealed gate passed by: nothing spent, nothing engaged, the key goes back to the bank (380.3399ms)
+✔ scenario 4 / D07 / D08: confirming the gate spends exactly one key, opens it for good, and the boss is untouched; the key does not come back (913.7585ms)
+✔ scenario 5: death after the unlock and before any fight keeps the gate open and recreates no key, in the bank or in the cache (450.034ms)
+✔ scenario 6: dying in the boss fight keeps the gate open, records no first clear and opens no shortcut (864.2219ms)
+✔ scenario 7 / D13: the kill and the death on the same tick: the kill stands, the adventurer is dead, nothing is banked (1643.1416ms)
+✔ a win banks nothing by itself: the Warden pays gold and one gear item into what is carried, and camp banks it once (1999.359ms)
+✔ H12: a boss cleared and the adventurer lost on the way home: the world change stays, the carried reward goes to the cache (1776.1442ms)
+✔ the first clear is written exactly once: settling the same expedition twice is refused (1738.0368ms)
+✔ scenario 8 / D14: a rematch is opt-in, costs no key, leaves the first clear alone and pays a quarter of the gold and no gear (1532.5561ms)
+✔ B13: a first-time challenge on a boss already cleared is not counted as done; a rematch before the first clear is refused (1507.2123ms)
+✔ a defeated boss stays absent: passing through its arena later starts no fight, and a reach objective there is just a walk (727.1693ms)
+✔ a plain walk never enters a living boss arena: reach and survey of it are refused, and exploring and sweeping skip it (2720.5781ms)
+✔ retreat is physical: abandoning the Warden leaves by the door in, the boss resets, nothing is cleared, the shortcut stays shut (2946.7071ms)
+✔ a boss fights alone: one fight, one enemy (1249.6754ms)
+✔ scenario 9 / D12: an excluded room is never approached even with the key in hand (884.1061ms)
+✔ the Castellan: first clear records the campaign route; the reward is one gear item and it opens no link (3142.0611ms)
+✔ the limited-healing rematch: no rations all expedition, and winning or losing never reverts the clear (971.6888ms)
+✔ the preflight explains gate state, key need and boss status (8.5661ms)
+✔ six distinct editable defence/contact effect sources have matching transparent raster exports (20.4627ms)
+✔ three death pose samples exist from all eight model yaws (115.3421ms)
+✔ dead player settles while the 30 Hz simulation is stopped (44.9642ms)
+✔ winning O1 retains the enemy corpse at the simulator final position (85.2483ms)
+✔ an enemy that fell in an earlier fight stays down through the next one (41.1712ms)
+✔ eight screen-space headings round trip without handedness transforms (3.4217ms)
+✔ missing selective attack view is explicitly unavailable (0.8942ms)
+✔ a view the atlas does not have falls back to idle at the same facing and is flagged missing (0.7942ms)
+✔ O1 painted wall/door/threshold sources and runtime raster assets exist (38.7501ms)
+✔ Safe and Direct pick different routes when a short way crosses a dangerous region (6.0797ms)
+✔ in the real world today Safe and Direct agree on the only loop (to the Ossuary), because the short way is also the quiet one (1.0808ms)
+✔ avoid, fog and closed gates are walls for the planner (2.227ms)
+✔ the preflight reports confirmed, frontier, blocked and conflicted plans and only launches the first two (11.6627ms)
+✔ an expedition is deterministic and the seed changes the fights (748.9448ms)
+✔ every decision in the intent feed has a cause, and every route choice names its alternatives (342.8868ms)
+✔ Thorough surveys look into the rooms beside the target and Direct does not (474.8087ms)
+✔ avoid is absolute: the walk and the way home never enter an avoided room (1588.6674ms)
+✔ a health threshold sends the adventurer home at the next junction, and says so (276.6885ms)
+✔ a retreat order takes effect at once, in the room, and outranks the objectives (179.2254ms)
+✔ a redirect is accepted at a junction, goes first, and bad redirects are refused (1640.9071ms)
+✔ an objective that cannot be reached is skipped with its reason and the plan carries on (L14) (1004.0838ms)
+✔ with no permitted way home the expedition reports a blocked extraction and does not cross the avoided room (1.1004ms)
+✔ a fall ends the Chronicle as a death with the room it happened in (95.5843ms)
+✔ the Chronicles of the golden expeditions are identical to the recorded ones (6045.328ms)
+✔ a gate is unseen until a neighbouring room has been entered, sealed once seen, and open for good after it is worked (3.2845ms)
+✔ closed gates are walls for the planner and open ones are doors; fog does not show a room behind a sealed gate (3.223ms)
+✔ the Key Trial pays one fresh key per expedition, and it is not first-use eligible until banked (L18, L19) (537.4168ms)
+✔ a key found on the same run cannot open a gate; the objective is skipped with the reason (504.9513ms)
+✔ an issued key opens the gate once, for good, without a fight and without entering the room beyond (341.9755ms)
+✔ an unspent issued key returns to the bank on extraction, and a gate already open costs nothing (421.4897ms)
+✔ no issued key means no unlock, and issuing more than the bank holds is refused (582.7638ms)
+✔ a fall after the unlock keeps the gate open, never puts the spent key in the cache, and keeps the unspent one eligible (1215.9166ms)
+✔ the one-time discovery key is claimed for good, even if it was dropped, and never pays twice (2223.6932ms)
+✔ a fresh key recovered from a cache is still ineligible, and an issued key recovered keeps its eligibility (1073.5403ms)
+✔ the sluice shortcut is worked by hand, stays open, and the way home from the Low Gallery shortens by over a fifth in distance and skips the rooms between (3155.7544ms)
+✔ a gate that opens with the miniboss, or an optional special door, is skipped with its reason (1615.51ms)
+✔ preflight explains a gate plan before launch, and an avoided gate room is a conflict (13.8152ms)
+✔ bounded exploration enters a few new rooms beyond the edge of the map, then comes home, and the map is kept after a fall (1283.6242ms)
+✔ a kill pays once, a pickup is taken once, and the cache is carried like any find (4.0563ms)
+✔ authored pickups lie on open floor, inside their rooms, and are not starter kit (1.1901ms)
+✔ a full Old Road walk carries the kills and finds, and extraction banks them exactly once (560.4295ms)
+✔ a death banks nothing and leaves the carried loot in one cache where the adventurer fell (157.4624ms)
+✔ a death carrying nothing leaves no ghost marker and does not disturb an earlier cache (33.2408ms)
+✔ only one cache exists: a new death before recovery replaces the old one, and what it held is lost for good (110.8925ms)
+✔ recovering the cache and getting home secures it once; dying again after the pickup carries it forward without duplicating it (153.7396ms)
+✔ an expedition that is not over (extraction blocked) is not settled: nothing is banked or lost (234.7242ms)
+✔ a boss defeated before a death stays defeated, and the death still leaves a cache (155.5225ms)
+✔ starter kit never enters a bank or a cache, and a broken save is refused (330.2223ms)
+✔ a settled save survives export, reload and a second expedition without drifting (1353.4252ms)
+✔ prefs: defaults, damaged text, out-of-range volumes and a store that remembers (4.3151ms)
+✔ prefs: reduced motion follows the system until the player chooses (0.6325ms)
+✔ history: newest first, one entry per run id, never more than twenty, damaged text reads as empty (422.6909ms)
+✔ history: stored text stays under the byte cap even with large Chronicles (583.5203ms)
+✔ glossary: unique ids, every term has a short meaning, and the feed vocabulary is covered (0.844ms)
+✔ guide: six short screens, each a title and a few plain sentences (0.5129ms)
+✔ audio: every intent kind either maps to a cue or is declared silent (1.0044ms)
+✔ audio: the texts the expedition actually writes pick the right cue (0.4561ms)
+✔ audio: every cue points at a shipped file, has a label, and fires its visual pair with sound off (2.4007ms)
+✔ all five music slots and semantic sound keys are unique (2.1296ms)
+✔ only confirmed simulator event text triggers defence and contact cues (1.2936ms)
+✔ combat detail equals the simulator tick by tick (162.11ms)
+✔ the adventurer attack arc uses its own effective move numbers (17.7036ms)
+✔ reading the adapter never changes the run (109.7259ms)
+✔ the build block quotes the simulator numbers for all 18 stats (1.6109ms)
+✔ the visual study never sets combat detail (0.811ms)
+✔ a shield cue needs a rise in the simulator totals, and a new fight restarts the baseline (0.5149ms)
+✔ states run ready, travelling, fighting, travelling, completed and the controller never picks a tactic (154.0165ms)
+✔ detection hands the current positions to the simulator (12.076ms)
+✔ after a win travel resumes from the simulator position and finishes (36.4256ms)
+✔ an enemy that cannot see the route is never fought and traversal still completes (15.9281ms)
+✔ death stops travel (10.5919ms)
+✔ a fight that runs past its tick cap is unresolved and travel stops (12.305ms)
+✔ no route reports unresolved instead of walking through a solid (5.1148ms)
+✔ the same configuration always produces the same run (121.252ms)
+✔ when one enemy sees the adventurer its ally within the alert radius joins the same fight (113.7735ms)
+✔ an ally outside the alert radius stays out, then starts a second fight with the carried-over health (140.8608ms)
+✔ a pair that cannot see the route is never fought (10.2384ms)
+✔ death in a pair fight stops travel and reports one fight (8.7592ms)
+✔ pair runs are deterministic (126.6021ms)
+✔ the adapter reports every enemy and idles the ones outside the fight (11.0907ms)
+✔ O1 keeps the 480x440 floor, a pillar at (10,-125) and one manifest for every consumer (3.2575ms)
+✔ north and south boundaries are continuous across the whole room (5.1246ms)
+✔ west and east openings are 174 wide and leave clearance for a radius-13 body along the road (1.5051ms)
+✔ route bends around the pillar and never touches it (22.9635ms)
+✔ route is deterministic and reports no route into a solid (44.1095ms)
+✔ sight is blocked by the pillar and limited by range and arc (1.0797ms)
+✔ O1 results and digests are identical to the recorded golden runs (5697.9927ms)
+✔ a dodge into the north wall stops at the wall (15.3253ms)
+✔ a dodge toward the pillar never enters it (5.91ms)
+✔ an enemy lunge toward the pillar stops at the pillar (6.2834ms)
+✔ body separation cannot push a fighter through a wall (10.4797ms)
+✔ no fighter is ever inside a solid across whole fights (345.5259ms)
+✔ a melee hit does not land through the pillar, but does without it (4.0356ms)
+✔ legacy circular-arena fights are unchanged (32370.3709ms)
+✔ every manifest encounter keeps its enemies on the floor, clear of solids, away from the entry and close enough to be a group (6.4249ms)
+✔ a headless Old Road expedition and its fights stay inside the time budget (3522.4898ms)
+✔ the built JavaScript stays inside the gzip budget (needs a build; skipped when dist is absent) (928.3677ms)
+✔ portable sin, cos and atan2 match the native functions to within 2 ulp (83.2522ms)
+✔ portable exp, hypot and pow agree with the native functions (65.2284ms)
+✔ portable trig keeps its symmetries and special values (4.6082ms)
+✔ the portable block is identical in every copy (297.465ms)
+✔ simulator and sim-feeding world code use no engine-dependent Math (24.493ms)
+✔ the level table rises, is clamped, and says which rows were measured (2.5475ms)
+✔ experience: kills pay in full, a leg that cost health adds at most a quarter, and levels follow the thresholds (0.7356ms)
+✔ a Progress starting above level 1 holds at least that level of experience (0.2918ms)
+✔ upgrades are three, temporary, and only add stat points (1.2307ms)
+✔ Ledger: kit rations are drunk first, then found ones, and neither is loot (0.5715ms)
+✔ without progression nothing changes: no progress block and fixed level (228.0399ms)
+✔ a run with progression carries a progress block and is deterministic (171.2305ms)
+✔ levels apply at arrival, never mid-fight: every level-up is logged against a tick, and the next leg starts from the new level (55.3758ms)
+✔ experience, level and upgrade never reach the save: a settled expedition keeps no progression (92.0503ms)
+✔ a fall banks nothing and the level goes with it (51.9985ms)
+✔ drinking rule: with the drink setting at 0 no ration is ever drunk (1360.7886ms)
+✔ drinking rule: every drink is logged with its cause, spaced by the drinking time, and only below the threshold (15388.267ms)
+✔ starter rations are not loot: they never appear in the bank, the carried bundle or a cache (5452.7477ms)
+✔ healing reserve: a plan that keeps rations heads home once they are down to the reserve (280.2464ms)
+✔ the sanctuary exists once, near S2, inside the room (0.9833ms)
+✔ sanctuary: one upgrade and one rest per expedition, from the plan default, never touching the ledger (4499.4757ms)
+✔ sanctuary default choice is respected for each upgrade (8148.6435ms)
+✔ different plans give different runs, the same plan the same run (322.4065ms)
+✔ the simulator carries stamina and poise into a fight, and a legacy fight starts full (5.7329ms)
+✔ after a retreat order the adventurer starts no attack, and the fight ends only by escape or a fall (432.8578ms)
+✔ a retreat is not invulnerable: hit hard enough on the way out, the adventurer still falls (213.4301ms)
+✔ an order the simulator cannot use is refused, and leaving ends a fight with no winner (0.7154ms)
+✔ a retreat from a fight ends the leg at the chosen door, escaped, with survivors back at their posts and the dead staying dead (29.8729ms)
+✔ a revisit is a fresh contact: survivors of an escaped fight see the adventurer again (37.1404ms)
+✔ a retreat is refused for an unknown door and when no route exists (9.0136ms)
+✔ while walking, a retreat order just turns the adventurer round (11.3268ms)
+✔ a retreat order given in the middle of a fight disengages first, then withdraws the permitted way home (79.8231ms)
+✔ the health threshold fires inside a fight, not only at doorways (93.6178ms)
+✔ with a retreat setting the adventurer survives far more often, and with none it does not (200-seed comparison) (28901.0937ms)
+✔ a retreat with no permitted way home is reported as blocked, never crosses the avoided room, and does not stop the fight (2.1506ms)
+✔ stamina and poise carry between rooms and recover while walking (418.2391ms)
+✔ a retreat ordered while still at camp ends the expedition at once, extracted once (26.145ms)
+✔ every contract encounter is a simulator encounter with the same archetypes in the same order (3.02ms)
+✔ every roster enemy has a kill reward, and the miniboss and boss are the only bosses (0.5125ms)
+✔ the sim is deterministic for every new encounter, and a different seed changes the fight (299.3643ms)
+✔ fights end, and nobody ends outside the room, in every authored room that holds a roster enemy (721.7878ms)
+✔ spit leaves a warned patch of ground, and the legacy encounters never make one (89.0748ms)
+✔ the warden and the castellan pay once, report themselves as defeated bosses, and nothing else does (188.679ms)
+✔ a boss fights alone, and a boss that is left comes back at full health (42.4013ms)
+✔ a save survives a round trip exactly, whatever the key order (6.4202ms)
+✔ a changed or cut-short save is refused with a reason (1.0541ms)
+✔ a newer version is refused and an older one is migrated (0.9962ms)
+✔ a version 1 save migrates to version 2: banked keys move into the bank and nothing else changes (0.7961ms)
+✔ structurally wrong documents are named, not trusted (0.7293ms)
+✔ invariants catch negative money, bad counts, duplicate rooms and bad keys (0.6736ms)
+✔ persist refuses a broken state and does not touch the store (1.7401ms)
+✔ a missing save starts fresh and a damaged one starts fresh with the reason, without overwriting it (0.5232ms)
+✔ storage that throws never breaks saving; the save stays in memory and the store says it is degraded (0.8093ms)
+✔ import writes once, only when the whole text is valid (0.6791ms)
+✔ the committed room files are exactly what the generator produces (71.0091ms)
+✔ the world has the 17 rooms and 19 links of the slice schedule (0.2547ms)
+✔ every link has a door in both rooms, 174 wide, on the wall that faces the neighbour (0.3987ms)
+✔ doors sit inside their wall with solid wall at both ends and between doors (0.3382ms)
+✔ a radius-13 body can walk the centre line of every door and the room between every pair of doors (456.6296ms)
+✔ solids stay inside the bounds and the floor matches the schedule (0.3857ms)
+✔ O1 keeps the values it had before the generator (0.1914ms)
+✔ the world graph loads, finds neighbours and paths, and keeps gated links closed (8.0969ms)
+✔ the world graph rejects bad files with readable reasons (0.8871ms)
+✔ every room except camp is authored, and the unbuilt special pocket says it is out of the slice (1.5879ms)
+✔ each authored room names exactly the encounters the contract plans for it, with the contract enemies in order (0.4437ms)
+✔ no elite pairs; the miniboss and the boss fight alone in a room with one door that is the way in (0.2019ms)
+✔ spawns stand on open floor, face a real heading, keep 110 units apart and 110 from every door (0.8447ms)
+✔ cover is where the encounters need it: the ranged rooms have solids between the spawns and the doors (0.5116ms)
+✔ the line from the way in to the way out stays clear of cover by 80 units, so a fight there has a 160-wide lane (1.2029ms)
+✔ solids lie inside the room and never block a doorway (2.0752ms)
+✔ with every gate closed, camp still reaches both key sources and the Ossuary; each gate then opens the room behind it (10.2932ms)
+✔ doc 22 section 6: a key source is reachable without spending a key, in every gate state (0.7697ms)
+✔ the pickups in the new rooms are what each purpose line asks for (0.4217ms)
+✔ the walk follows the graph path out and back and ends at the camp centre (78.1219ms)
+✔ the adventurer never jumps: walking steps stay within walking speed, across rooms and passages (501.8635ms)
+✔ a killed enemy stays dead for the rest of the walk (56.4735ms)
+✔ health carries between rooms and a fall ends the walk where it happened (69.8754ms)
+✔ the walk is deterministic, and the seed changes the fights (101.4924ms)
+✔ rooms without encounters are empty and unknown encounters are refused (48.2806ms)
+✔ the walk can turn at any room and start at any room (11.5114ms)
+✔ the walking-expedition results and digests are identical to the recorded golden runs (811.2233ms)
+ℹ tests 218
+ℹ suites 0
+ℹ pass 218
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 50411.8675
+
+Checking simulator regression
+identical 2340, different 0
+
+Checking legacy arena
+identical 78, different 0
+
+Checking browser tests
+
+> idle-souls-visual-proof@0.1.0 test:browser
+> playwright test
+
+[WebServer] (node:6404) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 66 tests using 1 worker
+
+(node:20272) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\browser\audio.spec.ts:3:1 › O1 audio is user-unlocked, all music is lazily selectable and sound files are served (3.6s)
+  ok  2 tests\browser\expedition.spec.ts:12:3 › plan, launch and read the Chronicle at 1280x720 (3.2s)
+  ok  3 tests\browser\expedition.spec.ts:12:3 › plan, launch and read the Chronicle at 390x844 (3.0s)
+  ok  4 tests\browser\expedition.spec.ts:12:3 › plan, launch and read the Chronicle at 844x390 (3.0s)
+  ok  5 tests\browser\expedition.spec.ts:36:1 › the page and Node produce the same Chronicle for the same plan (4.0s)
+  ok  6 tests\browser\expedition.spec.ts:52:1 › browser and Node agree on expeditions across plans and seeds (7.5s)
+  ok  7 tests\browser\expedition.spec.ts:72:1 › avoiding the objective room is a conflict and launch stays off; removing the avoid clears it (3.5s)
+  ok  8 tests\browser\expedition.spec.ts:83:1 › a retreat order starts at once, is logged as manual, and suspends the objectives (5.1s)
+  ok  9 tests\browser\expedition.spec.ts:96:1 › the fresh map offers only what is on it and a preset drops places it cannot reach (2.7s)
+  ok 10 tests\browser\expedition.spec.ts:109:1 › a returning expedition banks its loot once, and the camp shows it next time (3.0s)
+  ok 11 tests\browser\expedition.spec.ts:126:1 › a fall leaves one cache, the camp warns about it, and a recover objective brings it home (3.0s)
+  ok 12 tests\browser\expedition.spec.ts:143:1 › the save can be exported and imported, and a damaged save is refused (2.9s)
+  ok 13 tests\browser\expedition.spec.ts:153:1 › a new game starts in fog: only the Outer Road can be chosen, and walking it opens up the map (3.0s)
+  ok 14 tests\browser\expedition.spec.ts:172:1 › a banked key opens a gate only when issued; the gate then stays open and costs nothing again (4.2s)
+  ok 15 tests\browser\expedition.spec.ts:202:3 › progression controls, level line and Chronicle progress at 1280x720 (4.4s)
+  ok 16 tests\browser\expedition.spec.ts:202:3 › progression controls, level line and Chronicle progress at 390x844 (3.6s)
+  ok 17 tests\browser\expedition.spec.ts:202:3 › progression controls, level line and Chronicle progress at 844x390 (3.5s)
+  ok 18 tests\browser\expedition.spec.ts:226:1 › progress=0 hides the progression controls and keeps the fixed level field (2.8s)
+  ok 19 tests\browser\expedition.spec.ts:234:1 › browser and Node agree on boss expeditions: first clears, a rematch, the Castellan and an abandoned fight (5.9s)
+  ok 20 tests\browser\expedition.spec.ts:255:1 › a boss is challenged on purpose, cleared once, persisted, and then offered as an opt-in rematch (4.5s)
+  ok 21 tests\browser\m9.spec.ts:11:1 › the Chronicle screen shows route, decisions with causes, gains, keys, loot fate and what stays (3.0s)
+  ok 22 tests\browser\m9.spec.ts:28:1 › a fall names its cause from the simulator (3.0s)
+  ok 23 tests\browser\m9.spec.ts:40:1 › finished expeditions are listed, reopened, bounded to twenty, and kept apart from the save (3.4s)
+  ok 24 tests\browser\m9.spec.ts:62:1 › the Help and history buttons are off while an expedition is out, so a press cannot drop it (3.0s)
+  ok 25 tests\browser\m9.spec.ts:81:1 › camp map: tap picks a room and adds an objective; Avoid works by button, by long press and from the list (4.1s)
+  ok 26 tests\browser\m9.spec.ts:113:1 › camp map: the keyboard moves between rooms, and an edge room offers Explore from here (2.9s)
+  ok 27 tests\browser\m9.spec.ts:132:1 › camp map: the route preview shows its three states in words (3.1s)
+  ok 28 tests\browser\m9.spec.ts:146:1 › the first-run guide shows one screen at a time, can be skipped, and does not come back (3.1s)
+  ok 29 tests\browser\m9.spec.ts:166:1 › the glossary drawer defines the terms the feed uses (2.6s)
+  ok 30 tests\browser\m9.spec.ts:173:1 › the stored onboarding flag survives a reload in normal storage (7.5s)
+  ok 31 tests\browser\m9.spec.ts:188:1 › larger text and reduced motion are stored and applied (7.8s)
+  ok 32 tests\browser\m9.spec.ts:209:1 › reduced motion follows the system setting when the player says nothing (2.7s)
+  ok 33 tests\browser\m9.spec.ts:216:1 › audio is off until Enable audio; every cue has a visual pair; volumes are independent (3.1s)
+  ok 34 tests\browser\m9.spec.ts:241:1 › a fall and a return each raise a cue with a visual line (2.9s)
+  ok 35 tests\browser\m9.spec.ts:287:1 › audit: names on controls, labels on inputs, heading order and unique ids on every screen (3.3s)
+  ok 36 tests\browser\m9.spec.ts:304:1 › audit: the guide screen has a valid structure too (2.7s)
+  ok 37 tests\browser\m9.spec.ts:309:1 › keyboard: Tab reaches the planner controls in order with a visible focus ring, and Enter and Space press buttons (2.9s)
+  ok 38 tests\browser\m9.spec.ts:329:1 › keyboard: the details drawers open and close with Enter and Escape on the map selection (2.8s)
+  ok 39 tests\browser\m9.spec.ts:339:1 › no signal is colour only: gates, avoid, danger and low health carry a mark or pattern (3.0s)
+  ok 40 tests\browser\m9.spec.ts:374:3 › layout at 390x844: no sideways scroll, no clipped controls, 44px targets, readable text (2.9s)
+  ok 41 tests\browser\m9.spec.ts:374:3 › layout at 844x390: no sideways scroll, no clipped controls, 44px targets, readable text (3.1s)
+  ok 42 tests\browser\m9.spec.ts:374:3 › layout at 360x640: no sideways scroll, no clipped controls, 44px targets, readable text (2.8s)
+  ok 43 tests\browser\m9.spec.ts:374:3 › layout at 768x1024: no sideways scroll, no clipped controls, 44px targets, readable text (2.9s)
+  ok 44 tests\browser\m9.spec.ts:374:3 › layout at 1280x720: no sideways scroll, no clipped controls, 44px targets, readable text (3.0s)
+  ok 45 tests\browser\m9.spec.ts:409:1 › layout with larger text at 360x640 still has no sideways scroll or clipped control (2.7s)
+  ok 46 tests\browser\o1.spec.ts:13:3 › O1 dispatch matches the Node run at 1280x720 (6.2s)
+  ok 47 tests\browser\o1.spec.ts:13:3 › O1 dispatch matches the Node run at 390x844 (4.6s)
+  ok 48 tests\browser\o1.spec.ts:13:3 › O1 dispatch matches the Node run at 844x390 (4.3s)
+  ok 49 tests\browser\o1.spec.ts:48:1 › browser and Node agree on seeded O1 runs across opponents and doctrines (4.8s)
+  ok 50 tests\browser\o1.spec.ts:57:1 › browser and Node agree on the walking expedition from camp to the Broken Causeway and back (5.2s)
+  ok 51 tests\browser\o1.spec.ts:71:1 › the visual study and its scenes still load without the O1 scene (3.7s)
+  ok 52 tests\browser\o1.spec.ts:79:3 › combat tabs show the simulator's numbers at 1280x720 (5.2s)
+  ok 53 tests\browser\o1.spec.ts:79:3 › combat tabs show the simulator's numbers at 390x844 (4.1s)
+  ok 54 tests\browser\o1.spec.ts:79:3 › combat tabs show the simulator's numbers at 844x390 (4.1s)
+  ok 55 tests\browser\o1.spec.ts:113:1 › combat cues can be turned off and the run does not change (3.6s)
+  ok 56 tests\browser\o1.spec.ts:122:3 › zoom buttons and the action cam work at 1280x720 (9.1s)
+  ok 57 tests\browser\o1.spec.ts:122:3 › zoom buttons and the action cam work at 390x844 (6.2s)
+  ok 58 tests\browser\o1.spec.ts:122:3 › zoom buttons and the action cam work at 844x390 (5.8s)
+  ok 59 tests\browser\o1.spec.ts:154:1 › ?cam=action opens in the action camera (3.4s)
+  ok 60 tests\browser\o1.spec.ts:160:1 › a pair runs from the page and matches the Node run (6.9s)
+[perf] 16x run: 11.1 s wall, {"longTasks":1,"longest":82,"frames":793,"medianFrame":16.699999999999818,"p95Frame":16.799999999999272,"worstFrame":316.60000000000014}
+  ok 61 tests\browser\perf.spec.ts:7:1 › at 16x the screen stays smooth: few long tasks, none over the budget (14.1s)
+[perf] heap after 3 expeditions 23.6 MB, after 20 24.2 MB, growth 2.5%
+  ok 62 tests\browser\perf.spec.ts:33:1 › twenty expeditions in one page do not grow the heap without bound (7.6s)
+  ok 63 tests\browser\preview.spec.ts:3:3 › render and operate visual controls at 1280x720 (4.0s)
+  ok 64 tests\browser\preview.spec.ts:3:3 › render and operate visual controls at 390x844 (3.5s)
+  ok 65 tests\browser\preview.spec.ts:3:3 › render and operate visual controls at 844x390 (3.4s)
+  ok 66 tests\browser\preview.spec.ts:38:1 › calibration contains eight authored guard views and no missing frames (2.8s)
+
+  66 passed (4.7m)
+
+All baseline checks passed.

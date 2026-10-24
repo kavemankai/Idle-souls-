@@ -1,0 +1,31 @@
+{
+  "config": {
+    "appId": "io.github.kavemankai.idlesouls",
+    "appName": "Idle Souls",
+    "webDir": "dist-player",
+    "backgroundColor": "#121f1d",
+    "android": {
+      "allowMixedContent": false,
+      "backgroundColor": "#121f1d"
+    },
+    "plugins": {
+      "SystemBars": {
+        "insetsHandling": "css",
+        "initialViewportFitValueHint": "cover",
+        "style": "DARK"
+      }
+    }
+  },
+  "scripts": [
+    {
+      "FullName": "assets/public/assets/index-B_pGNdL2.js",
+      "Length": 262877
+    },
+    {
+      "FullName": "assets/public/assets/web-BJCXxS8C.js",
+      "Length": 844
+    }
+  ],
+  "embeddedMusicBytes": 166313,
+  "sha256": "A4C2841BA192A7ECDFB063FD1154F1BB2AAB4BA87D947E3EFAA8EC5E762888B6"
+}

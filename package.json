@@ -4,8 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "check": "tsx tools/check.ts",
     "dev": "vite --host 0.0.0.0",
     "build": "npm run typecheck && vite build",
+    "build:player": "npm run typecheck && vite build --mode player",
+    "dev:player": "vite --mode player --host 0.0.0.0",
+    "android:sync": "npm run build:player && cap sync android",
+    "android:debug": "npm run android:sync && tsx tools/android-build.ts debug",
+    "android:release": "npm run android:sync && tsx tools/android-build.ts release",
     "preview": "vite preview --host 0.0.0.0",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src tests tools --no-error-on-unmatched-pattern",
@@ -24,12 +30,17 @@
     "report:o1": "tsx tools/o1-report.ts",
     "report:retreat": "tsx tools/retreat-report.ts",
     "world:build": "tsx tools/world/build-rooms.ts --write",
-    "world:check": "tsx tools/world/build-rooms.ts --check"
+    "world:check": "tsx tools/world/build-rooms.ts --check",
+    "test:player": "npm run build:player && playwright test --config playwright.player.config.ts"
   },
   "dependencies": {
+    "@capacitor/android": "8.5.3",
+    "@capacitor/app": "8.1.2",
+    "@capacitor/core": "8.5.3",
     "phaser": "4.2.1"
   },
   "devDependencies": {
+    "@capacitor/cli": "8.5.3",
     "@eslint/js": "10.0.1",
     "@playwright/test": "1.64.1",
     "@types/node": "26.6.5",

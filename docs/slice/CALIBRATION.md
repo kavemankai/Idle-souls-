@@ -1,4 +1,5 @@
 # Calibration of the level table against the whole roster
+> Historical analysis. The pacing harness predated explicit boss challenges and persisted boss-clear inputs. [The release baseline](../release/BASELINE.md) records the corrected harness and new, limited samples. Do not treat the old campaign rows as evidence about the current boss flow or release balance.
 
 Branch `claude/calibration`, built on the M0 to M7 integration head (20ca3f5). Nothing in the simulator, enemy stats, hero offense, world runner, UI or rooms was changed. The only code that changed is `src/progression/levelTable.ts` (rows and a new `ROOM_ARRIVAL` table) and new tools. Raw numbers are in `docs/slice/CALIBRATION_NUMBERS.md` (generated) and `docs/slice/data/*.json`.
 

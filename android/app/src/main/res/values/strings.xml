@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Idle Souls</string>
+    <string name="title_activity_main">Idle Souls</string>
+    <string name="package_name">io.github.kavemankai.idlesouls</string>
+    <string name="custom_url_scheme">io.github.kavemankai.idlesouls</string>
+</resources>

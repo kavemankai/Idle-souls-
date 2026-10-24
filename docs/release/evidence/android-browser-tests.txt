@@ -1,0 +1,116 @@
+
+> idle-souls-visual-proof@0.1.0 test:browser
+> playwright test
+
+[WebServer] (node:13136) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 67 tests using 1 worker
+
+(node:2888) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   1 tests\browser\audio.spec.ts:3:1 › O1 audio is user-unlocked, all music is lazily selectable and sound files are served (33.6s)
+(node:23436) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  2 tests\browser\expedition.spec.ts:12:3 › plan, launch and read the Chronicle at 1280x720 (2.3s)
+  ok  3 tests\browser\expedition.spec.ts:12:3 › plan, launch and read the Chronicle at 390x844 (3.0s)
+  ok  4 tests\browser\expedition.spec.ts:12:3 › plan, launch and read the Chronicle at 844x390 (4.2s)
+  ok  5 tests\browser\expedition.spec.ts:36:1 › the page and Node produce the same Chronicle for the same plan (3.9s)
+  ok  6 tests\browser\expedition.spec.ts:52:1 › browser and Node agree on expeditions across plans and seeds (8.7s)
+  ok  7 tests\browser\expedition.spec.ts:72:1 › avoiding the objective room is a conflict and launch stays off; removing the avoid clears it (2.8s)
+  ok  8 tests\browser\expedition.spec.ts:83:1 › a retreat order starts at once, is logged as manual, and suspends the objectives (5.2s)
+  ok  9 tests\browser\expedition.spec.ts:96:1 › the fresh map offers only what is on it and a preset drops places it cannot reach (2.9s)
+  ok 10 tests\browser\expedition.spec.ts:109:1 › a returning expedition banks its loot once, and the camp shows it next time (2.8s)
+  ok 11 tests\browser\expedition.spec.ts:126:1 › a fall leaves one cache, the camp warns about it, and a recover objective brings it home (2.9s)
+  ok 12 tests\browser\expedition.spec.ts:143:1 › the save can be exported and imported, and a damaged save is refused (2.6s)
+  ok 13 tests\browser\expedition.spec.ts:153:1 › a new game starts in fog: only the Outer Road can be chosen, and walking it opens up the map (2.5s)
+  ok 14 tests\browser\expedition.spec.ts:172:1 › a banked key opens a gate only when issued; the gate then stays open and costs nothing again (2.6s)
+  ok 15 tests\browser\expedition.spec.ts:202:3 › progression controls, level line and Chronicle progress at 1280x720 (2.9s)
+  ok 16 tests\browser\expedition.spec.ts:202:3 › progression controls, level line and Chronicle progress at 390x844 (3.5s)
+  ok 17 tests\browser\expedition.spec.ts:202:3 › progression controls, level line and Chronicle progress at 844x390 (3.0s)
+  ok 18 tests\browser\expedition.spec.ts:226:1 › progress=0 hides the progression controls and keeps the fixed level field (2.3s)
+  ok 19 tests\browser\expedition.spec.ts:234:1 › browser and Node agree on boss expeditions: first clears, a rematch, the Castellan and an abandoned fight (5.5s)
+  ok 20 tests\browser\expedition.spec.ts:255:1 › a boss is challenged on purpose, cleared once, persisted, and then offered as an opt-in rematch (4.9s)
+  ok 21 tests\browser\lifecycle.spec.ts:3:1 › background and Back pause the live run without discarding it or accumulating ticks (4.2s)
+  ok 22 tests\browser\m9.spec.ts:11:1 › the Chronicle screen shows route, decisions with causes, gains, keys, loot fate and what stays (2.9s)
+  ok 23 tests\browser\m9.spec.ts:28:1 › a fall names its cause from the simulator (3.0s)
+  ok 24 tests\browser\m9.spec.ts:40:1 › finished expeditions are listed, reopened, bounded to twenty, and kept apart from the save (3.6s)
+  ok 25 tests\browser\m9.spec.ts:62:1 › the Help and history buttons are off while an expedition is out, so a press cannot drop it (3.8s)
+  ok 26 tests\browser\m9.spec.ts:81:1 › camp map: tap picks a room and adds an objective; Avoid works by button, by long press and from the list (6.2s)
+  ok 27 tests\browser\m9.spec.ts:113:1 › camp map: the keyboard moves between rooms, and an edge room offers Explore from here (7.3s)
+  ok 28 tests\browser\m9.spec.ts:132:1 › camp map: the route preview shows its three states in words (3.8s)
+  ok 29 tests\browser\m9.spec.ts:146:1 › the first-run guide shows one screen at a time, can be skipped, and does not come back (4.5s)
+  ok 30 tests\browser\m9.spec.ts:166:1 › the glossary drawer defines the terms the feed uses (3.5s)
+  ok 31 tests\browser\m9.spec.ts:173:1 › the stored onboarding flag survives a reload in normal storage (8.1s)
+  ok 32 tests\browser\m9.spec.ts:188:1 › larger text and reduced motion are stored and applied (8.9s)
+  ok 33 tests\browser\m9.spec.ts:209:1 › reduced motion follows the system setting when the player says nothing (3.2s)
+  ok 34 tests\browser\m9.spec.ts:216:1 › audio is off until Enable audio; every cue has a visual pair; volumes are independent (4.1s)
+  ok 35 tests\browser\m9.spec.ts:241:1 › a fall and a return each raise a cue with a visual line (2.9s)
+  ok 36 tests\browser\m9.spec.ts:287:1 › audit: names on controls, labels on inputs, heading order and unique ids on every screen (3.2s)
+  ok 37 tests\browser\m9.spec.ts:304:1 › audit: the guide screen has a valid structure too (2.6s)
+  ok 38 tests\browser\m9.spec.ts:309:1 › keyboard: Tab reaches the planner controls in order with a visible focus ring, and Enter and Space press buttons (2.9s)
+  ok 39 tests\browser\m9.spec.ts:329:1 › keyboard: the details drawers open and close with Enter and Escape on the map selection (3.1s)
+  ok 40 tests\browser\m9.spec.ts:339:1 › no signal is colour only: gates, avoid, danger and low health carry a mark or pattern (3.5s)
+  ok 41 tests\browser\m9.spec.ts:374:3 › layout at 390x844: no sideways scroll, no clipped controls, 44px targets, readable text (3.7s)
+  ok 42 tests\browser\m9.spec.ts:374:3 › layout at 844x390: no sideways scroll, no clipped controls, 44px targets, readable text (3.5s)
+  ok 43 tests\browser\m9.spec.ts:374:3 › layout at 360x640: no sideways scroll, no clipped controls, 44px targets, readable text (4.5s)
+  ok 44 tests\browser\m9.spec.ts:374:3 › layout at 768x1024: no sideways scroll, no clipped controls, 44px targets, readable text (5.1s)
+  ok 45 tests\browser\m9.spec.ts:374:3 › layout at 1280x720: no sideways scroll, no clipped controls, 44px targets, readable text (4.3s)
+  ok 46 tests\browser\m9.spec.ts:409:1 › layout with larger text at 360x640 still has no sideways scroll or clipped control (3.1s)
+  ok 47 tests\browser\o1.spec.ts:13:3 › O1 dispatch matches the Node run at 1280x720 (9.1s)
+  ok 48 tests\browser\o1.spec.ts:13:3 › O1 dispatch matches the Node run at 390x844 (5.8s)
+  ok 49 tests\browser\o1.spec.ts:13:3 › O1 dispatch matches the Node run at 844x390 (5.7s)
+  ok 50 tests\browser\o1.spec.ts:48:1 › browser and Node agree on seeded O1 runs across opponents and doctrines (5.6s)
+  ok 51 tests\browser\o1.spec.ts:57:1 › browser and Node agree on the walking expedition from camp to the Broken Causeway and back (6.9s)
+  ok 52 tests\browser\o1.spec.ts:71:1 › the visual study and its scenes still load without the O1 scene (4.0s)
+  ok 53 tests\browser\o1.spec.ts:79:3 › combat tabs show the simulator's numbers at 1280x720 (5.2s)
+  ok 54 tests\browser\o1.spec.ts:79:3 › combat tabs show the simulator's numbers at 390x844 (4.2s)
+  ok 55 tests\browser\o1.spec.ts:79:3 › combat tabs show the simulator's numbers at 844x390 (3.7s)
+  ok 56 tests\browser\o1.spec.ts:113:1 › combat cues can be turned off and the run does not change (3.7s)
+  ok 57 tests\browser\o1.spec.ts:122:3 › zoom buttons and the action cam work at 1280x720 (9.2s)
+  ok 58 tests\browser\o1.spec.ts:122:3 › zoom buttons and the action cam work at 390x844 (6.3s)
+  ok 59 tests\browser\o1.spec.ts:122:3 › zoom buttons and the action cam work at 844x390 (5.9s)
+  ok 60 tests\browser\o1.spec.ts:154:1 › ?cam=action opens in the action camera (3.3s)
+  ok 61 tests\browser\o1.spec.ts:160:1 › a pair runs from the page and matches the Node run (6.9s)
+[perf] 16x run: 11.1 s wall, {"longTasks":1,"longest":85,"frames":794,"medianFrame":16.699999999999818,"p95Frame":16.799999999999272,"worstFrame":250}
+  ok 62 tests\browser\perf.spec.ts:7:1 › at 16x the screen stays smooth: few long tasks, none over the budget (14.2s)
+[perf] heap after 3 expeditions 23.6 MB, after 20 24.2 MB, growth 2.3%
+  ok 63 tests\browser\perf.spec.ts:33:1 › twenty expeditions in one page do not grow the heap without bound (7.7s)
+  ok 64 tests\browser\preview.spec.ts:3:3 › render and operate visual controls at 1280x720 (4.4s)
+  ok 65 tests\browser\preview.spec.ts:3:3 › render and operate visual controls at 390x844 (3.7s)
+  ok 66 tests\browser\preview.spec.ts:3:3 › render and operate visual controls at 844x390 (3.3s)
+  ok 67 tests\browser\preview.spec.ts:38:1 › calibration contains eight authored guard views and no missing frames (2.8s)
+
+
+  1) tests\browser\audio.spec.ts:3:1 › O1 audio is user-unlocked, all music is lazily selectable and sound files are served
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.waitForResponse: Test timeout of 30000ms exceeded.
+
+       9 |   await expect(page.locator('#audio-enable')).toHaveAttribute('aria-pressed', 'false');
+      10 |   await Promise.all([
+    > 11 |     page.waitForResponse(r => r.url().endsWith('/audio/music/whispers.ogg') && r.status() === 200),
+         |          ^
+      12 |     page.locator('#audio-enable').click(),
+      13 |   ]);
+      14 |   await expect(page.locator('#audio-enable')).toHaveAttribute('aria-pressed', 'true');
+        at C:\Users\kyler\Documents\Codex\2026-10-24\https-github-com-kavemankai-idle-souls-3\Idle-souls\tests\browser\audio.spec.ts:11:10
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\audio-O1-audio-is-user-unl-8b850--and-sound-files-are-served\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\audio-O1-audio-is-user-unl-8b850--and-sound-files-are-served\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\audio-O1-audio-is-user-unl-8b850--and-sound-files-are-served\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\audio-O1-audio-is-user-unl-8b850--and-sound-files-are-served\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests\browser\audio.spec.ts:3:1 › O1 audio is user-unlocked, all music is lazily selectable and sound files are served
+  66 passed (5.7m)
