@@ -48,6 +48,8 @@ export interface WorldRunConfig {
    * upgrades change it, and a new level applies at the next arrival in a room. Absent: the fixed `level`, exactly as before.
    */
   progress?: Progress;
+  /** Earned camp bonuses, absent in unchanged baseline runs. */
+  permanentBonus?: Readonly<Record<string, number>>;
   /** Starter-kit rations (not loot: never banked or cached) and the health share below which the adventurer drinks one when no enemy is near. 0 turns drinking off. */
   kitRations?: number; drinkBelowPct?: number;
 }
@@ -196,10 +198,19 @@ export class WorldRunner {
   private manifest(id: string) { return this.manifests[id]; }
   /** The simulator level in force now: the level table's row for the current design level, or the fixed level. */
   get levelNow(): number { return this.progress ? simLevel(this.progress.level) : this.cfg.level; }
+  /** One combination point: no persistent bonus preserves the legacy stat allocation. */
+  private combinedBonus(): Readonly<Record<string, number>> {
+    const persistent = this.cfg.permanentBonus ?? {};
+    const temporary = this.progress?.statBonus() ?? {};
+    if (!Object.keys(persistent).length) return temporary;
+    const result: Record<string, number> = { ...persistent };
+    for (const [key, value] of Object.entries(temporary)) result[key] = (result[key] ?? 0) + value;
+    return result;
+  }
   /** Recompute stats, walking speed and (with progression) maximum health, keeping the share of health. Called on arrival, never mid-fight. */
   private refreshStats() {
     const stats = this.sim.allocate(this.levelNow, this.cfg.focus, this.cfg.seed);
-    for (const [k, n] of Object.entries(this.progress?.statBonus() ?? {})) stats[k] = Math.min(20, (stats[k] ?? 1) + n);
+    for (const [k, n] of Object.entries(this.combinedBonus())) stats[k] = Math.min(20, (stats[k] ?? 1) + n);
     this.derived = this.sim.derive(stats, false);
     this.speed = this.sim.ARCH.adventurer.speed * this.derived.moveMult;
     if (this.progress && this.cfg.hpOverride === undefined && this.hpMax > 0 && this.derived.hp !== this.hpMax) {
@@ -230,7 +241,7 @@ export class WorldRunner {
     if (encounter && arch && BOSSES[arch] && (this.cfg.defeatedBosses ?? []).includes(arch) && !(this.cfg.rematchRooms ?? []).includes(room)) encounter = undefined;
     this.runner = new RoomRunner(this.sim, {
       seed: this.cfg.seed, level: this.levelNow, focus: this.cfg.focus, doctrine: this.cfg.doctrine,
-      statBonus: this.progress?.statBonus(),
+      statBonus: this.combinedBonus(),
       encounter, room: m,
       entryDoor: entry ?? undefined, exitDoor: exitDoor.id, start: at, startFace: face,
       startHp: this.hp, hpOverride: this.hpMax, carry: this.carry, defeated: this.dead.get(room), seedOffset: this.legIdx * 100003 + 100003, maxFightTicks: this.cfg.maxFightTicks,
