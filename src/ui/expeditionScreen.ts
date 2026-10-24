@@ -86,6 +86,7 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
   const durableRepo = developer ? null : playerSaveRepository();
   let durable: SaveV3 | null = null;
   let storageBlocked = !developer;
+  let dispatchPending = false, pauseAfterDispatch = false;
   let journal: ExpeditionCommandJournal | null = null;
   let activeId = '';
   let lastQueuedTick = 0, lastEventCount = 0, lastPickupCount = 0, lastRoom = '';
@@ -129,7 +130,7 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
   motionQuery?.addEventListener?.('change', applyPrefs);
   /** Skip link, settings row and the cue banner: shown on every screen. Each control is a labelled button of at least 44 px. */
   /** While an expedition is out, the buttons that would leave the screen are off, so a stray press cannot drop the run. */
-  const busy = () => view === 'run' && !!run && (!run.world.terminal || (!developer && !!durable?.activeExpedition));
+  const busy = () => dispatchPending || (view === 'run' && !!run && (!run.world.terminal || (!developer && !!durable?.activeExpedition)));
   function toolbar(): Node {
     const wrap = h('div', { id: 'tools' });
     const rerender = () => wrap.replaceChildren(...build());
@@ -291,22 +292,23 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
     renderRun();
   }
   async function launchDurable() {
-    if (!durableRepo || !durable || storageBlocked || durable.activeExpedition) return;
+    if (!durableRepo || !durable || storageBlocked || durable.activeExpedition || dispatchPending) return;
+    dispatchPending = true; pauseAfterDispatch = false;
     seed = crypto.getRandomValues(new Uint32Array(1))[0] || 1;
     const config = cfg(), candidate = startExpedition(sim, config, graph);
     const id = 'run:' + save.camp.expeditions + ':' + seed + ':' + Date.now();
     let first;
     try { first = checkpoint(id, config, candidate, []); }
-    catch (error) { saveNote = String(error); renderPlan(); return; }
+    catch (error) { dispatchPending = false; saveNote = String(error); renderPlan(); return; }
     const written = await commitDispatch(durableRepo, durable.revision, first);
-    if (!written.ok) { saveNote = 'Cannot dispatch without a durable checkpoint: ' + written.error; renderPlan(); return; }
+    if (!written.ok) { dispatchPending = false; saveNote = 'Cannot dispatch without a durable checkpoint: ' + written.error; renderPlan(); return; }
     durable = written.save; save = toLegacy(durable);
     runCfg = config; run = candidate; startedAt = save.camp.expeditions;
     activeId = id; journal = new ExpeditionCommandJournal(run);
     lastQueuedTick = 0; lastEventCount = 0; lastPickupCount = 0; lastRoom = run.world.room;
     checkpointQueue = Promise.resolve();
-    settlement = null; chronicle = null; paused = false; acc = 0; last = 0; toast = '';
-    renderRun();
+    settlement = null; chronicle = null; paused = pauseAfterDispatch; acc = 0; last = 0; toast = pauseAfterDispatch ? 'Paused by Back during dispatch.' : '';
+    dispatchPending = false; renderRun();
   }
   function resumeSavedExpedition() {
     if (!durable?.activeExpedition || !durableRepo || storageBlocked) return;
@@ -571,6 +573,7 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
     if (view === 'run' && run) { acc = 0; last = 0; syncCtl(); }
   });
   const removeBack = lifecycle.onBack(() => {
+    if (dispatchPending) { pauseAfterDispatch = true; return true; }
     const drawer = screen.querySelector<HTMLDetailsElement>('details[open]');
     if (drawer) { drawer.open = false; drawer.querySelector('summary')?.focus(); return true; }
     if (busy()) { pauseRun('Paused. Resume the expedition or retreat to camp.'); return true; }
