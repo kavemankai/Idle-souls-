@@ -14,11 +14,13 @@ function state(tick: number, heroHp: number, foeHp: number, blocks = 0, parries 
     attack: null,
   });
   const hero = fighter('Hero', heroHp, 100), foe = fighter('Mireling', foeHp, 35);
-  const combat = {
+  const combat: CombatView = {
     combatants: [hero, foe],
+    mind: { thought: '', truth: '', intent: '', parryChance: null, target: '' },
+    beliefs: [], causes: [], events: [], over: false, winner: null,
     totals: { blocks, perfects, parries, dealt: 0, taken: 0, dodges: 0, punishes: 0,
       dodgeCounters: 0, guardBreaksDealt: 0, counteredHits: 0 },
-  } as CombatView;
+  };
   return {
     room: 'O1', tick, fightKey: key, fighting: true, passage: false,
     heroHealth: hero.hp, combat,
