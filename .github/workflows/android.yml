@@ -46,10 +46,38 @@ jobs:
           done
           for apk in "$debug" "$release"; do
             unzip -Z1 "$apk" | grep -Fx 'assets/public/index.html'
-            unzip -Z1 "$apk" | grep -E '^assets/public/audio/.*[.]ogg$' | sed -n '1,3p'
+            unzip -Z1 "$apk" | grep -E '^assets/public/audio/.*[.]ogg
+          sha256sum "$debug" "$release" "$bundle"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-foundation
+          path: |
+            android/app/build/outputs/apk/debug/*.apk
+            android/app/build/outputs/apk/release/*.apk
+            android/app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+          retention-days: 14
+ | sed -n '1,3p'
+            for art in characters/runtime/adventurer.png characters/runtime/adventurer.json characters/runtime/mireling.png characters/runtime/sentry.png environments/runtime/earth.png vfx/runtime/slash.png; do
+              unzip -Z1 "$apk" | grep -Fx "assets/public/$art"
+            done
           done
           unzip -Z1 "$bundle" | grep -Fx 'base/assets/public/index.html'
-          unzip -Z1 "$bundle" | grep -E '^base/assets/public/audio/.*[.]ogg$' | sed -n '1,3p'
+          unzip -Z1 "$bundle" | grep -E '^base/assets/public/audio/.*[.]ogg
+          sha256sum "$debug" "$release" "$bundle"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-foundation
+          path: |
+            android/app/build/outputs/apk/debug/*.apk
+            android/app/build/outputs/apk/release/*.apk
+            android/app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+          retention-days: 14
+ | sed -n '1,3p'
+          for art in characters/runtime/adventurer.png characters/runtime/adventurer.json characters/runtime/mireling.png characters/runtime/sentry.png environments/runtime/earth.png vfx/runtime/slash.png; do
+            unzip -Z1 "$bundle" | grep -Fx "base/assets/public/$art"
+          done
           sha256sum "$debug" "$release" "$bundle"
       - uses: actions/upload-artifact@v4
         with:
