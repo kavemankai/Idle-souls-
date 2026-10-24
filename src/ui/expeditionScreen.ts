@@ -470,7 +470,7 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
     return order.type === 'retreat' ? 'Retreat ordered; saving before continuation.' : 'Redirect ordered; saving before continuation.';
   }
   const canvas = h('canvas', { id: 'map', width: 640, height: 420, role: 'img', 'aria-label': 'Expedition map', 'aria-describedby': 'xstatus' });
-  let feed: HTMLElement, objList: HTMLElement, status: HTMLElement, bar: HTMLElement, ctl: HTMLElement, result: HTMLElement, redirectSel: HTMLSelectElement;
+  let feed: HTMLElement, objList: HTMLElement, status: HTMLElement, ctl: HTMLElement, result: HTMLElement, redirectSel: HTMLSelectElement;
   let feedCount = 0;
   let toast = '';
   let carriedEl: HTMLElement, levelEl: HTMLElement, sanctEl: HTMLElement;
@@ -484,7 +484,6 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
     feed = h('ol', { class: 'feed', id: 'feed', role: 'log', 'aria-label': 'Intent feed', tabindex: '0' });
     objList = h('ol', { class: 'objstat', id: 'objstat' });
     status = h('p', { class: 'status', id: 'xstatus', role: 'status' });
-    bar = h('div', { class: 'hpbar' }, h('i', {}));
     carriedEl = h('p', { id: 'carried-line' });
     levelEl = h('p', { id: 'level-line' });
     sanctEl = h('p', { id: 'sanctuary-line', class: 'hint' });
@@ -503,7 +502,7 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
         h('div', { class: 'left' }, h('section', { class: 'card mapcard' },
           visualStage,
           !developer ? h('details', { id: 'expedition-map' }, h('summary', {}, 'World map and route'), canvas) : canvas,
-          status, bar, levelEl, carriedEl, sanctEl), ctl,
+          status, levelEl, carriedEl, sanctEl), ctl,
           h('section', { class: 'card' }, h('h2', {}, 'Change course'), h('p', { class: 'hint' }, 'A redirect waits for the next doorway. A retreat does not.'),
             h('div', { class: 'redirect' }, redirectSel, h('button', { type: 'button', id: 'redirect-go', onclick: () => { toast = issueOrder({ type: 'redirect', room: redirectSel.value }); draw(); } }, 'Go there first'))),
           h('section', { class: 'card' }, h('h2', {}, 'Objectives'), objList)),
@@ -515,7 +514,8 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
       void import('../presentation/expeditionVisualScene').then(({ mountExpeditionVisual }) => {
         if (generation !== visualGeneration || view !== 'run' || !visualStage.isConnected) return;
         visualStage.replaceChildren();
-        stopVisual = mountExpeditionVisual(visualStage, () => run?.world ?? null);
+        stopVisual = mountExpeditionVisual(visualStage, () => run?.world ?? null,
+          () => ({ known: run?.expedition.known ?? new Set<string>(), open: run?.expedition.openLinks ?? new Set<string>() }));
       }).catch(error => {
         if (generation === visualGeneration && visualStage.isConnected) {
           visualStage.replaceChildren(h('p', { role: 'alert' }, 'Combat art could not be loaded. The expedition map and save are still available.'));
@@ -569,9 +569,6 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
     levelEl.textContent = pg ? `Level ${pg.level} of ${MAX_DESIGN_LEVEL}${pg.xpToNext === null ? ' (highest)' : `, experience ${pg.xp} of ${pg.xpToNext}`} · rations ${w.ledger.rations} · upgrade: ${pg.sanctuary.upgrade ? upgradeById(pg.sanctuary.upgrade).name : 'none yet'}. Levels and upgrades end with the expedition.` : '';
     sanctEl.textContent = pg ? (pg.sanctuary.visits === 0 ? 'Sanctuary: not visited. It never banks: no banking here.' : `Sanctuary: ${pg.sanctuary.rested ? 'rested' : 'not rested'}, upgrade taken. No banking here.`) : '';
     carriedEl.textContent = `Carried, at risk until camp: ${describeBank(w.ledger.carried)}.${w.ledger.cache ? ` A recovery cache waits in ${name(graph, w.ledger.cache.room)}.` : ''}`;
-    const hpPct = Math.max(0, Math.min(100, w.hp / w.hpMax * 100));
-    (bar.firstChild as HTMLElement).style.width = `${hpPct}%`;
-    (bar.firstChild as HTMLElement).classList.toggle('low', hpPct < runCfg!.plan.retreatHpPct);
     drawMap(r);
     if (w.terminal) for (const id of ['retreat-now', 'redirect-go', 'skip']) (ctl.parentElement!.querySelector(`#${id}`) as HTMLButtonElement | null)?.setAttribute('disabled', '');
     if (w.terminal && !chronicle) finish(r);
