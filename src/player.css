@@ -13,3 +13,40 @@ body { margin: 0; }
 .xp:has(.ctl) { padding-bottom: calc(180px + var(--inset-bottom)); }
 .xp .ctl { position: fixed; bottom: 0; left: 0; right: 0; z-index: 2; background: var(--c-page); padding: 8px calc(16px + var(--inset-right)) calc(8px + var(--inset-bottom)) calc(16px + var(--inset-left)); }
 .xp #retreat-now { flex: 1 1 100%; }
+
+/* R05: the in-room animated expedition is the PRIMARY viewport; the world map
+   remains available on demand but never stands in for combat. */
+.xp #battle-scene {
+  position: relative;
+  width: 100%;
+  height: clamp(320px, 50dvh, 490px);
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #655a45;
+  border-radius: 8px;
+  background: #101e1c;
+  isolation: isolate;
+}
+.xp #battle-scene canvas { display: block; touch-action: pan-y; }
+.xp #battle-loading, .xp #battle-scene [role=alert] {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 16px;
+  text-align: center;
+  color: #e6e0cf;
+}
+.xp #expedition-map { padding: 8px 0; }
+.xp #expedition-map summary {
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  color: #e6e0cf;
+}
+.xp #expedition-map canvas { display: block; width: 100%; height: auto; }
+@media (max-height: 530px) and (orientation: landscape) {
+  .xp #battle-scene { height: 240px; }
+}
