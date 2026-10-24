@@ -467,18 +467,60 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
     drawWorldMap(canvas, { graph, known: ex.known, open: ex.openLinks, visited: ex.visited, avoid: new Set(runCfg!.plan.avoid), route: ex.route ? ex.route.rooms : null, routeKind: 'confirmed', here: r.world.room, target: ex.target, hero: r.world.pos, cache: r.world.ledger.cache });
   }
   function finish(r: ExpeditionRun) {
-    const c = finishChronicle(runCfg!, r).chronicle; chronicle = c;
-    settlement = settle(save, c, startedAt);
-    if (settlement.applied) { try { persist(store, settlement.save); save = settlement.save; } catch (e) { settlement = { ...settlement, applied: false, refused: `The save could not be written: ${(e as Error).message}`, lines: [`The save could not be written: ${(e as Error).message}`] }; } }
+    const c = finishChronicle(runCfg!, r).chronicle;
+    chronicle = c; // Prevent a duplicate finish callback while an async save is pending.
+    if (developer) {
+      settlement = settle(save, c, startedAt);
+      if (settlement.applied) {
+        try { persist(store, settlement.save); save = settlement.save; }
+        catch (e) {
+          settlement = { ...settlement, applied: false, refused: 'The save could not be written: ' + String(e), lines: ['The save could not be written: ' + String(e)] };
+        }
+      }
+      presentSettlement(c, r);
+      return;
+    }
+    void commitFinalSettlement(c, r);
+  }
+  async function commitFinalSettlement(c: Chronicle, r: ExpeditionRun) {
+    await queueCheckpoint(true);
+    if (!durableRepo || !durable || storageBlocked) {
+      const reason = 'Your expedition is NOT safely settled. Keep this screen and retry after storage is available; the previous checkpoint remains intact.';
+      settlement = { ...settle(save, c, startedAt), applied: false, refused: reason, lines: [reason] };
+      presentSettlement(c, r);
+      return;
+    }
+    // Domain settlement is computed once from the pre-commit bank. Only the
+    // repository transaction may make that outcome visible as banked.
+    const preview = settle(save, c, startedAt);
+    if (!preview.applied) { settlement = preview; presentSettlement(c, r); return; }
+    const written = await commitSettlement(durableRepo, durable.revision, activeId, c, startedAt);
+    if (written.ok) {
+      durable = written.save; save = toLegacy(written.save);
+      settlement = preview;
+    } else {
+      const reason = 'Settlement was NOT committed: ' + written.error;
+      settlement = { ...preview, applied: false, refused: reason, lines: [reason] };
+    }
+    presentSettlement(c, r);
+  }
+  function presentSettlement(c: Chronicle, r: ExpeditionRun) {
+    const current = settlement!;
     const deathCause = describeDeath(sim, graph, r);
-    const opened = settlement!.applied ? c.loot.opened.map(k => { const l = graph.links.find(x => WorldGraph.linkKey(x.from, x.to) === k); return `Opened for good: ${l ? `${name(graph, l.from)} and ${name(graph, l.to)}` : k}.`; }) : [];
-    const lines = [...settlement!.lines, ...opened];
-    history.add({ id: entryId(c, save.camp.expeditions), at: Date.now(), chronicle: c, settlement: lines, deathCause });
+    const opened = current.applied ? c.loot.opened.map(k => {
+      const l = graph.links.find(x => WorldGraph.linkKey(x.from, x.to) === k);
+      return 'Opened for good: ' + (l ? name(graph, l.from) + ' and ' + name(graph, l.to) : k) + '.';
+    }) : [];
+    const lines = [...current.lines, ...opened];
+    if (current.applied) history.add({ id: entryId(c, save.camp.expeditions), at: Date.now(), chronicle: c, settlement: lines, deathCause });
     if (c.outcome === 'died') audio.cue('death');
     result.hidden = false;
-    result.replaceChildren(renderChronicle(c, { graph, settlement: lines, deathCause, actions: [h('button', { type: 'button', id: 'again', onclick: renderPlan }, 'Plan another')] }));
+    const actions = current.applied || developer ?
+      [h('button', { type: 'button', id: 'again', onclick: renderPlan }, 'Plan another')] :
+      [h('button', { type: 'button', id: 'retry-settlement', onclick: () => { storageBlocked = false; void commitFinalSettlement(c, r); } }, 'Retry durable settlement')];
+    result.replaceChildren(renderChronicle(c, { graph, settlement: lines, deathCause, actions }));
     syncCtl();
-    screen.querySelector<HTMLButtonElement>('#back-to-plan')!.disabled = false;
+    screen.querySelector<HTMLButtonElement>('#back-to-plan')!.disabled = busy();
     screen.querySelector('#tools')?.replaceWith(toolbar());
   }
 
