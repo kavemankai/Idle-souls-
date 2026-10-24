@@ -182,7 +182,8 @@ export function parseDurable(raw: string): DurableParse {
 export function serializeDurable(save: SaveV3): string {
   const problems = validateV3(save);
   if (problems.length) throw new Error('Refusing unsafe save: ' + problems.join('; '));
-  return wrap(JSON.parse(canonical(save)));
+  // Optional expedition fields must be stripped before canonical JSON; the V2 helper expects fully JSON-shaped data.
+  return wrap(JSON.parse(JSON.stringify(save)));
 }
 export type CommitResult = { ok: true; save: SaveV3; duplicate: boolean } | { ok: false; error: string; conflict?: boolean };
 export type LoadResult = { ok: true; save: SaveV3; migratedFrom: number | null; recoveredBackup: boolean } | { ok: false; error: string; backupAvailable: boolean };
