@@ -88,7 +88,7 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
   let storageBlocked = !developer;
   let journal: ExpeditionCommandJournal | null = null;
   let activeId = '';
-  let checkpointNumber = 0, lastQueuedTick = 0, lastEventCount = 0, lastPickupCount = 0, lastRoom = '';
+  let lastQueuedTick = 0, lastEventCount = 0, lastPickupCount = 0, lastRoom = '';
   let checkpointQueue: Promise<void> = Promise.resolve();
   let settlement: Settlement | null = null;
   let startedAt = 0;
@@ -302,7 +302,7 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
     if (!written.ok) { saveNote = 'Cannot dispatch without a durable checkpoint: ' + written.error; renderPlan(); return; }
     durable = written.save; save = toLegacy(durable);
     runCfg = config; run = candidate; startedAt = save.camp.expeditions;
-    activeId = id; journal = new ExpeditionCommandJournal(run); checkpointNumber = 0;
+    activeId = id; journal = new ExpeditionCommandJournal(run);
     lastQueuedTick = 0; lastEventCount = 0; lastPickupCount = 0; lastRoom = run.world.room;
     checkpointQueue = Promise.resolve();
     settlement = null; chronicle = null; paused = false; acc = 0; last = 0; toast = '';
@@ -316,7 +316,7 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
       runCfg = snap.config; run = restored; startedAt = durable.camp.expeditions;
       activeId = snap.id; journal = new ExpeditionCommandJournal(restored);
       journal.commands.push(...structuredClone(snap.commands));
-      checkpointNumber = 0; lastQueuedTick = snap.tick;
+      lastQueuedTick = snap.tick;
       lastEventCount = restored.expedition.events.length;
       lastPickupCount = restored.world.ledger.gains.length; lastRoom = restored.world.room;
       checkpointQueue = Promise.resolve();
@@ -335,6 +335,49 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
     if (result.ok) { durable = result.save; save = toLegacy(result.save); saveNote = 'The unfinished expedition was discarded.'; }
     else saveNote = 'Discard failed; the expedition is preserved: ' + result.error;
     renderPlan();
+  }
+  /** Serial checkpoint writer. Disk failure stops play instead of silently using volatile memory. */
+  function queueCheckpoint(force = false): Promise<void> {
+    if (developer || !durableRepo || !durable || !run || !runCfg || !journal || storageBlocked) return checkpointQueue;
+    const w = run.world, ex = run.expedition;
+    if (!force && w.tick - lastQueuedTick < 60 && w.room === lastRoom &&
+      ex.events.length === lastEventCount && w.ledger.gains.length === lastPickupCount) return checkpointQueue;
+    let snap;
+    try { snap = checkpoint(activeId, runCfg, run, journal.commands); }
+    catch (error) { storageBlocked = true; if (view === 'run') pauseRun('Cannot safely checkpoint: ' + String(error)); return checkpointQueue; }
+    lastQueuedTick = snap.tick; lastRoom = w.room;
+    lastEventCount = ex.events.length; lastPickupCount = w.ledger.gains.length;
+    checkpointQueue = checkpointQueue.then(async () => {
+      if (!durable || !durableRepo || storageBlocked) return;
+      const result = await commitCheckpoint(durableRepo, durable.revision, snap);
+      if (result.ok) { durable = result.save; save = toLegacy(result.save); }
+      else {
+        storageBlocked = true;
+        if (view === 'run') pauseRun('Your progress is NOT safely saved: ' + result.error + '. Reload to recover the last committed checkpoint.');
+      }
+    }).catch(error => {
+      storageBlocked = true;
+      if (view === 'run') pauseRun('Your progress is NOT safely saved: ' + String(error));
+    });
+    return checkpointQueue;
+  }
+  /** An accepted order is committed before playback can advance another tick. */
+  function issueOrder(order: { type: 'retreat' } | { type: 'redirect'; room: string }): string {
+    if (!run) return 'No running expedition';
+    if (developer || !journal) return run.expedition.order(order) ?? 'Order accepted.';
+    if (storageBlocked) return 'Storage is unavailable. Expedition is paused; do not continue.';
+    const wasPaused = paused;
+    paused = true; acc = 0; last = 0; audio.setSuspended(true);
+    const reason = journal.order(order);
+    if (reason !== null) { paused = wasPaused; syncCtl(); return reason; }
+    void queueCheckpoint(true).then(() => {
+      if (!storageBlocked && !wasPaused && lifecycle.active) {
+        paused = false; acc = 0; last = 0; audio.setSuspended(false);
+      }
+      if (view === 'run') syncCtl();
+    });
+    syncCtl();
+    return 'Order recorded; saving before continuation.';
   }
   const canvas = h('canvas', { id: 'map', width: 640, height: 420, role: 'img', 'aria-label': 'Expedition map', 'aria-describedby': 'xstatus' });
   let feed: HTMLElement, objList: HTMLElement, status: HTMLElement, bar: HTMLElement, ctl: HTMLElement, result: HTMLElement, redirectSel: HTMLSelectElement;
@@ -359,14 +402,14 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
       ...[1, 4, 16].map(s => h('button', { type: 'button', 'data-speed': String(s), 'aria-pressed': String(s === speed), onclick: () => { speed = s; syncCtl(); } }, `${s}x`)),
       h('button', { type: 'button', id: 'xp-pause', 'aria-pressed': String(paused), onclick: () => { if (!lifecycle.active) return; paused = !paused; acc = 0; last = 0; audio.setSuspended(paused); syncCtl(); } }, 'Pause'),
       developer ? h('button', { type: 'button', id: 'skip', onclick: () => { if (paused || !lifecycle.active) return; while (!r.world.terminal && r.world.tick < 30 * 3000) r.world.step(); draw(); } }, 'Skip to end') : null,
-      h('button', { type: 'button', id: 'retreat-now', class: 'danger', onclick: () => { toast = r.expedition.order({ type: 'retreat' }) ?? 'Retreat ordered. It starts now; in a fight the adventurer disengages first.'; draw(); } }, 'Retreat to camp'));
+      h('button', { type: 'button', id: 'retreat-now', class: 'danger', onclick: () => { toast = issueOrder({ type: 'retreat' }); draw(); } }, 'Retreat to camp'));
     screen.append(h('div', { id: 'main', tabindex: '-1' },
       h('div', { class: 'bar' }, h('div', {}, h('p', { class: 'eyebrow' }, developer ? 'EXPEDITION · TRIAL SETTINGS' : 'EXPEDITION'), h('h1', {}, 'On the road')),
         h('button', { type: 'button', id: 'back-to-plan', disabled: busy(), onclick: renderPlan }, 'Back to plan')),
       h('div', { class: 'cols' },
         h('div', { class: 'left' }, h('section', { class: 'card mapcard' }, canvas, status, bar, levelEl, carriedEl, sanctEl), ctl,
           h('section', { class: 'card' }, h('h2', {}, 'Change course'), h('p', { class: 'hint' }, 'A redirect waits for the next doorway. A retreat does not.'),
-            h('div', { class: 'redirect' }, redirectSel, h('button', { type: 'button', id: 'redirect-go', onclick: () => { toast = r.expedition.order({ type: 'redirect', room: redirectSel.value }) ?? `Redirect to ${name(graph, redirectSel.value)} queued for the next doorway.`; draw(); } }, 'Go there first'))),
+            h('div', { class: 'redirect' }, redirectSel, h('button', { type: 'button', id: 'redirect-go', onclick: () => { toast = issueOrder({ type: 'redirect', room: redirectSel.value }); draw(); } }, 'Go there first'))),
           h('section', { class: 'card' }, h('h2', {}, 'Objectives'), objList)),
         h('div', { class: 'right' }, h('section', { class: 'card' }, h('h2', {}, 'Intent feed'), feed), result))));
     feedCount = 0; syncCtl();
@@ -391,6 +434,7 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
     // Steps run in order, so the run is the same however many fit in a frame. A frame spends at most ~12 ms on them, so a heavy fight at 16x slows
     // the playback a little instead of freezing the page; the backlog is capped so it never snowballs.
     if (!paused) { const t0 = performance.now(); while (acc >= 1 && !r.world.terminal) { r.world.step(); acc -= 1; if (performance.now() - t0 > 12) break; } acc = Math.min(acc, 60); }
+    if (!developer && !storageBlocked) void queueCheckpoint();
     draw();
     if (!r.world.terminal) raf = requestAnimationFrame(frame);
   }
