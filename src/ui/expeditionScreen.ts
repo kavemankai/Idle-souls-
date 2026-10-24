@@ -75,6 +75,13 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
   let nextId = 1;
   let speed = 4, paused = false;
   let run: ExpeditionRun | null = null;
+  let stopVisual: (() => void) | null = null;
+  let visualGeneration = 0;
+  function releaseVisual() {
+    visualGeneration++;
+    stopVisual?.();
+    stopVisual = null;
+  }
   let runCfg: ExpeditionConfig | null = null;
   let chronicle: Chronicle | null = null;
   let acc = 0, last = 0, raf = 0;
@@ -205,6 +212,7 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
     purchasePending = false; renderPlan();
   }
   function renderPlan() {
+    releaseVisual();
     cancelAnimationFrame(raf);
     run = null; view = 'plan';
     audio.setSuspended(!lifecycle.active);
@@ -467,9 +475,12 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
   let toast = '';
   let carriedEl: HTMLElement, levelEl: HTMLElement, sanctEl: HTMLElement;
   function renderRun() {
+    releaseVisual();
     view = 'run';
     screen.replaceChildren(toolbar());
     const r = run!;
+    const visualStage = !developer ? h('div', { id: 'battle-scene', class: 'battle-scene', role: 'img', 'aria-label': 'Live animated expedition and autonomous combat' },
+      h('p', { id: 'battle-loading', role: 'status' }, 'Loading live expedition art…')) : null;
     feed = h('ol', { class: 'feed', id: 'feed', role: 'log', 'aria-label': 'Intent feed', tabindex: '0' });
     objList = h('ol', { class: 'objstat', id: 'objstat' });
     status = h('p', { class: 'status', id: 'xstatus', role: 'status' });
@@ -489,11 +500,29 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
       h('div', { class: 'bar' }, h('div', {}, h('p', { class: 'eyebrow' }, developer ? 'EXPEDITION · TRIAL SETTINGS' : 'EXPEDITION'), h('h1', {}, 'On the road')),
         h('button', { type: 'button', id: 'back-to-plan', disabled: busy(), onclick: renderPlan }, 'Back to plan')),
       h('div', { class: 'cols' },
-        h('div', { class: 'left' }, h('section', { class: 'card mapcard' }, canvas, status, bar, levelEl, carriedEl, sanctEl), ctl,
+        h('div', { class: 'left' }, h('section', { class: 'card mapcard' },
+          visualStage,
+          !developer ? h('details', { id: 'expedition-map' }, h('summary', {}, 'World map and route'), canvas) : canvas,
+          status, bar, levelEl, carriedEl, sanctEl), ctl,
           h('section', { class: 'card' }, h('h2', {}, 'Change course'), h('p', { class: 'hint' }, 'A redirect waits for the next doorway. A retreat does not.'),
             h('div', { class: 'redirect' }, redirectSel, h('button', { type: 'button', id: 'redirect-go', onclick: () => { toast = issueOrder({ type: 'redirect', room: redirectSel.value }); draw(); } }, 'Go there first'))),
           h('section', { class: 'card' }, h('h2', {}, 'Objectives'), objList)),
         h('div', { class: 'right' }, h('section', { class: 'card' }, h('h2', {}, 'Intent feed'), feed), result))));
+    if (visualStage) {
+      const generation = visualGeneration;
+      // Phaser is only loaded for a running production expedition. The renderer
+      // observes the very same WorldRunner that checkpoints and settles rewards.
+      void import('../presentation/expeditionVisualScene').then(({ mountExpeditionVisual }) => {
+        if (generation !== visualGeneration || view !== 'run' || !visualStage.isConnected) return;
+        visualStage.replaceChildren();
+        stopVisual = mountExpeditionVisual(visualStage, () => run?.world ?? null);
+      }).catch(error => {
+        if (generation === visualGeneration && visualStage.isConnected) {
+          visualStage.replaceChildren(h('p', { role: 'alert' }, 'Combat art could not be loaded. The expedition map and save are still available.'));
+          console.error('Expedition visual rendering failed', error);
+        }
+      });
+    }
     feedCount = 0; syncCtl();
     cancelAnimationFrame(raf); raf = requestAnimationFrame(frame);
     draw();
@@ -612,6 +641,7 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
 
   // ---------- Past expeditions ----------
   function renderHistory() {
+    releaseVisual();
     view = entryOpen ? 'entry' : 'history';
     if (developer) window.__EXPEDITION_STATE__ = () => ({ view: 'history', open: entryOpen });
     screen.replaceChildren(toolbar());
@@ -682,7 +712,7 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
       renderPlan();
     }).catch(error => { storageBlocked = true; saveNote = 'Cannot open durable saves: ' + String(error); renderPlan(); });
   }
-  return () => { cancelAnimationFrame(raf); unsubscribe(); removeBack(); audio.disable(); motionQuery?.removeEventListener?.('change', applyPrefs); screen.remove(); };
+  return () => { releaseVisual(); cancelAnimationFrame(raf); unsubscribe(); removeBack(); audio.disable(); motionQuery?.removeEventListener?.('change', applyPrefs); screen.remove(); };
 }
 declare global {
   interface Window {
