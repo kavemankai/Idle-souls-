@@ -247,7 +247,7 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
               disabled: purchasePending || storageBlocked || !!durable!.activeExpedition || !affordable,
               onclick: () => { void buyPermanentUpgrade(u.id, rank); } },
               !offer ? 'MAX' : 'Buy for ' + offer.gold + ' gold + ' + offer.mastery + ' mastery'));
-        })) : null,
+        })) : '',
       mapCard,
       h('section', { class: 'card' }, h('h2', {}, 'Quick start'),
         h('div', { class: 'presets' }, ...Object.entries(PRESETS).map(([id, p]) => h('button', { type: 'button', 'data-preset': id, onclick: () => applyPreset(p) }, p.label)))),
