@@ -23,6 +23,8 @@ export interface ExpeditionConfig {
    * (default 2, not loot) and drinks and rests by the plan's rules. Omit for the fixed level with no drinking and no sanctuary, as before.
    */
   progression?: { startLevel: number; kitRations?: number };
+  /** Earned camp bonuses, frozen at dispatch. */
+  permanentBonus?: Readonly<Record<string, number>>;
   /** Tests only. */
   hpOverride?: number; maxFightTicks?: number; encounters?: Readonly<Record<string, string>>;
 }
@@ -36,7 +38,7 @@ export function startExpedition(sim: SimApi, cfg: ExpeditionConfig, graph = new 
   const expedition = new Expedition(cfg.plan, graph, cfg.known, cfg.cache ?? null, cfg.openLinks ?? [], progress, cfg.defeatedBosses ?? []);
   const world = new WorldRunner(sim, {
     seed: cfg.seed, level: cfg.level, focus: cfg.focus, doctrine: cfg.plan.doctrine, navigator: expedition,
-    progress: progress ?? undefined, kitRations: progress && !limited ? cfg.progression!.kitRations ?? 2 : 0, drinkBelowPct: progress && !limited ? cfg.plan.drinkBelowPct : 0,
+    progress: progress ?? undefined, permanentBonus: cfg.permanentBonus, kitRations: progress && !limited ? cfg.progression!.kitRations ?? 2 : 0, drinkBelowPct: progress && !limited ? cfg.plan.drinkBelowPct : 0,
     defeatedBosses: cfg.defeatedBosses, rematchRooms: rematches.map(o => o.room),
     hpOverride: cfg.hpOverride, maxFightTicks: cfg.maxFightTicks, encounters: cfg.encounters, cache: cfg.cache, issuedKeys: cfg.issueKeys, claims: cfg.claims, openLinks: cfg.openLinks,
   }, graph);
