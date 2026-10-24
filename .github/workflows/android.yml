@@ -20,13 +20,37 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-      - uses: android-actions/setup-android@v3
-      - run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+      - name: Install Android API 36
+        run: |
+          java -version
+          sdkmanager --version
+          sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run test:player
       - run: npm run android:debug
       - run: npm run android:release
+      - name: Verify Android artifacts and packaged offline assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          debug=android/app/build/outputs/apk/debug/app-debug.apk
+          release=android/app/build/outputs/apk/release/app-release-unsigned.apk
+          bundle=android/app/build/outputs/bundle/release/app-release.aab
+          for file in "$debug" "$release" "$bundle"; do
+            test -s "$file" || { echo "::error::Missing or empty artifact: $file"; exit 1; }
+          done
+          for apk in "$debug" "$release"; do
+            unzip -Z1 "$apk" | grep -Fx 'assets/public/index.html'
+            unzip -Z1 "$apk" | grep -E '^assets/public/audio/.*[.]ogg$' | sed -n '1,3p'
+          done
+          unzip -Z1 "$bundle" | grep -Fx 'base/assets/public/index.html'
+          unzip -Z1 "$bundle" | grep -E '^base/assets/public/audio/.*[.]ogg$' | sed -n '1,3p'
+          sha256sum "$debug" "$release" "$bundle"
       - uses: actions/upload-artifact@v4
         with:
           name: android-foundation
@@ -34,4 +58,5 @@ jobs:
             android/app/build/outputs/apk/debug/*.apk
             android/app/build/outputs/apk/release/*.apk
             android/app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
           retention-days: 14
