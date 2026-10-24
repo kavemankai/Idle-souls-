@@ -9,6 +9,7 @@ import type { Chronicle } from '../expedition/chronicle';
 import { describeBank } from '../expedition/loot';
 import { UPGRADES, upgradeById, type UpgradeId } from '../progression/experience';
 import { MAX_DESIGN_LEVEL } from '../progression/levelTable';
+import { PERMANENT_UPGRADES, commitPurchase, permanentStartingLevel, permanentStatBonus, type PermanentUpgradeId } from '../progression/permanent';
 import { settle, type Settlement } from '../expedition/settle';
 import { LocalStore, MemoryStore, defaultSave, exportSave, importSave, load, persist, type SaveStore } from '../save/save';
 import { parseDurable, serializeDurable, toLegacy, type SaveV3 } from '../save/durable';
@@ -85,6 +86,7 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
   let saveNote = loaded.note ?? '';
   const durableRepo = developer ? null : playerSaveRepository();
   let durable: SaveV3 | null = null;
+  let purchasePending = false;
   let storageBlocked = !developer;
   let journal: ExpeditionCommandJournal | null = null;
   let activeId = '';
@@ -98,7 +100,7 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
   // Temporary levels are on unless ?progress=0 (fixed level, kept for tests and comparisons).
   const progressOn = params.get('progress') !== '0';
   let startLevel = Math.max(1, Math.min(MAX_DESIGN_LEVEL, Math.round(Number(params.get('startlevel')) || 1)));
-  const cfg = (): ExpeditionConfig => ({ seed, level, focus, progression: progressOn ? { startLevel } : undefined, plan: { ...plan, objectives: objectives.map(o => ({ ...o })), avoid: plan.avoid.slice() }, known: [...known()], hpOverride, cache: save.camp.cache, issueKeys: Math.min(issue, 2, save.camp.bank.keys), claims: save.world.claims, openLinks: save.world.openedLinks, defeatedBosses: save.world.defeatedBosses });
+  const cfg = (): ExpeditionConfig => ({ seed, level, focus, progression: developer ? (progressOn ? { startLevel } : undefined) : { startLevel: durable ? permanentStartingLevel(durable) : 1 }, permanentBonus: !developer && durable ? permanentStatBonus(durable) : undefined, plan: { ...plan, objectives: objectives.map(o => ({ ...o })), avoid: plan.avoid.slice() }, known: [...known()], hpOverride, cache: save.camp.cache, issueKeys: Math.min(issue, 2, save.camp.bank.keys), claims: save.world.claims, openLinks: save.world.openedLinks, defeatedBosses: save.world.defeatedBosses });
 
   // Per-device settings and the Chronicle history live under their own keys, never in the save. ?save=memory keeps them in memory too (tests).
   const memory = params.get('save') === 'memory';
@@ -153,6 +155,18 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
   }
 
   // ---------- Planning ----------
+  async function buyPermanentUpgrade(id: PermanentUpgradeId, rank: number) {
+    if (!durableRepo || !durable || storageBlocked || purchasePending || durable.activeExpedition) return;
+    const offer = PERMANENT_UPGRADES.find(x => x.id === id), price = offer?.prices[rank];
+    if (!offer || !price) return;
+    if (!window.confirm('Buy ' + offer.title + ' rank ' + (rank + 1) + ' for ' + price.gold + ' gold and ' + price.mastery + ' mastery?')) return;
+    purchasePending = true; renderPlan();
+    const txn = 'purchase:' + id + ':' + crypto.randomUUID();
+    const result = await commitPurchase(durableRepo, durable.revision, { upgradeId: id, expectedRank: rank }, txn);
+    if (result.ok) { durable = result.save; save = toLegacy(result.save); saveNote = offer.title + ' upgraded permanently for the next expedition.'; }
+    else saveNote = 'Purchase refused, nothing granted: ' + result.error;
+    purchasePending = false; renderPlan();
+  }
   function renderPlan() {
     cancelAnimationFrame(raf);
     run = null; view = 'plan';
@@ -215,6 +229,24 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
           h('p', { class: 'warn' }, 'An unfinished expedition is saved at tick ' + durable.activeExpedition.tick + '. Carried loot was not banked.'),
           h('button', { type: 'button', id: 'resume-saved', onclick: resumeSavedExpedition }, 'Resume saved expedition'),
           h('button', { type: 'button', id: 'discard-saved', onclick: () => { void discardSavedExpedition(); } }, 'Discard unfinished expedition')) : null),
+      !developer && durable ? h('section', { class: 'card', id: 'permanent-upgrades' },
+        h('h2', {}, 'Permanent character training'),
+        h('p', { class: 'hint', id: 'effective-build' },
+          'Next expedition: starting design level ' + permanentStartingLevel(durable) +
+          ', swingSkill +' + (durable.camp.permanent.weapon * 2) +
+          ', guardStrength +' + (durable.camp.permanent.shield * 2) +
+          ' (simulator stat cap: 20). Temporary XP and sanctuary choices reset each expedition.'),
+        h('p', { class: 'hint' }, 'Only banked gold and mastery can buy upgrades. Carried loot is unsafe until extraction. Permanent upgrades survive death and reload.'),
+        ...PERMANENT_UPGRADES.map(u => {
+          const rank = durable!.camp.permanent[u.id], offer = u.prices[rank];
+          const affordable = !!offer && save.camp.bank.gold >= offer.gold && save.camp.bank.mastery >= offer.mastery;
+          return h('div', { class: 'upgrade-row' },
+            h('p', {}, u.title + ' · Rank ' + rank + '/' + u.prices.length + '. ' + u.description),
+            h('button', { type: 'button', 'data-upgrade': u.id,
+              disabled: purchasePending || storageBlocked || !!durable!.activeExpedition || !affordable,
+              onclick: () => { void buyPermanentUpgrade(u.id, rank); } },
+              !offer ? 'MAX' : 'Buy for ' + offer.gold + ' gold + ' + offer.mastery + ' mastery'));
+        })) : null,
       mapCard,
       h('section', { class: 'card' }, h('h2', {}, 'Quick start'),
         h('div', { class: 'presets' }, ...Object.entries(PRESETS).map(([id, p]) => h('button', { type: 'button', 'data-preset': id, onclick: () => applyPreset(p) }, p.label)))),
