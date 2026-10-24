@@ -244,10 +244,25 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
             : h('label', {}, 'Level', h('input', { type: 'number', id: 'level', min: '1', max: String(sim.MAX_LEVEL), value: String(level), onchange: (e) => { level = Math.max(1, Math.min(sim.MAX_LEVEL, Math.round(Number((e.target as HTMLInputElement).value) || 80))); } })),
           h('label', {}, 'Focus', h('select', { id: 'focus', onchange: (e) => { focus = (e.target as HTMLSelectElement).value; } }, ...['balanced', 'duelist', 'bulwark', 'skirmisher', 'survivor'].map(f => { const op = h('option', { value: f }, cap(f)); if (f === focus) op.selected = true; return op; }))))): '',
       h('details', { class: 'card', id: 'save-card' }, h('summary', {}, 'Save: export, import'),
-        h('p', { class: 'hint' }, 'The save is one text kept in this browser. Export it as a backup; import replaces it, after checking it.'),
-        h('a', { class: 'btn', id: 'export-save', href: `data:application/json;charset=utf-8,${encodeURIComponent(exportSave(save))}`, download: 'idle-souls-save.json' }, 'Export save'),
+        h('p', { class: 'hint' }, developer ? 'Developer save kept in this browser.' : 'Save backups require an explicit import confirmation. The previous durable save is retained.'),
+        h('a', { class: 'btn', id: 'export-save', href: `data:application/json;charset=utf-8,${encodeURIComponent(!developer && durable ? serializeDurable(durable) : exportSave(save))}`, download: 'idle-souls-save.json' }, 'Export save'),
         h('textarea', { id: 'import-text', rows: '3', 'aria-label': 'Save text to import' }),
-        h('button', { type: 'button', id: 'import-go', onclick: () => { const r = importSave(store, (screen.querySelector('#import-text') as HTMLTextAreaElement).value); if (r.ok) { save = load(store).save; saveNote = 'Save imported.'; } else saveNote = r.error; renderPlan(); } }, 'Import save')),
+        h('button', { type: 'button', id: 'import-go', disabled: !developer && !durable, onclick: () => {
+           const raw = (screen.querySelector('#import-text') as HTMLTextAreaElement).value;
+           if (developer) {
+             const r = importSave(store, raw);
+             if (r.ok) { save = load(store).save; saveNote = 'Save imported.'; } else saveNote = r.error;
+             renderPlan(); return;
+           }
+           const parsed = parseDurable(raw);
+           if (!parsed.ok) { saveNote = parsed.error; renderPlan(); return; }
+           if (!window.confirm('Replace existing progress and the unfinished expedition? The previous save is backed up.')) return;
+           void durableRepo!.import(raw, true).then(r => {
+             if (r.ok) { durable = r.save; save = toLegacy(r.save); storageBlocked = false; saveNote = 'Imported and verified durable save.'; }
+             else saveNote = r.error;
+             renderPlan();
+           });
+         } }, 'Import save')),
       h('section', { class: 'card launch' },
         h('div', { class: `badge ${pf.status}`, id: 'preflight', 'data-status': pf.status }, STATUS_LABEL[pf.status] ?? pf.status),
         h('p', { class: 'hint', id: 'home-line' }, objectives.length ? `Way home: ${pf.home.route ? pf.home.route.rooms.map(r => name(graph, r)).join(' > ') : pf.home.reason}` : ''),
