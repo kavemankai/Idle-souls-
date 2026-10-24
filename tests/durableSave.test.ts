@@ -7,7 +7,7 @@ import { ExpeditionCommandJournal, checkpoint, continuationFingerprint, restoreE
 import { defaultSave, wrap } from '../src/save/save';
 import { commitCheckpoint, commitDispatch, commitSettlement } from '../src/save/durableSettlement';
 import {
-  parseDurable, prepareCommit, serializeDurable, TestDurableRepository, upgradeToV3, validateV3,
+  parseDurable, serializeDurable, TestDurableRepository, upgradeToV3, validateV3,
 } from '../src/save/durable';
 
 const sim = loadSim();
