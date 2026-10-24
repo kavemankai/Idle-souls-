@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import type { RoomManifest } from '../world/roomTypes';
 import { WorldGraph } from '../world/worldGraph';
 import { ROOMS } from '../world/roomRegistry';
-import { hallwayFor, visibleDungeon, type Hallway, type Vec } from './dungeonGeometry';
+import { visibleDungeon, type Hallway, type Vec } from './dungeonGeometry';
 
 const FLOOR_DEPTH = -2400, HALL_DEPTH = -2500, SEAL_DEPTH = -1700;
 const COLORS = { floor: 0x354640, edge: 0x8b8d79, mortar: 0x202e2b, seal: 0x7b5548 } as const;
