@@ -83,7 +83,7 @@ test('earned stats are reflected in the next simulator-backed expedition, not ex
   const starting = base(), config = cfg(5);
   const original = runExpedition(sim, config).chronicle;
   assert.deepEqual(runExpedition(sim, config).chronicle, original, 'baseline is still deterministic');
-  starting.camp.bank.mastery = 8; starting.camp.bank.gold = 20;
+  starting.camp.bank.mastery = 12; starting.camp.bank.gold = 20;
   const a = purchaseUpgrade(starting, { upgradeId: 'training', expectedRank: 0 }, 'power:training');
   assert.ok(a.ok);
   const b = purchaseUpgrade(a.save, { upgradeId: 'weapon', expectedRank: 0 }, 'power:weapon');
