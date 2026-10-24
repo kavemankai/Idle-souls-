@@ -563,7 +563,10 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
     audio.setSuspended(true); syncCtl(); draw();
   };
   const unsubscribe = lifecycle.subscribe(active => {
-    if (!active && busy()) pauseRun('Paused while away. Resume when ready.');
+    if (!active && busy()) {
+      pauseRun('Paused while away. Resume when ready.');
+      if (!developer) void queueCheckpoint(true); // Best effort; periodic commits guarantee the prior checkpoint.
+    }
     audio.setSuspended(!active || (busy() && paused));
     if (view === 'run' && run) { acc = 0; last = 0; syncCtl(); }
   });
@@ -577,6 +580,21 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
     return false;
   });
   renderPlan();
+  if (durableRepo) {
+    void durableRepo.load().then(loadedDurable => {
+      if (loadedDurable.ok) {
+        durable = loadedDurable.save;
+        save = toLegacy(loadedDurable.save);
+        storageBlocked = false;
+        if (loadedDurable.migratedFrom !== null) saveNote = 'Legacy save migrated to durable version 3. Original retained.';
+      } else {
+        storageBlocked = true;
+        saveNote = 'Your save is NOT safely available: ' + loadedDurable.error +
+          (loadedDurable.backupAvailable ? '. A backup exists; export it before attempting recovery.' : '');
+      }
+      renderPlan();
+    }).catch(error => { storageBlocked = true; saveNote = 'Cannot open durable saves: ' + String(error); renderPlan(); });
+  }
   return () => { cancelAnimationFrame(raf); unsubscribe(); removeBack(); audio.disable(); motionQuery?.removeEventListener?.('change', applyPrefs); screen.remove(); };
 }
 declare global {
