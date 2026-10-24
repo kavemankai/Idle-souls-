@@ -366,7 +366,13 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
   /** An accepted order is committed before playback can advance another tick. */
   function issueOrder(order: { type: 'retreat' } | { type: 'redirect'; room: string }): string {
     if (!run) return 'No running expedition';
-    if (developer || !journal) return run.expedition.order(order) ?? 'Order accepted.';
+    if (developer || !journal) {
+      const refused = run.expedition.order(order);
+      if (refused) return refused;
+      return order.type === 'retreat'
+        ? 'Retreat ordered. It starts now; in a fight the adventurer disengages first.'
+        : 'Redirect ordered for the next doorway.';
+    }
     if (storageBlocked) return 'Storage is unavailable. Expedition is paused; do not continue.';
     const wasPaused = paused;
     paused = true; acc = 0; last = 0; audio.setSuspended(true);
