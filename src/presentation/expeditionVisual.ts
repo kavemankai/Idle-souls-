@@ -1,4 +1,4 @@
-import type { Action, CombatView, Facing, Phase } from '../contracts/presentation';
+import type { Action, CombatView, Facing, Gauge, Phase } from '../contracts/presentation';
 import { facingFromVector } from './directions';
 import { poseOf } from '../world/o1Adapter';
 import { combatView } from '../world/o1Combat';
@@ -27,6 +27,9 @@ export interface ExpeditionVisualActor {
 export interface ExpeditionVisualState {
   readonly room: string;
   readonly tick: number;
+  /** Changes whenever a new room visit or encounter begins. */
+  readonly fightKey: string | null;
+  readonly heroHealth: Gauge;
   readonly fighting: boolean;
   readonly passage: boolean;
   readonly actors: readonly ExpeditionVisualActor[];
@@ -64,6 +67,10 @@ export function readExpeditionVisual(world: WorldRunner): ExpeditionVisualState 
   }
   return {
     room: world.room, tick: world.tick, passage: r === null,
+    // world.tick - r.tick is the room-visit offset; r.fights increments on
+    // each actual fight. Presentation never assigns combat identities.
+    fightKey: fight && r ? `${world.room}:${world.tick - r.tick}:${r.fights}` : null,
+    heroHealth: { value: world.hp, max: world.hpMax },
     fighting: !!fight, actors,
     combat: fight ? combatView(world.sim, fight) : undefined,
   };
