@@ -19,9 +19,9 @@ export async function commitDispatch(repo: DurableRepository, revision: number, 
 }
 /** Durable periodic checkpoint. Out-of-order asynchronous writes can never move the run backward. */
 export async function commitCheckpoint(
-  repo: DurableRepository, revision: number, active: ActiveExpeditionV3, sequence: number,
+  repo: DurableRepository, revision: number, active: ActiveExpeditionV3,
 ): Promise<CommitResult> {
-  return repo.commit(revision, 'checkpoint:' + active.id + ':' + sequence, old => {
+  return repo.commit(revision, 'checkpoint:' + active.id + ':' + active.tick + ':' + active.commands.length, old => {
     if (!old.activeExpedition || old.activeExpedition.id !== active.id) throw new Error('Checkpoint expedition identity differs');
     if (active.tick < old.activeExpedition.tick) throw new Error('Checkpoint would rewind durable simulation');
     if (active.commands.length < old.activeExpedition.commands.length) throw new Error('Checkpoint omitted accepted orders');
