@@ -10,7 +10,11 @@ import { describeBank } from '../expedition/loot';
 import { UPGRADES, upgradeById, type UpgradeId } from '../progression/experience';
 import { MAX_DESIGN_LEVEL } from '../progression/levelTable';
 import { settle, type Settlement } from '../expedition/settle';
-import { LocalStore, MemoryStore, exportSave, importSave, load, persist, type SaveStore } from '../save/save';
+import { LocalStore, MemoryStore, defaultSave, exportSave, importSave, load, persist, type SaveStore } from '../save/save';
+import { parseDurable, serializeDurable, toLegacy, type SaveV3 } from '../save/durable';
+import { playerSaveRepository } from '../save/nativeRepository';
+import { commitCheckpoint, commitDiscard, commitDispatch, commitSettlement } from '../save/durableSettlement';
+import { ExpeditionCommandJournal, checkpoint, restoreExpedition } from '../expedition/replayCheckpoint';
 import type { Save } from '../save/saveTypes';
 import { PrefsStore } from './prefs';
 import { History, entryId } from './history';
@@ -74,11 +78,18 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
   let chronicle: Chronicle | null = null;
   let acc = 0, last = 0, raf = 0;
   let notice = '';
-  // The save lives in browser storage (memory only with ?save=memory, for tests). Nothing changes it except a finished expedition and an import.
+  // Developer fixtures retain their V2 storage. Shipped players use only V3 durable storage.
   const store: SaveStore = params.get('save') === 'memory' ? new MemoryStore() : new LocalStore();
-  const loaded = load(store);
+  const loaded = developer ? load(store) : { save: defaultSave(), note: null };
   let save: Save = loaded.save;
   let saveNote = loaded.note ?? '';
+  const durableRepo = developer ? null : playerSaveRepository();
+  let durable: SaveV3 | null = null;
+  let storageBlocked = !developer;
+  let journal: ExpeditionCommandJournal | null = null;
+  let activeId = '';
+  let checkpointNumber = 0, lastQueuedTick = 0, lastEventCount = 0, lastPickupCount = 0, lastRoom = '';
+  let checkpointQueue: Promise<void> = Promise.resolve();
   let settlement: Settlement | null = null;
   let startedAt = 0;
   let issue = 0;
@@ -118,7 +129,7 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
   motionQuery?.addEventListener?.('change', applyPrefs);
   /** Skip link, settings row and the cue banner: shown on every screen. Each control is a labelled button of at least 44 px. */
   /** While an expedition is out, the buttons that would leave the screen are off, so a stray press cannot drop the run. */
-  const busy = () => view === 'run' && !!run && !run.world.terminal;
+  const busy = () => view === 'run' && !!run && (!run.world.terminal || (!developer && !!durable?.activeExpedition));
   function toolbar(): Node {
     const wrap = h('div', { id: 'tools' });
     const rerender = () => wrap.replaceChildren(...build());
@@ -198,7 +209,12 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
         sealed.length ? h('ul', { id: 'gates-seen' }, ...sealed.map(g => h('li', {}, `${name(graph, g.from)} to ${name(graph, g.to)}: sealed. It ${needText(g.need)}.`))) : null,
         save.camp.cache ? h('p', { class: 'warn', id: 'cache-line' }, `A recovery cache waits in ${name(graph, save.camp.cache.room)}: ${describeBank(save.camp.cache.contents)}. A new fall before you collect it replaces it, and what it holds is lost for good.`) : h('p', { class: 'hint', id: 'cache-line' }, 'No recovery cache is waiting.'),
         save.camp.cache ? h('button', { type: 'button', id: 'add-recover', disabled: objectives.length >= MAX_OBJECTIVES || objectives.some(o => o.kind === 'recover'), onclick: () => { objectives.push({ id: `o${nextId++}`, kind: 'recover', room: save.camp.cache!.room }); renderPlan(); } }, 'Add: recover the cache') : null,
-        saveNote ? h('p', { class: 'warn' }, saveNote) : null),
+        saveNote ? h('p', { class: 'warn' }, saveNote) : null,
+        !developer && !durable ? h('p', { class: 'warn', id: 'durable-status' }, 'Checking durable storage. Dispatch is disabled until your save is safe.') : null,
+        !developer && durable?.activeExpedition ? h('div', { id: 'saved-expedition' },
+          h('p', { class: 'warn' }, 'An unfinished expedition is saved at tick ' + durable.activeExpedition.tick + '. Carried loot was not banked.'),
+          h('button', { type: 'button', id: 'resume-saved', onclick: resumeSavedExpedition }, 'Resume saved expedition'),
+          h('button', { type: 'button', id: 'discard-saved', onclick: () => { void discardSavedExpedition(); } }, 'Discard unfinished expedition')) : null),
       mapCard,
       h('section', { class: 'card' }, h('h2', {}, 'Quick start'),
         h('div', { class: 'presets' }, ...Object.entries(PRESETS).map(([id, p]) => h('button', { type: 'button', 'data-preset': id, onclick: () => applyPreset(p) }, p.label)))),
@@ -237,7 +253,7 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
         h('p', { class: 'hint', id: 'home-line' }, objectives.length ? `Way home: ${pf.home.route ? pf.home.route.rooms.map(r => name(graph, r)).join(' > ') : pf.home.reason}` : ''),
         ...pf.messages.map(m => h('p', { class: 'warn' }, m)),
         h('p', { class: 'hint', id: 'risk-rule' }, 'Everything you win or pick up is carried and at risk until you reach camp alive. Only camp banks it: not a retreat, a quiet corner or a boss. If you fall, what you carry stays in one recovery cache where you fell.'),
-        h('button', { type: 'button', id: 'launch', class: 'primary', disabled: !pf.launchable, onclick: launch }, 'Launch expedition')),
+        h('button', { type: 'button', id: 'launch', class: 'primary', disabled: !pf.launchable || (!developer && (storageBlocked || !durable || !!durable.activeExpedition)), onclick: launch }, 'Launch expedition')),
       glossaryDrawer());
     if (notice) { main.append(h('p', { class: 'warn', role: 'status' }, notice)); notice = ''; }
   }
@@ -253,11 +269,57 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
   // ---------- Expedition ----------
   function launch() {
     if (!lifecycle.active) return;
-    if (!developer) seed = crypto.getRandomValues(new Uint32Array(1))[0] || 1;
+    if (!developer) { void launchDurable(); return; }
     runCfg = cfg(); startedAt = save.camp.expeditions; settlement = null;
     run = startExpedition(sim, runCfg, graph);
     chronicle = null; paused = false; acc = 0; last = 0; toast = '';
     renderRun();
+  }
+  async function launchDurable() {
+    if (!durableRepo || !durable || storageBlocked || durable.activeExpedition) return;
+    seed = crypto.getRandomValues(new Uint32Array(1))[0] || 1;
+    const config = cfg(), candidate = startExpedition(sim, config, graph);
+    const id = 'run:' + save.camp.expeditions + ':' + seed + ':' + Date.now();
+    let first;
+    try { first = checkpoint(id, config, candidate, []); }
+    catch (error) { saveNote = String(error); renderPlan(); return; }
+    const written = await commitDispatch(durableRepo, durable.revision, first);
+    if (!written.ok) { saveNote = 'Cannot dispatch without a durable checkpoint: ' + written.error; renderPlan(); return; }
+    durable = written.save; save = toLegacy(durable);
+    runCfg = config; run = candidate; startedAt = save.camp.expeditions;
+    activeId = id; journal = new ExpeditionCommandJournal(run); checkpointNumber = 0;
+    lastQueuedTick = 0; lastEventCount = 0; lastPickupCount = 0; lastRoom = run.world.room;
+    checkpointQueue = Promise.resolve();
+    settlement = null; chronicle = null; paused = false; acc = 0; last = 0; toast = '';
+    renderRun();
+  }
+  function resumeSavedExpedition() {
+    if (!durable?.activeExpedition || !durableRepo || storageBlocked) return;
+    const snap = durable.activeExpedition;
+    try {
+      const restored = restoreExpedition(sim, snap, graph);
+      runCfg = snap.config; run = restored; startedAt = durable.camp.expeditions;
+      activeId = snap.id; journal = new ExpeditionCommandJournal(restored);
+      journal.commands.push(...structuredClone(snap.commands));
+      checkpointNumber = 0; lastQueuedTick = snap.tick;
+      lastEventCount = restored.expedition.events.length;
+      lastPickupCount = restored.world.ledger.gains.length; lastRoom = restored.world.room;
+      checkpointQueue = Promise.resolve();
+      settlement = null; chronicle = null; paused = true; acc = 0; last = 0;
+      toast = 'Restored exact checkpoint state. Press Resume when ready.';
+      renderRun();
+    } catch (error) {
+      saveNote = 'Checkpoint could not be verified; original retained. ' + String(error);
+      renderPlan();
+    }
+  }
+  async function discardSavedExpedition() {
+    if (!durable?.activeExpedition || !durableRepo || storageBlocked) return;
+    if (!window.confirm('Discard carried loot and this unfinished expedition? Nothing will be banked.')) return;
+    const result = await commitDiscard(durableRepo, durable.revision, durable.activeExpedition.id);
+    if (result.ok) { durable = result.save; save = toLegacy(result.save); saveNote = 'The unfinished expedition was discarded.'; }
+    else saveNote = 'Discard failed; the expedition is preserved: ' + result.error;
+    renderPlan();
   }
   const canvas = h('canvas', { id: 'map', width: 640, height: 420, role: 'img', 'aria-label': 'Expedition map', 'aria-describedby': 'xstatus' });
   let feed: HTMLElement, objList: HTMLElement, status: HTMLElement, bar: HTMLElement, ctl: HTMLElement, result: HTMLElement, redirectSel: HTMLSelectElement;
