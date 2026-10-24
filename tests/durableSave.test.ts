@@ -110,9 +110,9 @@ test('dispatch, checkpoint and settlement each commit exactly once with immutabl
   const tick0 = await repo.load(); assert.ok(tick0.ok);
   for (let i = 0; i < 50; i++) started.world.step();
   const savedTick = checkpoint('run13', cfg, started, []);
-  const updated = await commitCheckpoint(repo, tick0.save.revision, savedTick, 1);
+  const updated = await commitCheckpoint(repo, tick0.save.revision, savedTick);
   assert.ok(updated.ok);
-  const duplicateCheckpoint = await commitCheckpoint(repo, tick0.save.revision, savedTick, 1);
+  const duplicateCheckpoint = await commitCheckpoint(repo, tick0.save.revision, savedTick);
   assert.ok(duplicateCheckpoint.ok && duplicateCheckpoint.duplicate);
   const settled = runExpedition(sim, cfg).chronicle;
   const active = await repo.load(); assert.ok(active.ok);
