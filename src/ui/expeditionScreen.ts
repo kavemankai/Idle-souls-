@@ -88,6 +88,9 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
   let durable: SaveV3 | null = null;
   let purchasePending = false;
   let storageBlocked = !developer;
+  let backupAvailable = false;
+  let verifiedBackup: string | null = null;
+  let recoveryPending = false;
   let dispatchPending = false, pauseAfterDispatch = false;
   let journal: ExpeditionCommandJournal | null = null;
   let activeId = '';
@@ -156,6 +159,39 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
   }
 
   // ---------- Planning ----------
+  /** Inspect an independent last-known-good copy without modifying the corrupt primary. */
+  async function inspectBackup() {
+    if (!durableRepo || recoveryPending) return;
+    recoveryPending = true;
+    try {
+      const raw = await durableRepo.readBackup();
+      if (!raw) { verifiedBackup = null; saveNote = 'No durable backup is available.'; return; }
+      const parsed = parseDurable(raw);
+      if (!parsed.ok) { verifiedBackup = null; saveNote = 'Backup failed validation: ' + parsed.error; return; }
+      verifiedBackup = raw;
+      saveNote = 'Backup verified: revision ' + parsed.save.revision +
+        ', expeditions ' + parsed.save.camp.expeditions +
+        '. Export it before choosing whether to restore.';
+    } catch (error) { verifiedBackup = null; saveNote = 'Could not read backup: ' + String(error); }
+    finally { recoveryPending = false; renderPlan(); }
+  }
+  async function restoreVerifiedBackup() {
+    if (!durableRepo || !verifiedBackup || recoveryPending) return;
+    const parsed = parseDurable(verifiedBackup);
+    if (!parsed.ok) { verifiedBackup = null; saveNote = 'Backup is no longer valid: ' + parsed.error; renderPlan(); return; }
+    if (!window.confirm('Replace the broken primary with this VERIFIED backup? The previous primary will be quarantined. Any progress after the backup revision may be lost.')) return;
+    recoveryPending = true;
+    try {
+      const result = await durableRepo.import(verifiedBackup, true);
+      if (!result.ok) { saveNote = 'Restore failed; primary preserved: ' + result.error; return; }
+      const reloaded = await durableRepo.load();
+      if (!reloaded.ok) { saveNote = 'Restore could not be read back: ' + reloaded.error; return; }
+      durable = reloaded.save; save = toLegacy(reloaded.save);
+      storageBlocked = false; backupAvailable = false; verifiedBackup = null;
+      saveNote = 'Verified backup restored. Review your saved expedition and bank before playing.';
+    } catch (error) { saveNote = 'Restore failed safely: ' + String(error); }
+    finally { recoveryPending = false; renderPlan(); }
+  }
   async function buyPermanentUpgrade(id: PermanentUpgradeId, rank: number) {
     if (!durableRepo || !durable || storageBlocked || purchasePending || durable.activeExpedition) return;
     const offer = PERMANENT_UPGRADES.find(x => x.id === id), price = offer?.prices[rank];
@@ -229,7 +265,13 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
         !developer && durable?.activeExpedition ? h('div', { id: 'saved-expedition' },
           h('p', { class: 'warn' }, 'An unfinished expedition is saved at tick ' + durable.activeExpedition.tick + '. Carried loot was not banked.'),
           h('button', { type: 'button', id: 'resume-saved', onclick: resumeSavedExpedition }, 'Resume saved expedition'),
-          h('button', { type: 'button', id: 'discard-saved', onclick: () => { void discardSavedExpedition(); } }, 'Discard unfinished expedition')) : null),
+          h('button', { type: 'button', id: 'discard-saved', onclick: () => { void discardSavedExpedition(); } }, 'Discard unfinished expedition')) : null,
+        !developer && backupAvailable && !durable ? h('div', { id: 'save-recovery' },
+          h('h3', {}, 'Recover your saved progress'),
+          h('p', { class: 'warn' }, 'Your primary save failed validation. This screen will not overwrite it automatically. An older backup may be available.'),
+          h('button', { type: 'button', id: 'inspect-backup', disabled: recoveryPending, onclick: () => { void inspectBackup(); } }, recoveryPending ? 'Inspecting backup' : 'Inspect backup'),
+          verifiedBackup ? h('a', { class: 'btn', id: 'export-backup', href: 'data:application/json;charset=utf-8,' + encodeURIComponent(verifiedBackup), download: 'idle-souls-recovery-backup.json' }, 'Export verified backup') : null,
+          verifiedBackup ? h('button', { type: 'button', id: 'restore-backup', disabled: recoveryPending, onclick: () => { void restoreVerifiedBackup(); } }, 'Restore this backup') : null) : null),
       !developer && durable ? h('section', { class: 'card', id: 'permanent-upgrades' },
         h('h2', {}, 'Permanent character training'),
         h('p', { class: 'hint', id: 'effective-build' },
@@ -440,7 +482,7 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
     redirectSel = h('select', { id: 'redirect-room', 'aria-label': 'Redirect to' }, ...[...k, ...frontierRooms(graph, k, r.expedition.openLinks)].filter(x => x !== CAMP && !runCfg!.plan.avoid.includes(x)).sort().map(x => h('option', { value: x }, name(graph, x))));
     ctl = h('div', { class: 'ctl' },
       ...[1, 4, 16].map(s => h('button', { type: 'button', 'data-speed': String(s), 'aria-pressed': String(s === speed), onclick: () => { speed = s; syncCtl(); } }, `${s}x`)),
-      h('button', { type: 'button', id: 'xp-pause', 'aria-pressed': String(paused), onclick: () => { if (!lifecycle.active) return; paused = !paused; acc = 0; last = 0; audio.setSuspended(paused); syncCtl(); } }, 'Pause'),
+      h('button', { type: 'button', id: 'xp-pause', 'aria-pressed': String(paused), onclick: () => { if (!lifecycle.active || (!developer && storageBlocked)) return; paused = !paused; acc = 0; last = 0; audio.setSuspended(paused); syncCtl(); } }, 'Pause'),
       developer ? h('button', { type: 'button', id: 'skip', onclick: () => { if (paused || !lifecycle.active) return; while (!r.world.terminal && r.world.tick < 30 * 3000) r.world.step(); draw(); } }, 'Skip to end') : null,
       h('button', { type: 'button', id: 'retreat-now', class: 'danger', onclick: () => { toast = issueOrder({ type: 'retreat' }); draw(); } }, 'Retreat to camp'));
     screen.append(h('div', { id: 'main', tabindex: '-1' },
@@ -461,14 +503,18 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
     const pause = ctl.querySelector<HTMLButtonElement>('#xp-pause')!;
     pause.setAttribute('aria-pressed', String(paused));
     pause.textContent = paused ? 'Resume expedition' : 'Pause';
-    pause.disabled = !lifecycle.active || !!run?.world.terminal;
+    pause.disabled = !lifecycle.active || !!run?.world.terminal || (!developer && storageBlocked);
     const skip = ctl.querySelector<HTMLButtonElement>('#skip');
     if (skip) skip.disabled = paused || !lifecycle.active || !!run?.world.terminal;
+    for (const id of ['retreat-now', 'redirect-go']) {
+      const control = ctl.parentElement?.querySelector<HTMLButtonElement>('#' + id);
+      if (control) control.disabled = !!run?.world.terminal || (!developer && storageBlocked);
+    }
   }
   function frame(t: number) {
     const r = run;
     if (!r) return;
-    if (!lifecycle.active || paused) { acc = 0; last = 0; raf = requestAnimationFrame(frame); return; }
+    if (!lifecycle.active || paused || (!developer && storageBlocked)) { acc = 0; last = 0; raf = requestAnimationFrame(frame); return; }
     if (last === 0) last = t;
     acc += Math.min(100, t - last) * speed * 30 / 1000; last = t;
     // Steps run in order, so the run is the same however many fit in a frame. A frame spends at most ~12 ms on them, so a heavy fight at 16x slows
@@ -626,10 +672,10 @@ export function mountExpedition(root: HTMLElement, options: { developer?: boolea
       if (loadedDurable.ok) {
         durable = loadedDurable.save;
         save = toLegacy(loadedDurable.save);
-        storageBlocked = false;
+        storageBlocked = false; backupAvailable = false; verifiedBackup = null;
         if (loadedDurable.migratedFrom !== null) saveNote = 'Legacy save migrated to durable version 3. Original retained.';
       } else {
-        storageBlocked = true;
+        storageBlocked = true; backupAvailable = loadedDurable.backupAvailable; verifiedBackup = null;
         saveNote = 'Your save is NOT safely available: ' + loadedDurable.error +
           (loadedDurable.backupAvailable ? '. A backup exists; export it before attempting recovery.' : '');
       }
