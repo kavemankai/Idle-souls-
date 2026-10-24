@@ -66,3 +66,33 @@ test('production Android entry shows live animated combat viewport rather than o
   await expect(page.locator('#retreat-now')).toBeVisible();
   expect(await page.evaluate(() => typeof window.__O1_RUN__)).toBe('undefined');
 });
+
+test('production player uses one continuous dungeon canvas, hallways and hero action chip with no duplicate screen HP bar', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 780 });
+  await page.goto('/');
+  await page.locator('#guide-skip').click();
+  await page.locator('[data-preset=first]').click();
+  await page.locator('#launch').click();
+  const stage = page.locator('#battle-scene');
+  await expect.poll(() => stage.getAttribute('data-visual-ready'), { timeout: 30000 }).toBe('true');
+  await expect(page.locator('.hpbar')).toHaveCount(0);
+  await expect(page.locator('#xstatus')).toContainText('health');
+  await expect.poll(() => stage.getAttribute('data-visual-action'), { timeout: 15000 }).toMatch(/^• /);
+  const canvas = await stage.locator('canvas').elementHandle();
+  expect(canvas).not.toBeNull();
+  await page.locator('[data-speed="16"]').click();
+  await expect.poll(async () => Number(await stage.getAttribute('data-visual-hallways')),
+    { timeout: 40000 }).toBeGreaterThan(0);
+  await expect.poll(() => stage.getAttribute('data-visual-room'),
+    { timeout: 40000 }).toBe('O1');
+  expect(await canvas!.evaluate(c => c === document.querySelector('#battle-scene canvas') && c.isConnected))
+    .toBe(true);
+  const numbers = await Promise.all(['visual-hero-x','visual-hero-y','visual-camera-x','visual-camera-y']
+    .map(a => stage.getAttribute('data-' + a)));
+  assertFinite(numbers);
+  await expect.poll(async () => Number(await stage.getAttribute('data-visual-loaded-rooms')))
+    .toBeGreaterThanOrEqual(1);
+});
+function assertFinite(values: (string | null)[]) {
+  for (const value of values) expect(value !== null && Number.isFinite(Number(value))).toBe(true);
+}

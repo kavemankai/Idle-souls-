@@ -28,18 +28,21 @@ test('visual adapter reads REAL room fighters and never changes expedition outco
     assert.equal(snapshot.room, w.room);
     assert.equal(snapshot.actors[0].archetype, 'adventurer');
     assert.equal(snapshot.actors[0].illustrated, true);
+    assert.equal(snapshot.actors[0].x, w.pos.x, 'hero must use the continuous world runner x');
+    assert.equal(snapshot.actors[0].y, w.pos.y, 'hero must use the continuous world runner y');
+    assert.ok(snapshot.heroStatus.startsWith('• '), 'read-only short action label exists');
     if (snapshot.actors[0].action === 'walk') observedMovement = true;
     if (snapshot.fighting && w.runner?.fight) {
       observedCombat = true;
       assert.equal(snapshot.combat?.combatants[0].hp.value, w.runner.fight.p.hp);
-      assert.equal(snapshot.actors[0].x, w.runner.fight.p.x);
-      assert.equal(snapshot.actors[0].y, w.runner.fight.p.y);
+      assert.equal(snapshot.actors[0].x, w.pos.x);
+      assert.equal(snapshot.actors[0].y, w.pos.y);
       assert.equal(snapshot.actors.length, w.runner.foes.length + 1);
       for (let i = 0; i < w.runner.foes.length; i++) {
         const fighter = w.runner.fighterOf(i);
         if (fighter) {
-          assert.equal(snapshot.actors[i + 1].x, fighter.x);
-          assert.equal(snapshot.actors[i + 1].y, fighter.y);
+          assert.equal(snapshot.actors[i + 1].x, fighter.x + w.runner.cfg.room.plan!.center.x);
+          assert.equal(snapshot.actors[i + 1].y, fighter.y + w.runner.cfg.room.plan!.center.y);
         }
       }
     }

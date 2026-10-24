@@ -22,7 +22,7 @@ function state(tick: number, heroHp: number, foeHp: number, blocks = 0, parries 
       dodgeCounters: 0, guardBreaksDealt: 0, counteredHits: 0 },
   };
   return {
-    room: 'O1', tick, fightKey: key, fighting: true, passage: false,
+    room: 'O1', tick, fightKey: key, fighting: true, passage: false, heroStatus: '• Fighting',
     heroHealth: hero.hp, combat,
     actors: [
       { id: 'hero', archetype: 'adventurer', illustrated: true, x: 0, y: 0, facing: 'E',

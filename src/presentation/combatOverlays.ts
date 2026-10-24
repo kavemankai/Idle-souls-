@@ -44,11 +44,11 @@ export class CombatOverlays {
     let objects = this.bars.get(actorId);
     if (!objects) {
       objects = {
-        graphic: this.scene.add.graphics().setDepth(1300),
+        graphic: this.scene.add.graphics().setDepth(11000),
         text: this.scene.add.text(0, 0, '', {
           fontFamily: 'Arial', fontSize: '11px', fontStyle: 'bold',
           color: '#f6f1e5', stroke: '#091411', strokeThickness: 3,
-        }).setOrigin(.5, 1).setDepth(1301),
+        }).setOrigin(.5, 1).setDepth(11001),
       };
       this.bars.set(actorId, objects);
     }
@@ -80,7 +80,7 @@ export class CombatOverlays {
     const text = this.scene.add.text(x, y, cue.label, {
       fontFamily: 'Arial', fontSize: cue.kind === 'damage' ? '19px' : '15px',
       fontStyle: 'bold', color, stroke: '#0a1312', strokeThickness: 4,
-    }).setOrigin(.5, .5).setDepth(1600);
+    }).setOrigin(.5, .5).setDepth(12050);
     this.popups.push({ text, y, age: 0 });
     this.totalPopups++;
     // Bounded visual effects even at 16x simulation speed.
