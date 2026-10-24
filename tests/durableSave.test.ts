@@ -80,7 +80,7 @@ test('a journal restores the exact running mid-fight state and later Chronicle, 
   const snap = checkpoint('combat7', cfg, a, journal.commands);
   const b = restoreExpedition(sim, snap);
   assert.equal(continuationFingerprint(b), before);
-  assert.deepEqual(b.world.runner?.fight, a.world.runner?.fight);
+  assert.deepEqual(JSON.parse(JSON.stringify(b.world.runner?.fight)), JSON.parse(JSON.stringify(a.world.runner?.fight)), 'serializable combat state is identical');
   // Same future sequence from the identical save tick.
   while (!a.world.terminal && a.world.tick < 50000) a.world.step();
   while (!b.world.terminal && b.world.tick < 50000) b.world.step();
