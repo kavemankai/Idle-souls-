@@ -49,6 +49,7 @@ test('production Android entry shows live animated combat viewport rather than o
   await expect(stage.locator('canvas')).toBeVisible({ timeout: 30000 });
   await expect.poll(() => stage.getAttribute('data-visual-ready'), { timeout: 30000 }).toBe('true');
   await expect.poll(async () => Number(await stage.getAttribute('data-visual-actors')), { timeout: 15000 }).toBeGreaterThanOrEqual(1);
+  await expect.poll(async () => Number(await stage.getAttribute('data-visual-hp-bars')), { timeout: 15000 }).toBeGreaterThanOrEqual(1);
   const bounds = await stage.boundingBox();
   expect(bounds).not.toBeNull();
   expect(bounds!.width).toBeGreaterThanOrEqual(300);
