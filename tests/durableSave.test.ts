@@ -127,3 +127,16 @@ test('dispatch, checkpoint and settlement each commit exactly once with immutabl
   const attack = await commitSettlement(repo, end.save.revision, 'run13', settled, 1);
   assert.ok(attack.ok && attack.duplicate);
 });
+
+test('V3 checkpoint serialization strips optional undefined fields without changing authoritative replay', () => {
+  const cfg: ExpeditionConfig = { ...config(9), hpOverride: undefined, cache: null, issueKeys: 0, encounters: undefined };
+  const started = startExpedition(sim, cfg);
+  const v3 = upgradeToV3(defaultSave());
+  v3.activeExpedition = checkpoint('optional9', cfg, started, []);
+  const raw = serializeDurable(v3);
+  const restored = parseDurable(raw);
+  assert.ok(restored.ok, JSON.stringify(restored));
+  assert.equal(restored.save.activeExpedition!.id, 'optional9');
+  const resumed = restoreExpedition(sim, restored.save.activeExpedition!);
+  assert.equal(continuationFingerprint(resumed), continuationFingerprint(started));
+});
