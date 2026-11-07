@@ -1,0 +1,5 @@
+# Asset pipeline
+
+Use `templates/ASSET_MANIFEST.example.json` for an inventory separate from the runtime asset map. Give each asset a stable lowercase id, purpose, engine/export target, source, generated files, rights and a visual QA result. Images have declared dimensions. Models record texture and triangle budgets and animation names. The validator checks metadata and file paths, names and budgets. Cross-check actual dimensions and file provenance during review. Record an exact upstream revision or original producer and keep the license and required notices beside distribution.
+
+For 2D, import the original editable image into the existing asset pipeline, export WebP/PNG at the game's target size and compare crops in portrait and landscape. Retain source and thumbnail separately. Use the web smoke captures as the reference layout. For a tracked Blender fixture, use `adapters/blender/export.mjs` to create a GLB, preview and mesh report in a fresh output directory. Review the image before approval and run the Godot import check in the isolated fixture.
