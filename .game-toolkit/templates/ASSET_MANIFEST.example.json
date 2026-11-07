@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "assets": [
+    {
+      "id": "marker",
+      "kind": "image",
+      "purpose": "Original sample icon",
+      "engine": "web",
+      "exportTarget": "SVG",
+      "producer": "Toolkit fixture",
+      "origin": "first-party",
+      "license": "CC0-1.0",
+      "licenseFile": "ASSET_LICENSE.txt",
+      "redistribution": "allowed",
+      "sourceFile": "marker.svg",
+      "generated": [],
+      "width": 32,
+      "height": 32,
+      "visualQa": "pending"
+    }
+  ]
+}
